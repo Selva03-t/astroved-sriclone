@@ -1,0 +1,337 @@
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+
+const navigationItems = [
+  { label: "Home", path: "/dashboard" },
+  { label: "Puja", path: "/puja" },
+  { label: "Chadhava", path: "/chadhava" },
+  { label: "Panchang", path: "/panchang" },
+  { label: "Temples", path: "/temples" },
+  { label: "Library", path: "/library" },
+  { label: "Astro Tools", path: "/astro-tools" },
+  { label: "Store", path: "/store" },
+];
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => setUser(null));
+  }, [pathname]);
+
+   useEffect(() => {
+      setMobileMenuOpen(false);
+   }, [pathname]);
+
+   const isActivePath = (path: string) => {
+      return pathname === path || (path !== "/dashboard" && pathname?.startsWith(path + "/"));
+   };
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setUser(null);
+    window.location.href = "/dashboard";
+  };
+
+   return (
+      <section className="sticky top-0 z-50 overflow-visible border-b border-[#d5d8f5] bg-white/95 shadow-sm backdrop-blur">
+         <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto] items-center gap-6 px-8 py-3.5 md:grid-cols-[1fr_auto_1fr]">
+        <div className="justify-self-start">
+           <Link href="/dashboard" className="flex items-center gap-3 pr-4">
+              <Image 
+                src="https://cdn.astroved.com/images/images-av/AstroVed-Logo.svg" 
+                alt="AstroVed Logo" 
+                width={130} 
+                height={32} 
+                className="h-7 w-auto"
+              />
+           </Link>
+        </div>
+        <nav aria-label="Dashboard navigation" className="hidden md:block md:justify-self-center">
+          <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1f1f1f]">
+            {navigationItems.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.path}
+                  className={
+                              isActivePath(item.path)
+                      ? "text-[#f47820]"
+                      : "transition-colors hover:text-[#f47820]"
+                  }
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+            <div className="justify-self-end flex items-center gap-4">
+               <button
+                  type="button"
+                  aria-label="Toggle menu"
+                  aria-expanded={mobileMenuOpen}
+                  onClick={() => setMobileMenuOpen((prev) => !prev)}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#6969fa]/25 bg-white text-[#5a5add] shadow-sm transition-all duration-300 hover:border-[#6969fa]/50 hover:bg-[#f5f5ff] md:hidden"
+               >
+                  {mobileMenuOpen ? (
+                     <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                     </svg>
+                  ) : (
+                     <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                     </svg>
+                  )}
+               </button>
+
+               {/* Language Dropdown */}
+               <div className="relative group/lang hidden md:block">
+                 <button className="flex items-center gap-1.5 h-[42px] px-3.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-[15px] font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                   English
+                   <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                 </button>
+                 <div className="absolute top-full right-0 pt-2 opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all z-[90]">
+                   <div className="w-32 bg-white rounded-xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden">
+                     <div className="py-1">
+                       <button className="w-full text-left px-4 py-2.5 text-sm text-[#f47820] bg-orange-50 font-bold">English</button>
+                       <button className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 font-medium">हिंदी</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               <div className="group relative hidden md:block">
+            <button
+              type="button"
+              aria-label="Account menu"
+              className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-300 shadow-sm transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
+            >
+              {user ? (
+                <div className="h-full w-full flex items-center justify-center bg-[#f47820] text-white rounded-full font-bold text-xs uppercase">
+                   {user.name.charAt(0)}
+                </div>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-6 w-6">
+                  <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7" />
+                  <path
+                    d="M5 19a7 7 0 0 1 14 0"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </button>
+            
+            {/* Redesigned Dropdown */}
+            <div className="pointer-events-none absolute right-0 top-full z-[80] w-[320px] pt-3 opacity-0 translate-y-3 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+               <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden">
+                 {!user ? (
+                 <div className="p-5 border-b border-gray-50 bg-gray-50/30">
+                    <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas & offers:</p>
+                    <Link 
+                      href="/auth/login"
+                      className="block w-full bg-[#1a73e8] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#1557b0] transition-all"
+                    >
+                       Login / Create an account
+                    </Link>
+                 </div>
+               ) : (
+                 <div className="p-5 border-b border-gray-50 bg-[#0e915f]/5">
+                    <div className="flex items-center gap-3">
+                       <div className="h-10 w-10 bg-[#0e915f] text-white rounded-full flex items-center justify-center font-bold">
+                          {user.name.charAt(0)}
+                       </div>
+                       <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-[#0e915f] uppercase tracking-wider">Namaste,</p>
+                          <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                       </div>
+                    </div>
+                 </div>
+               )}
+
+               <div className="p-2">
+                  <p className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Account Details</p>
+                  
+                  <nav className="space-y-0.5">
+                     <Link href={user ? "/profile" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My profile</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href={user ? "/bookings/puja" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My Puja Bookings</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href={user ? "/bookings/chadhava" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">My Chadhava Bookings</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Book a Puja</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+
+                     <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Book a Chadhava</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+
+                     <Link href="/astro-tools" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-wand-magic-sparkles text-gray-400 group-hover/item:text-purple-600 transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Astro Tools</span>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                     </Link>
+
+                     <Link href="/store" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                        <div className="flex items-center gap-4">
+                           <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-orange-500 transition-colors"></i>
+                           <span className="text-[14px] font-semibold text-gray-700">Store</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
+                           <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                        </div>
+                     </Link>
+                  </nav>
+               </div>
+
+               <div className="p-4 bg-gray-50/50 space-y-4">
+                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Help & Support</p>
+                   
+                   <div className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
+                      <div className="h-8 w-8 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-sm">
+                         <i className="fa-solid fa-phone"></i>
+                      </div>
+                      <div>
+                         <p className="text-[13px] font-bold text-gray-900">080-711-74417</p>
+                         <p className="text-[10px] text-gray-400 font-medium tracking-tight">Available from 10:30 AM - 7:30 PM</p>
+                      </div>
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-2">
+                      <a href="mailto:support@astroved.com" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
+                         <i className="fa-regular fa-envelope text-red-500"></i>
+                         <span className="text-xs font-bold text-gray-700">Email us</span>
+                      </a>
+                      <a href="https://wa.me/918071174417" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
+                         <i className="fa-brands fa-whatsapp text-green-500"></i>
+                         <span className="text-xs font-bold text-gray-700">Whatsapp</span>
+                      </a>
+                   </div>
+                   
+                   {user && (
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full py-2.5 mt-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                      >
+                         <i className="fa-solid fa-power-off mr-2"></i> Log out from AstroVed
+                      </button>
+                   )}
+               </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+         <div
+            className={`mx-auto max-w-6xl overflow-hidden px-6 transition-all duration-300 md:hidden ${
+               mobileMenuOpen ? "max-h-[80vh] pb-4" : "max-h-0"
+            }`}
+         >
+            <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+               <nav aria-label="Mobile navigation">
+                  <ul className="space-y-1">
+                     {navigationItems.map((item) => (
+                        <li key={`mobile-${item.label}`}>
+                           <Link
+                              href={item.path}
+                              className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                                 isActivePath(item.path)
+                                    ? "bg-[#f47820]/10 text-[#f47820]"
+                                    : "text-gray-700 hover:bg-gray-50"
+                              }`}
+                           >
+                              {item.label}
+                           </Link>
+                        </li>
+                     ))}
+                  </ul>
+               </nav>
+
+               <div className="mt-3 border-t border-gray-100 pt-3">
+                  {user ? (
+                     <>
+                        <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#0e915f]">Namaste, {user.name}</p>
+                        <div className="mt-2 space-y-1">
+                           <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Profile
+                           </Link>
+                           <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Puja Bookings
+                           </Link>
+                           <Link href="/bookings/chadhava" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                              My Chadhava Bookings
+                           </Link>
+                           <button
+                              type="button"
+                              onClick={handleLogout}
+                              className="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
+                           >
+                              Log out
+                           </button>
+                        </div>
+                     </>
+                  ) : (
+                     <Link
+                        href="/auth/login"
+                        className="block w-full rounded-xl bg-[#1a73e8] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#1557b0]"
+                     >
+                        Login / Create an account
+                     </Link>
+                  )}
+               </div>
+            </div>
+         </div>
+    </section>
+  );
+}
