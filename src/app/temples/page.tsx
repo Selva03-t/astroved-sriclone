@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 interface Temple {
   _id: string;
@@ -30,6 +31,7 @@ const locations = [
 ];
 
 export default function TemplesPage() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<Temple[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCity, setActiveCity] = useState("Ayodhya");
@@ -74,21 +76,21 @@ export default function TemplesPage() {
           {/* Hero Content */}
           <div className="flex-1 space-y-8 z-10 w-full max-w-2xl">
             <h1 className="text-4xl md:text-[54px] font-bold text-[#1f1f1f] leading-[1.1]">
-              Connect with holy pilgrimages and divine temples of India
+              {t.temples.heroTitle}
             </h1>
             
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#f47820] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
-                <span className="text-[#4F4F4F] font-medium text-[17px]">Learn about the culture and religious history of temples</span>
+                <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature1}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#f47820] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
-                <span className="text-[#4F4F4F] font-medium text-[17px]">Connect with temples of your favourite deities</span>
+                <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature2}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#f47820] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
-                <span className="text-[#4F4F4F] font-medium text-[17px]">Offer charity work and donate in your favourite temples</span>
+                <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature3}</span>
               </li>
             </ul>
 
@@ -97,7 +99,7 @@ export default function TemplesPage() {
                 onClick={() => document.getElementById('temples-list')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-[#f47820] hover:bg-[#e86b16] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
               >
-                Explore Temples of India
+                {t.temples.exploreBtn}
               </button>
               <a 
                 href="https://docs.google.com/forms/d/e/1FAIpQLSeFIQnaxbHWpVUXKMrCn4I9A8UNSybCRhhAgBwvTkq3uEddBA/viewform?usp=publish-editors" 
@@ -105,7 +107,7 @@ export default function TemplesPage() {
                 rel="noopener noreferrer" 
                 className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-3.5 px-8 rounded-full border border-gray-300 transition-all shadow-sm flex items-center gap-2 active:scale-95 text-[15px]"
               >
-                <span className="text-xl leading-none -mt-1">+</span> Add Temples
+                <span className="text-xl leading-none -mt-1">+</span> {t.temples.addTemples}
               </a>
             </div>
           </div>
@@ -153,7 +155,7 @@ export default function TemplesPage() {
                 <span className={`text-[15px] font-bold ${
                   activeCity === loc.name ? "text-[#f47820]" : "text-gray-500"
                 }`}>
-                  {loc.name}
+                  {loc.name === "All" ? t.temples.filterAll : loc.name}
                 </span>
               </button>
             ))}
@@ -175,13 +177,13 @@ export default function TemplesPage() {
           <div className="flex justify-center py-20">
             <div className="animate-pulse flex flex-col items-center">
               <div className="h-12 w-12 border-4 border-t-[#f47820] border-[#f47820]/30 rounded-full animate-spin mb-4"></div>
-              <div className="text-gray-400 font-medium">Loading temples...</div>
+              <div className="text-gray-400 font-medium">{t.temples.loading}</div>
             </div>
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-24 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
              <div className="text-6xl mb-4">🕉️</div>
-             <p className="text-gray-600 text-lg font-medium">No temples found for <span className="text-[#f47820]">{activeCity}</span>. Check back soon!</p>
+             <p className="text-gray-600 text-lg font-medium">{t.temples.noTemples}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

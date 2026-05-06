@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { MapPinIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 interface Puja {
   _id: string;
@@ -159,10 +160,9 @@ function FilterChip({
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150 whitespace-nowrap select-none
-          ${
-            isActive
-              ? "border-[#6969fa] bg-[#6969fa]/10 text-[#6969fa]"
-              : "border-gray-300 bg-white text-gray-600 hover:border-[#6969fa]/60 hover:text-[#6969fa]"
+          ${isActive
+            ? "border-[#6969fa] bg-[#6969fa]/10 text-[#6969fa]"
+            : "border-gray-300 bg-white text-gray-600 hover:border-[#6969fa]/60 hover:text-[#6969fa]"
           }`}
       >
         <span>{isActive ? selected : group.label}</span>
@@ -204,6 +204,7 @@ function FilterChip({
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function PujaPage() {
+  const { t } = useTranslation();
   const [allPujas, setAllPujas] = useState<Puja[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -266,13 +267,13 @@ export default function PujaPage() {
 
           {/* Page Heading */}
           <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#2c1c4e] md:text-4xl">
-            Perform Puja as Per Vedic Rituals at Famous Hindu Temples in India
+            {t.puja.heading}
           </h1>
 
           {/* Banner Carousel */}
           {isLoading ? (
             <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
-              <p className="text-base text-[#6e5f8f]">Loading pujas...</p>
+              <p className="text-base text-[#6e5f8f]">{t.puja.loading}</p>
             </div>
           ) : allPujas.length > 0 ? (
             <>
@@ -326,9 +327,8 @@ export default function PujaPage() {
                     type="button"
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to puja ${index + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === activeIndex ? "w-8 bg-[#6969fa]" : "w-2 bg-[#d7cbef]"
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6969fa]" : "w-2 bg-[#d7cbef]"
+                      }`}
                   />
                 ))}
               </div>
@@ -338,10 +338,10 @@ export default function PujaPage() {
           {/* Section */}
           <section className="mt-12">
             <h2 className="text-2xl font-bold text-[#2c1c4e] md:text-3xl">
-              Upcoming Pujas — Globally
+              {t.puja.sectionTitle}
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6e5f8f] md:text-base">
-              Explore sacred rituals, discover temple offerings, and find the right puja for your spiritual needs.
+              {t.puja.sectionSubtitle}
             </p>
 
             {/* ── Filter bar ── */}
@@ -352,7 +352,7 @@ export default function PujaPage() {
                   <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                     <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
                   </svg>
-                  Filter
+                  {t.puja.filter}
                 </div>
 
                 <div className="h-6 w-px shrink-0 bg-gray-200" />
@@ -377,7 +377,7 @@ export default function PujaPage() {
                     <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5">
                       <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
-                    Clear all
+                    {t.puja.clearAll}
                   </button>
                 )}
               </div>
@@ -385,7 +385,7 @@ export default function PujaPage() {
               {/* Active filter tags */}
               {hasActiveFilters && (
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Active:</span>
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{t.puja.active}</span>
                   {Object.entries(filters)
                     .filter(([, v]) => v !== "All")
                     .map(([key, val]) => (
@@ -414,8 +414,8 @@ export default function PujaPage() {
             {!isLoading && (
               <p className="mt-4 text-sm text-[#6e5f8f]">
                 {hasActiveFilters
-                  ? `Showing ${displayedPujas.length} of ${allPujas.length} pujas`
-                  : `${allPujas.length} pujas available`}
+                  ? `${t.puja.showingPujas} ${displayedPujas.length} ${t.puja.of} ${allPujas.length} ${t.puja.pujas}`
+                  : `${allPujas.length} ${t.puja.allPujas}`}
               </p>
             )}
 
@@ -423,14 +423,14 @@ export default function PujaPage() {
             {isLoading ? null : displayedPujas.length === 0 ? (
               <div className="mt-16 flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c4b8ef] bg-white py-16 text-center">
                 <span className="text-4xl">🙏</span>
-                <p className="text-lg font-semibold text-[#2c1c4e]">No pujas match your filters</p>
-                <p className="text-sm text-[#6e5f8f]">Try adjusting or clearing the filters above</p>
+                <p className="text-lg font-semibold text-[#2c1c4e]">{t.puja.noMatch}</p>
+                <p className="text-sm text-[#6e5f8f]">{t.puja.noMatchSub}</p>
                 <button
                   type="button"
                   onClick={clearFilters}
                   className="mt-2 rounded-full bg-[#6969fa] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5555e8] transition"
                 >
-                  Clear Filters
+                  {t.puja.clearFilters}
                 </button>
               </div>
             ) : (
@@ -489,7 +489,7 @@ export default function PujaPage() {
                         <div className="flex items-center gap-2">
                           <CalendarIcon className="h-4 w-4 shrink-0 text-[#6969fa]" />
                           <span className="text-xs font-medium text-[#6e5f8f]">
-                            {puja.date || "Announced Soon"}
+                            {puja.date || t.puja.announcedSoon}
                           </span>
                         </div>
                       </div>
@@ -498,7 +498,7 @@ export default function PujaPage() {
                         href={`/puja/${puja.slug || slugify(puja.title)}`}
                         className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#6969fa] py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(105,105,250,0.35)] transition-all hover:bg-[#5555e8] hover:shadow-[0_6px_20px_rgba(105,105,250,0.45)] active:scale-[0.98]"
                       >
-                        {puja.buttonText || "Book Puja"}
+                        {puja.buttonText || t.puja.bookNow}
                         <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                           <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                         </svg>
@@ -512,9 +512,9 @@ export default function PujaPage() {
 
           {/* ── Reviews ── */}
           <section className="mt-20 border-t border-gray-100 pt-16 pb-16">
-            <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">What devotees Say about AstroVed Puja ?</h2>
-            <p className="mt-2 mb-8 text-sm text-gray-600 md:text-base">Reviews and Ratings from our customers who performed online Puja with us.</p>
-            <div 
+            <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">{t.puja.devoteesTitle}</h2>
+            <p className="mt-2 mb-8 text-sm text-gray-600 md:text-base">{t.puja.devoteesSubtitle}</p>
+            <div
               ref={reviewsScrollRef}
               onScroll={handleScrollEvent}
               className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4"
@@ -525,7 +525,7 @@ export default function PujaPage() {
                   <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="Video thumbnail" className="h-full w-full object-cover opacity-80" />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm cursor-pointer hover:bg-black/80 transition-colors">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-1"><path d="M8 5v14l11-7z"/></svg>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-1"><path d="M8 5v14l11-7z" /></svg>
                     </div>
                   </div>
                 </div>
@@ -576,19 +576,19 @@ export default function PujaPage() {
 
             {/* Scroll Controls */}
             <div className="mt-8 flex items-center justify-center gap-4">
-              <button 
+              <button
                 onClick={() => handleReviewScroll('left')}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-white hover:bg-gray-400 transition"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" /></svg>
               </button>
-              
+
               <div className="flex items-center gap-2">
                 <div className={`h-2 w-2 rounded-full transition-colors ${reviewScrollPos < 0.5 ? 'bg-[#f47820]' : 'bg-gray-300'}`} />
                 <div className={`h-2 w-2 rounded-full transition-colors ${reviewScrollPos >= 0.5 ? 'bg-[#f47820]' : 'bg-gray-300'}`} />
               </div>
 
-              <button 
+              <button
                 onClick={() => handleReviewScroll('right')}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f47820] text-white hover:bg-[#d96619] transition shadow-md"
               >
@@ -600,25 +600,25 @@ export default function PujaPage() {
           {/* ── Stats Section ── */}
           <section className="mt-20">
             <h2 className="mb-2 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
-              Start your Sacred Journey with AstroVed Puja Service
+              {t.puja.sacredJourney}
             </h2>
-            <p className="mb-8 text-sm text-gray-600">Why book AstroVed Online Puja?</p>
+            <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
                 <h3 className="text-2xl font-black text-[#1d4ed8]">10,00,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#2563eb]">Puja's Done</p>
+                <p className="mt-1 text-sm font-semibold text-[#2563eb]">{t.puja.pujasDone}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#faf5ff] to-[#f3e8ff] p-8 text-center shadow-sm border border-[#e9d5ff]/50">
                 <h3 className="text-2xl font-black text-[#6969fa]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6969fa]/80">Happy Devotees</p>
+                <p className="mt-1 text-sm font-semibold text-[#6969fa]/80">{t.puja.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
                 <h3 className="text-2xl font-black text-[#be185d]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#db2777]">Famous Temples in India</p>
+                <p className="mt-1 text-sm font-semibold text-[#db2777]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#f47820]">1 Sankalp</h3>
-                <p className="mt-1 text-sm font-semibold text-[#f47820]/80">Spreading Sanatan Dharma</p>
+                <h3 className="text-2xl font-black text-[#f47820]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#f47820]/80">{t.puja.sankalpDesc}</p>
               </div>
             </div>
           </section>
@@ -626,36 +626,36 @@ export default function PujaPage() {
           {/* ── How it works ── */}
           <section id="how-it-works" className="mt-20">
             <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
-              How does AstroVed Online Puja Works?
+              {t.puja.howItWorks}
             </h2>
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div className="space-y-8">
                 <div className="flex gap-4">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">1</div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Choose Your Puja</h3>
-                    <p className="mt-1 text-sm text-gray-600">Select your Puja from the list.</p>
+                    <h3 className="font-bold text-gray-900">{t.puja.step1Title}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{t.puja.step1Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">2</div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Your Information</h3>
-                    <p className="mt-1 text-sm text-gray-600">After selecting the Puja, fill in the information of your Name and Gotra in the provided form.</p>
+                    <h3 className="font-bold text-gray-900">{t.puja.step2Title}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{t.puja.step2Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">3</div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Puja video</h3>
-                    <p className="mt-1 text-sm text-gray-600">The video of your Puja completed with your name and Gotra will be shared on WhatsApp.</p>
+                    <h3 className="font-bold text-gray-900">{t.puja.step3Title}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{t.puja.step3Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">4</div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Aashirwad Box</h3>
-                    <p className="mt-1 text-sm text-gray-600">Aashirwad Box will be sent to your registered address.</p>
+                    <h3 className="font-bold text-gray-900">{t.puja.step4Title}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{t.puja.step4Desc}</p>
                   </div>
                 </div>
               </div>
