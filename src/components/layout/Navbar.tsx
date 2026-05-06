@@ -79,7 +79,7 @@ export default function Navbar() {
     pathname?.startsWith("/puja/");
 
   return (
-    <section className="sticky top-0 z-50 overflow-visible border-b border-[#d5d8f5] bg-white/95 shadow-sm backdrop-blur">
+    <section className="sticky top-0 z-50 overflow-visible border-b border-gray-100 bg-white shadow-sm">
       <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto] items-center gap-6 px-8 py-3.5 md:grid-cols-[1fr_auto_1fr]">
         <div className="justify-self-start">
           <Link href="/dashboard" className="flex items-center gap-3 pr-4">
@@ -94,15 +94,15 @@ export default function Navbar() {
         </div>
 
         <nav aria-label="Dashboard navigation" className="hidden md:block md:justify-self-center">
-          <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1f1f1f]">
+          <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1a1a1a]">
             {navKeys.map((item) => (
               <li key={item.key}>
                 <Link
                   href={item.path}
                   className={
                     isActivePath(item.path)
-                      ? "text-[#f47820]"
-                      : "transition-colors hover:text-[#f47820]"
+                      ? "text-[#EA580C] font-bold"
+                      : "transition-colors hover:text-[#EA580C]"
                   }
                 >
                   {t(`nav.${item.key}`)}
@@ -119,7 +119,7 @@ export default function Navbar() {
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#6969fa]/25 bg-white text-[#5a5add] shadow-sm transition-all duration-300 hover:border-[#6969fa]/50 hover:bg-[#f5f5ff] md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-all duration-300 hover:bg-gray-50 md:hidden"
           >
             {mobileMenuOpen ? (
               <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
@@ -136,7 +136,7 @@ export default function Navbar() {
           <div className="relative hidden md:block" ref={langRef}>
             <button
               onClick={() => setLangOpen((prev) => !prev)}
-              className="flex items-center gap-1.5 h-[42px] px-3.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-[15px] font-medium hover:bg-gray-50 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border border-gray-200 bg-white text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors"
             >
               {languageDisplayNames[language] || "English"}
               <svg className={`w-4 h-4 text-gray-500 transition-transform ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,7 +179,7 @@ export default function Navbar() {
             <button
               type="button"
               aria-label="Account menu"
-              className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-300 shadow-sm transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
+              className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
             >
               {user ? (
                 <div className="h-full w-full flex items-center justify-center bg-[#f47820] text-white rounded-full font-bold text-xs uppercase">

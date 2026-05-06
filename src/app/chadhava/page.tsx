@@ -158,7 +158,7 @@ export default function ChadhavaPage() {
               </div>
             </div>
           </section>
-
+        
           {/* ── How it works ── */}
           <section id="how-it-works" className="mt-20">
             <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
