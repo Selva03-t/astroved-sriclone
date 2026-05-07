@@ -49,7 +49,7 @@ export default function AdminDashboard() {
           </div>
         ))}
       </div>
-
+    
       <div className="mt-8">
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="text-lg font-medium text-gray-900">Quick Actions</h2>

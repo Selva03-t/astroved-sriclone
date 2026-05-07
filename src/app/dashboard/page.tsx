@@ -91,7 +91,7 @@ export default function DashboardPage() {
                     alt={banner.title}
                     fill
                     className="object-cover object-top"
-
+                  
                     priority
                   />
                   {banner.showContent && (
@@ -173,7 +173,7 @@ export default function DashboardPage() {
             {t.home.specialPujasSubtitle}
           </p>
           <PujaCardsSection />
-        </div>
+        </div>               
       </section>
 
       {/* Reviews & Ratings Section */}

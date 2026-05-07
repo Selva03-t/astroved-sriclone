@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface Temple {
   _id: string;
@@ -196,14 +197,14 @@ export default function TemplesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items.map((item, index) => (
-              <motion.div 
-                key={item._id} 
-                className="flex flex-col gap-4 group"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <Link href={`/temples/${item.slug || item._id}`} key={item._id}>
+                <motion.div 
+                  className="flex flex-col gap-4 group"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
                 <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative cursor-pointer border border-gray-100 bg-white">
                   {/* Left / Right arrows mock */}
                   <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -240,6 +241,7 @@ export default function TemplesPage() {
                   </p>
                 </div>
               </motion.div>
+              </Link>
             ))}
           </div>
         )}
