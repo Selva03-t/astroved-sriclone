@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 interface Temple {
   _id: string;
@@ -113,12 +114,19 @@ export default function TemplesPage() {
           </div>
 
           {/* Hero Image */}
-          <div className="flex-1 w-full flex justify-center lg:justify-end">
-            <img 
-              src="https://www.srimandir.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimg_hero_artwork_en.0462daf4.png&w=3840&q=75" 
-              alt="Temples Map of India" 
-              className="w-full max-w-[500px] object-contain drop-shadow-xl"
-            />
+          <div className="flex-1 w-full flex justify-center lg:justify-end relative">
+            <motion.div
+              className="relative w-full max-w-[500px]"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <img 
+                src="https://www.srimandir.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimg_hero_artwork_en.0462daf4.png&w=3840&q=75" 
+                alt="Temples Map of India" 
+                className="w-full object-contain drop-shadow-2xl"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -187,9 +195,16 @@ export default function TemplesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {items.map((item) => (
-              <div key={item._id} className="flex flex-col gap-4">
-                <div className="w-full aspect-[4/3] rounded-[28px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative group cursor-pointer border border-gray-100">
+            {items.map((item, index) => (
+              <motion.div 
+                key={item._id} 
+                className="flex flex-col gap-4 group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative cursor-pointer border border-gray-100 bg-white">
                   {/* Left / Right arrows mock */}
                   <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                      <div className="h-7 w-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-lg"><span className="text-gray-800 text-xs">❮</span></div>
@@ -198,10 +213,12 @@ export default function TemplesPage() {
                      <div className="h-7 w-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-lg"><span className="text-gray-800 text-xs">❯</span></div>
                   </div>
 
-                  <img 
+                  <motion.img 
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                     src={item.imageUrl || "https://images.unsplash.com/photo-1519280459341-33758079543e?auto=format&fit=crop&w=400&q=80"} 
                     alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                   />
                   {/* Mock Carousel Dots */}
                   <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -214,15 +231,15 @@ export default function TemplesPage() {
                 </div>
                 
                 <div className="px-1">
-                  <h3 className="text-[19px] font-bold text-[#1f1f1f] mb-1">{item.name}</h3>
-                  <p className="text-[#1f1f1f] font-bold text-[14px] mb-3">
+                  <h3 className="text-lg font-bold text-[#1f1f1f] mb-1">{item.name}</h3>
+                  <p className="text-[#1f1f1f] font-semibold text-sm mb-2">
                     {item.city}, {item.state}
                   </p>
-                  <p className="text-gray-500 text-[15px] leading-[1.6] line-clamp-3">
+                  <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
                     {item.description}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

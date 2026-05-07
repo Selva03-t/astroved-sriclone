@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
-
+import { OfferingCard } from "@/components/chadhava/OfferingCard";
+import { HighlightOffering } from "@/components/chadhava/HighlightOffering";
+import { FAQAccordion } from "@/components/chadhava/FAQAccordion";
 interface Offering {
   id: string;
   name: string;
@@ -43,6 +45,10 @@ export default function ChadhavaDetailPage() {
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(1); // 1: Details, 2: Review, 3: Completed
   const [userInfo, setUserInfo] = useState({ whatsapp: "", name: "" });
+
+  // UI State
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     if (!slug) return;
@@ -87,6 +93,24 @@ export default function ChadhavaDetailPage() {
         return total + (off?.price || 0) * qty;
       }, 0)
     : 0;
+
+  const carouselImages = data?.imageUrl ? [
+    data.imageUrl,
+    "https://images.unsplash.com/photo-1604085572504-a392ddf0d86a?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=1200&q=80"
+  ] : ["https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80"];
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+  };
+  
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? carouselImages.length - 1 : prev - 1));
+  };
+  
+  const handleDotClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
   if (loading) {
     return (
@@ -264,82 +288,119 @@ export default function ChadhavaDetailPage() {
       <Navbar />
 
       {/* Breadcrumbs */}
-      <nav className="bg-[#fff5e9] py-3 px-6">
-        <div className="mx-auto max-w-7xl text-[12px] font-medium text-gray-400 flex items-center gap-2">
-          <Link href="/" className="hover:text-gray-600">Home</Link>
-          <i className="fa-solid fa-chevron-right text-[8px]"></i>
-          <Link href="/chadhava" className="hover:text-gray-600">AstroVed Chadhava Seva</Link>
-          <i className="fa-solid fa-chevron-right text-[8px]"></i>
-          <span className="text-[#f47820] truncate max-w-[200px]">{data.title}</span>
+      <nav className="bg-[#fff5e9] py-3.5 px-6">
+        <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+          <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
+          <Link href="/chadhava" className="hover:text-gray-800 transition-colors">AstroVed Chadhava Seva</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
+          <span className="text-[#f47820] truncate max-w-[300px] font-bold">{data.title}</span>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="bg-white py-12 lg:py-16 border-b border-gray-100">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div className="relative rounded-[32px] overflow-hidden shadow-2xl">
-             <img 
-               src={data.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80"} 
-               alt={data.title} 
-               className="w-full h-[400px] object-cover"
-             />
+        <div className="mx-auto max-w-[1150px] px-6 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
+          <div className="relative w-full flex flex-col items-center">
+             <div className="relative w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-gray-50">
+               <img 
+                 src={carouselImages[currentImageIndex]} 
+                 alt={data.title} 
+                 className="w-full aspect-[16/10] object-cover transition-opacity duration-300"
+               />
+               {carouselImages.length > 1 && (
+                 <>
+                   <button 
+                     onClick={handlePrevImage}
+                     className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
+                   >
+                      <i className="fa-solid fa-chevron-left text-[12px]"></i>
+                   </button>
+                   <button 
+                     onClick={handleNextImage}
+                     className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
+                   >
+                      <i className="fa-solid fa-chevron-right text-[12px]"></i>
+                   </button>
+                 </>
+               )}
+             </div>
+             {/* Dots */}
+             {carouselImages.length > 1 && (
+               <div className="flex items-center gap-2 mt-5">
+                  {carouselImages.map((_, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => handleDotClick(idx)}
+                      className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#f47820]' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+                    />
+                  ))}
+               </div>
+             )}
           </div>
-          <div className="lg:pl-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-[#1f1f1f] leading-tight mb-8">
+          <div className="lg:pl-4">
+            <h1 className="text-3xl lg:text-[34px] font-bold text-[#687383] leading-tight mb-6">
               {data.heroTitle || data.title}
             </h1>
-            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed mb-10">
-              {data.content ? <p>{data.content}</p> : <p>{data.description}</p>}
+            <div className="text-[15px] text-[#555] leading-[1.7] mb-6">
+              <p>🪐 <strong>What happens when the offering is made?</strong></p>
+              <div className={`mt-2 transition-all ${!isExpanded ? 'line-clamp-4' : ''}`}>
+                 {data.content ? data.content : data.description}
+              </div>
+              <button 
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#f47820] transition-colors"
+              >
+                {isExpanded ? 'Read less' : 'Read more'}
+              </button>
             </div>
-            <div className="flex items-center gap-4">
+            
+            <div className="flex items-center gap-4 mt-8">
                 <div className="flex -space-x-2">
-                   {[...Array(5)].map((_, i) => (
-                     <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src={`https://i.pravatar.cc/32?u=${i}`} alt="user" /></div>
-                   ))}
+                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=1" alt="user" /></div>
+                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=2" alt="user" /></div>
+                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=3" alt="user" /></div>
+                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=4" alt="user" /></div>
+                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=5" alt="user" /></div>
                 </div>
-                <p className="text-sm font-medium text-gray-700 leading-tight">
-                   Till now <span className="text-[#f47820] font-extrabold">1,50,000+ Devotees</span> have participated in Chadhava conducted by AstroVed Chadhava Seva.
-                </p>
             </div>
+            <p className="text-[15px] text-[#555] leading-relaxed mt-4">
+               Till now <span className="text-[#f47820] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
+            </p>
           </div>
         </div>
       </section>
 
       {/* Offerings Selector */}
-      <section className="py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-2xl font-bold text-[#1f1f1f] mb-12">Choose an offering</h2>
+      <section className="py-10 lg:py-16 bg-[#f8f8f8]">
+        <div className="mx-auto max-w-[1000px] px-6">
+          <h2 className="text-[28px] font-bold text-[#111827] mb-8">Choose an offering</h2>
           
-          <div className="space-y-6">
-            {data.offerings.map((off) => {
+          <div className="flex flex-col border-t border-[#ececec]">
+            {data.offerings.map((off, index) => {
               const qty = cart[off.id] || 0;
+              const isHighlight = index === data.offerings.length - 1 && data.offerings.length > 1; // Highlight the last offering if there are multiple
+              
+              if (isHighlight) {
+                return (
+                  <HighlightOffering 
+                    key={off.id}
+                    offering={off}
+                    qty={qty}
+                    onToggle={toggleOffering as any}
+                    onUpdateQty={updateQuantity}
+                  />
+                );
+              }
+              
               return (
-                <div key={off.id} className={`bg-white rounded-[20px] p-4 lg:p-5 flex flex-col md:flex-row items-center gap-6 border transition-all duration-300 ${qty > 0 ? 'border-[#0e915f] shadow-lg shadow-[#0e915f]/5' : 'border-gray-100 hover:border-gray-200 shadow-sm'}`}>
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-[#1f1f1f] mb-1 leading-snug">{off.name}</h3>
-                    <p className="text-gray-400 text-[12px] mb-3 leading-relaxed">{off.description}</p>
-                    <div className="text-xl font-bold text-[#0e915f]">₹ {off.price}</div>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="relative h-20 w-28 rounded-xl overflow-hidden shadow-sm">
-                      <img src={off.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=400&q=80"} alt={off.name} className="w-full h-full object-cover" />
-                    </div>
-                    {qty === 0 ? (
-                      <button 
-                        onClick={() => toggleOffering(off)}
-                        className="bg-white text-[#0e915f] border border-[#0e915f] px-8 py-2 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#0e915f] hover:text-white transition-all active:scale-95 flex items-center gap-2"
-                      >
-                        <i className="fa-solid fa-plus text-[10px]"></i> Add
-                      </button>
-                    ) : (
-                      <div className="flex items-center gap-4 bg-[#0e915f] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-[#0e915f]/20">
-                         <button onClick={() => updateQuantity(off.id, -1)} className="hover:scale-125 transition-transform">−</button>
-                         <span className="min-w-[20px] text-center">{qty}</span>
-                         <button onClick={() => updateQuantity(off.id, 1)} className="hover:scale-125 transition-transform">+</button>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <OfferingCard
+                  key={off.id}
+                  offering={off}
+                  qty={qty}
+                  onToggle={toggleOffering as any}
+                  onUpdateQty={updateQuantity}
+                />
               );
             })}
           </div>
@@ -347,18 +408,16 @@ export default function ChadhavaDetailPage() {
       </section>
 
       {/* FAQs */}
-      <section className="py-20 bg-gray-50/50">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-           <h2 className="text-2xl font-bold text-[#1f1f1f] mb-12">Frequently asked Questions</h2>
-           <div className="text-left space-y-4">
+      <section className="py-16 bg-white border-t border-[#ececec]">
+        <div className="mx-auto max-w-[1000px] px-6">
+           <h2 className="text-[28px] font-bold text-[#111827] mb-8">Frequently asked Questions</h2>
+           <div className="flex flex-col border-t border-[#ececec]">
               {data.faqs.map((faq, i) => (
-                <details key={i} className="group bg-white rounded-2xl p-6 border border-gray-100 transition-all cursor-pointer open:ring-1 open:ring-[#f47820]">
-                  <summary className="flex items-center justify-between font-bold text-gray-900 group-open:text-[#f47820] list-none">
-                     {faq.question}
-                     <i className="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
-                  </summary>
-                  <p className="mt-4 text-gray-600 leading-relaxed text-sm pr-10">{faq.answer}</p>
-                </details>
+                <FAQAccordion
+                  key={i}
+                  question={faq.question}
+                  answer={faq.answer}
+                />
               ))}
            </div>
         </div>

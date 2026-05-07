@@ -148,42 +148,46 @@ export default function PanchangClientPage() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fdf4e7" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#fdf6ea" }}>
 
       {/* ── Controls Bar ── */}
-      <div className="bg-white border-b border-gray-200 sticky top-[68px] z-40" style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
-        <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between h-[56px]">
+      <div className="bg-white border-b border-gray-100 sticky top-[68px] z-40 shadow-sm">
+        <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between py-3 gap-4">
           {/* Left */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setSelectedDate(getTodayStr())}
-              style={{ backgroundColor: isToday ? "#f47820" : "transparent", color: isToday ? "#fff" : "#6b7280" }}
-              className="px-5 py-2 rounded-lg text-[14px] font-bold transition-colors"
+              className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
+                isToday ? "bg-[#f47820] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+              }`}
             >
               Today
             </button>
             <button
               onClick={() => setSelectedDate(getTomorrowStr())}
-              style={{ backgroundColor: isTomorrow ? "#f47820" : "transparent", color: isTomorrow ? "#fff" : "#6b7280" }}
-              className="px-5 py-2 rounded-lg text-[14px] font-bold transition-colors"
+              className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
+                isTomorrow ? "bg-[#f47820] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+              }`}
             >
               Tomorrow
             </button>
-            <button onClick={() => setSelectedDate(addDays(selectedDate, -1))} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <div className="relative flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 bg-white cursor-pointer">
-              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-              <span className="text-[14px] font-medium text-gray-700 select-none">{formattedDisplayDate}</span>
-              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer w-full" />
+            <div className="flex items-center gap-1">
+              <button onClick={() => setSelectedDate(addDays(selectedDate, -1))} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <div className="relative flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <span className="text-[14px] font-medium text-gray-700 select-none whitespace-nowrap">{formattedDisplayDate}</span>
+                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer w-full" />
+              </div>
+              <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </button>
             </div>
-            <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-100">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            </button>
           </div>
           {/* Right: location */}
-          <div className="relative flex items-center gap-2 border border-gray-200 rounded-lg px-4 py-2 bg-white cursor-pointer min-w-[260px]">
+          <div className="relative flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 bg-white cursor-pointer min-w-[260px] hover:bg-gray-50 transition-colors">
             <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -200,81 +204,83 @@ export default function PanchangClientPage() {
       </div>
 
       {/* ── Main Content ── */}
-      <div className="max-w-[1400px] mx-auto px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-6 py-8">
         {loading && <div className="text-center py-2 text-sm text-gray-400 animate-pulse mb-3">Loading...</div>}
 
-        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr_320px] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_minmax(400px,460px)_340px] justify-center gap-8 items-start">
 
           {/* ══════════════ COLUMN 1 ══════════════ */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-6">
 
             {/* Heading */}
-            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] h-7">
-              <h2 className="text-[16px] font-bold text-[#1a1a1a]">{displayDateLabel}</h2>
+            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] h-6">
+              <h2 className="text-[17px] font-semibold text-[#1f1f1f]">{displayDateLabel}</h2>
             </div>
 
             {/* Date Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.07)" }}>
-              <div className="p-5 flex gap-4 items-start">
-                <div className="w-[80px] h-[80px] rounded-full overflow-hidden flex-shrink-0 bg-gray-300 border-2 border-gray-300">
+            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
+              <div className="p-6 flex gap-4 items-center">
+                <div className="w-[100px] h-[100px] rounded-full overflow-hidden flex-shrink-0 bg-[#f4f7fb] border border-gray-100 shadow-inner flex items-center justify-center p-2">
                   <MoonPhaseIcon />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[18px] font-bold text-[#1a1a1a] leading-snug">
+                  <h3 className="text-[18px] font-bold text-[#1f1f1f] leading-snug mb-1">
                     {data?.tithi?.name},<br />{weekday}
                   </h3>
-                  <p className="text-[13px] text-gray-500 mt-1">{data?.month?.purnimanta} Month</p>
-                  <p className="text-[13px] text-gray-500">{data?.season},{data?.samvat?.vikram}</p>
+                  <p className="text-[14px] font-medium text-gray-500">{data?.month?.purnimanta} Month</p>
+                  <p className="text-[14px] font-medium text-gray-500">{data?.season}, {data?.samvat?.vikram}</p>
                 </div>
               </div>
-              <div className="border-t border-gray-100 px-5 py-3">
-                <p className="text-[12px] text-gray-400 font-medium mb-1">Festival</p>
-                <p className="text-[14px] font-semibold text-[#f47820] cursor-pointer hover:underline leading-snug">
+              <div className="border-t border-gray-100 px-6 py-4">
+                <p className="text-[13px] text-gray-400 font-medium mb-1">Festival</p>
+                <p className="text-[15px] font-semibold text-[#185adb] cursor-pointer hover:underline leading-snug">
                   {data?.festival || "Ekadanta Sankashti Chaturthi"}
                 </p>
               </div>
             </div>
 
             {/* Auspicious–Inauspicious Timings */}
-            <div>
-              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] mb-4 h-7">
-                <h2 className="text-[16px] font-bold text-[#1a1a1a]">Auspicious-Inauspicious Timings</h2>
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] h-6">
+                <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Auspicious-Inauspicious Timings</h2>
                 <HelpIcon />
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                {/* Auspicious Timings */}
-                <div className="rounded-xl px-4 py-4" style={{ backgroundColor: "#e8f5e9" }}>
-                  <p className="text-[13px] font-bold mb-2" style={{ color: "#2e7d32" }}>Auspicious<br />Timings</p>
-                  <p className="text-[13px] text-gray-700 leading-snug">
-                    {auspicious.abhijit?.start} से {auspicious.abhijit?.end}
-                  </p>
-                </div>
-                {/* Gulik Kaal */}
-                <div className="rounded-xl px-4 py-4" style={{ backgroundColor: "#fffde7" }}>
-                  <p className="text-[13px] font-bold mb-2" style={{ color: "#b8860b" }}>Gulik Kaal</p>
-                  <p className="text-[13px] text-gray-700 leading-snug">
-                    {inauspicious.gulik?.start} से {inauspicious.gulik?.end}
-                  </p>
-                </div>
-                {/* Rahu Kaal */}
-                <div className="rounded-xl px-4 py-4" style={{ backgroundColor: "#ffebee" }}>
-                  <p className="text-[13px] font-bold mb-2" style={{ color: "#c62828" }}>Rahu Kaal</p>
-                  <p className="text-[13px] text-gray-700 leading-snug">
-                    {inauspicious.rahu?.start} से {inauspicious.rahu?.end}
-                  </p>
-                </div>
-                {/* Yamghant Kaal */}
-                <div className="rounded-xl px-4 py-4" style={{ backgroundColor: "#fce4ec" }}>
-                  <p className="text-[13px] font-bold mb-2" style={{ color: "#ad1457" }}>Yamghant Kaal</p>
-                  <p className="text-[13px] text-gray-700 leading-snug">
-                    {inauspicious.yamghant?.start} से {inauspicious.yamghant?.end}
-                  </p>
+              <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Auspicious Timings */}
+                  <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#f2f9f2" }}>
+                    <p className="text-[15px] font-bold mb-1" style={{ color: "#2e7d32" }}>Auspicious<br />Timings</p>
+                    <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
+                      {auspicious.abhijit?.start} से {auspicious.abhijit?.end}
+                    </p>
+                  </div>
+                  {/* Gulik Kaal */}
+                  <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fffbf0" }}>
+                    <p className="text-[15px] font-bold mb-1" style={{ color: "#b8860b" }}>Gulik Kaal</p>
+                    <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
+                      {inauspicious.gulik?.start} से {inauspicious.gulik?.end}
+                    </p>
+                  </div>
+                  {/* Rahu Kaal */}
+                  <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fdf2f4" }}>
+                    <p className="text-[15px] font-bold mb-1" style={{ color: "#c62828" }}>Rahu Kaal</p>
+                    <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
+                      {inauspicious.rahu?.start} से {inauspicious.rahu?.end}
+                    </p>
+                  </div>
+                  {/* Yamghant Kaal */}
+                  <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fdf0f4" }}>
+                    <p className="text-[15px] font-bold mb-1" style={{ color: "#ad1457" }}>Yamghant Kaal</p>
+                    <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
+                      {inauspicious.yamghant?.start} से {inauspicious.yamghant?.end}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Sun & Moon Times */}
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.07)" }}>
+            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
               {[
                 { icon: "☀️", label: "Sunrise",  value: sun.rise },
                 { icon: "🌇", label: "Sunset",   value: sun.set },
@@ -283,43 +289,43 @@ export default function PanchangClientPage() {
               ].map((row, i, arr) => (
                 <div
                   key={row.label}
-                  className="flex items-center justify-between px-5 py-4"
-                  style={{ borderBottom: i < arr.length - 1 ? "1px solid #f1f1f1" : "none" }}
+                  className="flex items-center justify-between px-6 py-4"
+                  style={{ borderBottom: i < arr.length - 1 ? "1px solid #f8f9fa" : "none" }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-[22px]">{row.icon}</span>
-                    <span className="text-[14px] font-semibold text-gray-700">{row.label}</span>
+                    <span className="text-[20px]">{row.icon}</span>
+                    <span className="text-[15px] font-medium text-gray-500">{row.label}</span>
                   </div>
-                  <span className="text-[14px] font-bold text-gray-900">{row.value || "—"}</span>
+                  <span className="text-[15px] font-bold text-[#1f1f1f]">{row.value || "—"}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* ══════════════ COLUMN 2 ══════════════ */}
-          <div>
-            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] mb-4 h-7">
-              <h2 className="text-[16px] font-bold text-[#1a1a1a]">Panchang</h2>
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] h-6">
+              <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Panchang</h2>
               <HelpIcon />
             </div>
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.07)" }}>
-              <div className="grid grid-cols-2" style={{ borderBottom: "none" }}>
+            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
+              <div className="grid grid-cols-2">
                 {panchangFields.map((field, i) => {
                   const isLeft = i % 2 === 0;
                   const isLastRow = i >= panchangFields.length - 2;
                   return (
                     <div
                       key={field.label}
-                      className="px-6 py-5"
+                      className="px-6 py-5 flex flex-col justify-center"
                       style={{
-                        borderBottom: !isLastRow ? "1px solid #f1f1f1" : "none",
-                        borderRight: isLeft ? "1px solid #f1f1f1" : "none",
+                        borderBottom: !isLastRow ? "1px solid #f8f9fa" : "none",
+                        borderRight: isLeft ? "1px solid #f8f9fa" : "none",
                       }}
                     >
-                      <p className="text-[12px] text-gray-400 mb-1">{field.label}</p>
-                      <p className="text-[15px] font-bold text-[#1a1a1a] leading-snug">{field.value || "—"}</p>
+                      <p className="text-[14px] font-medium text-gray-500 mb-1">{field.label}</p>
+                      <p className="text-[16px] font-bold text-[#1f1f1f] leading-snug">{field.value || "—"}</p>
                       {field.sub && (
-                        <p className="text-[12px] text-gray-400 mt-1">{field.sub}</p>
+                        <p className="text-[13px] font-medium text-gray-400 mt-1">{field.sub}</p>
                       )}
                     </div>
                   );
@@ -329,29 +335,28 @@ export default function PanchangClientPage() {
           </div>
 
           {/* ══════════════ COLUMN 3 ══════════════ */}
-          <div className="flex flex-col" style={{ height: "720px" }}>
-            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] mb-4 h-7">
-              <h2 className="text-[16px] font-bold text-[#1a1a1a]">Upcoming festivals</h2>
+          <div className="flex flex-col gap-6" style={{ height: "780px" }}>
+            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] h-6">
+              <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Upcoming festivals</h2>
             </div>
             <div
-              className="bg-white rounded-2xl border border-gray-100 flex-1 overflow-hidden flex flex-col"
-              style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.07)" }}
+              className="bg-white rounded-3xl border border-gray-100 flex-1 overflow-hidden flex flex-col shadow-sm"
             >
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300">
                 {(data?.upcomingFestivals || []).map((f: any, i: number, arr: any[]) => {
                   const isSelected = f.name === data?.festival;
                   return (
                     <div
                       key={i}
-                      className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 cursor-pointer"
-                      style={{ borderBottom: i < arr.length - 1 ? "1px solid #f1f1f1" : "none" }}
+                      className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 cursor-pointer"
+                      style={{ borderBottom: i < arr.length - 1 ? "1px solid #f8f9fa" : "none" }}
                     >
-                      <span className="text-[13px] text-gray-400 whitespace-nowrap flex-shrink-0 mr-4">
+                      <span className="text-[14px] font-medium text-gray-500 whitespace-nowrap flex-shrink-0 mr-4">
                         {f.date}
                       </span>
                       <span
-                        className="text-[14px] font-semibold text-right leading-snug"
-                        style={{ color: isSelected ? "#f47820" : "#1a1a1a" }}
+                        className="text-[15px] font-semibold text-right leading-snug"
+                        style={{ color: isSelected ? "#f47820" : "#1f1f1f" }}
                       >
                         {f.name}
                       </span>
