@@ -295,155 +295,155 @@ export default function PujaDetailPage() {
 
             {/* ── Hero ── */}
             <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
-              <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+              <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image */}
-                <div className="relative overflow-hidden rounded-2xl shadow-md">
-                  <img src={puja.imageUrl} alt={puja.title} className="h-72 w-full object-cover md:h-[420px]" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+                <div className="relative overflow-hidden rounded-2xl">
+                  <img src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"} alt={puja.title} className="w-full object-cover h-[350px] md:h-[450px]" />
+                  
+                  {/* Top Left Badge */}
                   {(puja.badge || puja.shortTitle) && (
                     <div className="absolute left-4 top-4">
-                      <span className="inline-flex items-center rounded-full bg-[#f6c232] px-4 py-1.5 text-xs font-bold text-[#533813] shadow">
-                        {puja.badge || puja.shortTitle}
+                      <span className="inline-flex items-center rounded-lg bg-[#ffc107] px-4 py-1.5 text-[13px] font-bold text-[#1f1f1f] shadow-sm">
+                        {puja.badge || puja.shortTitle || "Special"}
                       </span>
                     </div>
                   )}
-                  <div className="absolute inset-x-5 bottom-6 text-white">
-                    <p className="text-xs font-bold uppercase tracking-widest text-white/70">{puja.subtitle || "Sacred Ritual"}</p>
-                    <h1 className="mt-2 text-2xl font-extrabold leading-snug drop-shadow-lg md:text-3xl">{puja.details.heroTitle || puja.title}</h1>
-                    <p className="mt-2 text-sm text-white/90">{puja.details.strengthFor}</p>
+
+                  {/* Swipe Button (Decorative to match screenshot) */}
+                  <div className="absolute left-4 bottom-4">
+                    <button className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
+                      SWIPE 
+                      <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
 
                 {/* Right: Details panel */}
-                <div className="flex flex-col">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-[#6969fa]">
-                    {puja.subtitle || "UPCOMING SACRED RITUAL"}
+                <div className="flex flex-col justify-center">
+                  <p className="text-[#d81b60] text-[11px] font-bold uppercase tracking-widest mb-2">
+                    {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                   </p>
-                  <h2 className="mt-2 text-xl font-bold leading-snug text-gray-900 md:text-2xl">{puja.title}</h2>
-                  <p className="mt-1.5 text-sm font-semibold text-[#6969fa]">{puja.details.strengthFor}</p>
+                  
+                  <h1 className="text-[22px] md:text-[26px] font-bold leading-snug text-[#1f1f1f] mb-3">
+                    {puja.title}
+                  </h1>
+                  
+                  <p className="text-[15px] font-medium text-gray-600 mb-5 leading-relaxed">
+                    {puja.description || "Join us for this sacred ritual to seek divine blessings."}
+                  </p>
 
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <MapPinIcon className="h-4 w-4 shrink-0 text-gray-400" />
-                      <span>{puja.location || puja.details.templeLocation}</span>
+                  <div className="flex flex-col gap-2.5 mb-5">
+                    <div className="flex items-start gap-2.5 text-[13px] text-gray-500 font-medium">
+                      <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      <span className="leading-tight">{puja.location || puja.details?.templeLocation || "Sacred Temple, India"}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <CalendarIcon className="h-4 w-4 shrink-0 text-gray-400" />
-                      <span>{puja.date || "Date to be announced"}</span>
+                    <div className="flex items-start gap-2.5 text-[13px] text-gray-500 font-medium">
+                      <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      <span className="leading-tight">{puja.date || "Upcoming Auspicious Date"}</span>
                     </div>
                   </div>
 
                   {/* Countdown */}
                   {!countdown.expired && (
-                    <div className="mt-5">
-                      <p className="text-xs text-gray-500">Puja booking will close in :</p>
-                      <div className="mt-2 flex gap-2">
-                        {[
-                          { v: countdown.days, l: "Days" },
-                          { v: countdown.hours, l: "Hours" },
-                          { v: countdown.minutes, l: "Mins" },
-                          { v: countdown.seconds, l: "Secs" },
-                        ].map((item) => (
-                          <div key={item.l} className="text-center">
-                            <div className="min-w-[48px] rounded-md border border-gray-200 bg-gray-50 px-2 py-2 text-base font-bold text-gray-900">
-                              {String(item.v).padStart(2, "0")}
-                            </div>
-                            <p className="mt-1 text-[10px] text-gray-500">{item.l}</p>
-                          </div>
-                        ))}
+                    <div className="mb-5 border-t border-gray-100 pt-4">
+                      <p className="text-[13px] font-bold text-[#1f1f1f] mb-2">Puja booking will close in :</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-[22px] font-bold text-[#e05a00]">{String(countdown.days)}</span>
+                        <span className="text-[11px] font-medium text-[#e05a00] uppercase mr-2">Day</span>
+                        
+                        <span className="text-[22px] font-bold text-[#e05a00]">{String(countdown.hours)}</span>
+                        <span className="text-[11px] font-medium text-[#e05a00] uppercase mr-2">Hours</span>
+                        
+                        <span className="text-[22px] font-bold text-[#e05a00]">{String(countdown.minutes)}</span>
+                        <span className="text-[11px] font-medium text-[#e05a00] uppercase mr-2">Mins</span>
+                        
+                        <span className="text-[22px] font-bold text-[#e05a00]">{String(countdown.seconds)}</span>
+                        <span className="text-[11px] font-medium text-[#e05a00] uppercase">Secs</span>
                       </div>
                     </div>
                   )}
                   {countdown.expired && (
-                    <p className="mt-4 rounded-lg bg-red-50 px-4 py-2 text-xs font-semibold text-red-600">
+                    <p className="mb-5 rounded-lg bg-red-50 px-4 py-2 text-xs font-semibold text-red-600">
                       This puja has already been conducted.
                     </p>
                   )}
 
-                  {/* Rating + Devotees */}
-                  <div className="mt-5 flex items-center gap-2">
-                    <span className="text-amber-400">★★★★★</span>
-                    <span className="text-sm font-semibold text-gray-800">4.9 (7K+ ratings)</span>
+                  {/* Avatars + Devotees count */}
+                  <div className="flex items-center justify-between mb-4 border-t border-gray-100 pt-5">
+                    <div className="flex items-center gap-4">
+                      <div className="flex -space-x-2">
+                        {[1, 2, 3, 4].map((i) => (
+                          <img key={i} className="w-7 h-7 rounded-full border-2 border-white object-cover" src={`https://i.pravatar.cc/150?img=${i + 10}`} alt="devotee" />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="text-[12px] font-bold text-[#f6a22f]">
+                      ★ 4.9 (7K+ ratings)
+                    </div>
                   </div>
-                  <p className="mt-1 text-sm text-gray-600">
-                    Till now{" "}
-                    <span className="font-bold text-[#6969fa]">3,00,000+ Devotees</span>{" "}
-                    have participated in Pujas
+                  
+                  <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
+                    Till now <span className="font-bold text-[#e05a00]">3,00,000+ Devotees</span> have participated in Pujas conducted by AstroVed Puja Seva.
                   </p>
 
                   {/* CTA */}
                   {countdown.expired ? (
-                    <button disabled className="mt-6 flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-gray-300 py-4 text-sm font-bold text-white">
+                    <button disabled className="w-full flex items-center justify-center rounded-lg bg-gray-300 py-3.5 text-[16px] font-bold text-white cursor-not-allowed">
                       Puja is Over
                     </button>
                   ) : (
                     <button
                       onClick={() => setShowPackageModal(true)}
-                      className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#6969fa] py-4 text-base font-bold text-white shadow-[0_4px_18px_rgba(105,105,250,0.4)] transition-all hover:bg-[#5555e8] active:scale-[0.98]"
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#0e915f] py-3.5 text-[16px] font-bold text-white hover:bg-[#0b7c50] transition-colors"
                     >
-                      Select puja package →
+                      Select puja package
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
                     </button>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* ── Sticky Section Tabs ── */}
-            <div className="sticky top-[73px] z-30 border-b border-gray-200 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
-              <div className="mx-auto max-w-6xl px-4">
-                <div className="flex w-full overflow-x-auto no-scrollbar gap-6 md:justify-between md:gap-0">
-                  {sectionTabs.map((tab) => (
-                    <a
-                      key={tab.id}
-                      href={`#${tab.id}`}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`flex-shrink-0 border-b-[3px] py-4 px-1 text-[15px] font-medium whitespace-nowrap transition-colors ${
-                        activeTab === tab.id
-                          ? "border-[#6969fa] text-[#6969fa]"
-                          : "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300"
-                      }`}
-                    >
-                      {tab.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             {/* ── Flat Content Sections ── */}
-            <div className="mx-auto max-w-6xl px-4 md:px-6">
+            <div className="mx-auto max-w-6xl px-4 md:px-6 pt-10">
 
               {/* ── About Puja ── */}
-              <section id="about" className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">About Puja</h2>
-                <p className="mt-4 text-sm leading-7 text-gray-600">{puja.details.about}</p>
-                <div className="mt-3 space-y-2 text-sm leading-7 text-gray-600">
-                  {aboutParagraphs.map((p, idx) => <p key={`ap-${idx}`}>🔸 {p}</p>)}
-                </div>
-                <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {puja.details.stats.map((stat, idx) => (
-                    <div key={`stat-${idx}`} className="rounded-xl bg-[#f8f7ff] p-5 border border-[#6969fa]/10">
-                      <p className="text-xs font-bold uppercase tracking-wide text-[#6969fa]">{stat.label}</p>
-                      <p className="mt-2 text-3xl font-extrabold text-gray-900">{stat.value}</p>
-                      {stat.detail && <p className="mt-1 text-xs font-medium text-gray-500">{stat.detail}</p>}
-                    </div>
-                  ))}
+              <section id="about" className="border-b border-gray-100 pb-10">
+                <h2 className="text-[20px] font-bold text-[#1f1f1f] leading-snug">
+                  🔥 Are enemies repeatedly troubling you or is your court case stuck? Through the special grace of Maa Bagalamukhi in Haridwar, perform the 21 kg Lal Mirchi Havan to remove obstacles and open the path to victory.
+                </h2>
+                <div className="mt-6 space-y-5 text-[13px] leading-relaxed text-gray-500">
+                  <p>{puja.details.about || "In Sanatan Dharma, this puja is regarded as a divine power who can pacify negative energies and help control the influence of enemies. She holds a special place and is especially worshipped during times of conflict."}</p>
+                  
+                  <div className="space-y-2 text-gray-500">
+                    <p className="font-medium text-gray-600 flex items-center gap-2"><span className="text-[#f6a22f]">🏯</span> Significance of Temple</p>
+                    <p>Located in this sacred land, it is considered highly powerful and spiritually significant for worship. Situated along the holy river, it has long been a center of deep spiritual practices.</p>
+                  </div>
+
+                  <div className="space-y-2 text-gray-500">
+                    <p className="font-medium text-gray-600 flex items-center gap-2"><span className="text-[#f6a22f]">🔥</span> Significance of this Havan</p>
+                    <p>The main highlight of this puja is the special havan performed. In Sanatan tradition, this symbolizes the destruction of negative energies and harmful forces. When offerings are made into the sacred fire, it represents the burning away of obstacles.</p>
+                  </div>
                 </div>
               </section>
 
               {/* ── Benefits ── */}
               <section id="benefits" className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">Puja Benefits</h2>
+                <h2 className="text-[20px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
                 <div className="mt-8 grid gap-8 md:grid-cols-3">
                   {puja.details.benefits.map((b, idx) => (
                     <div key={`benefit-${idx}`} className="flex gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6969fa]/20 text-2xl shadow-sm">
+                      <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full bg-[#fff4ed] text-[#e05a00] text-lg">
                         {BENEFIT_ICONS[idx % BENEFIT_ICONS.length]}
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-900">{b.title}</h3>
-                        <p className="mt-1.5 text-sm leading-6 text-gray-600">{b.description}</p>
-                        <button type="button" className="mt-2 text-sm font-bold text-[#6969fa] hover:text-[#5555e8]">Read more</button>
+                        <h3 className="font-bold text-[#1f1f1f] text-[14px]">{b.title}</h3>
+                        <p className="mt-2 text-[13px] leading-relaxed text-gray-500 line-clamp-3">{b.description}</p>
+                        <button type="button" className="mt-2 text-[13px] font-semibold text-[#e05a00] hover:text-[#c44e00]">Read more</button>
                       </div>
                     </div>
                   ))}
@@ -452,14 +452,14 @@ export default function PujaDetailPage() {
 
               {/* ── Process ── */}
               <section id="process" className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">Puja Process</h2>
+                <h2 className="text-[20px] font-bold text-[#1f1f1f]">Puja Process</h2>
                 <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                   {puja.details.process.map((step, idx) => (
                     <div key={`process-${idx}`} className="flex gap-4">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-[#6969fa] text-sm font-bold text-white shadow-sm">{idx + 1}</div>
+                      <div className="flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded bg-[#e05a00] text-[12px] font-bold text-white shadow-sm">{idx + 1}</div>
                       <div>
-                        <h3 className="font-bold text-gray-900">{step.title}</h3>
-                        <p className="mt-1.5 text-sm leading-6 text-gray-600">{step.description}</p>
+                        <h3 className="font-bold text-[#1f1f1f] text-[14px]">{step.title}</h3>
+                        <p className="mt-2 text-[13px] leading-relaxed text-gray-500">{step.description}</p>
                       </div>
                     </div>
                   ))}

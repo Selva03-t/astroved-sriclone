@@ -263,7 +263,7 @@ export default function PujaPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-[#f9f9ff] py-10">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
 
           {/* Page Heading */}
           <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#2c1c4e] md:text-4xl">
@@ -346,7 +346,7 @@ export default function PujaPage() {
 
             {/* ── Filter bar ── */}
             <div className="mt-6">
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+              <div className="flex flex-wrap items-center gap-2 pb-1">
                 {/* Filter icon label */}
                 <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-500">
                   <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
@@ -434,74 +434,54 @@ export default function PujaPage() {
                 </button>
               </div>
             ) : (
-              <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3">
                 {displayedPujas.map((puja) => (
                   <div
                     key={puja._id}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-[0_16px_36px_rgba(105,105,250,0.14)]"
+                    className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col p-5"
                   >
-                    {/* Image */}
-                    <div className="relative h-52 w-full overflow-hidden">
+                    {/* Image Section */}
+                    <div className="relative h-[220px] w-full rounded-xl overflow-hidden shrink-0">
                       <img
-                        src={puja.imageUrl}
+                        src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
                         alt={puja.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
-                      {puja.badge && (
-                        <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-[#fcd34d]/90 px-3 py-1 backdrop-blur-sm">
-                          <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-700" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-950">
-                            {puja.badge}
-                          </span>
-                        </div>
-                      )}
-
-                      <div className="absolute inset-x-4 bottom-4">
-                        <h4 className="text-base font-bold leading-tight text-white drop-shadow-md lg:text-lg">
-                          {puja.shortTitle || puja.title}
-                        </h4>
+                      {/* Top Left Badge */}
+                      <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+                        {puja.badge || "Special"}
+                      </div>
+                      {/* Bottom Left Badge */}
+                      <div className="absolute bottom-3 left-3 bg-[#0e915f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+                        BOOK PUJA
                       </div>
                     </div>
-
-                    {/* Content */}
-                    <div className="flex flex-1 flex-col p-5">
-                      <p className="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-[#a855f7]">
-                        {puja.subtitle || "UPCOMING SACRED RITUAL"}
+                    
+                    {/* Content Section */}
+                    <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
+                      <p className="text-[#d81b60] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+                        {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                       </p>
-
-                      <h3 className="mb-2 line-clamp-2 text-base font-bold leading-snug text-[#2c1c4e]">
+                      <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
                         {puja.title}
                       </h3>
-
-                      <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-[#6e5f8f]">
+                      <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-2 mb-6 flex-1">
                         {puja.description || "Join us for this sacred ritual to seek divine blessings."}
                       </p>
-
-                      <div className="mt-auto space-y-2 border-t border-gray-50 pt-3">
-                        <div className="flex items-center gap-2">
-                          <MapPinIcon className="h-4 w-4 shrink-0 text-[#6969fa]" />
-                          <span className="text-xs font-medium text-[#6e5f8f]">
-                            {puja.location || "Vedic Ritual Center"}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CalendarIcon className="h-4 w-4 shrink-0 text-[#6969fa]" />
-                          <span className="text-xs font-medium text-[#6e5f8f]">
-                            {puja.date || t.puja.announcedSoon}
-                          </span>
-                        </div>
+                      
+                      {/* Location & Date */}
+                      <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
+                        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span className="line-clamp-2 leading-tight">{(puja as any).location || "Sacred Temple, India"}</span>
+                      </div>
+                      <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
+                        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span className="leading-tight">{(puja as any).date || t.puja.announcedSoon}</span>
                       </div>
 
-                      <Link
-                        href={`/puja/${puja.slug || slugify(puja.title)}`}
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#6969fa] py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(105,105,250,0.35)] transition-all hover:bg-[#5555e8] hover:shadow-[0_6px_20px_rgba(105,105,250,0.45)] active:scale-[0.98]"
-                      >
+                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#0e915f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#0b7c50] transition-colors flex items-center justify-center gap-1.5">
                         {puja.buttonText || t.puja.bookNow}
-                        <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-                          <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                        </svg>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                       </Link>
                     </div>
                   </div>

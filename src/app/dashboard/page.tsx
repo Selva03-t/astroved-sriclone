@@ -164,12 +164,12 @@ export default function DashboardPage() {
       </div>
 
       {/* AstroVed Special Pujas Section */}
-      <section className="bg-[#fffdf9] py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-4xl font-extrabold text-center mb-2">
-            <span className="text-purple-700">AstroVed</span> {t.home.specialPujas}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
+            <span className="text-[#6b4c9a]">AstroVed</span> {t.home.specialPujas}
           </h2>
-          <p className="text-center text-xl text-gray-600 mb-8">
+          <p className="text-center text-[17px] font-medium text-gray-700 mb-14 max-w-2xl mx-auto leading-relaxed">
             {t.home.specialPujasSubtitle}
           </p>
           <PujaCardsSection />
@@ -177,58 +177,58 @@ export default function DashboardPage() {
       </section>
 
       {/* Reviews & Ratings Section */}
-      <section className="bg-white py-20">
+      <section className="bg-[#fafafa] py-20">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-5xl font-extrabold text-[#1f1f1f] mb-4">{t.home.reviewsTitle}</h2>
-          <p className="text-xl text-gray-600 mb-16">{t.home.reviewsSubtitle}</p>
+          <h2 className="text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">{t.home.reviewsTitle}</h2>
+          <p className="text-[17px] font-medium text-gray-700 mb-14">{t.home.reviewsSubtitle}</p>
 
           <ReviewsSection />
         </div>
       </section>
 
       {/* Trust & Impact Section */}
-      <section className="bg-[#101c3d] py-24 text-white overflow-hidden">
+      <section className="bg-[#101c3d] py-16 md:py-20 text-white overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
-              <p className="text-[#6969fa] font-bold text-lg mb-4">{t.home.trustedBy}</p>
-              <h2 className="text-5xl font-extrabold leading-tight mb-8">
+              <p className="text-[#6969fa] font-bold text-base mb-3">{t.home.trustedBy}</p>
+              <h2 className="text-4xl lg:text-[40px] font-bold leading-tight mb-5">
                 {t.home.largestPlatform}
               </h2>
-              <p className="text-gray-300 text-xl leading-relaxed max-w-xl">
+              <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
                 {t.home.platformDesc}
               </p>
             </div>
 
             {/* Right Column: Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-              <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+              <div className="flex flex-col gap-3.5">
                 <div className="h-12 w-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl">🙏</div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{t.home.devotees}</h3>
-                  <p className="text-gray-400 leading-relaxed font-medium">{t.home.devoteesDesc}</p>
+                  <h3 className="text-xl font-bold mb-1.5">{t.home.devotees}</h3>
+                  <p className="text-gray-400 leading-relaxed text-[15px] font-medium">{t.home.devoteesDesc}</p>
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3.5">
                 <div className="h-12 w-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl text-yellow-400">★</div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{t.home.rating}</h3>
-                  <p className="text-gray-400 leading-relaxed font-medium">{t.home.ratingDesc}</p>
+                  <h3 className="text-xl font-bold mb-1.5">{t.home.rating}</h3>
+                  <p className="text-gray-400 leading-relaxed text-[15px] font-medium">{t.home.ratingDesc}</p>
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3.5">
                 <div className="h-12 w-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl">🌍</div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{t.home.countries}</h3>
-                  <p className="text-gray-400 leading-relaxed font-medium">{t.home.countriesDesc}</p>
+                  <h3 className="text-xl font-bold mb-1.5">{t.home.countries}</h3>
+                  <p className="text-gray-400 leading-relaxed text-[15px] font-medium">{t.home.countriesDesc}</p>
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3.5">
                 <div className="h-12 w-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl">🔥</div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">{t.home.services}</h3>
-                  <p className="text-gray-400 leading-relaxed font-medium">{t.home.servicesDesc}</p>
+                  <h3 className="text-xl font-bold mb-1.5">{t.home.services}</h3>
+                  <p className="text-gray-400 leading-relaxed text-[15px] font-medium">{t.home.servicesDesc}</p>
                 </div>
               </div>
             </div>
@@ -237,67 +237,67 @@ export default function DashboardPage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-white py-24">
+      <section className="bg-white py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-extrabold text-[#1f1f1f] mb-6">{t.home.oneApp}</h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-[40px] font-bold text-[#1f1f1f] mb-4">{t.home.oneApp}</h2>
+            <p className="text-lg text-gray-600 max-w-5xl mx-auto leading-relaxed">
               {t.home.oneAppDesc}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-14">
             {/* Feature 1 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-black rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-black/20">🔔</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#1f2937] rounded-xl flex items-center justify-center text-2xl shadow-md">🔔</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.divineTemple}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.divineTempleDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.divineTemple}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.divineTempleDesc}</p>
               </div>
             </div>
 
             {/* Feature 2 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-[#8b4513] rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-orange-900/20">📖</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#c2410c] rounded-xl flex items-center justify-center text-2xl shadow-md">📖</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.hinduLiterature}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.hinduLiteratureDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.hinduLiterature}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.hinduLiteratureDesc}</p>
               </div>
             </div>
 
             {/* Feature 3 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-[#008080] rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-teal-900/20">🎵</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#0d9488] rounded-xl flex items-center justify-center text-2xl shadow-md">🎵</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.devotionalMusic}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.devotionalMusicDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.devotionalMusic}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.devotionalMusicDesc}</p>
               </div>
             </div>
 
             {/* Feature 4 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-[#f47820] rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-orange-500/20">✡</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#ea580c] rounded-xl flex items-center justify-center text-2xl shadow-md">✡</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.panchangFeature}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.panchangFeatureDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.panchangFeature}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.panchangFeatureDesc}</p>
               </div>
             </div>
 
             {/* Feature 5 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-[#ffd700] rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-yellow-500/20">☸</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#ca8a04] rounded-xl flex items-center justify-center text-2xl shadow-md">☸</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.pujaService}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.pujaServiceDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.pujaService}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.pujaServiceDesc}</p>
               </div>
             </div>
 
             {/* Feature 6 */}
-            <div className="flex flex-col gap-5">
-              <div className="h-14 w-14 bg-[#ff4500] rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-red-500/20">🕉</div>
+            <div className="flex flex-col gap-4">
+              <div className="h-14 w-14 bg-[#dc2626] rounded-xl flex items-center justify-center text-2xl shadow-md">🕉</div>
               <div>
-                <h3 className="text-2xl font-bold text-[#1f1f1f] mb-3">{t.home.community}</h3>
-                <p className="text-gray-600 text-[17px] leading-[1.6]">{t.home.communityDesc}</p>
+                <h3 className="text-xl font-bold text-[#1f1f1f] mb-2">{t.home.community}</h3>
+                <p className="text-gray-600 text-base leading-relaxed">{t.home.communityDesc}</p>
               </div>
             </div>
           </div>
@@ -416,27 +416,43 @@ const ReviewCard = ({ review }: { review: Review }) => {
   const isVideo = review.type === 'video';
 
   return (
-    <div className="flex flex-col items-center min-w-[320px] max-w-[380px] shrink-0">
+    <div className="flex flex-col min-w-[280px] max-w-[340px] shrink-0">
       {isVideo ? (
-        <div className="w-full h-[240px] rounded-[32px] overflow-hidden shadow-lg mb-8 bg-black relative border-4 border-white">
-          <iframe
-            src={review.videoUrl?.replace('watch?v=', 'embed/')}
-            className="w-full h-full"
-            allowFullScreen
-          />
+        <div className="w-full h-[200px] rounded-2xl overflow-hidden shadow-sm mb-5 bg-black relative border border-gray-100">
+          {review.videoUrl ? (
+            <iframe
+              src={review.videoUrl?.replace('watch?v=', 'embed/')}
+              className="w-full h-full"
+              allowFullScreen
+            />
+          ) : (
+            <div className="relative w-full h-full">
+              <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="Video thumbnail" className="w-full h-full object-cover opacity-80" />
+              <div className="absolute inset-x-4 bottom-4 flex items-center justify-between text-white text-xs font-semibold">
+                 <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <span>0:00 / 1:00</span>
+                 </div>
+                 <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072M17.657 6.343a8 8 0 010 11.314M12 2v20M2 12h20"/></svg>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                 </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
-        <div className="w-full h-[240px] bg-[#f3f4f6] rounded-[32px] px-10 py-10 shadow-sm mb-8 flex items-center justify-center text-center overflow-hidden">
-          <div className="overflow-y-auto h-full flex items-center no-scrollbar">
-            <p className="text-[#4b5563] italic text-[18px] leading-[1.8] font-medium py-4">
-              "{review.content}"
+        <div className="w-full h-[200px] bg-white border border-gray-200 rounded-2xl p-8 shadow-md mb-5 flex items-center justify-center text-left overflow-hidden hover:shadow-lg transition-shadow">
+          <div className="overflow-y-auto w-full no-scrollbar">
+            <p className="text-gray-900 italic text-[16px] font-semibold leading-[1.7]">
+              {review.content}
             </p>
           </div>
         </div>
       )}
 
-      <div className="flex items-center gap-5 w-full pl-4">
-        <div className="h-16 w-16 rounded-full overflow-hidden border-4 border-white shadow-md shrink-0">
+      <div className="flex items-center gap-3 w-full px-2">
+        <div className="h-12 w-12 rounded-full overflow-hidden shadow-md shrink-0 border-2 border-white">
           <img
             src={review.avatarUrl || `https://ui-avatars.com/api/?name=${review.name}&background=random`}
             alt={review.name}
@@ -444,8 +460,8 @@ const ReviewCard = ({ review }: { review: Review }) => {
           />
         </div>
         <div className="text-left">
-          <h4 className="font-bold text-[#1f1f1f] text-xl leading-tight">{review.name}</h4>
-          <p className="text-gray-500 text-[15px] font-medium mt-0.5">{review.location}</p>
+          <h4 className="font-extrabold text-black text-base leading-none">{review.name}</h4>
+          <p className="text-gray-600 text-[13px] font-bold mt-1.5">{review.location}</p>
         </div>
       </div>
     </div>
@@ -526,29 +542,32 @@ export function ReviewsSection() {
         ))}
       </div>
 
-      <div className="mt-8 flex justify-center items-center gap-6">
+      <div className="mt-8 flex justify-center items-center gap-4">
+        {/* Left Arrow */}
         <button
           onClick={() => handleScroll('left')}
-          className="h-12 w-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all shadow-sm active:scale-90"
+          className="h-8 w-8 rounded-full bg-[#d1d5db] flex items-center justify-center hover:bg-gray-400 transition-all shadow-sm active:scale-95"
         >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-6 h-6 rotate-180 text-gray-600"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 rotate-180 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
 
-        <div className="flex gap-2">
+        {/* Dots */}
+        <div className="flex gap-1.5 items-center">
           {reviews.map((_, idx) => (
             <div
               key={idx}
-              className={`h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-8 bg-[#f47820]" : "w-2 bg-[#cbd5e1]"
+              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#f47820]" : "w-1.5 bg-[#cbd5e1]"
                 }`}
             ></div>
           ))}
         </div>
 
+        {/* Right Arrow */}
         <button
           onClick={() => handleScroll('right')}
-          className="h-12 w-12 rounded-full bg-primary-sunsetOrange-500 text-white flex items-center justify-center shadow-lg hover:bg-orange-600 active:scale-90 transition-all"
+          className="h-8 w-8 rounded-full bg-[#f47820] flex items-center justify-center shadow-md hover:bg-orange-600 active:scale-95 transition-all"
         >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-6 h-6 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
       </div>
     </div>
@@ -568,23 +587,53 @@ type Puja = {
   buttonText: string;
   slug?: string;
   createdAt?: string;
+  badge?: string;
 };
 
 const PujaCard = ({ puja }: { puja: Puja }) => (
-  <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 border border-gray-100">
-    <div className="relative h-60 w-full overflow-hidden">
+  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col p-5">
+    {/* Image Section */}
+    <div className="relative h-[220px] w-full rounded-xl overflow-hidden shrink-0">
       <img
         src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
         alt={puja.title}
-        className="w-full h-full object-fit transition-transform duration-500 hover:scale-110"
+        className="w-full h-full object-cover"
       />
+      {/* Top Left Badge */}
+      <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+        {puja.badge || "Special"}
+      </div>
+      {/* Bottom Left Badge */}
+      <div className="absolute bottom-3 left-3 bg-[#0e915f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+        BOOK PUJA
+      </div>
     </div>
-    <div className="p-6 flex flex-col flex-1 text-center">
-      <p className="text-[#f47820] text-sm font-bold uppercase tracking-wider mb-2">{puja.subtitle}</p>
-      <h3 className="text-xl font-bold text-gray-900 mb-3">{puja.title}</h3>
-      <p className="text-gray-600 text-sm line-clamp-3 mb-6 flex-1">{puja.description}</p>
-      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-gradient-to-r from-[#6969fa] to-[#5555e8] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 text-center block">
-        {puja.buttonText || "Book Now"}
+    
+    {/* Content Section */}
+    <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
+      <p className="text-[#d81b60] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+        {puja.subtitle || "SPECIAL PUJA & YAGYA"}
+      </p>
+      <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
+        {puja.title}
+      </h3>
+      <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-2 mb-6 flex-1">
+        {puja.description}
+      </p>
+      
+      {/* Location & Date */}
+      <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
+        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span className="line-clamp-2 leading-tight">{(puja as any).location || "Sacred Temple, India"}</span>
+      </div>
+      <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
+        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span className="leading-tight">{(puja as any).date || "Upcoming Auspicious Date"}</span>
+      </div>
+
+      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#0e915f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#0b7c50] transition-colors flex items-center justify-center gap-1.5">
+        {puja.buttonText || "PARTICIPATE"}
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </Link>
     </div>
   </div>
@@ -616,7 +665,7 @@ export function PujaCardsSection() {
   if (!pujas.length) return null;
   return (
     <div className="flex flex-col items-center">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 w-full">
         {pujas.map((puja) => (
           <PujaCard key={puja._id} puja={puja} />
         ))}

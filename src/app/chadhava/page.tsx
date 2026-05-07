@@ -99,33 +99,33 @@ export default function ChadhavaPage() {
               <p className="text-gray-500">{t.chadhava.noOfferings}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3">
               {items.map((item, index) => (
-                <div key={item._id || item.slug || index} className="bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-[#f3eee5] hover:shadow-[0_20px_50px_rgba(14,145,95,0.1)] transition-all duration-500 group">
-                  <div className="relative h-64 w-full">
-                    <img 
-                      src={item.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80"} 
+                <div
+                  key={item._id || item.slug || index}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col p-5"
+                >
+                  {/* Image Section */}
+                  <div className="relative h-[220px] w-full rounded-xl overflow-hidden shrink-0">
+                    <img
+                      src={item.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="p-8">
-                    <h3 className="text-xl font-bold text-[#1f1f1f] mb-3 leading-snug group-hover:text-[#0e915f] transition-colors">{item.title}</h3>
-                    
-                    {item.subtitle && (
-                      <p className="text-[#1f1f1f] font-bold text-sm mb-4">{item.subtitle}</p>
-                    )}
-                    
-                    <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-4 mb-8">
+                  
+                  {/* Content Section */}
+                  <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
+                    <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-3 mb-6 flex-1">
                       {item.description}
                     </p>
 
-                    <Link 
-                      href={`/chadhava/${item.slug}`} 
-                      className="inline-flex items-center justify-between w-full bg-[#0e915f] text-white py-4 px-6 rounded-xl font-bold hover:bg-[#0b7c50] transition-all group/btn"
-                    >
-                      <span>{t.chadhava.performSeva} {item.location || 'Temples'}</span>
-                      <i className="fa-solid fa-arrow-right transition-transform group-hover/btn:translate-x-1"></i>
+                    <Link href={`/chadhava/${item.slug || String(item.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#0e915f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#0b7c50] transition-colors flex items-center justify-center gap-1.5 mt-auto">
+                      {(item as any).buttonText || t.chadhava.performSeva}
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </Link>
                   </div>
                 </div>
