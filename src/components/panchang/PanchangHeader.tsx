@@ -1,4 +1,4 @@
-ï»¿import React from 'react';
+import React from 'react';
 
 export default function PanchangHeader({ data }: { data: any }) {
   const dateObj = new Date(data.date);
@@ -20,7 +20,7 @@ export default function PanchangHeader({ data }: { data: any }) {
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">{data.tithi?.name || 'Today\'s Panchang'}</h1>
               <p className="text-violet-100 mt-2 text-lg">
-                {data.month?.purnimanta} Month â€¢ {data.season} Season â€¢ {data.samvat?.vikram}
+                {data.month?.purnimanta} Month • {data.season} Season • {data.samvat?.vikram}
               </p>
             </div>
             
@@ -39,3 +39,4 @@ export default function PanchangHeader({ data }: { data: any }) {
     </div>
   );
 }
+

@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import AstroPageLayout from "@/components/astro-tools/AstroPageLayout";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 interface RashiResult {
   rashi: string;
   rashiSanskrit: string;
@@ -17,7 +17,7 @@ interface RashiResult {
   traits: string[];
 }
 
-// ─── Icons (same set) ─────────────────────────────────────────────────────────
+// --- Icons (same set) ---------------------------------------------------------
 const IconPerson = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -57,12 +57,12 @@ const IconShare = () => (
 );
 
 const inputCls =
-  "w-full h-[52px] rounded-xl border border-gray-200 px-4 text-[14px] text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
+  "w-full h-14 rounded-xl border border-gray-200 px-4 text-base text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
 
 function Field({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">{label}</label>
+      <label className="block text-base font-semibold text-gray-700 mb-2">{label}</label>
       <div className="relative flex items-center">
         <span className="absolute left-4 text-violet-400 flex-shrink-0">{icon}</span>
         <div className="w-full pl-10">{children}</div>
@@ -71,7 +71,7 @@ function Field({ label, icon, children }: { label: string; icon: React.ReactNode
   );
 }
 
-// ─── SEO data ─────────────────────────────────────────────────────────────────
+// --- SEO data -----------------------------------------------------------------
 const SEO_SECTIONS = [
   {
     heading: "What is Janma Rashi?",
@@ -99,7 +99,7 @@ const FAQS = [
   { q: "Why is Janma Rashi important in Hindu rituals and astrology?", a: "Janma Rashi is used in many Hindu rituals including Naamkaran (naming ceremony), marriage compatibility (Kundali matching), choosing auspicious dates (Muhurta), and determining astrological remedies for dosha." },
 ];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// --- Page ---------------------------------------------------------------------
 export default function JanmaRashiPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -150,16 +150,16 @@ export default function JanmaRashiPage() {
         faqs={FAQS}
         currentHref="/astro-tools/janma-rashi"
       >
-        {/* ── Form Card ── */}
+        {/* -- Form Card -- */}
         <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
           <div className="flex items-start justify-between mb-6">
-            <h2 className="text-[16px] font-bold text-gray-900 leading-snug max-w-[80%]">
+            <h2 className="text-xl font-bold text-gray-900 leading-snug max-w-[80%]">
               Enter Your Birth Details
             </h2>
             <button
               onClick={handleShare}
               aria-label="Share"
-              className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
             >
               <IconShare />
             </button>
@@ -202,11 +202,11 @@ export default function JanmaRashiPage() {
               />
             </Field>
 
-            {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+            {error && <p className="text-base text-red-500 font-medium">{error}</p>}
 
             <button
               type="submit" disabled={loading}
-              className="w-full h-14 rounded-xl font-semibold text-[15px] text-white tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-sm mt-2"
+              className="w-full h-14 rounded-xl font-semibold text-base text-white tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-sm mt-2"
               style={{ backgroundColor: loading ? "#34d399" : "#059669" }}
             >
               {loading ? "Calculating..." : "Find Your Janma Rashi"}
@@ -214,12 +214,12 @@ export default function JanmaRashiPage() {
           </form>
         </div>
 
-        {/* ── Results card ── */}
+        {/* -- Results card -- */}
         {data && (
           <div className="bg-white rounded-2xl border border-violet-200 overflow-hidden shadow-sm">
             <div className="bg-violet-50 border-b border-violet-100 p-6 text-center">
-              <p className="text-gray-500 text-sm mb-1">Namaste, {name.trim()}! 🙏</p>
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Your Janma Rashi</p>
+              <p className="text-gray-500 text-base mb-1">Namaste, {name.trim()}!</p>
+              <p className="text-sm text-gray-400 uppercase tracking-widest font-semibold mb-2">Your Janma Rashi</p>
               <p className="text-5xl mb-2">{data.symbol}</p>
               <p className="text-3xl font-extrabold text-violet-700">{data.rashi}</p>
               <p className="text-base text-gray-400 mt-1">{data.rashiSanskrit}</p>
@@ -234,13 +234,13 @@ export default function JanmaRashiPage() {
                   { label: "Lucky Color", value: data.luckyColor },
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl bg-gray-50 border border-gray-100 p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{item.label}</p>
-                    <p className="text-sm font-bold text-gray-800">{item.value}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">{item.label}</p>
+                    <p className="text-base font-bold text-gray-800">{item.value}</p>
                   </div>
                 ))}
               </div>
               <div className="rounded-xl border border-violet-100 bg-violet-50 p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-violet-400 mb-2">Personality Traits</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-violet-400 mb-2">Personality Traits</p>
                 <div className="flex flex-wrap gap-2">
                   {data.traits.map((t) => (
                     <span key={t} className="text-xs px-3 py-1 rounded-full bg-violet-100 text-violet-700 font-semibold">{t}</span>
@@ -254,3 +254,4 @@ export default function JanmaRashiPage() {
     </>
   );
 }
+

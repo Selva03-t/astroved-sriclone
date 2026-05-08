@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
@@ -7,17 +7,17 @@ import CalculatorCard, {
   type CalculatorCardProps,
 } from "@/components/astro-tools/CalculatorCard";
 
-// ─── Shared zodiac image (working URL) ──────────────────────────────────────
+// --- Shared zodiac image (working URL) --------------------------------------
 const ZODIAC_IMG =
   "https://imgs.search.brave.com/acCjMCO5vYOt4Fj3wdCMtAipxx5GpIeFIJ-3Grf2FcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9uYWtz/aGF0cmEtdmVkaWMt/YXN0cm9sb2d5LWls/bHVzdHJhdGlvbi1y/YXNoaS1ncmFoYS1s/YWduYS1kYXNoYS1i/aGF2YS1yYWh1LW5h/a3NoYXRyYS12ZWRp/Yy1hc3Ryb2xvZ3kt/bmFrc2hhdHJhLXZl/ZGljLWFzdHJvbG9n/eS0zNzM5MzI2MDAu/anBn";
 
-// ─── Calculator data ──────────────────────────────────────────────────────────
+// --- Calculator data ----------------------------------------------------------
 const ACTIVE: CalculatorCardProps[] = [
   {
     id: "nakshatra",
     title: "Nakshatra Finder",
     description: "Helps you find your janma nakshatra",
-    accentHex: "#7c3aed",
+    accentHex: "#6869F9",
     imageUrl: ZODIAC_IMG,
     href: "/astro-tools/nakshatra",
     live: true,
@@ -54,7 +54,7 @@ const COMING_SOON: CalculatorCardProps[] = [
   },
 ];
 
-// ─── Inline SVG icons ─────────────────────────────────────────────────────────
+// --- Inline SVG icons ---------------------------------------------------------
 function IconShare() {
   return (
     <svg viewBox="0 0 24 24" fill="none" className="w-[18px] h-[18px]" stroke="currentColor" strokeWidth={2}>
@@ -83,7 +83,7 @@ function IconChevronRight() {
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// --- Page ---------------------------------------------------------------------
 export default function AstroToolsPage() {
   const [copied, setCopied] = useState(false);
 
@@ -110,19 +110,19 @@ export default function AstroToolsPage() {
 
       <div className="min-h-screen bg-[#f5f5f5]">
 
-        {/* ── 1. Breadcrumb strip ────────────────────────────────────────────────────────────────────────── */}
+        {/* -- 1. Breadcrumb strip -------------------------------------------------------------------------- */}
         <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
           <div className="max-w-6xl mx-auto text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
             <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
             <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-            <span className="text-[#7c3aed] font-bold">Free Astrology Calculators</span>
+            <span className="text-[#6869F9] font-bold">Free Astrology Calculators</span>
           </div>
         </nav>
 
-        {/* ── 2. Main container ────────────────────────────────────────── */}
+        {/* -- 2. Main container ------------------------------------------ */}
         <div className="max-w-6xl mx-auto px-6">
 
-          {/* ── Title row ── */}
+          {/* -- Title row -- */}
           <div className="flex items-start justify-between pt-10 pb-8">
             <h1 className="text-[2.25rem] font-extrabold text-gray-900 leading-tight tracking-tight">
               Free Astrology Calculators
@@ -150,22 +150,22 @@ export default function AstroToolsPage() {
             </div>
           </div>
 
-          {/* ── Active calculator cards ── */}
+          {/* -- Active calculator cards -- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
             {ACTIVE.map((c) => <CalculatorCard key={c.id} {...c} />)}
           </div>
 
-          {/* ── Coming Soon heading ── */}
+          {/* -- Coming Soon heading -- */}
           <h2 className="text-[2rem] font-extrabold text-gray-900 mb-6 tracking-tight">
             Coming Soon
           </h2>
 
-          {/* ── Coming Soon cards ── */}
+          {/* -- Coming Soon cards -- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
             {COMING_SOON.map((c) => <CalculatorCard key={c.id} {...c} />)}
           </div>
 
-          {/* ── About section ── */}
+          {/* -- About section -- */}
           <div className="pb-16 max-w-3xl">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Astrology Calculators</h3>
             <p className="text-[15px] text-gray-600 leading-[1.9]">
@@ -182,3 +182,4 @@ export default function AstroToolsPage() {
     </>
   );
 }
+

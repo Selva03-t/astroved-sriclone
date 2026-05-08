@@ -144,7 +144,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("email")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "email"
-              ? "bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -157,7 +157,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("phone")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "phone"
-              ? "bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -170,7 +170,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("whatsapp")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "whatsapp"
-              ? "bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -186,7 +186,7 @@ export default function LoginMethods() {
             : method === "phone"
               ? "Phone Number"
               : "WhatsApp Number"}
-          <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#8b5cf6] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+          <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
             {(method === "phone" || method === "whatsapp") && (
               <span className="mr-2 text-base text-[#7b5db5]">+</span>
             )}
@@ -203,7 +203,7 @@ export default function LoginMethods() {
         {method === "email" && (
            <label className="block text-sm font-medium text-[#5a3b8a]">
               Password
-              <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#8b5cf6] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+              <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#e0dcff]">
                 <input
                   type="password"
                   value={password}
@@ -221,7 +221,7 @@ export default function LoginMethods() {
           <div className="flex justify-end">
             <Link
               href="/auth/forgot-password"
-              className="text-sm font-medium text-[#6d28d9] transition-colors duration-300 hover:text-[#4c1d95]"
+              className="text-sm font-medium text-[#5657e8] transition-colors duration-300 hover:text-[#4647c4]"
             >
               Forgot password?
             </Link>
@@ -233,7 +233,7 @@ export default function LoginMethods() {
           disabled={!isValid || loading}
           className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isValid && !loading
-              ? "bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#6d28d9] shadow-[0_10px_24_rgba(124,58,237,0.35)] hover:brightness-110"
+              ? "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] shadow-[0_10px_24_rgba(104,105,249,0.35)] hover:brightness-110"
               : "cursor-not-allowed bg-[#d2c2ef]"
           }`}
         >
@@ -251,7 +251,7 @@ export default function LoginMethods() {
         New to astroved?{" "}
         <Link
           href="/auth/signup"
-          className="font-semibold text-[#6d28d9] underline decoration-[#a78bfa] underline-offset-4 transition-colors duration-300 hover:text-[#4c1d95]"
+          className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
         >
           Register now
         </Link>

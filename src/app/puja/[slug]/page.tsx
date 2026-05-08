@@ -1,12 +1,34 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
-import { CalendarIcon, MapPinIcon, StarIcon, XMarkIcon, CheckIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowLeftIcon,
+  BuildingLibraryIcon,
+  CheckBadgeIcon,
+  CheckIcon,
+  FireIcon,
+  GiftIcon,
+  HeartIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+  StarIcon,
+  TagIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 
-const BENEFIT_ICONS = ["🏆", "🛡️", "🌿", "💫", "❤️", "🌟", "⚡", "🎯"];
+const BENEFIT_ICONS = [
+  SparklesIcon,
+  ShieldCheckIcon,
+  FireIcon,
+  HeartIcon,
+  StarIcon,
+  GiftIcon,
+  BuildingLibraryIcon,
+  CheckBadgeIcon,
+];
 const PERSON_LABELS = ["1 Person", "2 Person", "4 Person", "6 Person"];
 const PKG_NAMES = ["Individual Puja", "Partner Puja", "Family + Bhog", "Joint Family + Bhog"];
 const PERSON_COLORS = [
@@ -288,28 +310,28 @@ export default function PujaDetailPage() {
       <Navbar />
       <main className="min-h-screen bg-white pb-24">
         {loading ? (
-          <div className="mx-auto max-w-6xl px-6 py-20 text-center text-[#7c3aed]">Loading puja details...</div>
+          <div className="mx-auto max-w-6xl px-6 py-20 text-center text-[#6869F9]">Loading puja details...</div>
         ) : !puja ? (
           <div className="mx-auto max-w-6xl px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
-            <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#7c3aed] px-6 py-3 text-sm font-semibold text-white">
+            <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-semibold text-white">
               Back to Pujas
             </Link>
           </div>
         ) : (
           <>
-            {/* ── Breadcrumb (sticky below navbar) ── */}
+            {/* -- Breadcrumb (sticky below navbar) -- */}
             <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
               <div className="mx-auto max-w-6xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
                 <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
                 <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-                <span className="text-[#7c3aed] truncate max-w-[300px] font-bold">{puja.title}</span>
+                <span className="text-[#6869F9] truncate max-w-[300px] font-bold">{puja.title}</span>
               </div>
             </nav>
 
-            {/* ── Hero ── */}
+            {/* -- Hero -- */}
             <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
               <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image */}
@@ -338,7 +360,7 @@ export default function PujaDetailPage() {
 
                 {/* Right: Details panel */}
                 <div className="flex flex-col justify-center">
-                  <p className="text-[#d81b60] text-[11px] font-bold uppercase tracking-widest mb-2">
+                  <p className="text-[#F47820] text-[11px] font-bold uppercase tracking-widest mb-2">
                     {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                   </p>
                   
@@ -366,17 +388,17 @@ export default function PujaDetailPage() {
                     <div className="mb-5 border-t border-gray-100 pt-4">
                       <p className="text-[13px] font-bold text-[#1f1f1f] mb-2">Puja booking will close in :</p>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-[22px] font-bold text-[#6d28d9]">{String(countdown.days)}</span>
-                        <span className="text-[11px] font-medium text-[#6d28d9] uppercase mr-2">Day</span>
+                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.days)}</span>
+                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Day</span>
                         
-                        <span className="text-[22px] font-bold text-[#6d28d9]">{String(countdown.hours)}</span>
-                        <span className="text-[11px] font-medium text-[#6d28d9] uppercase mr-2">Hours</span>
+                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.hours)}</span>
+                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Hours</span>
                         
-                        <span className="text-[22px] font-bold text-[#6d28d9]">{String(countdown.minutes)}</span>
-                        <span className="text-[11px] font-medium text-[#6d28d9] uppercase mr-2">Mins</span>
+                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.minutes)}</span>
+                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Mins</span>
                         
-                        <span className="text-[22px] font-bold text-[#6d28d9]">{String(countdown.seconds)}</span>
-                        <span className="text-[11px] font-medium text-[#6d28d9] uppercase">Secs</span>
+                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.seconds)}</span>
+                        <span className="text-[11px] font-medium text-[#F47820] uppercase">Secs</span>
                       </div>
                     </div>
                   )}
@@ -395,13 +417,13 @@ export default function PujaDetailPage() {
                         ))}
                       </div>
                     </div>
-                    <div className="text-[12px] font-bold text-[#a78bfa]">
-                      ★ 4.9 (7K+ ratings)
+                    <div className="flex items-center gap-1 text-[12px] font-bold text-[#a78bfa]">
+                      <StarIcon className="h-4 w-4 text-amber-400" /> 4.9 (7K+ ratings)
                     </div>
                   </div>
                   
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
-                    Till now <span className="font-bold text-[#6d28d9]">3,00,000+ Devotees</span> have participated in Pujas conducted by AstroVed Puja Seva.
+                    Till now <span className="font-bold text-[#F47820]">3,00,000+ Devotees</span> have participated in Pujas conducted by AstroVed Puja Seva.
                   </p>
 
                   {/* CTA */}
@@ -412,7 +434,7 @@ export default function PujaDetailPage() {
                   ) : (
                     <button
                       onClick={() => setShowPackageModal(true)}
-                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#7c3aed] py-3.5 text-[16px] font-bold text-white hover:bg-[#6d28d9] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#6869F9] py-3.5 text-[16px] font-bold text-white hover:bg-[#F47820] transition-colors"
                     >
                       Select puja package
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -424,7 +446,7 @@ export default function PujaDetailPage() {
               </div>
             </div>
 
-            {/* ── Section Nav Bar (sticky below breadcrumb+navbar = ~114px) ── */}
+            {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
             <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
               <div className="mx-auto max-w-6xl px-4 md:px-6">
                 <div className="flex items-center justify-between overflow-x-auto no-scrollbar w-full gap-4">
@@ -442,13 +464,13 @@ export default function PujaDetailPage() {
                       }}
                       className={`relative shrink-0 py-4 text-[15px] font-semibold whitespace-nowrap transition-colors ${
                         activeTab === tab.id
-                          ? 'text-[#7c3aed]'
-                          : 'text-gray-500 hover:text-[#7c3aed]'
+                          ? 'text-[#6869F9]'
+                          : 'text-gray-500 hover:text-[#6869F9]'
                       }`}
                     >
                       {tab.label}
                       {activeTab === tab.id && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#7c3aed] rounded-t-full" />
+                        <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#6869F9] rounded-t-full" />
                       )}
                     </button>
                   ))}
@@ -456,55 +478,59 @@ export default function PujaDetailPage() {
               </div>
             </div>
 
-            {/* ── Flat Content Sections ── */}
+            {/* -- Flat Content Sections -- */}
             <div className="mx-auto max-w-6xl px-4 md:px-6 pt-10">
 
-              {/* ── About Puja ── */}
+              {/* -- About Puja -- */}
               <section id="about" className="border-b border-gray-100 pb-10">
-                <h2 className="text-[24px] font-bold text-[#1f1f1f] leading-snug">
-                  🔥 {puja.details?.heroTitle || "Are enemies repeatedly troubling you or is your court case stuck? Through the special grace of Maa Bagalamukhi, perform the sacred Havan to remove obstacles and open the path to victory."}
+                <h2 className="flex items-start gap-3 text-[24px] font-bold text-[#1f1f1f] leading-snug">
+                  <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#F47820]" />
+                  <span>{puja.details?.heroTitle || "Are enemies repeatedly troubling you or is your court case stuck? Through the special grace of Maa Bagalamukhi, perform the sacred Havan to remove obstacles and open the path to victory."}</span>
                 </h2>
                 <div className="mt-6 space-y-6 text-[16px] leading-[1.9] text-gray-700">
                   <p>{puja.details.about || "In Sanatan Dharma, this puja is regarded as a divine power who can pacify negative energies and help control the influence of enemies. She holds a special place and is especially worshipped during times of conflict."}</p>
                   
                   <div className="space-y-2">
-                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><span className="text-[#a78bfa]">🏯</span> Significance of Temple</p>
+                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><BuildingLibraryIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of Temple</p>
                     <p>Located in this sacred land, it is considered highly powerful and spiritually significant for worship. Situated along the holy river, it has long been a center of deep spiritual practices.</p>
                   </div>
 
                   <div className="space-y-2">
-                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><span className="text-[#a78bfa]">🔥</span> Significance of this Havan</p>
+                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><FireIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of this Havan</p>
                     <p>The main highlight of this puja is the special havan performed. In Sanatan tradition, this symbolizes the destruction of negative energies and harmful forces. When offerings are made into the sacred fire, it represents the burning away of obstacles.</p>
                   </div>
                 </div>
               </section>
 
-              {/* ── Benefits ── */}
+              {/* -- Benefits -- */}
               <section id="benefits" className="border-b border-gray-100 py-10">
                 <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
                 <div className="mt-8 grid gap-8 md:grid-cols-3">
                   {puja.details.benefits.map((b, idx) => (
                     <div key={`benefit-${idx}`} className="flex gap-4">
-                      <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#6d28d9] text-xl">
-                        {BENEFIT_ICONS[idx % BENEFIT_ICONS.length]}
+                      <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#F47820] text-xl">
+                        {(() => {
+                          const BenefitIcon = BENEFIT_ICONS[idx % BENEFIT_ICONS.length];
+                          return <BenefitIcon className="h-5 w-5" />;
+                        })()}
                       </div>
                       <div>
                         <h3 className="font-bold text-[#1f1f1f] text-[17px]">{b.title}</h3>
                         <p className="mt-2 text-[15px] leading-[1.8] text-gray-600 line-clamp-3">{b.description}</p>
-                        <button type="button" className="mt-2 text-[14px] font-semibold text-[#6d28d9] hover:text-[#5b21b6]">Read more</button>
+                        <button type="button" className="mt-2 text-[14px] font-semibold text-[#F47820] hover:text-[#5b21b6]">Read more</button>
                       </div>
                     </div>
                   ))}
                 </div>
               </section>
 
-              {/* ── Process ── */}
+              {/* -- Process -- */}
               <section id="process" className="border-b border-gray-100 py-10">
                 <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
                 <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                   {puja.details.process.map((step, idx) => (
                     <div key={`process-${idx}`} className="flex gap-4">
-                      <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#6d28d9] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
+                      <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#F47820] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
                       <div>
                         <h3 className="font-bold text-[#1f1f1f] text-[16px]">{step.title}</h3>
                         <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{step.description}</p>
@@ -514,7 +540,7 @@ export default function PujaDetailPage() {
                 </div>
               </section>
 
-              {/* ── Temple Details ── */}
+              {/* -- Temple Details -- */}
               <section id="temple" className="border-b border-gray-100 py-10">
                 <h2 className="text-[24px] font-bold text-gray-900">{puja.details.templeName}, {puja.details.templeLocation}</h2>
                 <div className="mt-6 grid gap-8 md:grid-cols-[1fr_1.5fr]">
@@ -527,26 +553,26 @@ export default function PujaDetailPage() {
                 </div>
               </section>
 
-              {/* ── All Packages Includes ── */}
+              {/* -- All Packages Includes -- */}
               <section className="border-b border-gray-100 py-10">
                 <h2 className="text-2xl font-bold text-gray-900">All Puja Packages includes</h2>
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
                   {puja.details.inclusions.map((item, idx) => (
                     <div key={`incl-${idx}`} className="flex items-start gap-3">
-                      <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#7c3aed]/20">
-                        <CheckIcon className="h-3 w-3 text-[#7c3aed]" />
+                      <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6869F9]/20">
+                        <CheckIcon className="h-3 w-3 text-[#6869F9]" />
                       </div>
                       <p className="text-sm leading-6 text-gray-700 font-medium">{item}</p>
                     </div>
                   ))}
                 </div>
                 <div className="mt-6 flex items-start gap-3 rounded-xl bg-[#f5f3ff] border border-[#ddd6fe] p-4 text-[#5b21b6]">
-                  <span className="text-xl">🎁</span>
+                  <GiftIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#6869F9]" />
                   <p className="text-sm font-semibold leading-6">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
                 </div>
               </section>
 
-              {/* ── Package Selection ── */}
+              {/* -- Package Selection -- */}
               <section id="packages" className="border-b border-gray-100 py-10">
                 <h2 className="text-2xl font-bold text-gray-900">Select your puja package</h2>
                 <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -559,7 +585,7 @@ export default function PujaDetailPage() {
                         type="button"
                         onClick={() => setSelectedPackageId(pkg.id)}
                         className={`relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300 ${
-                          isSelected ? "border-[#7c3aed] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#7c3aed]/30 hover:shadow-md"
+                          isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
                         }`}
                       >
                         {isRecommended && (
@@ -575,7 +601,7 @@ export default function PujaDetailPage() {
                               {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
                             </span>
                             <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
-                              isSelected ? "border-[#7c3aed] bg-[#7c3aed]" : "border-gray-300"
+                              isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
                             }`}>
                               {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
                             </div>
@@ -585,8 +611,8 @@ export default function PujaDetailPage() {
                             <div className="flex-1">
                               <h4 className="font-bold text-gray-900 leading-snug">{PKG_NAMES[idx] || pkg.name}</h4>
                               <div className="mt-3">
-                                <p className="text-xl font-black text-[#7c3aed]">₹{pkg.price}</p>
-                                <p className="text-xs font-bold text-gray-400 line-through">₹{Math.round(pkg.price * 1.2)}</p>
+                                <p className="text-xl font-black text-[#6869F9]">Rs. {pkg.price}</p>
+                                <p className="text-xs font-bold text-gray-400 line-through">Rs. {Math.round(pkg.price * 1.2)}</p>
                               </div>
                             </div>
                             <img
@@ -597,7 +623,7 @@ export default function PujaDetailPage() {
                           </div>
                         </div>
                         {isSelected && (
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#7c3aed] rotate-45 z-10"></div>
+                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6869F9] rotate-45 z-10"></div>
                         )}
                       </button>
                     );
@@ -622,7 +648,7 @@ export default function PujaDetailPage() {
                 )}
               </section>
 
-              {/* ── Reviews ── */}
+              {/* -- Reviews -- */}
               <section id="reviews" className="border-b border-gray-100 py-10">
                 <h2 className="text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
                 <p className="mt-1.5 text-sm text-gray-500">Read what our devotees have to say about AstroVed.</p>
@@ -639,20 +665,24 @@ export default function PujaDetailPage() {
                   {userReviews.map((review) => (
                     <div key={review.name} className="py-6">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f7ff] text-sm font-bold text-[#7c3aed] border border-[#7c3aed]/20 shadow-sm">{review.name[0]}</div>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f7ff] text-sm font-bold text-[#6869F9] border border-[#6869F9]/20 shadow-sm">{review.name[0]}</div>
                         <div>
                           <p className="text-sm font-bold text-gray-900">{review.name}</p>
                           <p className="text-[11px] font-semibold text-gray-400">{review.date}</p>
                         </div>
                       </div>
-                      <p className="mt-2 text-sm text-amber-400">★★★★★</p>
+                      <div className="mt-2 flex items-center gap-0.5 text-amber-400">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <StarIcon key={star} className="h-4 w-4" />
+                        ))}
+                      </div>
                       <p className="mt-2 text-sm leading-6 text-gray-600">{review.comment}</p>
                     </div>
                   ))}
                 </div>
               </section>
 
-              {/* ── FAQs ── */}
+              {/* -- FAQs -- */}
               <section id="faqs" className="py-10">
                 <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
                 <div className="mt-6 divide-y divide-gray-100">
@@ -660,9 +690,9 @@ export default function PujaDetailPage() {
                     <details key={`faq-${idx}`} className="group py-5">
                       <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
                         {item.question}
-                        <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#7c3aed] group-open:border-[#7c3aed]/20 transition-colors">+</span>
+                        <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#6869F9] group-open:border-[#6869F9]/20 transition-colors">+</span>
                       </summary>
-                      <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#7c3aed]/20">{item.answer}</p>
+                      <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
                     </details>
                   ))}
                 </div>
@@ -672,17 +702,17 @@ export default function PujaDetailPage() {
           </>
         )}
 
-        {/* ── Sticky bottom booking bar ── */}
+        {/* -- Sticky bottom booking bar -- */}
         {puja && !countdown.expired && (
           <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
             <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="truncate text-sm font-bold text-[#3b0764]">{selectedPackage?.name ?? "Select a package"}</p>
-                <p className="text-xl font-extrabold text-[#7c3aed]">₹{selectedPackage?.price ?? "—"}</p>
+                <p className="text-xl font-extrabold text-[#6869F9]">Rs. {selectedPackage?.price ?? "—"}</p>
               </div>
               <button
                 onClick={() => setShowPackageModal(true)}
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#7c3aed] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(105,105,250,0.4)] transition-all hover:bg-[#5555e8] active:scale-95"
+                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(105,105,250,0.4)] transition-all hover:bg-[#5657e8] active:scale-95"
               >
                 Book Puja
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -717,7 +747,7 @@ export default function PujaDetailPage() {
                        "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
                     ].map((item, idx) => (
                        <div key={idx} className="flex items-start gap-4">
-                          <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-[#7c3aed]" />
+                          <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-[#6869F9]" />
                           <p className="text-[14px] leading-relaxed text-[#4b5563]">{item}</p>
                        </div>
                     ))}
@@ -725,7 +755,7 @@ export default function PujaDetailPage() {
 
                  {/* Additional Offerings Note */}
                  <div className="mt-8 flex items-center gap-4 rounded-2xl bg-[#f0f9f4] p-4 text-[#0e8356]">
-                    <div className="h-10 w-10 shrink-0 bg-[#7c3aed]/10 rounded-lg flex items-center justify-center">
+                    <div className="h-10 w-10 shrink-0 bg-[#6869F9]/10 rounded-lg flex items-center justify-center">
                        <i className="fa-solid fa-hand-holding-dollar text-lg"></i>
                     </div>
                     <p className="text-[13px] font-medium leading-relaxed">
@@ -743,7 +773,7 @@ export default function PujaDetailPage() {
                             onClick={() => setSelectedPackageId(pkg.id)}
                             className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all text-left ${
                               selectedPackageId === pkg.id 
-                                ? "border-[#7c3aed] bg-[#7c3aed]/5 shadow-lg" 
+                                ? "border-[#6869F9] bg-[#6869F9]/5 shadow-lg" 
                                 : "border-gray-100 hover:border-gray-200"
                             }`}
                           >
@@ -763,7 +793,7 @@ export default function PujaDetailPage() {
                                    {idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person"}
                                 </div>
                                 <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                   selectedPackageId === pkg.id ? "border-[#7c3aed] bg-[#7c3aed]" : "border-gray-200"
+                                   selectedPackageId === pkg.id ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"
                                 }`}>
                                    {selectedPackageId === pkg.id && <CheckIcon className="h-4 w-4 text-white" />}
                                 </div>
@@ -800,10 +830,10 @@ export default function PujaDetailPage() {
                          setShowDetailsModal(true);
                       }
                    }}
-                   className="flex w-full items-center justify-between rounded-2xl bg-[#7c3aed] p-4 text-white shadow-xl shadow-[#7c3aed]/20 hover:scale-[1.01] transition-transform"
+                   className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
                  >
                     <div className="text-left">
-                       <p className="text-xl font-bold">₹{selectedPackage?.price || '0'}</p>
+                       <p className="text-xl font-bold">Rs. {selectedPackage?.price || '0'}</p>
                        <p className="text-[10px] font-medium uppercase opacity-80">{selectedPackage?.name}</p>
                     </div>
                     <div className="flex items-center gap-4 font-bold uppercase tracking-widest text-sm">
@@ -839,7 +869,7 @@ export default function PujaDetailPage() {
                     <label className="block text-gray-900 font-bold text-sm mb-2">Enter Your Whatsapp Mobile Number</label>
                     <p className="text-[11px] text-gray-400 mb-4 leading-relaxed font-medium">Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.</p>
                     <div className="relative group">
-                       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#7c3aed] font-bold">
+                       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#6869F9] font-bold">
                           <i className="fa-brands fa-whatsapp text-lg"></i>
                           <span className="text-sm">+91</span>
                        </div>
@@ -897,7 +927,7 @@ export default function PujaDetailPage() {
                       setShowReviewModal(true);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                    }}
-                   className="w-full bg-[#7c3aed] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6d28d9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
+                   className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#F47820] transition-all disabled:opacity-50 disabled:grayscale mt-4"
                  >
                     Next
                  </button>
@@ -913,9 +943,9 @@ export default function PujaDetailPage() {
            {/* Review Breadcrumbs */}
            <div className="bg-white border-b border-gray-100 py-3 px-6 sticky top-0 z-10">
               <div className="mx-auto max-w-7xl flex items-center justify-between">
-                 <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#7c3aed]">
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#7c3aed] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#7c3aed] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
+                 <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#6869F9]">
+                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
+                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
                     <div className="flex items-center gap-2 opacity-30"><div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px]">3</div> Make Payment</div>
                  </div>
                  <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500">
@@ -932,7 +962,7 @@ export default function PujaDetailPage() {
                       setShowReviewModal(false);
                       setShowDetailsModal(true);
                    }}
-                   className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#7c3aed] transition-colors mb-6"
+                   className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#6869F9] transition-colors mb-6"
                  >
                     <ArrowLeftIcon className="h-4 w-4" /> Review Booking
                  </button>
@@ -943,15 +973,15 @@ export default function PujaDetailPage() {
                        <div className="flex justify-between items-start mb-4">
                           <div>
                              <h3 className="font-bold text-[#1f1f1f] text-lg mb-1">{selectedPackage?.name}</h3>
-                             <p className="text-[#7c3aed] font-extrabold text-xl">₹ {selectedPackage?.price}</p>
+                             <p className="text-[#6869F9] font-extrabold text-xl">Rs. {selectedPackage?.price}</p>
                           </div>
-                          <div className="bg-[#7c3aed]/10 text-[#7c3aed] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                          <div className="bg-[#6869F9]/10 text-[#6869F9] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
                              Primary Package
                           </div>
                        </div>
                        <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-gray-50">
                           <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
-                             <i className="fa-brands fa-whatsapp text-[#7c3aed] text-lg"></i>
+                             <i className="fa-brands fa-whatsapp text-[#6869F9] text-lg"></i>
                              <span>+91 {userDetails.whatsapp}</span>
                           </div>
                           <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
@@ -970,7 +1000,7 @@ export default function PujaDetailPage() {
                              </div>
                              <div>
                                 <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
-                                <p className="text-[#7c3aed] font-bold text-sm">₹ {extra.price}</p>
+                                <p className="text-[#6869F9] font-bold text-sm">Rs. {extra.price}</p>
                              </div>
                           </div>
                           <button 
@@ -984,7 +1014,7 @@ export default function PujaDetailPage() {
                     
                     <div className="bg-violet-50/50 rounded-2xl p-6 flex justify-between items-center cursor-pointer hover:bg-violet-50 transition-colors border border-violet-100/50">
                        <div className="flex items-center gap-3">
-                          <span className="text-xl">🏷️</span>
+                          <TagIcon className="h-6 w-6 text-[#6869F9]" />
                           <span className="font-bold text-sm text-[#1f1f1f]">Apply Coupon Code</span>
                        </div>
                        <i className="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
@@ -995,17 +1025,17 @@ export default function PujaDetailPage() {
                        <div className="space-y-4 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
                              <span>{selectedPackage?.name}</span>
-                             <span className="text-gray-900">₹ {selectedPackage?.price}.0</span>
+                             <span className="text-gray-900">Rs. {selectedPackage?.price}.0</span>
                           </div>
                           {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
                              <div key={extra.id} className="flex justify-between">
                                 <span>{extra.name}</span>
-                                <span className="text-gray-900">₹ {extra.price}.0</span>
+                                <span className="text-gray-900">Rs. {extra.price}.0</span>
                              </div>
                           ))}
                           <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
                              <span>Total Amount</span>
-                             <span className="text-[#7c3aed]">₹ {totalAmount}.0</span>
+                             <span className="text-[#6869F9]">Rs. {totalAmount}.0</span>
                           </div>
                        </div>
                     </div>
@@ -1015,22 +1045,22 @@ export default function PujaDetailPage() {
               {/* Right Column: Upsell */}
               <div>
                  <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
-                    <span className="h-1.5 w-6 bg-[#7c3aed] rounded-full"></span>
+                    <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
                     Add more Divine offerings
                  </h3>
                  <div className="space-y-4">
                     {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                       <div key={extra.id} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-[#7c3aed]/30 transition-all">
+                       <div key={extra.id} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-[#6869F9]/30 transition-all">
                           <div className="h-16 w-16 rounded-xl overflow-hidden bg-gray-50 shrink-0">
                              <img src={extra.imageUrl} className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
                              <h4 className="font-bold text-[13px] text-[#1f1f1f] truncate">{extra.name}</h4>
-                             <p className="text-[#7c3aed] font-bold text-[13px] mt-0.5">₹ {extra.price}</p>
+                             <p className="text-[#6869F9] font-bold text-[13px] mt-0.5">Rs. {extra.price}</p>
                           </div>
                           <button 
                             onClick={() => toggleExtra(extra.id)}
-                            className="bg-white text-[#7c3aed] border border-[#7c3aed] h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#7c3aed] hover:text-white transition-all active:scale-95"
+                            className="bg-white text-[#6869F9] border border-[#6869F9] h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#6869F9] hover:text-white transition-all active:scale-95"
                           >
                              + Add
                           </button>
@@ -1051,11 +1081,11 @@ export default function PujaDetailPage() {
 
            {/* Floating Bottom Bar */}
            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#7c3aed] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#7c3aed]/20">
+              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
                     <span>{1 + selectedExtraIds.length} Sevas selected</span>
                     <span className="opacity-50">•</span>
-                    <span className="text-lg">₹ {totalAmount}</span>
+                    <span className="text-lg">Rs. {totalAmount}</span>
                  </div>
                  <button 
                    onClick={() => {

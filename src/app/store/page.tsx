@@ -1,9 +1,9 @@
-﻿import React from 'react';
+import React from 'react';
 
 const products = [
-  { id: 1, name: 'Traditional Pooja Items', price: '₹499', description: 'Authentic items for daily prayers.' },
+  { id: 1, name: 'Traditional Pooja Items', price: '?499', description: 'Authentic items for daily prayers.' },
   { id: 2, name: 'Aiswaryam TMT Steel Products', price: 'Contact for price', description: 'Premium construction materials.' },
-  { id: 3, name: 'Spiritual Books', price: '₹199', description: 'Readings for peace and wisdom.' }
+  { id: 3, name: 'Spiritual Books', price: '?199', description: 'Readings for peace and wisdom.' }
 ];
 
 const StorePage = () => {

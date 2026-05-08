@@ -72,7 +72,7 @@ export default function TemplesPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-[#faf5ff] pt-12 pb-20 px-6 sm:px-12 lg:px-24 border-b border-[#e9d5ff]">
+      <section className="relative bg-[#f5f3ff] pt-12 pb-20 px-6 sm:px-12 lg:px-24 border-b border-[#e0d9ff]">
         <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-12">
           
           {/* Hero Content */}
@@ -83,15 +83,15 @@ export default function TemplesPage() {
             
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#7c3aed] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature1}</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#7c3aed] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature2}</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#7c3aed] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature3}</span>
               </li>
             </ul>
@@ -99,7 +99,7 @@ export default function TemplesPage() {
             <div className="flex flex-wrap gap-4 pt-4">
               <button 
                 onClick={() => document.getElementById('temples-list')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
+                className="bg-[#6869F9] hover:bg-[#F47820] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
               >
                 {t.temples.exploreBtn}
               </button>
@@ -137,7 +137,7 @@ export default function TemplesPage() {
         {/* Left Scroll Button */}
         <button 
           onClick={() => handleScroll('left')}
-          className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-r-full bg-white/90 shadow-[2px_0_8px_rgba(0,0,0,0.1)] text-gray-600 hover:text-[#7c3aed] transition-opacity ${scrollPos > 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-r-full bg-white/90 shadow-[2px_0_8px_rgba(0,0,0,0.1)] text-gray-600 hover:text-[#6869F9] transition-opacity ${scrollPos > 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" /></svg>
         </button>
@@ -154,15 +154,15 @@ export default function TemplesPage() {
                 onClick={() => setActiveCity(loc.name)}
                 className={`group flex flex-col items-center gap-2 pb-3 min-w-max border-b-4 transition-all ${
                   activeCity === loc.name 
-                    ? "border-[#7c3aed]" 
+                    ? "border-[#6869F9]" 
                     : "border-transparent opacity-80 hover:opacity-100 hover:border-gray-200"
                 }`}
               >
-                <div className={`h-[68px] w-[68px] rounded-2xl overflow-hidden shadow-sm transition-transform ${activeCity === loc.name ? "transform scale-105 border-2 border-white shadow-md ring-2 ring-[#7c3aed]/20" : "border border-gray-100 group-hover:scale-105"}`}>
+                <div className={`h-[68px] w-[68px] rounded-2xl overflow-hidden shadow-sm transition-transform ${activeCity === loc.name ? "transform scale-105 border-2 border-white shadow-md ring-2 ring-[#6869F9]/20" : "border border-gray-100 group-hover:scale-105"}`}>
                   <img src={loc.image} alt={loc.name} className="h-full w-full object-cover" />
                 </div>
                 <span className={`text-[15px] font-bold ${
-                  activeCity === loc.name ? "text-[#7c3aed]" : "text-gray-500"
+                  activeCity === loc.name ? "text-[#6869F9]" : "text-gray-500"
                 }`}>
                   {loc.name === "All" ? t.temples.filterAll : loc.name}
                 </span>
@@ -174,7 +174,7 @@ export default function TemplesPage() {
         {/* Right Scroll Button */}
         <button 
           onClick={() => handleScroll('right')}
-          className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-l-full bg-white/90 shadow-[-2px_0_8px_rgba(0,0,0,0.1)] text-gray-600 hover:text-[#7c3aed] transition-opacity ${scrollPos < 0.99 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-l-full bg-white/90 shadow-[-2px_0_8px_rgba(0,0,0,0.1)] text-gray-600 hover:text-[#6869F9] transition-opacity ${scrollPos < 0.99 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
@@ -185,7 +185,7 @@ export default function TemplesPage() {
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-pulse flex flex-col items-center">
-              <div className="h-12 w-12 border-4 border-t-[#7c3aed] border-[#7c3aed]/30 rounded-full animate-spin mb-4"></div>
+              <div className="h-12 w-12 border-4 border-t-[#6869F9] border-[#6869F9]/30 rounded-full animate-spin mb-4"></div>
               <div className="text-gray-400 font-medium">{t.temples.loading}</div>
             </div>
           </div>
@@ -247,3 +247,4 @@ export default function TemplesPage() {
     </main>
   );
 }
+

@@ -1,8 +1,16 @@
-﻿"use client";
+"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  ClockIcon,
+  ExclamationTriangleIcon,
+  MoonIcon,
+  NoSymbolIcon,
+  ShieldExclamationIcon,
+  SunIcon,
+} from "@heroicons/react/24/outline";
 
 const CITIES = [
   { label: "Varanasi, Uttar Pradesh", lat: 25.3176, lon: 82.9739 },
@@ -52,7 +60,7 @@ export default function RahuKaalPage() {
     {
       label: "Rahu Kaal",
       sublabel: "Most inauspicious",
-      icon: "🐍",
+      icon: NoSymbolIcon,
       bg: "#fff1f2",
       border: "#fecdd3",
       text: "#be123c",
@@ -61,7 +69,7 @@ export default function RahuKaalPage() {
     {
       label: "Gulik Kaal",
       sublabel: "Son of Saturn",
-      icon: "⚫",
+      icon: ShieldExclamationIcon,
       bg: "#fefce8",
       border: "#fde68a",
       text: "#854d0e",
@@ -70,7 +78,7 @@ export default function RahuKaalPage() {
     {
       label: "Yamghant Kaal",
       sublabel: "Son of Yama",
-      icon: "🔱",
+      icon: ExclamationTriangleIcon,
       bg: "#fdf4ff",
       border: "#e9d5ff",
       text: "#7e22ce",
@@ -85,11 +93,11 @@ export default function RahuKaalPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
+              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#7c3aed] font-medium">Rahu Kaal Calculator</span>
+              <span className="text-[#6869F9] font-medium">Rahu Kaal Calculator</span>
             </nav>
           </div>
         </div>
@@ -98,7 +106,7 @@ export default function RahuKaalPage() {
           {/* Header */}
           <div className="bg-gradient-to-r from-slate-600 to-gray-800 rounded-2xl p-6 text-white mb-8" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.12)" }}>
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">🐍</span>
+              <ClockIcon className="h-9 w-9" />
               <h1 className="text-2xl font-bold">Rahu Kaal Calculator</h1>
             </div>
             <p className="text-gray-300 text-sm max-w-xl">
@@ -132,7 +140,7 @@ export default function RahuKaalPage() {
               {timings.map((t) => (
                 <div key={t.label} className="rounded-2xl border p-5" style={{ backgroundColor: t.bg, borderColor: t.border, boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="text-2xl">{t.icon}</span>
+                    <t.icon className="h-7 w-7" style={{ color: t.text }} />
                     <div>
                       <p className="text-sm font-bold" style={{ color: t.text }}>{t.label}</p>
                       <p className="text-xs text-gray-400">{t.sublabel}</p>
@@ -156,13 +164,13 @@ export default function RahuKaalPage() {
           {data?.sun && (
             <div className="mt-6 bg-white rounded-2xl border border-amber-100 p-5 flex gap-6 justify-center" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
               <div className="text-center">
-                <span className="text-2xl">☀️</span>
+                <SunIcon className="mx-auto h-7 w-7 text-amber-500" />
                 <p className="text-xs text-gray-400 mt-1">Sunrise</p>
                 <p className="text-sm font-bold text-gray-800">{data.sun.rise || "—"}</p>
               </div>
               <div className="w-px bg-gray-100" />
               <div className="text-center">
-                <span className="text-2xl">🌇</span>
+                <MoonIcon className="mx-auto h-7 w-7 text-slate-500" />
                 <p className="text-xs text-gray-400 mt-1">Sunset</p>
                 <p className="text-sm font-bold text-gray-800">{data.sun.set || "—"}</p>
               </div>
@@ -183,3 +191,4 @@ export default function RahuKaalPage() {
     </>
   );
 }
+

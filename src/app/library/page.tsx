@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
+import { BookOpenIcon } from "@heroicons/react/24/outline";
 
 interface LibraryItem {
   _id: string;
@@ -56,7 +57,7 @@ export default function LibraryPage() {
              </div>
           ) : items.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
-               <div className="text-5xl mb-4">📚</div>
+               <BookOpenIcon className="mx-auto mb-4 h-12 w-12 text-[#6869F9]" />
                <p className="text-gray-500 font-medium">The library shelves are being stocked. Please visit later.</p>
             </div>
           ) : (
@@ -92,3 +93,4 @@ export default function LibraryPage() {
     </>
   );
 }
+

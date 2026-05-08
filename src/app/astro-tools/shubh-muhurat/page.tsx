@@ -1,8 +1,22 @@
-﻿"use client";
+"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { ComponentType, SVGProps } from "react";
+import {
+  AcademicCapIcon,
+  BeakerIcon,
+  BriefcaseIcon,
+  BuildingStorefrontIcon,
+  CalendarDaysIcon,
+  ClockIcon,
+  HeartIcon,
+  HomeModernIcon,
+  SparklesIcon,
+  SunIcon,
+  TruckIcon,
+} from "@heroicons/react/24/outline";
 
 function getTodayStr() {
   const d = new Date();
@@ -10,15 +24,17 @@ function getTodayStr() {
 }
 
 const PURPOSES = [
-  { label: "Marriage / Vivah", icon: "💍" },
-  { label: "Business Start / Vyapar", icon: "🏢" },
-  { label: "Travel / Yatra", icon: "✈️" },
-  { label: "Property Purchase / Griha", icon: "🏠" },
-  { label: "Vehicle Purchase / Vahan", icon: "🚗" },
-  { label: "New Job / Naukri", icon: "💼" },
-  { label: "Education / Vidyarambha", icon: "📚" },
-  { label: "Medical Procedure", icon: "🏥" },
+  { label: "Marriage / Vivah", icon: HeartIcon },
+  { label: "Business Start / Vyapar", icon: BuildingStorefrontIcon },
+  { label: "Travel / Yatra", icon: SparklesIcon },
+  { label: "Property Purchase / Griha", icon: HomeModernIcon },
+  { label: "Vehicle Purchase / Vahan", icon: TruckIcon },
+  { label: "New Job / Naukri", icon: BriefcaseIcon },
+  { label: "Education / Vidyarambha", icon: AcademicCapIcon },
+  { label: "Medical Procedure", icon: BeakerIcon },
 ];
+
+type ToolIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
 interface AuspiciousTimings {
   abhijit?: { start: string; end: string };
@@ -56,6 +72,7 @@ export default function ShubhMuhuratPage() {
 
   const auspicious = data?.auspiciousTimings ?? {};
   const purpose = PURPOSES.find(p => p.label === selectedPurpose) ?? PURPOSES[0];
+  const PurposeIcon = purpose.icon;
 
   return (
     <>
@@ -64,11 +81,11 @@ export default function ShubhMuhuratPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
+              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#7c3aed] font-medium">Shubh Muhurat Finder</span>
+              <span className="text-[#6869F9] font-medium">Shubh Muhurat Finder</span>
             </nav>
           </div>
         </div>
@@ -80,7 +97,7 @@ export default function ShubhMuhuratPage() {
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
               <div className="bg-gradient-to-r from-yellow-500 to-amber-600 p-6 text-white">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-3xl">🕐</span>
+                  <SparklesIcon className="h-9 w-9" />
                   <h1 className="text-xl font-bold">Shubh Muhurat Finder</h1>
                 </div>
                 <p className="text-yellow-50 text-sm">Find the most auspicious time for any important occasion based on the Panchang.</p>
@@ -94,24 +111,26 @@ export default function ShubhMuhuratPage() {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Select Purpose</label>
                   <div className="grid grid-cols-2 gap-2">
-                    {PURPOSES.map((p) => (
+                    {PURPOSES.map((p) => {
+                      const Icon = p.icon as ToolIcon;
+                      return (
                       <button key={p.label} onClick={() => setSelectedPurpose(p.label)}
                         className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold border transition text-left"
                         style={{
                           backgroundColor: selectedPurpose === p.label ? "#fff8ed" : "#f9fafb",
-                          borderColor: selectedPurpose === p.label ? "#7c3aed" : "#e5e7eb",
-                          color: selectedPurpose === p.label ? "#7c3aed" : "#374151",
+                          borderColor: selectedPurpose === p.label ? "#6869F9" : "#e5e7eb",
+                          color: selectedPurpose === p.label ? "#6869F9" : "#374151",
                         }}>
-                        <span>{p.icon}</span>
+                        <Icon className="h-4 w-4 shrink-0" />
                         <span className="leading-tight">{p.label.split(" / ")[0]}</span>
                       </button>
-                    ))}
+                    )})}
                   </div>
                 </div>
                 <button onClick={fetchData}
                   className="w-full py-3 rounded-xl font-bold text-white transition text-sm"
                   style={{ backgroundColor: "#d97706" }}>
-                  Find Shubh Muhurat →
+                  Find Shubh Muhurat
                 </button>
               </div>
             </div>
@@ -120,12 +139,12 @@ export default function ShubhMuhuratPage() {
             <div>
               {loading ? (
                 <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center animate-pulse" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-                  <div className="text-5xl mb-4">🕐</div>
+                  <ClockIcon className="mx-auto mb-4 h-12 w-12 text-amber-300" />
                   <p className="text-gray-400 text-sm">Fetching Panchang data...</p>
                 </div>
               ) : !data ? (
                 <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-                  <div className="text-5xl mb-4">🕐</div>
+                  <CalendarDaysIcon className="mx-auto mb-4 h-12 w-12 text-amber-300" />
                   <p className="text-gray-400 text-sm">Select a date and purpose, then click Find Shubh Muhurat.</p>
                 </div>
               ) : (
@@ -133,7 +152,7 @@ export default function ShubhMuhuratPage() {
                   {/* Header */}
                   <div className="p-5 border-b border-amber-100" style={{ backgroundColor: "#fffbeb" }}>
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{purpose.icon}</span>
+                      <PurposeIcon className="h-7 w-7 text-amber-700" />
                       <div>
                         <p className="text-[11px] text-gray-400 uppercase tracking-wide font-semibold">Shubh Muhurat For</p>
                         <p className="text-base font-bold text-amber-800">{selectedPurpose.split(" / ")[0]}</p>
@@ -145,7 +164,9 @@ export default function ShubhMuhuratPage() {
                     {/* Abhijit Muhurat */}
                     {auspicious.abhijit ? (
                       <div className="rounded-xl p-4 border border-violet-200" style={{ backgroundColor: "#f0fdf4" }}>
-                        <p className="text-[11px] font-bold uppercase tracking-wide text-violet-600 mb-1">✨ Abhijit Muhurat (Most Auspicious)</p>
+                        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-violet-600 mb-1">
+                          <SparklesIcon className="h-4 w-4" /> Abhijit Muhurat (Most Auspicious)
+                        </p>
                         <p className="text-xl font-extrabold text-violet-700">
                           {auspicious.abhijit.start} – {auspicious.abhijit.end}
                         </p>
@@ -176,13 +197,13 @@ export default function ShubhMuhuratPage() {
                     {data.sun && (
                       <div className="flex gap-4 justify-center rounded-xl bg-amber-50 border border-amber-100 py-3">
                         <div className="text-center">
-                          <span className="text-xl">☀️</span>
+                          <SunIcon className="mx-auto h-6 w-6 text-amber-500" />
                           <p className="text-xs text-gray-400">Sunrise</p>
                           <p className="text-sm font-bold text-gray-700">{data.sun.rise || "—"}</p>
                         </div>
                         <div className="w-px bg-amber-200" />
                         <div className="text-center">
-                          <span className="text-xl">🌇</span>
+                          <SunIcon className="mx-auto h-6 w-6 text-orange-500" />
                           <p className="text-xs text-gray-400">Sunset</p>
                           <p className="text-sm font-bold text-gray-700">{data.sun.set || "—"}</p>
                         </div>
@@ -208,3 +229,4 @@ export default function ShubhMuhuratPage() {
     </>
   );
 }
+

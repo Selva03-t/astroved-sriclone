@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -65,8 +65,8 @@ export default function ProfilePage() {
     return (
       <>
         <Navbar />
-        <div className="flex min-h-screen items-center justify-center bg-[#faf5ff]">
-          <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-[#1d4ed8]" />
+        <div className="flex min-h-screen items-center justify-center bg-[#f5f3ff]">
+          <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-[#5657e8]" />
         </div>
       </>
     );
@@ -75,13 +75,13 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#faf5ff]">
+      <main className="min-h-screen bg-[#f5f3ff]">
         {/* Breadcrumb */}
         <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
           <div className="mx-auto max-w-3xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
             <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
             <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-            <span className="text-[#7c3aed] font-bold">Profile</span>
+            <span className="text-[#6869F9] font-bold">Profile</span>
           </div>
         </nav>
 
@@ -116,7 +116,7 @@ export default function ProfilePage() {
                   setEditField("general");
                   setShowEditModal(true);
                 }}
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-[#1d4ed8] hover:bg-blue-50 transition"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-[#5657e8] hover:bg-blue-50 transition"
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" fill="currentColor" />
@@ -133,7 +133,7 @@ export default function ProfilePage() {
                     setEditField("general");
                     setShowEditModal(true);
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d4ed8] py-3 text-sm font-bold text-white hover:bg-[#1e40af] transition"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#5657e8] py-3 text-sm font-bold text-white hover:bg-[#4647c4] transition"
                 >
                   Please complete your profile
                   <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                       setEditField("general");
                       setShowEditModal(true);
                     }}
-                    className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold text-[#1d4ed8] hover:bg-blue-50 transition"
+                    className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold text-[#5657e8] hover:bg-blue-50 transition"
                   >
                     <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5">
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" fill="currentColor" />
@@ -275,7 +275,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.name || ""}
                   onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#1d4ed8] focus:outline-none focus:ring-1 focus:ring-[#1d4ed8]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#5657e8] focus:outline-none focus:ring-1 focus:ring-[#5657e8]"
                   placeholder="Your full name"
                 />
               </div>
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                 <select
                   value={formData.gender || ""}
                   onChange={(e) => setFormData((p) => ({ ...p, gender: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#1d4ed8] focus:outline-none focus:ring-1 focus:ring-[#1d4ed8]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#5657e8] focus:outline-none focus:ring-1 focus:ring-[#5657e8]"
                 >
                   <option value="">Select Gender</option>
                   <option value="Male">Male</option>
@@ -298,7 +298,7 @@ export default function ProfilePage() {
                   type="date"
                   value={formData.dob || ""}
                   onChange={(e) => setFormData((p) => ({ ...p, dob: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#1d4ed8] focus:outline-none focus:ring-1 focus:ring-[#1d4ed8]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#5657e8] focus:outline-none focus:ring-1 focus:ring-[#5657e8]"
                 />
               </div>
               <div>
@@ -307,7 +307,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.placeOfBirth || ""}
                   onChange={(e) => setFormData((p) => ({ ...p, placeOfBirth: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#1d4ed8] focus:outline-none focus:ring-1 focus:ring-[#1d4ed8]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#5657e8] focus:outline-none focus:ring-1 focus:ring-[#5657e8]"
                   placeholder="City, State"
                 />
               </div>
@@ -317,7 +317,7 @@ export default function ProfilePage() {
                   type="text"
                   value={formData.occupation || ""}
                   onChange={(e) => setFormData((p) => ({ ...p, occupation: e.target.value }))}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#1d4ed8] focus:outline-none focus:ring-1 focus:ring-[#1d4ed8]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-800 focus:border-[#5657e8] focus:outline-none focus:ring-1 focus:ring-[#5657e8]"
                   placeholder="e.g. Engineer, Teacher"
                 />
               </div>
@@ -333,7 +333,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 rounded-xl bg-[#1d4ed8] py-2.5 text-sm font-bold text-white hover:bg-[#1e40af] transition disabled:opacity-60"
+                className="flex-1 rounded-xl bg-[#5657e8] py-2.5 text-sm font-bold text-white hover:bg-[#4647c4] transition disabled:opacity-60"
               >
                 {saving ? "Saving..." : "Save Changes"}
               </button>

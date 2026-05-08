@@ -6,6 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/contexts/LanguageContext";
 
+type SupportedLanguage = "en" | "hi" | "ta" | "te" | "kn";
+
 const navKeys = [
   { key: "home", path: "/dashboard" },
   { key: "puja", path: "/puja" },
@@ -14,7 +16,7 @@ const navKeys = [
   { key: "temples", path: "/temples" },
   { key: "library", path: "/library" },
   { key: "astroTools", path: "/astro-tools" },
-  { key: "store", path: "/store" },
+  { key: "store", path: "https://astroved-tau.vercel.app/", external: true },
 ];
 
 const languageDisplayNames: Record<string, string> = {
@@ -24,6 +26,17 @@ const languageDisplayNames: Record<string, string> = {
   te: "తెలుగు",
   kn: "ಕನ್ನಡ",
 };
+
+const fullLanguageOptions: { code: SupportedLanguage; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "hi", label: "à¤¹à¤¿à¤¨à¥à¤¦à¥€" },
+  { code: "ta", label: "à®¤à®®à®¿à®´à¯" },
+  { code: "te", label: "à°¤à±†à°²à±à°—à±" },
+  { code: "kn", label: "à²•à²¨à³à²¨à²¡" },
+];
+
+const baseLanguageOptions = fullLanguageOptions.slice(0, 2);
+
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -55,10 +68,6 @@ export default function Navbar() {
         }
       })
       .catch(() => setUser(null));
-  }, [pathname]);
-
-  useEffect(() => {
-    setMobileMenuOpen(false);
   }, [pathname]);
 
   const isActivePath = (path: string) => {
@@ -97,16 +106,27 @@ export default function Navbar() {
           <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1a1a1a]">
             {navKeys.map((item) => (
               <li key={item.key}>
-                <Link
-                  href={item.path}
-                  className={
-                    isActivePath(item.path)
-                      ? "text-[#1A56DB] font-bold"
-                      : "transition-colors hover:text-[#1A56DB]"
-                  }
-                >
-                  {t(`nav.${item.key}`)}
-                </Link>
+                {item.external ? (
+                  <a
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-[#6869F9]"
+                  >
+                    {t(`nav.${item.key}`)}
+                  </a>
+                ) : (
+                  <Link
+                    href={item.path}
+                    className={
+                      isActivePath(item.path)
+                        ? "text-[#6869F9] font-bold"
+                        : "transition-colors hover:text-[#6869F9]"
+                    }
+                  >
+                    {t(`nav.${item.key}`)}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -158,11 +178,11 @@ export default function Navbar() {
                     ].map((lang) => (
                       <button
                         key={lang.code}
-                        onClick={() => { setLanguage(lang.code as any); setLangOpen(false); }}
+                        onClick={() => { setLanguage(lang.code as SupportedLanguage); setLangOpen(false); }}
                         className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                           language === lang.code
-                            ? "text-[#1A56DB] bg-blue-50 font-bold"
-                            : "text-gray-700 hover:bg-blue-50 hover:text-[#1A56DB] font-medium"
+                            ? "text-[#6869F9] bg-blue-50 font-bold"
+                            : "text-gray-700 hover:bg-blue-50 hover:text-[#6869F9] font-medium"
                         }`}
                       >
                         {lang.label}
@@ -182,7 +202,7 @@ export default function Navbar() {
               className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
             >
               {user ? (
-                <div className="h-full w-full flex items-center justify-center bg-[#1A56DB] text-white rounded-full font-bold text-xs uppercase">
+                <div className="h-full w-full flex items-center justify-center bg-[#6869F9] text-white rounded-full font-bold text-xs uppercase">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -200,19 +220,19 @@ export default function Navbar() {
                     <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas &amp; offers:</p>
                     <Link
                       href="/auth/login"
-                      className="block w-full bg-[#1a73e8] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#1557b0] transition-all"
+                      className="block w-full bg-[#F47820] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#d95f13] transition-all"
                     >
                       {t("account.login")}
                     </Link>
                   </div>
                 ) : (
-                  <div className="p-5 border-b border-gray-50 bg-[#1A56DB]/5">
+                  <div className="p-5 border-b border-gray-50 bg-[#6869F9]/5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-[#1A56DB] text-white rounded-full flex items-center justify-center font-bold">
+                      <div className="h-10 w-10 bg-[#6869F9] text-white rounded-full flex items-center justify-center font-bold">
                         {user.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-[#1A56DB] uppercase tracking-wider">Namaste,</p>
+                        <p className="text-xs font-bold text-[#6869F9] uppercase tracking-wider">Namaste,</p>
                         <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
                       </div>
                     </div>
@@ -224,7 +244,7 @@ export default function Navbar() {
                   <nav className="space-y-0.5">
                     <Link href={user ? "/profile" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                        <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.profile")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -232,7 +252,7 @@ export default function Navbar() {
 
                     <Link href={user ? "/bookings/puja" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                        <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.pujaBookings")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -240,7 +260,7 @@ export default function Navbar() {
 
                     <Link href={user ? "/bookings/chadhava" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#1a73e8] transition-colors"></i>
+                        <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.chadhavaBookings")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -248,7 +268,7 @@ export default function Navbar() {
 
                     <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#1A56DB] transition-colors"></i>
+                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookPuja")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -259,7 +279,7 @@ export default function Navbar() {
 
                     <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#1A56DB] transition-colors"></i>
+                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookChadhava")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -276,7 +296,7 @@ export default function Navbar() {
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                     </Link>
 
-                    <Link href="/store" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                    <a href="https://astroved-tau.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
                         <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-blue-500 transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">Store</span>
@@ -285,7 +305,7 @@ export default function Navbar() {
                         <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
                         <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                       </div>
-                    </Link>
+                    </a>
                   </nav>
                 </div>
 
@@ -334,14 +354,25 @@ export default function Navbar() {
             <ul className="space-y-1">
               {navKeys.map((item) => (
                 <li key={`mobile-${item.key}`}>
-                  <Link
-                    href={item.path}
-                    className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                      isActivePath(item.path) ? "bg-[#1A56DB]/10 text-[#1A56DB]" : "text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    {t(`nav.${item.key}`)}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+                    >
+                      {t(`nav.${item.key}`)}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.path}
+                      className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                        isActivePath(item.path) ? "bg-[#6869F9]/10 text-[#6869F9]" : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {t(`nav.${item.key}`)}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -354,8 +385,8 @@ export default function Navbar() {
               {["en", "hi", ...(isFullLanguagePage ? ["ta", "te", "kn"] : [])].map((lang) => (
                 <button
                   key={lang}
-                  onClick={() => setLanguage(lang as any)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#1A56DB] text-white" : "bg-gray-100 text-gray-700"}`}
+                  onClick={() => setLanguage(lang as SupportedLanguage)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#6869F9] text-white" : "bg-gray-100 text-gray-700"}`}
                 >
                   {languageDisplayNames[lang]}
                 </button>
@@ -366,7 +397,7 @@ export default function Navbar() {
           <div className="mt-3 border-t border-gray-100 pt-3">
             {user ? (
               <>
-                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#1A56DB]">Namaste, {user.name}</p>
+                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#6869F9]">Namaste, {user.name}</p>
                 <div className="mt-2 space-y-1">
                   <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Profile</Link>
                   <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Puja Bookings</Link>
@@ -383,7 +414,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/auth/login"
-                className="block w-full rounded-xl bg-[#1a73e8] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#1557b0]"
+                className="block w-full rounded-xl bg-[#F47820] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#d95f13]"
               >
                 {t("account.login")}
               </Link>
@@ -394,3 +425,4 @@ export default function Navbar() {
     </section>
   );
 }
+

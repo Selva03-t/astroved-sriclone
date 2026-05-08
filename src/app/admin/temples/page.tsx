@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -194,7 +194,7 @@ export default function AdminTemplesPage() {
               form="temples-admin-form"
               type="submit"
               disabled={submitting}
-              className="flex items-center rounded-md bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#6d28d9] disabled:opacity-50"
+              className="flex items-center rounded-md bg-[#6869F9] px-4 py-2 text-sm font-medium text-white hover:bg-[#5657e8] disabled:opacity-50"
             >
               {submitting ? "Saving..." : editingId ? "Update Temple" : "Save Temple"}
             </button>
@@ -204,7 +204,7 @@ export default function AdminTemplesPage() {
             className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
               isAdding
                 ? "bg-gray-500 hover:bg-gray-600"
-                : "bg-[#7c3aed] hover:bg-[#6d28d9]"
+                : "bg-[#6869F9] hover:bg-[#5657e8]"
             }`}
           >
             {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add Temple</>}
@@ -396,7 +396,7 @@ export default function AdminTemplesPage() {
           </section>
 
           <div className="flex justify-end pt-4 border-t">
-            <button disabled={submitting} type="submit" className="bg-[#7c3aed] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#6d28d9] transition-colors">
+            <button disabled={submitting} type="submit" className="bg-[#6869F9] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#5657e8] transition-colors">
               {submitting ? "Saving..." : editingId ? "Update Temple" : "Save Temple"}
             </button>
           </div>
@@ -440,3 +440,4 @@ export default function AdminTemplesPage() {
     </div>
   );
 }
+

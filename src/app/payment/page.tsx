@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
 function PaymentContent() {
   const searchParams = useSearchParams();
@@ -55,14 +56,14 @@ function PaymentContent() {
       <div className="min-h-screen bg-white">
         <Navbar />
         <div className="mx-auto max-w-md mt-20 p-10 text-center space-y-6">
-           <div className="h-20 w-20 bg-violet-100 text-violet-600 rounded-full flex items-center justify-center mx-auto text-4xl">
-              ✓
+           <div className="h-20 w-20 bg-violet-100 text-violet-600 rounded-full flex items-center justify-center mx-auto">
+              <CheckIcon className="h-10 w-10" />
            </div>
            <h1 className="text-3xl font-bold text-gray-900">Payment Successful!</h1>
            <p className="text-gray-500">Your Chadhava offering has been booked successfully. You will receive updates on WhatsApp.</p>
            <button 
              onClick={() => window.location.href = '/dashboard'}
-             className="w-full bg-[#7c3aed] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#6d28d9]"
+             className="w-full bg-[#6869F9] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#F47820]"
            >
               Back to Dashboard
            </button>
@@ -93,7 +94,7 @@ function PaymentContent() {
                   <span>Order ID: {orderId || "AV_LOADING..."}</span>
                </div>
                <div className="flex justify-between items-end">
-                  <span className="text-4xl font-extrabold text-gray-900">₹{amount}</span>
+                  <span className="text-4xl font-extrabold text-gray-900">Rs. {amount}</span>
                   <span className="text-sm text-blue-600 font-bold hover:underline cursor-pointer">View Details</span>
                </div>
             </div>
@@ -148,7 +149,7 @@ function PaymentContent() {
 
                     <button 
                       onClick={handlePay}
-                      className="w-full bg-[#3395ff] text-white py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-[#2087f0] transition-all active:scale-95 mt-4"
+                      className="w-full bg-[#F47820] text-white py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-[#6869F9] transition-all active:scale-95 mt-4"
                     >
                        Pay Now
                     </button>
@@ -176,4 +177,5 @@ export default function PaymentPage() {
     </Suspense>
   );
 }
+
 

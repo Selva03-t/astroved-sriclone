@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { ClockIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 interface LagnaResult {
   lagnaSign: string;
@@ -16,7 +17,7 @@ interface LagnaResult {
 const ELEMENT_BG: Record<string, { bg: string; border: string; text: string }> = {
   Fire:  { bg: "#fff7ed", border: "#fed7aa", text: "#c2410c" },
   Earth: { bg: "#f0fdf4", border: "#bbf7d0", text: "#5b21b6" },
-  Air:   { bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8" },
+  Air:   { bg: "#eff6ff", border: "#bfdbfe", text: "#5657e8" },
   Water: { bg: "#ecfeff", border: "#a5f3fc", text: "#155e75" },
 };
 
@@ -57,11 +58,11 @@ export default function LagnaPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
+              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#7c3aed] font-medium">Kundali Lagna Calculator</span>
+              <span className="text-[#6869F9] font-medium">Kundali Lagna Calculator</span>
             </nav>
           </div>
         </div>
@@ -73,7 +74,7 @@ export default function LagnaPage() {
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
               <div className="bg-gradient-to-r from-violet-600 to-violet-800 p-6 text-white">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-3xl">🔯</span>
+                  <SparklesIcon className="h-9 w-9" />
                   <h1 className="text-xl font-bold">Kundali Lagna Calculator</h1>
                 </div>
                 <p className="text-amber-50 text-sm">Find your Lagna (Ascendant Sign) — the most important point in your birth chart.</p>
@@ -102,11 +103,11 @@ export default function LagnaPage() {
                   <button type="submit" disabled={loading}
                     className="w-full py-3 rounded-xl font-bold text-white transition text-sm"
                     style={{ backgroundColor: loading ? "#fcd34d" : "#d97706" }}>
-                    {loading ? "Calculating..." : "Get My Lagna →"}
+                    {loading ? "Calculating..." : "Get My Lagna"}
                   </button>
                 </form>
                 <p className="mt-4 text-xs text-gray-400 text-center">
-                  ⚠️ Birth time is crucial for accurate Lagna calculation
+                  Birth time is crucial for accurate Lagna calculation
                 </p>
               </div>
             </div>
@@ -115,14 +116,14 @@ export default function LagnaPage() {
             <div>
               {!data || !elStyle ? (
                 <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-                  <div className="text-5xl mb-4">🔯</div>
+                  <ClockIcon className="mx-auto mb-4 h-12 w-12 text-violet-300" />
                   <h2 className="text-lg font-bold text-gray-700 mb-2">Your Lagna Awaits</h2>
                   <p className="text-sm text-gray-400">Enter your exact birth time for an accurate Lagna (Ascendant) calculation.</p>
                 </div>
               ) : (
                 <div className="bg-white rounded-2xl overflow-hidden border border-amber-100" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
                   <div className="p-6 text-center border-b border-amber-100" style={{ backgroundColor: "#fffbeb" }}>
-                    <p className="text-gray-500 text-sm mb-1">Namaste, {name.trim()}! 🙏</p>
+                    <p className="text-gray-500 text-sm mb-1">Namaste, {name.trim()}!</p>
                     <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Your Lagna (Ascendant)</p>
                     <p className="text-4xl font-extrabold text-amber-700 mb-1">{data.lagnaSign}</p>
                     <p className="text-base text-gray-400">{data.lagnaSignSanskrit} Lagna</p>
@@ -176,3 +177,4 @@ export default function LagnaPage() {
     </>
   );
 }
+

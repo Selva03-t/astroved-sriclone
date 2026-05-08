@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/LanguageContext";
+import HowItWorksCarousel from "@/components/common/HowItWorksCarousel";
 
 interface Chadhava {
   _id: string;
@@ -15,6 +15,7 @@ interface Chadhava {
   price: number;
   slug: string;
   subtitle?: string;
+  buttonText?: string;
 }
 
 export default function ChadhavaPage() {
@@ -32,10 +33,45 @@ export default function ChadhavaPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const howItWorksSteps = [
+    {
+      title: t.chadhava.step1Title,
+      description: t.chadhava.step1Desc,
+      imageSrc: "https://www.srimandir.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimg_chadhava_web_banner.3fc5e49e.webp&w=1200&q=75",
+      imageAlt: "Choose a chadhava offering",
+      tag: "Chadhava Seva",
+      cta: t.chadhava.performSeva,
+    },
+    {
+      title: t.chadhava.step2Title,
+      description: t.chadhava.step2Desc,
+      imageSrc: "/images/Lakshmi-Homam.jpg",
+      imageAlt: "Fill devotee information for chadhava",
+      tag: "Devotee Details",
+      cta: t.chadhava.performSeva,
+    },
+    {
+      title: t.chadhava.step3Title,
+      description: t.chadhava.step3Desc,
+      imageSrc: "/images/Navagraha-Shanti-Puja.jpg",
+      imageAlt: "Receive chadhava video on WhatsApp",
+      tag: "Seva Video",
+      cta: t.chadhava.performSeva,
+    },
+    {
+      title: t.chadhava.step4Title,
+      description: t.chadhava.step4Desc,
+      imageSrc: "/images/Maa-saraswathi.jpg",
+      imageAlt: "Receive aashirwad box at the registered address",
+      tag: "Aashirwad Box",
+      cta: t.chadhava.performSeva,
+    },
+  ];
+
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#faf5ff]">
+      <main className="min-h-screen bg-[#f5f3ff]">
         {/* New Hero Section */}
         <section className="bg-linear-to-r from-[#f5f3ff] to-[#ffffff] py-12 md:py-16 mb-12">
           <div className="mx-auto max-w-7xl px-6 flex flex-col lg:flex-row items-center gap-12">
@@ -53,7 +89,7 @@ export default function ChadhavaPage() {
                   t.chadhava.feature4
                 ].map((text, idx) => (
                   <li key={idx} className="flex items-center gap-3 text-gray-700 font-medium">
-                    <div className="h-5 w-5 rounded-full bg-[#7c3aed] flex items-center justify-center shrink-0">
+                    <div className="h-5 w-5 rounded-full bg-[#6869F9] flex items-center justify-center shrink-0">
                        <i className="fa-solid fa-check text-[10px] text-white"></i>
                     </div>
                     {text}
@@ -62,7 +98,7 @@ export default function ChadhavaPage() {
               </ul>
 
               <div className="flex flex-wrap gap-4">
-                <a href="#upcoming" className="inline-block bg-[#7c3aed] text-white px-10 py-3.5 rounded-xl font-bold text-base hover:bg-[#6d28d9] transition-all shadow-lg shadow-green-900/10 active:scale-95 text-center">
+                <a href="#upcoming" className="inline-block bg-[#6869F9] text-white px-10 py-3.5 rounded-xl font-bold text-base hover:bg-[#5657e8] transition-all shadow-lg shadow-green-900/10 active:scale-95 text-center">
                   {t.chadhava.viewNow}
                 </a>
                 <a href="#how-it-works" className="inline-block bg-white text-gray-700 border border-gray-200 px-10 py-3.5 rounded-xl font-bold text-base hover:bg-gray-50 transition-all active:scale-95 text-center">
@@ -92,7 +128,7 @@ export default function ChadhavaPage() {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#7c3aed]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6869F9]"></div>
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-[32px] border border-dashed border-gray-200">
@@ -123,8 +159,8 @@ export default function ChadhavaPage() {
                       {item.description}
                     </p>
 
-                    <Link href={`/chadhava/${item.slug || String(item.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#7c3aed] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#6d28d9] transition-colors flex items-center justify-center gap-1.5 mt-auto">
-                      {(item as any).buttonText || t.chadhava.performSeva}
+                    <Link href={`/chadhava/${item.slug || String(item.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5 mt-auto">
+                      {item.buttonText || t.chadhava.performSeva}
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </Link>
                   </div>
@@ -133,7 +169,7 @@ export default function ChadhavaPage() {
             </div>
           )}
 
-          {/* ── Stats Section ── */}
+          {/* -- Stats Section -- */}
           <section className="mt-20 border-t border-gray-100 pt-16">
             <h2 className="mb-2 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
               {t.chadhava.sacredJourney}
@@ -141,67 +177,28 @@ export default function ChadhavaPage() {
             <p className="mb-8 text-sm text-gray-600">{t.chadhava.whyBook}</p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
-                <h3 className="text-2xl font-black text-[#1d4ed8]">10,00,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#2563eb]">{t.chadhava.chadhavaDone}</p>
+                <h3 className="text-2xl font-black text-[#5657e8]">10,00,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.chadhava.chadhavaDone}</p>
               </div>
-              <div className="rounded-2xl bg-gradient-to-br from-[#faf5ff] to-[#f3e8ff] p-8 text-center shadow-sm border border-[#e9d5ff]/50">
-                <h3 className="text-2xl font-black text-[#7c3aed]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#7c3aed]/80">{t.chadhava.happyDevotees}</p>
+              <div className="rounded-2xl bg-gradient-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
+                <h3 className="text-2xl font-black text-[#6869F9]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.chadhava.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
-                <h3 className="text-2xl font-black text-[#be185d]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#db2777]">{t.chadhava.famousTemples}</p>
+                <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#F47820]">{t.chadhava.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#7c3aed]">{t.chadhava.sankalp}</h3>
-                <p className="mt-1 text-sm font-semibold text-[#7c3aed]/80">{t.chadhava.sankalpDesc}</p>
+                <h3 className="text-2xl font-black text-[#6869F9]">{t.chadhava.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.chadhava.sankalpDesc}</p>
               </div>
             </div>
           </section>
         
-          {/* ── How it works ── */}
-          <section id="how-it-works" className="mt-20">
-            <h2 className="mb-8 border-b border-gray-200 pb-4 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
-              {t.chadhava.howItWorksTitle}
-            </h2>
-            <div className="grid items-center gap-12 lg:grid-cols-2">
-              <div className="space-y-8">
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">1</div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{t.chadhava.step1Title}</h3>
-                    <p className="mt-1 text-sm text-gray-600">{t.chadhava.step1Desc}</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">2</div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{t.chadhava.step2Title}</h3>
-                    <p className="mt-1 text-sm text-gray-600">{t.chadhava.step2Desc}</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">3</div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{t.chadhava.step3Title}</h3>
-                    <p className="mt-1 text-sm text-gray-600">{t.chadhava.step3Desc}</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">4</div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{t.chadhava.step4Title}</h3>
-                    <p className="mt-1 text-sm text-gray-600">{t.chadhava.step4Desc}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="relative rounded-[32px] bg-[#7c3aed] p-8 shadow-xl">
-                <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="How it works" className="mx-auto w-full max-w-sm rounded-xl object-cover shadow-2xl h-80" />
-              </div>
-            </div>
-          </section>
+          <HowItWorksCarousel title={t.chadhava.howItWorksTitle} steps={howItWorksSteps} />
         </div>
       </main>
     </>
   );
 }
+

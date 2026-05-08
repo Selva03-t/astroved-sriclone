@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
@@ -35,7 +35,7 @@ export default function MyChadhavaBookings() {
       
       <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-12">
          <div className="flex items-center gap-4 mb-8">
-            <div className="h-12 w-12 bg-blue-100 text-[#1a73e8] rounded-2xl flex items-center justify-center text-xl">
+            <div className="h-12 w-12 bg-blue-100 text-[#F47820] rounded-2xl flex items-center justify-center text-xl">
                <i className="fa-solid fa-box-open"></i>
             </div>
             <div>
@@ -59,7 +59,7 @@ export default function MyChadhavaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't made any chadhava offerings yet. Join the tradition today.</p>
                <button 
                  onClick={() => window.location.href = '/chadhava'}
-                 className="bg-[#7c3aed] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#6d28d9]"
+                 className="bg-[#6869F9] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#5657e8]"
                >
                   Explore Chadhava
                </button>
@@ -82,7 +82,7 @@ export default function MyChadhavaBookings() {
                         </div>
                      </div>
                      <div className="text-center sm:text-right">
-                        <div className="text-2xl font-black text-[#7c3aed] mb-1">₹ {booking.amount}</div>
+                        <div className="text-2xl font-black text-[#6869F9] mb-1">Rs. {booking.amount}</div>
                         <p className="text-[10px] font-bold text-gray-300 uppercase">Transaction ID: {booking._id.substr(-8).toUpperCase()}</p>
                      </div>
                   </div>
@@ -95,3 +95,4 @@ export default function MyChadhavaBookings() {
     </main>
   );
 }
+

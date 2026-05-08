@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 import React from 'react';
 import { useTranslation } from '@/contexts/LanguageContext';
+import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 
 export default function SunMoonTimes({ data }: { data: any }) {
   const { t } = useTranslation();
@@ -9,7 +10,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#7c3aed]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#6869F9]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{t("panchang.sunAndMoon") || "Sunset-Sunrise"}</h2>
       </div>
       
@@ -17,7 +18,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
         <div className="divide-y divide-gray-100">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#7c3aed] text-lg">☀</span>
+              <SunIcon className="h-5 w-5 text-[#6869F9]" />
               <span className="text-sm font-semibold">{t("panchang.sunrise")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{sun.rise || '-'}</span>
@@ -25,7 +26,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#7c3aed] text-lg opacity-80">☀</span>
+              <SunIcon className="h-5 w-5 text-[#6869F9] opacity-80" />
               <span className="text-sm font-semibold">{t("panchang.sunset")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{sun.set || '-'}</span>
@@ -33,7 +34,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#f4b400] text-lg">🌙</span>
+              <MoonIcon className="h-5 w-5 text-[#f4b400]" />
               <span className="text-sm font-semibold">{t("panchang.moonrise")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{moon.rise || '-'}</span>
@@ -41,7 +42,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#f4b400] text-lg opacity-80">🌜</span>
+              <MoonIcon className="h-5 w-5 text-[#f4b400] opacity-80" />
               <span className="text-sm font-semibold">{t("panchang.moonset")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{moon.set || '-'}</span>
@@ -51,3 +52,4 @@ export default function SunMoonTimes({ data }: { data: any }) {
     </div>
   );
 }
+

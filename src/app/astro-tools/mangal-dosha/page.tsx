@@ -1,8 +1,15 @@
-﻿"use client";
+"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  FireIcon,
+  ShieldExclamationIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 
 interface MangalDoshaResult {
   hasMangalDosha: boolean;
@@ -14,10 +21,10 @@ interface MangalDoshaResult {
 }
 
 const SEVERITY_STYLES = {
-  High:   { bg: "#fff1f2", border: "#fecdd3", badge: "bg-red-100 text-red-700",    icon: "🔴" },
-  Medium: { bg: "#fff7ed", border: "#fed7aa", badge: "bg-violet-100 text-violet-700", icon: "🟠" },
-  Low:    { bg: "#fefce8", border: "#fde68a", badge: "bg-yellow-100 text-yellow-700", icon: "🟡" },
-  None:   { bg: "#f0fdf4", border: "#bbf7d0", badge: "bg-violet-100 text-violet-700",  icon: "🟢" },
+  High:   { bg: "#fff1f2", border: "#fecdd3", badge: "bg-red-100 text-red-700",    icon: ExclamationTriangleIcon },
+  Medium: { bg: "#fff7ed", border: "#fed7aa", badge: "bg-violet-100 text-violet-700", icon: ShieldExclamationIcon },
+  Low:    { bg: "#fefce8", border: "#fde68a", badge: "bg-yellow-100 text-yellow-700", icon: SparklesIcon },
+  None:   { bg: "#f0fdf4", border: "#bbf7d0", badge: "bg-violet-100 text-violet-700",  icon: CheckCircleIcon },
 };
 
 export default function MangalDoshaPage() {
@@ -49,6 +56,7 @@ export default function MangalDoshaPage() {
   };
 
   const styles = data ? SEVERITY_STYLES[data.severity] : null;
+  const SeverityIcon = styles?.icon;
 
   return (
     <>
@@ -57,11 +65,11 @@ export default function MangalDoshaPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
+              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#7c3aed] font-medium">Mangal Dosha Calculator</span>
+              <span className="text-[#6869F9] font-medium">Mangal Dosha Calculator</span>
             </nav>
           </div>
         </div>
@@ -73,7 +81,7 @@ export default function MangalDoshaPage() {
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
               <div className="bg-gradient-to-r from-red-500 to-rose-600 p-6 text-white">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-3xl">♂</span>
+                  <FireIcon className="h-9 w-9" />
                   <h1 className="text-xl font-bold">Mangal Dosha Calculator</h1>
                 </div>
                 <p className="text-red-100 text-sm">Check the presence and severity of Mangal Dosha (Kuja Dosha) in your Kundali.</p>
@@ -102,7 +110,7 @@ export default function MangalDoshaPage() {
                   <button type="submit" disabled={loading}
                     className="w-full py-3 rounded-xl font-bold text-white transition text-sm"
                     style={{ backgroundColor: loading ? "#fca5a5" : "#dc2626" }}>
-                    {loading ? "Calculating..." : "Check Mangal Dosha →"}
+                    {loading ? "Calculating..." : "Check Mangal Dosha"}
                   </button>
                 </form>
                 <p className="mt-4 text-xs text-gray-400 text-center">Based on Mars position in Kundali · Vedic Astrology</p>
@@ -113,7 +121,7 @@ export default function MangalDoshaPage() {
             <div>
               {!data || !styles ? (
                 <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-                  <div className="text-5xl mb-4">♂</div>
+                  <FireIcon className="mx-auto mb-4 h-12 w-12 text-red-300" />
                   <h2 className="text-lg font-bold text-gray-700 mb-2">Mangal Dosha Report</h2>
                   <p className="text-sm text-gray-400">Enter your birth details to check if Mangal Dosha is present in your Kundali.</p>
                 </div>
@@ -121,8 +129,8 @@ export default function MangalDoshaPage() {
                 <div className="bg-white rounded-2xl overflow-hidden border" style={{ borderColor: styles.border, boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
                   {/* Result Header */}
                   <div className="p-6 text-center border-b" style={{ backgroundColor: styles.bg, borderColor: styles.border }}>
-                    <p className="text-gray-500 text-sm mb-2">Namaste, {name.trim()}! 🙏</p>
-                    <div className="text-4xl mb-3">{styles.icon}</div>
+                    <p className="text-gray-500 text-sm mb-2">Namaste, {name.trim()}!</p>
+                    {SeverityIcon && <SeverityIcon className="mx-auto mb-3 h-11 w-11 text-red-500" />}
                     <p className="text-2xl font-extrabold text-gray-800 mb-1">
                       {data.hasMangalDosha ? "Mangal Dosha Present" : "No Mangal Dosha"}
                     </p>
@@ -157,7 +165,7 @@ export default function MangalDoshaPage() {
                       <ul className="space-y-2">
                         {data.remedies.map((r, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                            <span className="text-[#7c3aed] mt-0.5 flex-shrink-0">•</span>
+                            <span className="text-[#6869F9] mt-0.5 flex-shrink-0">•</span>
                             {r}
                           </li>
                         ))}
@@ -183,3 +191,4 @@ export default function MangalDoshaPage() {
     </>
   );
 }
+

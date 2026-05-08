@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import AstroPageLayout from "@/components/astro-tools/AstroPageLayout";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 interface NakshatraResponse {
   nakshatra: string;
   pada: number;
@@ -28,7 +28,7 @@ const FIELD_ORDER = [
   { label: "Name Alphabet", key: "alphabet" as const },
 ];
 
-// ─── Input field ──────────────────────────────────────────────────────────────
+// --- Input field --------------------------------------------------------------
 function Field({
   label,
   icon,
@@ -40,7 +40,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">{label}</label>
+      <label className="block text-base font-semibold text-gray-700 mb-2">{label}</label>
       <div className="relative flex items-center">
         <span className="absolute left-4 text-violet-400 flex-shrink-0">{icon}</span>
         <div className="w-full pl-10">{children}</div>
@@ -49,7 +49,7 @@ function Field({
   );
 }
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
+// --- Icons --------------------------------------------------------------------
 const IconPerson = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -89,9 +89,9 @@ const IconShare = () => (
 );
 
 const inputCls =
-  "w-full h-[52px] rounded-xl border border-gray-200 px-4 text-[14px] text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
+  "w-full h-14 rounded-xl border border-gray-200 px-4 text-base text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
 
-// ─── SEO data ─────────────────────────────────────────────────────────────────
+// --- SEO data -----------------------------------------------------------------
 const SEO_SECTIONS = [
   {
     heading: "Nakshatra Finder",
@@ -99,7 +99,7 @@ const SEO_SECTIONS = [
   },
   {
     heading: "What is a Nakshatra?",
-    body: "In Vedic astrology, the sky is divided into 27 segments called Nakshatras. These are lunar constellations that represent different qualities. The moon, which changes signs every 2.3 days, plays a major role in determining your emotional and mental nature. The Nakshatra the moon was in at your time of birth is your Janma Nakshatra. Each Nakshatra spans 13°20′ in the sky and has its own ruling deity, symbol, and qualities. Knowing your Nakshatra can reveal insights about your character, health, compatibility, career, and spiritual path.",
+    body: "In Vedic astrology, the sky is divided into 27 segments called Nakshatras. These are lunar constellations that represent different qualities. The moon, which changes signs every 2.3 days, plays a major role in determining your emotional and mental nature. The Nakshatra the moon was in at your time of birth is your Janma Nakshatra. Each Nakshatra spans 13°20' in the sky and has its own ruling deity, symbol, and qualities. Knowing your Nakshatra can reveal insights about your character, health, compatibility, career, and spiritual path.",
   },
   {
     heading: "Find Nakshatra by Date of Birth / Birth Star Finder",
@@ -125,7 +125,7 @@ const FAQS = [
   { q: "What does Janma Nakshatra mean?", a: "Janma Nakshatra means 'birth star' in Sanskrit. It is the Nakshatra (lunar constellation) the Moon was positioned in at the exact time of your birth." },
 ];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// --- Page ---------------------------------------------------------------------
 export default function NakshatraFinderPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -184,17 +184,17 @@ export default function NakshatraFinderPage() {
         faqs={FAQS}
         currentHref="/astro-tools/nakshatra"
       >
-        {/* ── Form Card ── */}
+        {/* -- Form Card -- */}
         <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
           {/* Card header */}
           <div className="flex items-start justify-between mb-6">
-            <h2 className="text-[16px] font-bold text-gray-900 leading-snug max-w-[80%]">
+            <h2 className="text-xl font-bold text-gray-900 leading-snug max-w-[80%]">
               Enter Your Birth Details to Calculate Your Nakshatra
             </h2>
             <button
               onClick={handleShare}
               aria-label="Share"
-              className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
             >
               <IconShare />
             </button>
@@ -241,12 +241,12 @@ export default function NakshatraFinderPage() {
               />
             </Field>
 
-            {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+            {error && <p className="text-base text-red-500 font-medium">{error}</p>}
 
             {/* CTA */}
             <button
               type="submit" disabled={loading}
-              className="w-full h-14 rounded-xl font-semibold text-[15px] text-white tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-sm mt-2"
+              className="w-full h-14 rounded-xl font-semibold text-base text-white tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 shadow-sm mt-2"
               style={{ backgroundColor: loading ? "#34d399" : "#059669" }}
             >
               {loading ? "Calculating..." : "Find Your Nakshatra"}
@@ -254,20 +254,20 @@ export default function NakshatraFinderPage() {
           </form>
         </div>
 
-        {/* ── Results card ── */}
+        {/* -- Results card -- */}
         {data && (
           <div className="bg-white rounded-2xl border border-emerald-200 overflow-hidden shadow-sm">
             <div className="bg-emerald-50 border-b border-emerald-100 p-6 text-center">
-              <p className="text-gray-500 text-sm mb-1">Namaste, {name.trim()}! 🙏</p>
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Your Janma Nakshatra</p>
+              <p className="text-gray-500 text-base mb-1">Namaste, {name.trim()}!</p>
+              <p className="text-sm text-gray-400 uppercase tracking-widest font-semibold mb-2">Your Janma Nakshatra</p>
               <p className="text-4xl font-extrabold text-emerald-600 mb-1">{data.nakshatra}</p>
               <p className="text-sm text-gray-400">Pada {data.pada} · {data.rasi} Rasi</p>
             </div>
             <div className="p-6 grid grid-cols-2 md:grid-cols-4 gap-3">
               {resultRows.map((row) => (
                 <div key={row.label} className="rounded-xl bg-gray-50 border border-gray-100 p-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{row.label}</p>
-                  <p className="text-sm font-bold text-gray-800">{row.value}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">{row.label}</p>
+                  <p className="text-base font-bold text-gray-800">{row.value}</p>
                 </div>
               ))}
             </div>
@@ -277,3 +277,4 @@ export default function NakshatraFinderPage() {
     </>
   );
 }
+
