@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useMemo, useState } from "react";
 
@@ -143,7 +143,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-green-100"
             placeholder="Enter your name"
             aria-label="Name"
             required
@@ -160,7 +160,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
               type="date"
               value={dob}
               onChange={(event) => setDob(event.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-green-100"
               aria-label="Date of birth"
               required
             />
@@ -175,7 +175,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
               type="time"
               value={time}
               onChange={(event) => setTime(event.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-green-100"
               aria-label="Birth time"
               required
             />
@@ -185,7 +185,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-green-600 px-4 py-2 font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-400"
+          className="w-full rounded-lg bg-violet-600 px-4 py-2 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-400"
         >
           {loading ? "Calculating..." : "Calculate"}
         </button>
@@ -201,7 +201,7 @@ export default function NakshatraCard({ hideHeader = false }: NakshatraCardProps
           <h4 className="mt-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500 sm:text-xs">
             Your Janma Nakshatra
           </h4>
-          <p className="mt-2 text-center text-4xl font-extrabold text-green-600 sm:text-5xl">{data.nakshatra}</p>
+          <p className="mt-2 text-center text-4xl font-extrabold text-violet-600 sm:text-5xl">{data.nakshatra}</p>
 
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {resultRows.map((field) => (

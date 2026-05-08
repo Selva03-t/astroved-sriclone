@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
@@ -57,14 +57,14 @@ const IconShare = () => (
 );
 
 const inputCls =
-  "w-full h-[52px] rounded-xl border border-gray-200 px-4 text-[14px] text-gray-800 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all placeholder-gray-400 bg-white";
+  "w-full h-[52px] rounded-xl border border-gray-200 px-4 text-[14px] text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
 
 function Field({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
       <label className="block text-[13px] font-semibold text-gray-700 mb-1.5">{label}</label>
       <div className="relative flex items-center">
-        <span className="absolute left-4 text-orange-400 flex-shrink-0">{icon}</span>
+        <span className="absolute left-4 text-violet-400 flex-shrink-0">{icon}</span>
         <div className="w-full pl-10">{children}</div>
       </div>
     </div>
@@ -159,7 +159,7 @@ export default function JanmaRashiPage() {
             <button
               onClick={handleShare}
               aria-label="Share"
-              className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-500 hover:border-orange-300 hover:text-orange-500 transition-colors flex-shrink-0 ml-3"
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
             >
               <IconShare />
             </button>

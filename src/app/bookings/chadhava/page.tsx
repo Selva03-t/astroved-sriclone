@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
@@ -59,7 +59,7 @@ export default function MyChadhavaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't made any chadhava offerings yet. Join the tradition today.</p>
                <button 
                  onClick={() => window.location.href = '/chadhava'}
-                 className="bg-[#0e915f] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#0b7c50]"
+                 className="bg-[#7c3aed] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#6d28d9]"
                >
                   Explore Chadhava
                </button>
@@ -74,7 +74,7 @@ export default function MyChadhavaBookings() {
                         </div>
                         <div>
                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-[10px] font-bold bg-green-50 text-green-600 px-2 py-0.5 rounded uppercase tracking-wider">Confirmed</span>
+                              <span className="text-[10px] font-bold bg-violet-50 text-violet-600 px-2 py-0.5 rounded uppercase tracking-wider">Confirmed</span>
                               <span className="text-[10px] font-bold text-gray-400">Order ID: {booking.orderId}</span>
                            </div>
                            <h3 className="text-lg font-bold text-gray-900 uppercase">{booking.title || 'Spiritual Chadhava'}</h3>
@@ -82,7 +82,7 @@ export default function MyChadhavaBookings() {
                         </div>
                      </div>
                      <div className="text-center sm:text-right">
-                        <div className="text-2xl font-black text-[#0e915f] mb-1">₹ {booking.amount}</div>
+                        <div className="text-2xl font-black text-[#7c3aed] mb-1">₹ {booking.amount}</div>
                         <p className="text-[10px] font-bold text-gray-300 uppercase">Transaction ID: {booking._id.substr(-8).toUpperCase()}</p>
                      </div>
                   </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -64,13 +64,13 @@ export default function PanchangControls() {
       <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 hide-scrollbar">
         <button 
           onClick={() => handleDateChange(getTodayStr())}
-          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isToday ? 'bg-[#f47820] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isToday ? 'bg-[#7c3aed] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
         >
           {todayText}
         </button>
         <button 
           onClick={() => handleDateChange(getTomorrowStr())}
-          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isTomorrow ? 'bg-[#f47820] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isTomorrow ? 'bg-[#7c3aed] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
         >
           {tomorrowText}
         </button>
@@ -104,7 +104,7 @@ export default function PanchangControls() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <select className="appearance-none pl-9 pr-8 py-2 border border-gray-200 rounded-md text-sm font-medium text-gray-700 bg-white w-full md:w-[250px] outline-none focus:border-orange-500 cursor-pointer">
+          <select className="appearance-none pl-9 pr-8 py-2 border border-gray-200 rounded-md text-sm font-medium text-gray-700 bg-white w-full md:w-[250px] outline-none focus:border-violet-500 cursor-pointer">
             <option value="Varanasi">Varanasi, Uttar Pradesh, India</option>
             <option value="Delhi">New Delhi, Delhi, India</option>
             <option value="Mumbai">Mumbai, Maharashtra, India</option>

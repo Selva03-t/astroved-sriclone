@@ -167,12 +167,28 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
-        <button
-          onClick={handleOpenAdd}
-          className="flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
-        >
-          {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
-        </button>
+        <div className="flex items-center gap-2">
+          {isAdding && (
+            <button
+              form="content-manager-form"
+              type="submit"
+              disabled={submitting}
+              className="flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
+            >
+              {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
+            </button>
+          )}
+          <button
+            onClick={handleOpenAdd}
+            className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
+              isAdding
+                ? "bg-gray-500 hover:bg-gray-600"
+                : "bg-purple-600 hover:bg-purple-700"
+            }`}
+          >
+            {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
+          </button>
+        </div>
       </div>
 
       {isAdding && (
@@ -180,7 +196,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
           <h2 className="mb-4 text-lg font-medium text-gray-900">
             {editingId ? `Edit ${title.slice(0, -1)}` : `Add New ${title.slice(0, -1)}`}
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form id="content-manager-form" onSubmit={handleSubmit} className="space-y-4">
             {formError ? (
               <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                 {formError}

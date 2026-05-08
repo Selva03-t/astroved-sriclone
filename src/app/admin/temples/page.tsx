@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -188,13 +188,32 @@ export default function AdminTemplesPage() {
     <div className="space-y-6 max-w-7xl mx-auto pb-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Temple CMS</h1>
-        <button onClick={handleOpenAdd} className="flex items-center rounded-md bg-[#f47820] px-4 py-2 text-sm font-medium text-white hover:bg-[#d86616]">
-          {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add Temple</>}
-        </button>
+        <div className="flex items-center gap-2">
+          {isAdding && (
+            <button
+              form="temples-admin-form"
+              type="submit"
+              disabled={submitting}
+              className="flex items-center rounded-md bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#6d28d9] disabled:opacity-50"
+            >
+              {submitting ? "Saving..." : editingId ? "Update Temple" : "Save Temple"}
+            </button>
+          )}
+          <button
+            onClick={handleOpenAdd}
+            className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
+              isAdding
+                ? "bg-gray-500 hover:bg-gray-600"
+                : "bg-[#7c3aed] hover:bg-[#6d28d9]"
+            }`}
+          >
+            {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add Temple</>}
+          </button>
+        </div>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleSubmit} className="bg-white p-8 shadow-sm border border-gray-100 rounded-2xl space-y-8">
+        <form id="temples-admin-form" onSubmit={handleSubmit} className="bg-white p-8 shadow-sm border border-gray-100 rounded-2xl space-y-8">
           
           {/* SECTION A */}
           <section>
@@ -377,7 +396,7 @@ export default function AdminTemplesPage() {
           </section>
 
           <div className="flex justify-end pt-4 border-t">
-            <button disabled={submitting} type="submit" className="bg-[#f47820] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#d86616] transition-colors">
+            <button disabled={submitting} type="submit" className="bg-[#7c3aed] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#6d28d9] transition-colors">
               {submitting ? "Saving..." : editingId ? "Update Temple" : "Save Temple"}
             </button>
           </div>

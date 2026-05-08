@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -65,7 +65,7 @@ export default function ProfilePage() {
     return (
       <>
         <Navbar />
-        <div className="flex min-h-screen items-center justify-center bg-[#fffdf9]">
+        <div className="flex min-h-screen items-center justify-center bg-[#faf5ff]">
           <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-[#1d4ed8]" />
         </div>
       </>
@@ -75,19 +75,15 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#fffdf9]">
+      <main className="min-h-screen bg-[#faf5ff]">
         {/* Breadcrumb */}
-        <div className="border-b border-gray-100 bg-[#fdf8f0] px-6 py-3">
-          <div className="mx-auto max-w-3xl">
-            <nav className="flex items-center gap-2 text-sm text-gray-500">
-              <Link href="/" className="hover:text-[#1d4ed8]">
-                Home
-              </Link>
-              <span className="text-gray-300">›</span>
-              <span className="font-semibold text-[#1d4ed8]">Profile</span>
-            </nav>
+        <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
+          <div className="mx-auto max-w-3xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+            <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
+            <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
+            <span className="text-[#7c3aed] font-bold">Profile</span>
           </div>
-        </div>
+        </nav>
 
         <div className="mx-auto max-w-3xl px-4 py-6">
           <h1 className="mb-4 text-xl font-bold text-gray-900">Profile</h1>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from 'react';
 import Image from 'next/image';
 import { useTranslation } from '@/contexts/LanguageContext';
@@ -21,7 +21,7 @@ export default function MainDateCard({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#f47820]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#7c3aed]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{formattedDate}</h2>
       </div>
       

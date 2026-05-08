@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
@@ -15,9 +15,9 @@ interface MangalDoshaResult {
 
 const SEVERITY_STYLES = {
   High:   { bg: "#fff1f2", border: "#fecdd3", badge: "bg-red-100 text-red-700",    icon: "🔴" },
-  Medium: { bg: "#fff7ed", border: "#fed7aa", badge: "bg-orange-100 text-orange-700", icon: "🟠" },
+  Medium: { bg: "#fff7ed", border: "#fed7aa", badge: "bg-violet-100 text-violet-700", icon: "🟠" },
   Low:    { bg: "#fefce8", border: "#fde68a", badge: "bg-yellow-100 text-yellow-700", icon: "🟡" },
-  None:   { bg: "#f0fdf4", border: "#bbf7d0", badge: "bg-green-100 text-green-700",  icon: "🟢" },
+  None:   { bg: "#f0fdf4", border: "#bbf7d0", badge: "bg-violet-100 text-violet-700",  icon: "🟢" },
 };
 
 export default function MangalDoshaPage() {
@@ -53,15 +53,15 @@ export default function MangalDoshaPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen" style={{ backgroundColor: "#fdf4e7" }}>
+      <main className="min-h-screen" style={{ backgroundColor: "#f5f3ff" }}>
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#f47820]">Home</Link>
+              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#f47820]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#f47820] font-medium">Mangal Dosha Calculator</span>
+              <span className="text-[#7c3aed] font-medium">Mangal Dosha Calculator</span>
             </nav>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function MangalDoshaPage() {
                       <ul className="space-y-2">
                         {data.remedies.map((r, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                            <span className="text-[#f47820] mt-0.5 flex-shrink-0">•</span>
+                            <span className="text-[#7c3aed] mt-0.5 flex-shrink-0">•</span>
                             {r}
                           </li>
                         ))}

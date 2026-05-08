@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -117,7 +117,7 @@ export default function ChadhavaDetailPage() {
       <div className="min-h-screen bg-white">
         <Navbar />
         <div className="flex items-center justify-center py-40">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0e915f]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#7c3aed]"></div>
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export default function ChadhavaDetailPage() {
         <Navbar />
         <div className="text-center py-40">
           <h2 className="text-2xl font-bold text-gray-800">Chadhava offering not found</h2>
-          <Link href="/chadhava" className="text-[#0e915f] font-bold mt-4 inline-block underline">Back to Chadhava</Link>
+          <Link href="/chadhava" className="text-[#7c3aed] font-bold mt-4 inline-block underline">Back to Chadhava</Link>
         </div>
       </div>
     );
@@ -146,9 +146,9 @@ export default function ChadhavaDetailPage() {
         {/* Review Breadcrumbs */}
         <div className="bg-white border-b border-gray-100 py-3 px-6">
            <div className="mx-auto max-w-7xl flex items-center justify-between">
-              <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#0e915f]">
-                 <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#0e915f] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
-                 <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#0e915f] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
+              <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#7c3aed]">
+                 <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#7c3aed] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
+                 <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#7c3aed] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
                  <div className="flex items-center gap-2 opacity-30"><div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px]">3</div> Make Payment</div>
                  <div className="flex items-center gap-2 opacity-30"><div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px]">4</div> View Certificate</div>
               </div>
@@ -160,7 +160,7 @@ export default function ChadhavaDetailPage() {
            <div className="lg:col-span-2 space-y-6">
               <button 
                 onClick={() => setStep(1)}
-                className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#0e915f] transition-colors mb-6"
+                className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#7c3aed] transition-colors mb-6"
               >
                 <i className="fa-solid fa-arrow-left"></i> Review Booking
               </button>
@@ -173,25 +173,25 @@ export default function ChadhavaDetailPage() {
                             <h3 className="font-bold text-[#1f1f1f]">{item.name}</h3>
                             <p className="text-gray-900 font-bold mt-1 text-sm">₹ {item.price}</p>
                          </div>
-                         <div className="flex items-center gap-4 bg-[#0e915f] text-white px-3 py-1.5 rounded-lg text-sm font-bold">
+                         <div className="flex items-center gap-4 bg-[#7c3aed] text-white px-3 py-1.5 rounded-lg text-sm font-bold">
                             <button onClick={() => updateQuantity(item.id, -1)} className="hover:scale-125">-</button>
                             <span className="min-w-[12px] text-center">{cart[item.id]}</span>
                             <button onClick={() => updateQuantity(item.id, 1)} className="hover:scale-125">+</button>
                          </div>
                       </div>
                       <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                         <div className="flex items-center gap-2 text-[#0e915f] text-[10px] font-bold">
+                         <div className="flex items-center gap-2 text-[#7c3aed] text-[10px] font-bold">
                             <i className="fa-brands fa-whatsapp text-sm"></i>
                             <span>+{userInfo.whatsapp} (Your WhatsApp Number)</span>
                          </div>
-                         <button onClick={() => setShowModal(true)} className="text-[10px] font-bold text-gray-400 italic hover:text-[#0e915f]">
+                         <button onClick={() => setShowModal(true)} className="text-[10px] font-bold text-gray-400 italic hover:text-[#7c3aed]">
                             ✏️ Edit
                          </button>
                       </div>
                    </div>
                  ))}
                  
-                 <div className="bg-orange-50/50 rounded-2xl p-6 flex justify-between items-center cursor-pointer hover:bg-orange-50 transition-colors">
+                 <div className="bg-violet-50/50 rounded-2xl p-6 flex justify-between items-center cursor-pointer hover:bg-violet-50 transition-colors">
                     <div className="flex items-center gap-3">
                        <span className="text-xl">🏷️</span>
                        <span className="font-bold text-sm text-[#1f1f1f]">Apply Coupon</span>
@@ -229,11 +229,11 @@ export default function ChadhavaDetailPage() {
                       <div className="flex-1">
                          <h4 className="font-bold text-[13px] text-[#1f1f1f] truncate w-32">{item.name}</h4>
                          <p className="text-gray-400 text-[10px] mt-0.5">{item.description.slice(0, 30)}...</p>
-                         <p className="text-[#0e915f] font-bold text-[13px] mt-1">₹ {item.price}</p>
+                         <p className="text-[#7c3aed] font-bold text-[13px] mt-1">₹ {item.price}</p>
                       </div>
                       <button 
                         onClick={() => toggleOffering(item)}
-                        className="bg-white text-[#0e915f] border border-[#0e915f] h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#0e915f] hover:text-white transition-all active:scale-95"
+                        className="bg-white text-[#7c3aed] border border-[#7c3aed] h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#7c3aed] hover:text-white transition-all active:scale-95"
                       >
                          + Add
                       </button>
@@ -245,7 +245,7 @@ export default function ChadhavaDetailPage() {
 
         {/* Floating Cart Bar (Review Page) */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#0e915f] text-white p-4 rounded-2xl shadow-xl shadow-[#0e915f]/20">
+           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#7c3aed] text-white p-4 rounded-2xl shadow-xl shadow-[#7c3aed]/20">
               <div className="flex items-center gap-4 text-sm font-bold">
                  <span>{selectedCount} Offerings</span>
                  <span className="opacity-50">•</span>
@@ -284,17 +284,17 @@ export default function ChadhavaDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fffdf9] pb-32">
+    <div className="min-h-screen bg-[#faf5ff] pb-32">
       <Navbar />
 
       {/* Breadcrumbs */}
-      <nav className="bg-[#fff5e9] py-3.5 px-6">
+      <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
         <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
           <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
           <Link href="/chadhava" className="hover:text-gray-800 transition-colors">AstroVed Chadhava Seva</Link>
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <span className="text-[#f47820] truncate max-w-[300px] font-bold">{data.title}</span>
+          <span className="text-[#7c3aed] truncate max-w-[300px] font-bold">{data.title}</span>
         </div>
       </nav>
 
@@ -332,7 +332,7 @@ export default function ChadhavaDetailPage() {
                     <button 
                       key={idx}
                       onClick={() => handleDotClick(idx)}
-                      className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#f47820]' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+                      className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#7c3aed]' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
                     />
                   ))}
                </div>
@@ -349,7 +349,7 @@ export default function ChadhavaDetailPage() {
               </div>
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#f47820] transition-colors"
+                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#7c3aed] transition-colors"
               >
                 {isExpanded ? 'Read less' : 'Read more'}
               </button>
@@ -365,7 +365,7 @@ export default function ChadhavaDetailPage() {
                 </div>
             </div>
             <p className="text-[15px] text-[#555] leading-relaxed mt-4">
-               Till now <span className="text-[#f47820] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
+               Till now <span className="text-[#7c3aed] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
             </p>
           </div>
         </div>
@@ -426,7 +426,7 @@ export default function ChadhavaDetailPage() {
       {/* Cart Bar */}
       {selectedCount > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 p-4 lg:p-6 z-50 animate-in slide-in-from-bottom duration-500">
-           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#0e915f] text-white p-4 lg:p-5 rounded-[24px] shadow-2xl shadow-[#0e915f]/30">
+           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#7c3aed] text-white p-4 lg:p-5 rounded-[24px] shadow-2xl shadow-[#7c3aed]/30">
               <div className="flex items-center gap-4 text-sm lg:text-base font-bold pl-4">
                  <span>{selectedCount} Offerings</span>
                  <span className="opacity-40">•</span>
@@ -458,7 +458,7 @@ export default function ChadhavaDetailPage() {
                     <label className="block text-gray-900 font-bold text-sm mb-4">Enter Your Whatsapp Mobile Number</label>
                     <p className="text-xs text-gray-400 mb-4">All your order details will be sent on WhatsApp on below number.</p>
                     <div className="relative">
-                       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#0e915f] font-bold">
+                       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#7c3aed] font-bold">
                           <i className="fa-brands fa-whatsapp text-lg"></i>
                           <span>+91</span>
                        </div>
@@ -470,7 +470,7 @@ export default function ChadhavaDetailPage() {
                            const val = e.target.value.replace(/\D/g, '').slice(0, 10);
                            setUserInfo(prev => ({ ...prev, whatsapp: val }));
                          }}
-                         className="w-full bg-gray-50 border-2 border-transparent focus:border-[#0e915f] outline-none rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 transition-all"
+                         className="w-full bg-gray-50 border-2 border-transparent focus:border-[#7c3aed] outline-none rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 transition-all"
                          placeholder="8727121883"
                        />
                        {userInfo.whatsapp && <button onClick={() => setUserInfo(p => ({...p, whatsapp: ''}))} className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500">✕</button>}
@@ -484,7 +484,7 @@ export default function ChadhavaDetailPage() {
                          type="text" 
                          value={userInfo.name}
                          onChange={(e) => setUserInfo(prev => ({ ...prev, name: e.target.value }))}
-                         className="w-full bg-gray-50 border-2 border-transparent focus:border-[#0e915f] outline-none rounded-2xl py-4 px-6 text-gray-900 transition-all placeholder:text-gray-300"
+                         className="w-full bg-gray-50 border-2 border-transparent focus:border-[#7c3aed] outline-none rounded-2xl py-4 px-6 text-gray-900 transition-all placeholder:text-gray-300"
                          placeholder="e.g. Rahul Sharma"
                        />
                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-300 uppercase">{userInfo.name.length}/64</div>
@@ -500,7 +500,7 @@ export default function ChadhavaDetailPage() {
                      }
                    }}
                    disabled={!userInfo.name || !userInfo.whatsapp}
-                   className="w-full bg-[#0e915f] text-white py-5 rounded-2xl font-extrabold uppercase tracking-widest text-sm shadow-xl shadow-[#0e915f]/20 hover:bg-[#0b7c50] transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
+                   className="w-full bg-[#7c3aed] text-white py-5 rounded-2xl font-extrabold uppercase tracking-widest text-sm shadow-xl shadow-[#7c3aed]/20 hover:bg-[#6d28d9] transition-all active:scale-95 disabled:opacity-50 disabled:grayscale"
                  >
                     Next
                  </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -55,14 +55,14 @@ function PaymentContent() {
       <div className="min-h-screen bg-white">
         <Navbar />
         <div className="mx-auto max-w-md mt-20 p-10 text-center space-y-6">
-           <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-4xl">
+           <div className="h-20 w-20 bg-violet-100 text-violet-600 rounded-full flex items-center justify-center mx-auto text-4xl">
               ✓
            </div>
            <h1 className="text-3xl font-bold text-gray-900">Payment Successful!</h1>
            <p className="text-gray-500">Your Chadhava offering has been booked successfully. You will receive updates on WhatsApp.</p>
            <button 
              onClick={() => window.location.href = '/dashboard'}
-             className="w-full bg-[#0e915f] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#0b7c50]"
+             className="w-full bg-[#7c3aed] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#6d28d9]"
            >
               Back to Dashboard
            </button>
@@ -121,7 +121,7 @@ function PaymentContent() {
                     <div className="space-y-4">
                        <button className="w-full flex items-center justify-between p-4 rounded-2xl border border-gray-100 hover:border-blue-100 hover:bg-blue-50/30 transition-all group">
                           <div className="flex items-center gap-4">
-                             <div className="h-10 w-10 bg-orange-50 rounded-lg flex items-center justify-center text-orange-600">
+                             <div className="h-10 w-10 bg-violet-50 rounded-lg flex items-center justify-center text-violet-600">
                                 <i className="fa-solid fa-qrcode"></i>
                              </div>
                              <div className="text-left">

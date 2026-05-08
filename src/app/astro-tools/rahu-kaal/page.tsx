@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
@@ -81,15 +81,15 @@ export default function RahuKaalPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen" style={{ backgroundColor: "#fdf4e7" }}>
+      <main className="min-h-screen" style={{ backgroundColor: "#f5f3ff" }}>
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#f47820]">Home</Link>
+              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#f47820]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#f47820] font-medium">Rahu Kaal Calculator</span>
+              <span className="text-[#7c3aed] font-medium">Rahu Kaal Calculator</span>
             </nav>
           </div>
         </div>

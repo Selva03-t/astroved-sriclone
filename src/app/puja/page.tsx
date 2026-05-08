@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { MapPinIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { ReviewsSection } from "@/app/dashboard/page";
 
 interface Puja {
   _id: string;
@@ -161,8 +162,8 @@ function FilterChip({
         onClick={() => setOpen((o) => !o)}
         className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150 whitespace-nowrap select-none
           ${isActive
-            ? "border-[#6969fa] bg-[#6969fa]/10 text-[#6969fa]"
-            : "border-gray-300 bg-white text-gray-600 hover:border-[#6969fa]/60 hover:text-[#6969fa]"
+            ? "border-[#7c3aed] bg-[#7c3aed]/10 text-[#7c3aed]"
+            : "border-gray-300 bg-white text-gray-600 hover:border-[#7c3aed]/60 hover:text-[#7c3aed]"
           }`}
       >
         <span>{isActive ? selected : group.label}</span>
@@ -186,11 +187,11 @@ function FilterChip({
                 setOpen(false);
               }}
               className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f5f5ff]
-                ${selected === opt.value ? "font-semibold text-[#6969fa]" : "text-gray-700"}`}
+                ${selected === opt.value ? "font-semibold text-[#7c3aed]" : "text-gray-700"}`}
             >
               {opt.value === "All" ? `All ${group.label}` : opt.value}
               {selected === opt.value && (
-                <svg viewBox="0 0 16 16" fill="none" className="h-4 w-4 text-[#6969fa]">
+                <svg viewBox="0 0 16 16" fill="none" className="h-4 w-4 text-[#7c3aed]">
                   <path d="M3 8l4 4 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )}
@@ -209,24 +210,6 @@ export default function PujaPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
-
-  const reviewsScrollRef = useRef<HTMLDivElement>(null);
-  const [reviewScrollPos, setReviewScrollPos] = useState(0);
-
-  const handleReviewScroll = (direction: 'left' | 'right') => {
-    if (reviewsScrollRef.current) {
-      const scrollAmount = 350;
-      reviewsScrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const handleScrollEvent = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const maxScrollLeft = target.scrollWidth - target.clientWidth;
-    if (maxScrollLeft > 0) {
-      setReviewScrollPos(target.scrollLeft / maxScrollLeft);
-    }
-  };
 
   // Fetch all pujas once
   useEffect(() => {
@@ -266,14 +249,14 @@ export default function PujaPage() {
         <div className="mx-auto max-w-7xl px-4 md:px-8">
 
           {/* Page Heading */}
-          <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#2c1c4e] md:text-4xl">
+          <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#3b0764] md:text-4xl">
             {t.puja.heading}
           </h1>
 
           {/* Banner Carousel */}
           {isLoading ? (
             <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
-              <p className="text-base text-[#6e5f8f]">{t.puja.loading}</p>
+              <p className="text-base text-[#7c3aed]">{t.puja.loading}</p>
             </div>
           ) : allPujas.length > 0 ? (
             <>
@@ -327,7 +310,7 @@ export default function PujaPage() {
                     type="button"
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to puja ${index + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6969fa]" : "w-2 bg-[#d7cbef]"
+                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#7c3aed]" : "w-2 bg-[#d7cbef]"
                       }`}
                   />
                 ))}
@@ -337,10 +320,10 @@ export default function PujaPage() {
 
           {/* Section */}
           <section className="mt-12">
-            <h2 className="text-2xl font-bold text-[#2c1c4e] md:text-3xl">
+            <h2 className="text-2xl font-bold text-[#3b0764] md:text-3xl">
               {t.puja.sectionTitle}
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6e5f8f] md:text-base">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#7c3aed] md:text-base">
               {t.puja.sectionSubtitle}
             </p>
 
@@ -391,7 +374,7 @@ export default function PujaPage() {
                     .map(([key, val]) => (
                       <span
                         key={key}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-[#6969fa]/10 px-3 py-1 text-xs font-semibold text-[#6969fa]"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-[#7c3aed]/10 px-3 py-1 text-xs font-semibold text-[#7c3aed]"
                       >
                         {key}: {val}
                         <button
@@ -412,7 +395,7 @@ export default function PujaPage() {
 
             {/* Result count */}
             {!isLoading && (
-              <p className="mt-4 text-sm text-[#6e5f8f]">
+              <p className="mt-4 text-sm text-[#7c3aed]">
                 {hasActiveFilters
                   ? `${t.puja.showingPujas} ${displayedPujas.length} ${t.puja.of} ${allPujas.length} ${t.puja.pujas}`
                   : `${allPujas.length} ${t.puja.allPujas}`}
@@ -423,12 +406,12 @@ export default function PujaPage() {
             {isLoading ? null : displayedPujas.length === 0 ? (
               <div className="mt-16 flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c4b8ef] bg-white py-16 text-center">
                 <span className="text-4xl">🙏</span>
-                <p className="text-lg font-semibold text-[#2c1c4e]">{t.puja.noMatch}</p>
-                <p className="text-sm text-[#6e5f8f]">{t.puja.noMatchSub}</p>
+                <p className="text-lg font-semibold text-[#3b0764]">{t.puja.noMatch}</p>
+                <p className="text-sm text-[#7c3aed]">{t.puja.noMatchSub}</p>
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-2 rounded-full bg-[#6969fa] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5555e8] transition"
+                  className="mt-2 rounded-full bg-[#7c3aed] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5555e8] transition"
                 >
                   {t.puja.clearFilters}
                 </button>
@@ -452,7 +435,7 @@ export default function PujaPage() {
                         {puja.badge || "Special"}
                       </div>
                       {/* Bottom Left Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#0e915f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+                      <div className="absolute bottom-3 left-3 bg-[#7c3aed] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
                         BOOK PUJA
                       </div>
                     </div>
@@ -471,15 +454,15 @@ export default function PujaPage() {
                       
                       {/* Location & Date */}
                       <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
-                        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span className="line-clamp-2 leading-tight">{(puja as any).location || "Sacred Temple, India"}</span>
                       </div>
                       <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
-                        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <span className="leading-tight">{(puja as any).date || t.puja.announcedSoon}</span>
                       </div>
 
-                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#0e915f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#0b7c50] transition-colors flex items-center justify-center gap-1.5">
+                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#7c3aed] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#6d28d9] transition-colors flex items-center justify-center gap-1.5">
                         {puja.buttonText || t.puja.bookNow}
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                       </Link>
@@ -494,87 +477,7 @@ export default function PujaPage() {
           <section className="mt-20 border-t border-gray-100 pt-16 pb-16">
             <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">{t.puja.devoteesTitle}</h2>
             <p className="mt-2 mb-8 text-sm text-gray-600 md:text-base">{t.puja.devoteesSubtitle}</p>
-            <div
-              ref={reviewsScrollRef}
-              onScroll={handleScrollEvent}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4"
-            >
-              {/* Video Review Card */}
-              <div className="shrink-0 w-[300px] md:w-[340px] snap-start overflow-hidden rounded-2xl bg-black">
-                <div className="relative h-48 w-full bg-gray-900">
-                  <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="Video thumbnail" className="h-full w-full object-cover opacity-80" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm cursor-pointer hover:bg-black/80 transition-colors">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-1"><path d="M8 5v14l11-7z" /></svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-4">
-                  <div className="flex items-center gap-3">
-                    <img src="https://i.pravatar.cc/150?u=nair" alt="Achutam" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 object-cover" />
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">Achutam Nair</p>
-                      <p className="text-xs text-gray-500">Bangalore</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Text Review 1 */}
-              <div className="shrink-0 w-[300px] md:w-[340px] snap-start flex flex-col rounded-2xl bg-[#f5f5f5] p-6 shadow-sm border border-gray-100">
-                <p className="flex-1 text-sm italic leading-relaxed text-gray-700">"So many puja options for all the devotees. Great to get the grace of god from our homes. Most authentic and trustworthy puja service compared to others."</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/150?u=ramesh" alt="Ramesh" className="h-10 w-10 rounded-full object-cover border border-gray-200" />
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">Ramesh Chandra Bhatt</p>
-                    <p className="text-xs text-gray-500">Nagpur</p>
-                  </div>
-                </div>
-              </div>
-              {/* Text Review 2 */}
-              <div className="shrink-0 w-[300px] md:w-[340px] snap-start flex flex-col rounded-2xl bg-[#f5f5f5] p-6 shadow-sm border border-gray-100">
-                <p className="flex-1 text-sm italic leading-relaxed text-gray-700">"I really like the whole process of puja at AstroVed. Puja is conducted properly and customer support is available throughout the process. I asked questions... Most genuine and authentic."</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/150?u=aperna" alt="Aperna" className="h-10 w-10 rounded-full object-cover border border-gray-200" />
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">Aperna Mal</p>
-                    <p className="text-xs text-gray-500">Puri</p>
-                  </div>
-                </div>
-              </div>
-              {/* Text Review 3 */}
-              <div className="shrink-0 w-[300px] md:w-[340px] snap-start flex flex-col rounded-2xl bg-[#f5f5f5] p-6 shadow-sm border border-gray-100">
-                <p className="flex-1 text-sm italic leading-relaxed text-gray-700">"Liked the fact that we can book puja online else we have to travel to get everything done. Felt very nice to hear my name and gotra during the puja of Mahadev. Prasad was also received in time."</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <img src="https://i.pravatar.cc/150?u=shivraj" alt="Shivraj" className="h-10 w-10 rounded-full object-cover border border-gray-200" />
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">Shivraj Dobhi</p>
-                    <p className="text-xs text-gray-500">Agra</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Scroll Controls */}
-            <div className="mt-8 flex items-center justify-center gap-4">
-              <button
-                onClick={() => handleReviewScroll('left')}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-white hover:bg-gray-400 transition"
-              >
-                <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" /></svg>
-              </button>
-
-              <div className="flex items-center gap-2">
-                <div className={`h-2 w-2 rounded-full transition-colors ${reviewScrollPos < 0.5 ? 'bg-[#f47820]' : 'bg-gray-300'}`} />
-                <div className={`h-2 w-2 rounded-full transition-colors ${reviewScrollPos >= 0.5 ? 'bg-[#f47820]' : 'bg-gray-300'}`} />
-              </div>
-
-              <button
-                onClick={() => handleReviewScroll('right')}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f47820] text-white hover:bg-[#d96619] transition shadow-md"
-              >
-                <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
-              </button>
-            </div>
+            <ReviewsSection />
           </section>
 
           {/* ── Stats Section ── */}
@@ -589,16 +492,16 @@ export default function PujaPage() {
                 <p className="mt-1 text-sm font-semibold text-[#2563eb]">{t.puja.pujasDone}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#faf5ff] to-[#f3e8ff] p-8 text-center shadow-sm border border-[#e9d5ff]/50">
-                <h3 className="text-2xl font-black text-[#6969fa]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6969fa]/80">{t.puja.happyDevotees}</p>
+                <h3 className="text-2xl font-black text-[#7c3aed]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#7c3aed]/80">{t.puja.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
                 <h3 className="text-2xl font-black text-[#be185d]">100 +</h3>
                 <p className="mt-1 text-sm font-semibold text-[#db2777]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#f47820]">{t.puja.sankalp}</h3>
-                <p className="mt-1 text-sm font-semibold text-[#f47820]/80">{t.puja.sankalpDesc}</p>
+                <h3 className="text-2xl font-black text-[#7c3aed]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#7c3aed]/80">{t.puja.sankalpDesc}</p>
               </div>
             </div>
           </section>
@@ -611,35 +514,35 @@ export default function PujaPage() {
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div className="space-y-8">
                 <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">1</div>
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">1</div>
                   <div>
                     <h3 className="font-bold text-gray-900">{t.puja.step1Title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{t.puja.step1Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">2</div>
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">2</div>
                   <div>
                     <h3 className="font-bold text-gray-900">{t.puja.step2Title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{t.puja.step2Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">3</div>
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">3</div>
                   <div>
                     <h3 className="font-bold text-gray-900">{t.puja.step3Title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{t.puja.step3Desc}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#f47820] text-sm font-bold text-white shadow-sm">4</div>
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#7c3aed] text-sm font-bold text-white shadow-sm">4</div>
                   <div>
                     <h3 className="font-bold text-gray-900">{t.puja.step4Title}</h3>
                     <p className="mt-1 text-sm text-gray-600">{t.puja.step4Desc}</p>
                   </div>
                 </div>
               </div>
-              <div className="relative rounded-[32px] bg-[#f47820] p-8 shadow-xl">
+              <div className="relative rounded-[32px] bg-[#7c3aed] p-8 shadow-xl">
                 <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="How it works" className="mx-auto w-full max-w-sm rounded-xl object-cover shadow-2xl h-80" />
               </div>
             </div>

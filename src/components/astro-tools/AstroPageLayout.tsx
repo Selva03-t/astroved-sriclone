@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, ReactNode } from "react";
 import Link from "next/link";
@@ -75,11 +75,11 @@ function Sidebar({ currentHref }: { currentHref: string }) {
         className="rounded-2xl overflow-hidden p-5 text-white"
         style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}
       >
-        <p className="text-xs font-semibold uppercase tracking-wider text-orange-100 mb-1">AstroVed App</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-violet-100 mb-1">AstroVed App</p>
         <p className="text-[17px] font-extrabold leading-snug mb-4">
           One App For all your Devotional Needs
         </p>
-        <button className="flex items-center gap-2 bg-white text-orange-600 text-[13px] font-bold px-4 py-2.5 rounded-xl hover:bg-orange-50 transition-colors">
+        <button className="flex items-center gap-2 bg-white text-violet-600 text-[13px] font-bold px-4 py-2.5 rounded-xl hover:bg-violet-50 transition-colors">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.42c1.42.07 2.4.78 3.22.8 1.22-.24 2.39-.94 3.68-.84 1.58.13 2.77.8 3.55 2.03-3.27 1.96-2.5 6.32.55 7.54-.65 1.7-1.5 3.37-3 4.33zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
           </svg>
@@ -91,7 +91,7 @@ function Sidebar({ currentHref }: { currentHref: string }) {
       <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[14px] font-bold text-gray-900">Popular articles for you</h3>
-          <button className="text-[12px] text-orange-500 font-semibold hover:underline">Read more ›</button>
+          <button className="text-[12px] text-violet-500 font-semibold hover:underline">Read more ›</button>
         </div>
         <div className="flex flex-col gap-3">
           {ARTICLES.map((a) => (
@@ -99,14 +99,14 @@ function Sidebar({ currentHref }: { currentHref: string }) {
               key={a.title}
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors group"
             >
-              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-xl flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center text-xl flex-shrink-0">
                 {a.img}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-semibold text-gray-800 leading-snug line-clamp-2">{a.title}</p>
                 <p className="text-[11px] text-gray-400 mt-0.5">Updated on {a.updated}</p>
               </div>
-              <svg className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:text-orange-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </div>
@@ -118,17 +118,17 @@ function Sidebar({ currentHref }: { currentHref: string }) {
       <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[14px] font-bold text-gray-900">Popular Calculators</h3>
-          <Link href="/astro-tools" className="text-[12px] text-orange-500 font-semibold hover:underline">See More ›</Link>
+          <Link href="/astro-tools" className="text-[12px] text-violet-500 font-semibold hover:underline">See More ›</Link>
         </div>
         <div className="flex flex-col gap-2">
           {filteredCalcs.map((c) => (
             <Link
               key={c.href}
               href={c.href}
-              className="flex items-center justify-between px-4 py-3 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-all duration-200 group"
+              className="flex items-center justify-between px-4 py-3 rounded-xl border border-gray-100 hover:border-violet-200 hover:bg-violet-50 transition-all duration-200 group"
             >
-              <span className="text-[13px] font-medium text-gray-700 group-hover:text-orange-700">{c.label}</span>
-              <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <span className="text-[13px] font-medium text-gray-700 group-hover:text-violet-700">{c.label}</span>
+              <svg className="w-4 h-4 text-gray-400 group-hover:text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -153,14 +153,14 @@ export default function AstroPageLayout({
     <div className="min-h-screen bg-[#f5f5f5]">
 
       {/* ── Breadcrumb ── */}
-      <div className="w-full border-b border-[#ecdfc8]" style={{ backgroundColor: "#fdf4e7" }}>
+      <div className="w-full border-b border-[#ecdfc8]" style={{ backgroundColor: "#f5f3ff" }}>
         <div className="max-w-[1400px] mx-auto px-6 py-3.5 flex items-center gap-1.5 text-[13px] text-gray-500">
-          <Link href="/" className="hover:text-orange-600 transition-colors">Home</Link>
-          <svg className="w-3 h-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <Link href="/" className="hover:text-violet-600 transition-colors">Home</Link>
+          <svg className="w-3 h-3 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-          <Link href="/astro-tools" className="hover:text-orange-600 transition-colors">Astrology Calculator</Link>
-          <svg className="w-3 h-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <Link href="/astro-tools" className="hover:text-violet-600 transition-colors">Astrology Calculator</Link>
+          <svg className="w-3 h-3 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
           <span className="text-gray-700">{breadcrumb}</span>

@@ -82,10 +82,10 @@ function MoonPhaseIcon() {
 
 function HelpIcon() {
   return (
-    <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#f47820" strokeWidth="2">
+    <svg className="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2">
       <circle cx="12" cy="12" r="10" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-      <circle cx="12" cy="17" r="0.5" fill="#f47820" />
+      <circle cx="12" cy="17" r="0.5" fill="#7c3aed" />
     </svg>
   );
 }
@@ -148,7 +148,7 @@ export default function PanchangClientPage() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fdf6ea" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#faf5ff" }}>
 
       {/* ── Controls Bar ── */}
       <div className="bg-white border-b border-gray-100 sticky top-[68px] z-40 shadow-sm">
@@ -158,7 +158,7 @@ export default function PanchangClientPage() {
             <button
               onClick={() => setSelectedDate(getTodayStr())}
               className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
-                isToday ? "bg-[#f47820] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                isToday ? "bg-[#7c3aed] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
               }`}
             >
               Today
@@ -166,7 +166,7 @@ export default function PanchangClientPage() {
             <button
               onClick={() => setSelectedDate(getTomorrowStr())}
               className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
-                isTomorrow ? "bg-[#f47820] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                isTomorrow ? "bg-[#7c3aed] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
               }`}
             >
               Tomorrow
@@ -213,7 +213,7 @@ export default function PanchangClientPage() {
           <div className="flex flex-col gap-6">
 
             {/* Heading */}
-            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] h-6">
+            <div className="flex items-center pl-3 border-l-[3px] border-[#7c3aed] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">{displayDateLabel}</h2>
             </div>
 
@@ -241,7 +241,7 @@ export default function PanchangClientPage() {
 
             {/* Auspicious–Inauspicious Timings */}
             <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] h-6">
+              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#7c3aed] h-6">
                 <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Auspicious-Inauspicious Timings</h2>
                 <HelpIcon />
               </div>
@@ -304,7 +304,7 @@ export default function PanchangClientPage() {
 
           {/* ══════════════ COLUMN 2 ══════════════ */}
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#f47820] h-6">
+            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#7c3aed] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Panchang</h2>
               <HelpIcon />
             </div>
@@ -336,7 +336,7 @@ export default function PanchangClientPage() {
 
           {/* ══════════════ COLUMN 3 ══════════════ */}
           <div className="flex flex-col gap-6" style={{ height: "780px" }}>
-            <div className="flex items-center pl-3 border-l-[3px] border-[#f47820] h-6">
+            <div className="flex items-center pl-3 border-l-[3px] border-[#7c3aed] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Upcoming festivals</h2>
             </div>
             <div
@@ -356,7 +356,7 @@ export default function PanchangClientPage() {
                       </span>
                       <span
                         className="text-[15px] font-semibold text-right leading-snug"
-                        style={{ color: isSelected ? "#f47820" : "#1f1f1f" }}
+                        style={{ color: isSelected ? "#7c3aed" : "#1f1f1f" }}
                       >
                         {f.name}
                       </span>

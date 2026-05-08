@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
@@ -110,16 +110,14 @@ export default function AstroToolsPage() {
 
       <div className="min-h-screen bg-[#f5f5f5]">
 
-        {/* ── 1. Breadcrumb strip ──────────────────────────────────────── */}
-        <div className="w-full border-b border-[#ecdfc8]" style={{ backgroundColor: "#fdf4e7" }}>
-          <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center gap-1.5 text-[13px] text-gray-600">
-            <Link href="/" className="text-gray-500 hover:text-gray-800 transition-colors">
-              Home
-            </Link>
-            <span className="text-orange-400"><IconChevronRight /></span>
-            <span className="text-gray-700">Free Astrology Calculators</span>
+        {/* ── 1. Breadcrumb strip ────────────────────────────────────────────────────────────────────────── */}
+        <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
+          <div className="max-w-6xl mx-auto text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+            <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
+            <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
+            <span className="text-[#7c3aed] font-bold">Free Astrology Calculators</span>
           </div>
-        </div>
+        </nav>
 
         {/* ── 2. Main container ────────────────────────────────────────── */}
         <div className="max-w-6xl mx-auto px-6">
@@ -138,14 +136,14 @@ export default function AstroToolsPage() {
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 text-gray-500 shadow-sm hover:shadow-md hover:border-gray-300 active:scale-95 transition-all duration-200"
               >
                 {copied
-                  ? <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  ? <svg className="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                   : <IconShare />
                 }
               </button>
               <button
                 onClick={handleWhatsApp}
                 aria-label="Share on WhatsApp"
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 text-green-500 shadow-sm hover:shadow-md hover:border-green-200 active:scale-95 transition-all duration-200"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 text-violet-500 shadow-sm hover:shadow-md hover:border-violet-200 active:scale-95 transition-all duration-200"
               >
                 <IconWhatsApp />
               </button>
@@ -175,7 +173,7 @@ export default function AstroToolsPage() {
               Our goal is to help you understand your life, personality, relationships, and future
               with the help of easy and accurate astrology tools. Whether you want to check your
               birth chart, find your moon sign, or know today&apos;s{" "}
-              <span className="text-orange-600 hover:underline cursor-pointer">Rahu Kaal</span>
+              <span className="text-violet-600 hover:underline cursor-pointer">Rahu Kaal</span>
               , you&apos;ll find all the important calculators here in one place.
             </p>
           </div>

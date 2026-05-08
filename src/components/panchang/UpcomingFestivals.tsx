@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from 'react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
@@ -8,7 +8,7 @@ export default function UpcomingFestivals({ festivals = [] }: { festivals?: any[
 
   return (
     <div className="mb-6 h-full">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#f47820]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#7c3aed]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{t("panchang.upcomingFestivals") || "Upcoming festivals"}</h2>
       </div>
       

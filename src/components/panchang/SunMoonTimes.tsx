@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from 'react';
 import { useTranslation } from '@/contexts/LanguageContext';
 
@@ -9,7 +9,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#f47820]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#7c3aed]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{t("panchang.sunAndMoon") || "Sunset-Sunrise"}</h2>
       </div>
       
@@ -17,7 +17,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
         <div className="divide-y divide-gray-100">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#f47820] text-lg">☀</span>
+              <span className="text-[#7c3aed] text-lg">☀</span>
               <span className="text-sm font-semibold">{t("panchang.sunrise")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{sun.rise || '-'}</span>
@@ -25,7 +25,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-3 text-gray-600">
-              <span className="text-[#f47820] text-lg opacity-80">☀</span>
+              <span className="text-[#7c3aed] text-lg opacity-80">☀</span>
               <span className="text-sm font-semibold">{t("panchang.sunset")}</span>
             </div>
             <span className="text-sm font-bold text-gray-900">{sun.set || '-'}</span>

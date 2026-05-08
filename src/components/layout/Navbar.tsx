@@ -101,8 +101,8 @@ export default function Navbar() {
                   href={item.path}
                   className={
                     isActivePath(item.path)
-                      ? "text-[#EA580C] font-bold"
-                      : "transition-colors hover:text-[#EA580C]"
+                      ? "text-[#1A56DB] font-bold"
+                      : "transition-colors hover:text-[#1A56DB]"
                   }
                 >
                   {t(`nav.${item.key}`)}
@@ -161,8 +161,8 @@ export default function Navbar() {
                         onClick={() => { setLanguage(lang.code as any); setLangOpen(false); }}
                         className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                           language === lang.code
-                            ? "text-[#f47820] bg-orange-50 font-bold"
-                            : "text-gray-700 hover:bg-orange-50 hover:text-[#f47820] font-medium"
+                            ? "text-[#1A56DB] bg-blue-50 font-bold"
+                            : "text-gray-700 hover:bg-blue-50 hover:text-[#1A56DB] font-medium"
                         }`}
                       >
                         {lang.label}
@@ -182,7 +182,7 @@ export default function Navbar() {
               className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
             >
               {user ? (
-                <div className="h-full w-full flex items-center justify-center bg-[#f47820] text-white rounded-full font-bold text-xs uppercase">
+                <div className="h-full w-full flex items-center justify-center bg-[#1A56DB] text-white rounded-full font-bold text-xs uppercase">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -206,13 +206,13 @@ export default function Navbar() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="p-5 border-b border-gray-50 bg-[#0e915f]/5">
+                  <div className="p-5 border-b border-gray-50 bg-[#1A56DB]/5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-[#0e915f] text-white rounded-full flex items-center justify-center font-bold">
+                      <div className="h-10 w-10 bg-[#1A56DB] text-white rounded-full flex items-center justify-center font-bold">
                         {user.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-[#0e915f] uppercase tracking-wider">Namaste,</p>
+                        <p className="text-xs font-bold text-[#1A56DB] uppercase tracking-wider">Namaste,</p>
                         <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
                       </div>
                     </div>
@@ -248,7 +248,7 @@ export default function Navbar() {
 
                     <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#1A56DB] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookPuja")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -259,7 +259,7 @@ export default function Navbar() {
 
                     <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#0e915f] transition-colors"></i>
+                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#1A56DB] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookChadhava")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -270,7 +270,7 @@ export default function Navbar() {
 
                     <Link href="/astro-tools" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-wand-magic-sparkles text-gray-400 group-hover/item:text-purple-600 transition-colors"></i>
+                        <i className="fa-solid fa-wand-magic-sparkles text-gray-400 group-hover/item:text-blue-600 transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">Astro Tools</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -278,7 +278,7 @@ export default function Navbar() {
 
                     <Link href="/store" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-orange-500 transition-colors"></i>
+                        <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-blue-500 transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">Store</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -292,7 +292,7 @@ export default function Navbar() {
                 <div className="p-4 bg-gray-50/50 space-y-4">
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{t("account.helpSupport")}</p>
                   <div className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
-                    <div className="h-8 w-8 bg-green-50 text-green-600 rounded-full flex items-center justify-center text-sm">
+                    <div className="h-8 w-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-sm">
                       <i className="fa-solid fa-phone"></i>
                     </div>
                     <div>
@@ -307,7 +307,7 @@ export default function Navbar() {
                       <span className="text-xs font-bold text-gray-700">Email us</span>
                     </a>
                     <a href="https://wa.me/918071174417" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
-                      <i className="fa-brands fa-whatsapp text-green-500"></i>
+                      <i className="fa-brands fa-whatsapp text-blue-500"></i>
                       <span className="text-xs font-bold text-gray-700">Whatsapp</span>
                     </a>
                   </div>
@@ -337,7 +337,7 @@ export default function Navbar() {
                   <Link
                     href={item.path}
                     className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                      isActivePath(item.path) ? "bg-[#f47820]/10 text-[#f47820]" : "text-gray-700 hover:bg-gray-50"
+                      isActivePath(item.path) ? "bg-[#1A56DB]/10 text-[#1A56DB]" : "text-gray-700 hover:bg-gray-50"
                     }`}
                   >
                     {t(`nav.${item.key}`)}
@@ -355,7 +355,7 @@ export default function Navbar() {
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang as any)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#f47820] text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#1A56DB] text-white" : "bg-gray-100 text-gray-700"}`}
                 >
                   {languageDisplayNames[lang]}
                 </button>
@@ -366,7 +366,7 @@ export default function Navbar() {
           <div className="mt-3 border-t border-gray-100 pt-3">
             {user ? (
               <>
-                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#0e915f]">Namaste, {user.name}</p>
+                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#1A56DB]">Namaste, {user.name}</p>
                 <div className="mt-2 space-y-1">
                   <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Profile</Link>
                   <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Puja Bookings</Link>

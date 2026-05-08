@@ -23,7 +23,7 @@ const banners = [
     title: "Download Our App",
     subtitle: "Get access to exclusive offers and features on the go",
     buttonText: "Download Now",
-    bgColor: "bg-gradient-to-r from-[#6969fa] to-[#5555e8]",
+    bgColor: "bg-gradient-to-r from-[#7c3aed] to-[#5555e8]",
     textColor: "text-white",
     image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
     className: "object-cover",
@@ -33,7 +33,7 @@ const banners = [
     title: "Special Puja",
     subtitle: "Book your sacred puja rituals with our expert priests",
     buttonText: "Book Now",
-    bgColor: "bg-gradient-to-r from-[#f47820] to-[#e85e00]",
+    bgColor: "bg-gradient-to-r from-[#7c3aed] to-[#6d28d9]",
     textColor: "text-white",
     image: "/images/Navagraha-Shanti-Puja.jpg",
   },
@@ -42,7 +42,7 @@ const banners = [
     title: "Special Chadhava",
     subtitle: "Offer Chadhava at 100+ sacred temples across India",
     buttonText: "Book Chadhava",
-    bgColor: "bg-gradient-to-r from-[#6969fa] via-[#f47820] to-[#6969fa]",
+    bgColor: "bg-gradient-to-r from-[#7c3aed] via-[#7c3aed] to-[#7c3aed]",
     textColor: "text-white",
     image: "/images/Lakshmi-Homam.jpg",
   },
@@ -102,7 +102,7 @@ export default function DashboardPage() {
                       <p className="max-w-xl text-lg text-white opacity-90">
                         {banner.subtitle}
                       </p>
-                      <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6969fa] transition hover:bg-gray-100">
+                      <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#7c3aed] transition hover:bg-gray-100">
                         {banner.buttonText}
                       </button>
                     </div>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                   <p className={`max-w-xl text-lg ${banner.textColor} opacity-90`}>
                     {banner.subtitle}
                   </p>
-                  <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6969fa] transition hover:bg-gray-100">
+                  <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#7c3aed] transition hover:bg-gray-100">
                     {banner.buttonText}
                   </button>
                 </div>
@@ -139,8 +139,8 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-primary-sunsetOrange-500 py-2 border-y border-orange-600 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap">
+      <div className="bg-[#7c3aed] py-3 border-y border-violet-800 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap flex">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
             "25+ Years of Expertise in Vedic Astrology",
@@ -151,11 +151,16 @@ export default function DashboardPage() {
             "25+ Years of Expertise in Vedic Astrology",
             "10M+ Homas, Poojas & Remedies Performed",
             "7M Expert Consultations",
-            "60M+ lives touched"
+            "60M+ lives touched",
+            "#1 Vedic Remedies & Astrological Insights Provider",
+            "25+ Years of Expertise in Vedic Astrology",
+            "10M+ Homas, Poojas & Remedies Performed",
+            "7M Expert Consultations",
+            "60M+ lives touched",
           ].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center mx-12">
-              <span className="text-white text-lg mr-4 rotate-45">✦</span>
-              <span className="text-[17px] text-white uppercase tracking-wide">
+            <div key={idx} className="inline-flex items-center mx-10 shrink-0">
+              <span className="text-yellow-300 text-base mr-3 rotate-45 inline-block">✦</span>
+              <span className="text-[15px] text-white font-semibold uppercase tracking-wide">
                 {item}
               </span>
             </div>
@@ -192,7 +197,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
-              <p className="text-[#6969fa] font-bold text-base mb-3">{t.home.trustedBy}</p>
+              <p className="text-[#7c3aed] font-bold text-base mb-3">{t.home.trustedBy}</p>
               <h2 className="text-4xl lg:text-[40px] font-bold leading-tight mb-5">
                 {t.home.largestPlatform}
               </h2>
@@ -273,7 +278,7 @@ export default function DashboardPage() {
                 <p className="text-gray-600 text-base leading-relaxed">{t.home.devotionalMusicDesc}</p>
               </div>
             </div>
-
+            
             {/* Feature 4 */}
             <div className="flex flex-col gap-4">
               <div className="h-14 w-14 bg-[#ea580c] rounded-xl flex items-center justify-center text-2xl shadow-md">✡</div>
@@ -314,7 +319,7 @@ export default function DashboardPage() {
             <p className="text-lg text-gray-600 mb-4">
               {t.home.articlesSubtitle}
             </p>
-            <Link href="/library" className="inline-flex items-center text-[#f47820] font-bold text-sm hover:underline">
+            <Link href="/library" className="inline-flex items-center text-[#7c3aed] font-bold text-sm hover:underline">
               {t.home.readAll} <span className="ml-1">→</span>
             </Link>
           </div>
@@ -333,7 +338,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.aartiDesc}
               </p>
-              <Link href="/library?tab=aarti" className="text-[#f47820] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=aarti" className="text-[#7c3aed] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -351,7 +356,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.chalisaDesc}
               </p>
-              <Link href="/library?tab=chalisa" className="text-[#f47820] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=chalisa" className="text-[#7c3aed] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -369,11 +374,11 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.mantraDesc}
               </p>
-              <Link href="/library?tab=mantra" className="text-[#f47820] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=mantra" className="text-[#7c3aed] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
-
+  
             {/* Card 4: Ayurvedic & Home Remedies */}
             <div className="flex flex-col">
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 shadow-md">
@@ -387,7 +392,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.ayurvedicDesc}
               </p>
-              <Link href="/library?tab=remedies" className="text-[#f47820] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=remedies" className="text-[#7c3aed] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -484,6 +489,17 @@ export function ReviewsSection() {
       .catch(() => setLoading(false));
   }, []);
 
+  const getCardWidth = () => {
+    if (scrollRef.current) {
+      const firstCard = scrollRef.current.children[0] as HTMLElement;
+      if (firstCard) {
+        const gap = 32; // gap-8 = 2rem = 32px
+        return firstCard.offsetWidth + gap;
+      }
+    }
+    return 340 + 32; // fallback
+  };
+
   // Auto-scroll logic
   useEffect(() => {
     if (reviews.length <= 1) return;
@@ -492,10 +508,10 @@ export function ReviewsSection() {
       if (scrollRef.current) {
         const container = scrollRef.current;
         const nextIndex = (currentIndex + 1) % reviews.length;
-        const scrollAmount = nextIndex * (380 + 32); // updated card width + gap
+        const cardWidth = getCardWidth();
 
         container.scrollTo({
-          left: scrollAmount,
+          left: nextIndex * cardWidth,
           behavior: 'smooth'
         });
         setCurrentIndex(nextIndex);
@@ -508,7 +524,7 @@ export function ReviewsSection() {
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const container = scrollRef.current;
-      const cardWidth = 380 + 32;
+      const cardWidth = getCardWidth();
       const newIndex = direction === 'left'
         ? Math.max(0, currentIndex - 1)
         : Math.min(reviews.length - 1, currentIndex + 1);
@@ -531,7 +547,8 @@ export function ReviewsSection() {
         className="flex gap-8 overflow-x-auto pb-10 snap-x snap-mandatory scrollbar-hide no-scrollbar"
         onScroll={(e) => {
           const scrollLeft = e.currentTarget.scrollLeft;
-          const index = Math.round(scrollLeft / (380 + 32));
+          const cardWidth = getCardWidth();
+          const index = Math.round(scrollLeft / cardWidth);
           if (index !== currentIndex) setCurrentIndex(index);
         }}
       >
@@ -556,7 +573,7 @@ export function ReviewsSection() {
           {reviews.map((_, idx) => (
             <div
               key={idx}
-              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#f47820]" : "w-1.5 bg-[#cbd5e1]"
+              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#7c3aed]" : "w-1.5 bg-[#cbd5e1]"
                 }`}
             ></div>
           ))}
@@ -565,7 +582,7 @@ export function ReviewsSection() {
         {/* Right Arrow */}
         <button
           onClick={() => handleScroll('right')}
-          className="h-8 w-8 rounded-full bg-[#f47820] flex items-center justify-center shadow-md hover:bg-orange-600 active:scale-95 transition-all"
+          className="h-8 w-8 rounded-full bg-[#7c3aed] flex items-center justify-center shadow-md hover:bg-violet-700 active:scale-95 transition-all"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
@@ -604,7 +621,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         {puja.badge || "Special"}
       </div>
       {/* Bottom Left Badge */}
-      <div className="absolute bottom-3 left-3 bg-[#0e915f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+      <div className="absolute bottom-3 left-3 bg-[#7c3aed] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
         BOOK PUJA
       </div>
     </div>
@@ -623,15 +640,15 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
       
       {/* Location & Date */}
       <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
-        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <span className="line-clamp-2 leading-tight">{(puja as any).location || "Sacred Temple, India"}</span>
       </div>
       <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
-        <svg className="w-[16px] h-[16px] text-[#f6a22f] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <span className="leading-tight">{(puja as any).date || "Upcoming Auspicious Date"}</span>
       </div>
 
-      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#0e915f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#0b7c50] transition-colors flex items-center justify-center gap-1.5">
+      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#7c3aed] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#6d28d9] transition-colors flex items-center justify-center gap-1.5">
         {puja.buttonText || "PARTICIPATE"}
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </Link>
@@ -671,7 +688,7 @@ export function PujaCardsSection() {
         ))}
       </div>
       <div className="mt-12">
-        <Link href="/puja" className="text-[#6969fa] text-xl hover:text-[#5555e8] transition-all flex items-center gap-2 group">
+        <Link href="/puja" className="text-[#7c3aed] text-xl hover:text-[#5555e8] transition-all flex items-center gap-2 group">
           {t.home.viewAllPujas} <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
       </div>

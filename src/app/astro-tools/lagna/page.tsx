@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
@@ -15,7 +15,7 @@ interface LagnaResult {
 
 const ELEMENT_BG: Record<string, { bg: string; border: string; text: string }> = {
   Fire:  { bg: "#fff7ed", border: "#fed7aa", text: "#c2410c" },
-  Earth: { bg: "#f0fdf4", border: "#bbf7d0", text: "#166534" },
+  Earth: { bg: "#f0fdf4", border: "#bbf7d0", text: "#5b21b6" },
   Air:   { bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8" },
   Water: { bg: "#ecfeff", border: "#a5f3fc", text: "#155e75" },
 };
@@ -53,15 +53,15 @@ export default function LagnaPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen" style={{ backgroundColor: "#fdf4e7" }}>
+      <main className="min-h-screen" style={{ backgroundColor: "#f5f3ff" }}>
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#f47820]">Home</Link>
+              <Link href="/" className="hover:text-[#7c3aed]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#f47820]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#7c3aed]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#f47820] font-medium">Kundali Lagna Calculator</span>
+              <span className="text-[#7c3aed] font-medium">Kundali Lagna Calculator</span>
             </nav>
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function LagnaPage() {
 
             {/* Form */}
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden" style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
-              <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6 text-white">
+              <div className="bg-gradient-to-r from-violet-600 to-violet-800 p-6 text-white">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl">🔯</span>
                   <h1 className="text-xl font-bold">Kundali Lagna Calculator</h1>

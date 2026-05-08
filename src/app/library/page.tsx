@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
@@ -34,7 +34,7 @@ export default function LibraryPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div className="max-w-2xl">
-              <h1 className="text-4xl font-extrabold text-[#2c1c4e] mb-4">
+              <h1 className="text-4xl font-extrabold text-[#3b0764] mb-4">
                 Spiritual Library
               </h1>
               <p className="text-gray-600 text-lg">
