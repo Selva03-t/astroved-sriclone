@@ -156,6 +156,7 @@ export default function Navbar() {
           <div className="relative hidden md:block" ref={langRef}>
             <button
               onClick={() => setLangOpen((prev) => !prev)}
+              aria-label={`Select language: ${(isFullLanguagePage ? fullLanguageOptions : baseLanguageOptions).map((item) => item.code).join(", ")}`}
               className="flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border border-gray-200 bg-white text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors"
             >
               {languageDisplayNames[language] || "English"}
