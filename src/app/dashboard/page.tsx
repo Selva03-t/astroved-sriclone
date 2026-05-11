@@ -17,44 +17,138 @@ const navigationItems = [
   { label: "Store", path: "/store" },
 ];
 
-const banners = [
+void navigationItems;
+
+type HomeBanner = {
+  id: number;
+  title: React.ReactNode;
+  subtitle: string;
+  buttonText: string;
+  buttonHref: string;
+  secondaryText?: string;
+  secondaryHref?: string;
+  bgClass: string;
+  gradientFrom: string;
+  gradientVia: string;
+  image: string;
+  imageAlt: string;
+  isFullImage: boolean;
+  imageClass?: string;
+  titleClass?: string;
+  textClass?: string;
+  buttonClass?: string;
+  secondaryClass?: string;
+};
+
+const legacyBanners = [
   {
     id: 1,
-    title: "Download Our App",
-    subtitle: "Get access to exclusive offers and features on the go",
-    buttonText: "Download Now",
-    bgColor: "bg-gradient-to-r from-[#6869F9] to-[#5657e8]",
-    textColor: "text-white",
-    image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
-    className: "object-cover",
+    title: <>AstroVed Special <span className="text-[#ffc107]">Chadhava</span></>,
+    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on Sri Mandir.",
+    buttonText: "Book Chadhava",
+    bgClass: "bg-[#3d1d1b]",
+    gradientFrom: "from-[#3d1d1b]",
+    gradientVia: "via-[#3d1d1b]/80",
+    image: "/images/Lakshmi-Homam.jpg",
+    isFullImage: true,
   },
   {
     id: 2,
-    title: "Special Puja",
-    subtitle: "Book your sacred puja rituals with our expert priests",
-    buttonText: "Book Now",
-    bgColor: "bg-gradient-to-r from-[#6869F9] to-[#F47820]",
-    textColor: "text-white",
-    image: "/images/Navagraha-Shanti-Puja.jpg",
+    title: <span className="text-[#ffc107]">AstroVed</span>,
+    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on Sri Mandir.",
+    buttonText: "Download App",
+    bgClass: "bg-[#4a1824]",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+    isFullImage: false,
+    imageClass: "object-contain h-[110%] w-auto absolute right-[-5%] bottom-[-10%] hidden lg:block rotate-[-5deg]",
   },
   {
     id: 3,
-    title: "Special Chadhava",
-    subtitle: "Offer Chadhava at 100+ sacred temples across India",
-    buttonText: "Book Chadhava",
-    bgColor: "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#6869F9]",
-    textColor: "text-white",
-    image: "/images/Lakshmi-Homam.jpg",
+    title: <>Offer Vedic Puja and Chadhava<br/>at 100+ sacred temples in your<br/>Name and Gotra to your<br/>beloved deity.</>,
+    subtitle: "",
+    buttonText: "",
+    bgClass: "bg-[#5e1824]",
+    gradientFrom: "from-[#5e1824]",
+    gradientVia: "via-[#5e1824]/80",
+    image: "/images/Navagraha-Shanti-Puja.jpg",
+    isFullImage: true,
+    titleClass: "text-[32px] md:text-[38px] lg:text-[42px] leading-[1.25] font-bold text-white tracking-wide max-w-2xl",
   },
   {
     id: 4,
-    title: "Akshaya Tritiya",
-    subtitle: "Participate in the most auspicious day of the year",
-    buttonText: "",
-    bgColor: "bg-white",
-    textColor: "text-[#1f1f1f]",
-    image: "/images/maa-kali.jpg",
-    showContent: false,
+    title: <>AstroVed Special <span className="text-[#ffc107]">Puja</span></>,
+    subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples — from the comfort of your home.",
+    buttonText: "Book Puja",
+    bgClass: "bg-[#071321]",
+    gradientFrom: "from-[#071321]",
+    gradientVia: "via-[#071321]/80",
+    image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+    isFullImage: true,
+  },
+];
+
+void legacyBanners;
+
+const banners: HomeBanner[] = [
+  {
+    id: 1,
+    title: <>Offer Vedic Puja and Chadhava<br />at 100+ sacred temples in your<br />Name and Gotra to your beloved deity.</>,
+    subtitle: "",
+    buttonText: "Explore Pujas",
+    buttonHref: "#special-pujas",
+    bgClass: "bg-[#001d26]",
+    gradientFrom: "from-[#001b24]",
+    gradientVia: "via-[#003949]/80",
+    image: "/images/home-carousel-family-cutout.png",
+    imageAlt: "Family offering prayers with puja plate",
+    isFullImage: true,
+    imageClass: "object-contain object-right-bottom opacity-95",
+    titleClass: "max-w-2xl text-[30px] md:text-[40px] lg:text-[46px] font-extrabold leading-[1.18] text-white",
+  },
+  {
+    id: 2,
+    title: <>AstroVed Special <span className="text-[#ffc107]">Chadhava</span></>,
+    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India - from your home. Seek divine blessings on AstroVed.",
+    buttonText: "Book Chadhava",
+    buttonHref: "/chadhava",
+    bgClass: "bg-[#180f0c]",
+    gradientFrom: "from-[#120c0a]",
+    gradientVia: "via-[#6f1f21]/75",
+    image: "/images/home-carousel-prasadam.jpeg",
+    imageAlt: "Traditional chadhava prasadam plate",
+    isFullImage: true,
+    imageClass: "object-cover object-center opacity-70 md:opacity-85",
+    titleClass: "text-[32px] md:text-5xl lg:text-[56px] font-extrabold leading-[1.12] text-white",
+  },
+  {
+    id: 3,
+    title: <>AstroVed Special <span className="text-[#ffc107]">Puja</span></>,
+    subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples - from the comfort of your home.",
+    buttonText: "Book Puja",
+    buttonHref: "#special-pujas",
+    bgClass: "bg-[#22140d]",
+    gradientFrom: "from-[#1b0c08]",
+    gradientVia: "via-[#3d1a10]/85",
+    image: "/images/home-carousel-puja-offerings.jpg",
+    imageAlt: "Traditional Hindu puja offerings with flowers and lamps",
+    isFullImage: true,
+    imageClass: "object-cover object-center opacity-95",
+    titleClass: "text-[32px] md:text-5xl lg:text-[56px] font-extrabold leading-[1.12] text-white",
+  },
+  {
+    id: 4,
+    title: <><span className="text-[#ffc107]">AstroVed</span></>,
+    subtitle: "Experience divine blessings from sacred temples of India - enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on AstroVed.",
+    buttonText: "Download App",
+    buttonHref: "#download-app",
+    bgClass: "bg-[#2f4f35]",
+    gradientFrom: "from-[#17291e]",
+    gradientVia: "via-[#5c1632]/80",
+    image: "/images/home-carousel-app.png",
+    imageAlt: "AstroVed mobile app preview",
+    isFullImage: true,
+    imageClass: "object-contain object-right-bottom opacity-90",
+    titleClass: "text-[32px] md:text-5xl lg:text-[56px] font-extrabold leading-[1.12] text-white",
   },
 ];
 
@@ -65,7 +159,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % banners.length);
-    }, 2000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -76,60 +170,83 @@ export default function DashboardPage() {
       <div className="h-px w-full bg-[#d5d8f5]" />
 
       {/* Banner Section */}
-      <section className="w-full">
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+      <section className="w-full bg-[#4b001f]">
+        <div className="relative w-full h-[430px] md:h-[500px] lg:h-[560px] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-500 ${index === currentBanner ? "opacity-100" : "opacity-0"
-                }`}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
+                } ${banner.bgClass}`}
             >
-              {banner.image ? (
-                <div className="relative h-full w-full">
+              {/* Background Images */}
+              {banner.isFullImage && (
+                <div className="absolute inset-0 z-0">
                   <Image
                     src={banner.image}
-                    alt={banner.title}
+                    alt={banner.imageAlt}
                     fill
-                    className="object-cover object-top"
-                  
-                    priority
+                    className={banner.imageClass || "object-cover object-right opacity-90 md:opacity-100"}
+                    priority={index === 0}
                   />
-                  {banner.showContent && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-black/20 px-6 py-16 text-center">
-                      <h2 className="max-w-2xl text-4xl font-bold leading-tight text-white sm:text-5xl">
-                        {banner.title}
-                      </h2>
-                      <p className="max-w-xl text-lg text-white opacity-90">
-                        {banner.subtitle}
-                      </p>
-                      <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6869F9] transition hover:bg-gray-100">
-                        {banner.buttonText}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={`flex h-full flex-col items-center justify-center gap-6 px-6 py-16 text-center ${banner.bgColor}`}>
-                  <h2 className={`max-w-2xl text-4xl font-bold leading-tight ${banner.textColor} sm:text-5xl`}>
-                    {banner.title}
-                  </h2>
-                  <p className={`max-w-xl text-lg ${banner.textColor} opacity-90`}>
-                    {banner.subtitle}
-                  </p>
-                  <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6869F9] transition hover:bg-gray-100">
-                    {banner.buttonText}
-                  </button>
+                  {/* Left-to-right gradient to blend image into background color */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${banner.gradientFrom} ${banner.gradientVia || ''} to-transparent w-full md:w-[74%]`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-r ${banner.gradientFrom} to-transparent w-full md:w-[46%]`}></div>
                 </div>
               )}
+
+              {!banner.isFullImage && banner.image && (
+                <div className="absolute inset-0 z-0 overflow-hidden flex justify-end">
+                  <img src={banner.image} alt="app" className={banner.imageClass} />
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="mx-auto max-w-7xl h-full flex items-center relative px-6 lg:px-8 z-10">
+                <div className="w-full max-w-[650px] md:w-[62%] lg:w-[56%]">
+                  <h2 className={banner.titleClass || "text-[32px] md:text-5xl font-extrabold leading-[1.2] text-white"}>
+                    {banner.title}
+                  </h2>
+                  {banner.subtitle && (
+                    <p className={`mt-5 max-w-xl text-base font-semibold leading-relaxed md:text-[17px] ${banner.textClass || "text-white/95"}`}>
+                      {banner.subtitle}
+                    </p>
+                  )}
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <Link href={banner.buttonHref} className={`inline-flex min-w-[205px] items-center justify-center rounded-lg px-8 py-3.5 text-[15px] font-extrabold shadow-md transition-colors ${banner.buttonClass || "bg-white text-[#1f1f1f] hover:bg-gray-100"}`}>
+                      {banner.buttonText}
+                    </Link>
+                    {banner.secondaryText && banner.secondaryHref && (
+                      <Link href={banner.secondaryHref} className={`inline-flex min-w-[205px] items-center justify-center rounded-lg border px-8 py-3.5 text-[15px] font-extrabold shadow-md transition-colors ${banner.secondaryClass || "border-white/70 bg-transparent text-white hover:bg-white/10"}`}>
+                        {banner.secondaryText}
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
 
-          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-3">
+          {/* Carousel Arrows */}
+          <button
+            onClick={() => setCurrentBanner((prev) => (prev === 0 ? banners.length - 1 : prev - 1))}
+            className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 h-9 w-9 md:h-10 md:w-10 rounded-full bg-black/35 text-white flex items-center justify-center opacity-90 transition hover:bg-black/55 shadow-lg"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button
+            onClick={() => setCurrentBanner((prev) => (prev + 1) % banners.length)}
+            className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 h-9 w-9 md:h-10 md:w-10 rounded-full bg-black/35 text-white flex items-center justify-center opacity-90 transition hover:bg-black/55 shadow-lg"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"/></svg>
+          </button>
+
+          {/* Pagination Dots */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
             {banners.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentBanner(index)}
-                className={`h-2 w-2 rounded-full transition ${index === currentBanner ? "bg-white w-8" : "bg-white/50"
+                className={`h-2 rounded-full transition-all duration-300 ${index === currentBanner ? "w-16 bg-white/50" : "w-2 bg-white/60 hover:bg-white/80"
                   }`}
                 aria-label={`Go to banner ${index + 1}`}
               />
@@ -138,29 +255,24 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-3 border-y border-violet-800 overflow-hidden">
+      {/* Trust Strip */}
+      <div className="overflow-hidden border-y border-[#5657e8] bg-[#6869F9] py-5 text-white">
         <div className="animate-marquee whitespace-nowrap flex">
           {[
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
+            "Trusted by 30 million+ people",
+            "100% Secure",
+            "India's Largest App for Hindu Devotees",
+            "Trusted by 30 million+ people",
+            "100% Secure",
+            "India's Largest App for Hindu Devotees",
+            "Trusted by 30 million+ people",
+            "100% Secure",
+            "India's Largest App for Hindu Devotees",
           ].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center mx-10 shrink-0">
+            <div key={idx} className="inline-flex items-center mx-8 shrink-0">
+              <i className={`mr-4 text-2xl ${idx % 3 === 1 ? "fa-solid fa-shield-halved" : idx % 3 === 2 ? "fa-solid fa-award" : "fa-solid fa-users"}`} aria-hidden="true"></i>
               <span className="text-yellow-300 text-base mr-3 rotate-45 inline-block">✦</span>
-              <span className="text-[15px] text-white font-semibold uppercase tracking-wide">
+              <span className="text-[24px] font-extrabold leading-none text-white">
                 {item}
               </span>
             </div>
@@ -169,7 +281,7 @@ export default function DashboardPage() {
       </div>
 
       {/* AstroVed Special Pujas Section */}
-      <section className="bg-white py-20">
+      <section id="special-pujas" className="scroll-mt-28 bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
             <span className="text-[#6b4c9a]">AstroVed</span> {t.home.specialPujas}
@@ -182,7 +294,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Reviews & Ratings Section */}
-      <section className="bg-[#fafafa] py-20">
+      <section id="reviews" className="scroll-mt-28 bg-[#fafafa] py-20">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <h2 className="text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">{t.home.reviewsTitle}</h2>
           <p className="text-[17px] font-medium text-gray-700 mb-14">{t.home.reviewsSubtitle}</p>
@@ -310,7 +422,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Articles Section (Exactly as in Image) */}
-      <section className="bg-white py-24">
+      <section id="articles" className="scroll-mt-28 bg-white py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-[#1f1f1f] mb-4">

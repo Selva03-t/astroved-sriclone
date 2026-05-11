@@ -36,10 +36,10 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-10 shadow-xl">
+    <div className="flex min-h-screen items-center justify-center bg-[#f3f0ff] px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[#d8ceff] bg-white p-10 shadow-xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-[#241a46]">
             Admin Access
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
                 name="email"
                 type="email"
                 required
-                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
                 name="password"
                 type="password"
                 required
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -89,7 +89,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-purple-600 px-4 py-3 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-[#6869F9] px-4 py-3 text-sm font-medium text-white hover:bg-[#5657e8] focus:outline-none focus:ring-2 focus:ring-[#6869F9] focus:ring-offset-2 disabled:opacity-50"
             >
               {loading ? "Verifying..." : "Sign in"}
             </button>

@@ -166,14 +166,14 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+        <h1 className="text-2xl font-semibold text-[#241a46]">{title}</h1>
         <div className="flex items-center gap-2">
           {isAdding && (
             <button
               form="content-manager-form"
               type="submit"
               disabled={submitting}
-              className="flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
+              className="flex items-center rounded-md bg-[#6869F9] px-4 py-2 text-sm font-medium text-white hover:bg-[#5657e8] disabled:opacity-50"
             >
               {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
             </button>
@@ -183,7 +183,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
             className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
               isAdding
                 ? "bg-gray-500 hover:bg-gray-600"
-                : "bg-purple-600 hover:bg-purple-700"
+                : "bg-[#6869F9] hover:bg-[#5657e8]"
             }`}
           >
             {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
@@ -192,8 +192,8 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
       </div>
 
       {isAdding && (
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="mb-4 text-lg font-medium text-gray-900">
+        <div className="rounded-lg border border-[#e8e2ff] bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-medium text-[#241a46]">
             {editingId ? `Edit ${title.slice(0, -1)}` : `Add New ${title.slice(0, -1)}`}
           </h2>
           <form id="content-manager-form" onSubmit={handleSubmit} className="space-y-4">
@@ -217,7 +217,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                       value={formData[field.name] || ""}
                       onChange={handleInputChange}
                       rows={field.type === "json" ? 8 : 3}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                     />
                   ) : (
                     <>
@@ -230,7 +230,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                         value={formData[field.name] || ""}
                         onChange={handleInputChange}
                         list={field.options ? `${field.name}-options` : undefined}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                       />
                       {field.options && (
                         <datalist id={`${field.name}-options`}>
@@ -248,7 +248,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
               <button
                 type="submit"
                 disabled={submitting}
-                className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
+                className="rounded-md bg-[#6869F9] px-6 py-2 text-sm font-medium text-white hover:bg-[#5657e8] disabled:opacity-50"
               >
                 {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
               </button>
@@ -257,7 +257,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
         </div>
       )}
 
-      <div className="rounded-lg bg-white shadow overflow-hidden">
+      <div className="overflow-hidden rounded-lg border border-[#e8e2ff] bg-white shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -303,7 +303,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                     <div className="flex items-center justify-end gap-3">
                       <button
                         onClick={() => handleEdit(item)}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-[#5657e8] hover:text-[#4647c4]"
                         aria-label="Edit item"
                       >
                         <PencilSquareIcon className="h-5 w-5" />

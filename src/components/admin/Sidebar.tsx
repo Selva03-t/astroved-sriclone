@@ -43,9 +43,9 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-white border-r">
-      <div className="flex h-16 items-center justify-center border-b">
-        <span className="text-xl font-bold text-purple-700">AstroVed Admin</span>
+    <div className="flex h-screen w-64 flex-col border-r border-[#d8ceff] bg-white">
+      <div className="flex h-16 items-center justify-center border-b border-[#d8ceff] bg-[#6869F9]">
+        <span className="text-xl font-bold text-white">AstroVed Admin</span>
       </div>
       <nav className="flex-1 space-y-1 px-2 py-4">
         {menuItems.map((item) => {
@@ -56,13 +56,13 @@ export default function Sidebar() {
               href={item.href}
               className={`group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-purple-50 text-purple-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-[#f3f0ff] text-[#5657e8]"
+                  : "text-gray-600 hover:bg-[#f3f0ff] hover:text-[#5657e8]"
               }`}
             >
               <item.icon
                 className={`mr-3 h-6 w-6 flex-shrink-0 ${
-                  isActive ? "text-purple-700" : "text-gray-400 group-hover:text-gray-500"
+                  isActive ? "text-[#5657e8]" : "text-gray-400 group-hover:text-[#6869F9]"
                 }`}
                 aria-hidden="true"
               />
@@ -82,8 +82,8 @@ export default function Sidebar() {
           Logout
         </button>
       </nav>
-      <div className="border-t p-4 font-semibold text-gray-500">
-          <Link href="/dashboard" className="flex items-center hover:text-purple-700">
+      <div className="border-t border-[#d8ceff] p-4 font-semibold text-gray-500">
+          <Link href="/dashboard" className="flex items-center hover:text-[#5657e8]">
             <span className="mr-2">←</span> Back to Site
           </Link>
       </div>

@@ -33,13 +33,13 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-[#241a46]">Admin Dashboard</h1>
       
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <div key={stat.name} className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 transition-all hover:shadow-md">
+          <div key={stat.name} className="overflow-hidden rounded-lg border border-[#e8e2ff] bg-white px-4 py-5 shadow-sm transition-all hover:shadow-md sm:p-6">
             <dt className="truncate text-sm font-medium text-gray-500">{stat.name}</dt>
-            <dd className="mt-1 text-3xl font-semibold tracking-tight text-purple-700">
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-[#5657e8]">
               {loading ? (
                 <span className="inline-block h-8 w-12 animate-pulse bg-gray-200 rounded"></span>
               ) : (
@@ -51,16 +51,16 @@ export default function AdminDashboard() {
       </div>
     
       <div className="mt-8">
-        <div className="rounded-lg bg-white p-6 shadow">
-          <h2 className="text-lg font-medium text-gray-900">Quick Actions</h2>
+        <div className="rounded-lg border border-[#e8e2ff] bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-medium text-[#241a46]">Quick Actions</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <a href="/admin/pujas" className="flex items-center justify-center rounded-md border border-transparent bg-purple-600 px-4 py-3 text-sm font-medium text-white hover:bg-purple-700 shadow-sm transition-all">
+            <a href="/admin/pujas" className="flex items-center justify-center rounded-md border border-transparent bg-[#6869F9] px-4 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#5657e8]">
               Add New Puja
             </a>
-            <a href="/admin/temples" className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+            <a href="/admin/temples" className="flex items-center justify-center rounded-md border border-[#d8ceff] bg-white px-4 py-3 text-sm font-medium text-[#5657e8] shadow-sm transition-all hover:bg-[#f3f0ff]">
               Manage Temples
             </a>
-            <a href="/admin/panchang" className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-all">
+            <a href="/admin/panchang" className="flex items-center justify-center rounded-md border border-[#d8ceff] bg-white px-4 py-3 text-sm font-medium text-[#5657e8] shadow-sm transition-all hover:bg-[#f3f0ff]">
               Update Panchang
             </a>
           </div>

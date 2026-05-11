@@ -64,15 +64,15 @@ export default function Footer() {
         {/* Bottom Part (Badges and Legal) */}
         <div className="mt-16 border-t border-white/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Download Badges */}
-          <div className="flex gap-4">
-             <a href="#" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+          <div id="download-app" className="flex scroll-mt-28 flex-wrap justify-center gap-4 md:justify-start">
+             <a href="https://play.google.com/store/apps/details?id=com.astroved.birthchartnew" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
                 <i className="fa-brands fa-google-play text-xl"></i>
                 <div className="leading-tight">
                    <p className="font-medium text-[9px] opacity-80 uppercase">GET IT ON</p>
                    <p className="font-bold text-[15px]">Google Play</p>
                 </div>
              </a>
-             <a href="#" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+             <a href="https://apps.apple.com/us/app/astroved-astrology-remedies/id1406242342" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on the App Store" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
                 <i className="fa-brands fa-apple text-2xl"></i>
                 <div className="leading-tight">
                    <p className="font-medium text-[9px] opacity-80">Download on the</p>
