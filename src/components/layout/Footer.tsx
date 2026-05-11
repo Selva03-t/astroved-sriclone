@@ -51,12 +51,12 @@ export default function Footer() {
               Firstprinciple AppsForBharat Pvt. Ltd. 2nd Floor, Urban Vault, No. 29/1, 27th Main Road, Somasundarapalya, HSR Post, Bangalore, Karnataka - 560102
             </p>
             <div className="flex flex-wrap gap-3">
-              <SocialIcon platform="youtube" href="https://youtube.com" />
-              <SocialIcon platform="instagram" href="https://instagram.com" />
-              <SocialIcon platform="linkedin" href="https://linkedin.com" />
-              <SocialIcon platform="whatsapp" href="https://whatsapp.com" />
-              <SocialIcon platform="x" href="https://twitter.com" />
-              <SocialIcon platform="facebook" href="https://facebook.com" />
+              <SocialIcon platform="youtube" href="https://www.youtube.com/astroved" />
+              <SocialIcon platform="instagram" href="https://www.instagram.com/accounts/login/?next=%2Fastroved&source=omni_redirect" />
+              <SocialIcon platform="linkedin" href="https://www.linkedin.com/company/astroved-com/" />
+              <SocialIcon platform="whatsapp" href="https://api.whatsapp.com/send/?phone=919677391108&text&type=phone_number&app_absent=0" />
+              <SocialIcon platform="x" href="https://x.com/astroved" />
+              <SocialIcon platform="facebook" href="https://www.facebook.com/astroved" />
             </div>
           </div>
         </div>
