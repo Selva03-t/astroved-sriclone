@@ -64,6 +64,7 @@ type PujaRecord = {
   templeVenue?: string;
   templeNote?: string;
   slug?: string;
+  gallery?: string[];
   details?: PujaDetails;
   packages?: PujaPackage[];
   offerings?: PujaOffering[];
@@ -435,7 +436,7 @@ const fallbackPujas: PujaRecord[] = [
   },
 ];
 
-const normalizePuja = (puja: PujaRecord) => ({
+const normalizePuja = (puja: PujaRecord, offeringsMap: Record<string, any> = {}) => ({
   ...puja,
   title: puja.title || 'Untitled Puja',
   _id: puja._id ? String(puja._id) : slugify(puja.title || 'Untitled Puja'),
@@ -444,6 +445,7 @@ const normalizePuja = (puja: PujaRecord) => ({
     puja.imageUrl ||
     'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&w=1600&q=80',
   slug: puja.slug || slugify(puja.title || 'Untitled Puja'),
+  gallery: Array.isArray(puja.gallery) && puja.gallery.length > 0 ? puja.gallery : undefined,
   eventDateTime: getStringField(puja, 'eventDateTime') || undefined,
   details: (() => {
     const flatDetails = {
@@ -466,21 +468,25 @@ const normalizePuja = (puja: PujaRecord) => ({
       ...defaultDetails,
       ...(puja.details || {}),
       ...Object.fromEntries(Object.entries(flatDetails).filter(([, value]) => value !== undefined)),
-      benefits: normalizeSections(flatDetails.benefits ?? puja.details?.benefits, defaultDetails.benefits),
-      process: normalizeSections(flatDetails.process ?? puja.details?.process, defaultDetails.process),
-      faq: normalizeFaq(flatDetails.faq ?? puja.details?.faq, defaultDetails.faq),
+      benefits: normalizeSections(puja.benefits ?? flatDetails.benefits ?? puja.details?.benefits, defaultDetails.benefits),
+      process: normalizeSections(puja.process ?? flatDetails.process ?? puja.details?.process, defaultDetails.process),
+      faq: normalizeFaq(puja.faq ?? flatDetails.faq ?? puja.details?.faq, defaultDetails.faq),
       inclusions:
-        Array.isArray(flatDetails.inclusions) && flatDetails.inclusions.length > 0
-          ? flatDetails.inclusions
-          : Array.isArray(puja.details?.inclusions) && puja.details?.inclusions.length > 0
-            ? puja.details!.inclusions.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-            : defaultDetails.inclusions,
+        Array.isArray(puja.inclusions) && puja.inclusions.length > 0
+          ? puja.inclusions
+          : Array.isArray(flatDetails.inclusions) && flatDetails.inclusions.length > 0
+            ? flatDetails.inclusions
+            : Array.isArray(puja.details?.inclusions) && puja.details?.inclusions.length > 0
+              ? puja.details!.inclusions.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+              : defaultDetails.inclusions,
       stats:
-        Array.isArray(flatDetails.stats) && flatDetails.stats.length > 0
-          ? flatDetails.stats
-          : Array.isArray(puja.details?.stats) && puja.details?.stats.length > 0
-            ? puja.details!.stats
-            : defaultDetails.stats,
+        Array.isArray(puja.stats) && puja.stats.length > 0
+          ? puja.stats
+          : Array.isArray(flatDetails.stats) && flatDetails.stats.length > 0
+            ? flatDetails.stats
+            : Array.isArray(puja.details?.stats) && puja.details?.stats.length > 0
+              ? puja.details!.stats
+              : defaultDetails.stats,
       templeName:
         flatDetails.templeName || puja.details?.templeName || puja.templeVenue || defaultDetails.templeName,
       templeLocation:
@@ -488,8 +494,17 @@ const normalizePuja = (puja: PujaRecord) => ({
       templeNote: flatDetails.templeNote || puja.details?.templeNote || puja.templeNote || defaultDetails.templeNote,
     };
   })(),
-  packages: normalizePackages(buildFlatPackages(puja) ?? puja.packages, defaultPackages),
-  offerings: buildOfferingsFromFlatFields(puja) ?? normalizeOfferings(puja.offerings),
+  packages: normalizePackages(Array.isArray(puja.packages) && puja.packages.length > 0 ? puja.packages : buildFlatPackages(puja), defaultPackages),
+  offerings: Array.isArray(puja.offeringIds) && puja.offeringIds.length > 0
+    ? puja.offeringIds.map((id: string) => offeringsMap[id]).filter(Boolean).map((o: any) => ({
+        id: String(o._id),
+        name: o.name,
+        price: o.price,
+        badge: o.badge,
+        description: o.description,
+        imageUrl: o.imageUrl
+      }))
+    : normalizeOfferings(Array.isArray(puja.offerings) && puja.offerings.length > 0 ? puja.offerings : buildOfferingsFromFlatFields(puja)),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -504,9 +519,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(201).json({ _id: result.insertedId, ...data });
     } else if (req.method === 'GET') {
       const { slug } = req.query;
+      
       const items = await collection.find({}).toArray();
-      const normalized = (items as PujaRecord[]).map(normalizePuja);
-      const source = normalized.length > 0 ? normalized : fallbackPujas.map(normalizePuja);
+      
+      const offeringsCollection = db.collection('offering');
+      const offeringsData = await offeringsCollection.find({}).toArray();
+      const offeringsMap = Object.fromEntries(offeringsData.map(o => [String(o._id), o]));
+
+      const normalized = (items as PujaRecord[]).map(p => normalizePuja(p, offeringsMap));
+      const source = normalized.length > 0 ? normalized : fallbackPujas.map(p => normalizePuja(p, offeringsMap));
 
       if (typeof slug === 'string' && slug.trim()) {
         const found = source.find((item) => item.slug === slug);

@@ -3,13 +3,23 @@
 import { useState, useEffect } from "react";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+interface SubField {
+  name: string;
+  label: string;
+  type: "text" | "textarea" | "url" | "number";
+  placeholder?: string;
+}
+
 interface Field {
   name: string;
   label: string;
-  type: "text" | "textarea" | "url" | "number" | "date" | "datetime-local" | "json";
+  type: "text" | "textarea" | "url" | "number" | "date" | "datetime-local" | "json" | "array-string" | "array-object" | "reference-array";
   required?: boolean;
   placeholder?: string;
   options?: string[];
+  objectSchema?: SubField[];
+  referenceEndpoint?: string;
+  referenceLabelField?: string;
 }
 
 interface ContentManagerProps {
@@ -26,9 +36,25 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
   const [formData, setFormData] = useState<any>({});
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [referenceData, setReferenceData] = useState<Record<string, any[]>>({});
 
   useEffect(() => {
     fetchItems();
+    
+    // Fetch any reference data
+    fields.forEach(async (f) => {
+      if (f.type === "reference-array" && f.referenceEndpoint) {
+        try {
+          const res = await fetch(f.referenceEndpoint);
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            setReferenceData((prev) => ({ ...prev, [f.name]: data }));
+          }
+        } catch (error) {
+          console.error(`Failed to fetch reference data for ${f.name}:`, error);
+        }
+      }
+    });
   }, [type]);
 
   const fetchItems = async () => {
@@ -49,6 +75,34 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [name]: value }));
+  };
+
+  const handleArrayChange = (fieldName: string, index: number, value: any, subField?: string) => {
+    setFormData((prev: any) => {
+      const arr = Array.isArray(prev[fieldName]) ? [...prev[fieldName]] : [];
+      if (subField) {
+        arr[index] = { ...arr[index], [subField]: value };
+      } else {
+        arr[index] = value;
+      }
+      return { ...prev, [fieldName]: arr };
+    });
+  };
+
+  const addArrayItem = (fieldName: string, type: "array-string" | "array-object") => {
+    setFormData((prev: any) => {
+      const arr = Array.isArray(prev[fieldName]) ? [...prev[fieldName]] : [];
+      arr.push(type === "array-string" ? "" : {});
+      return { ...prev, [fieldName]: arr };
+    });
+  };
+
+  const removeArrayItem = (fieldName: string, index: number) => {
+    setFormData((prev: any) => {
+      const arr = Array.isArray(prev[fieldName]) ? [...prev[fieldName]] : [];
+      arr.splice(index, 1);
+      return { ...prev, [fieldName]: arr };
+    });
   };
 
   const resetForm = () => {
@@ -77,6 +131,10 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
       const raw = item[field.name];
       if (field.type === "json") {
         draft[field.name] = raw === undefined || raw === null ? "" : JSON.stringify(raw, null, 2);
+        return;
+      }
+      if (field.type === "array-string" || field.type === "array-object" || field.type === "reference-array") {
+        draft[field.name] = Array.isArray(raw) ? raw : [];
         return;
       }
 
@@ -123,6 +181,23 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
           setFormError(`${field.label} must be valid JSON.`);
           return;
         }
+      }
+
+      if (field.type === "array-string") {
+        payload[field.name] = (formData[field.name] || []).filter((v: string) => typeof v === "string" && v.trim().length > 0);
+        continue;
+      }
+
+      if (field.type === "array-object") {
+        payload[field.name] = (formData[field.name] || []).filter((v: any) => 
+          v && typeof v === "object" && Object.values(v).some(val => val !== "" && val !== null && val !== undefined)
+        );
+        continue;
+      }
+
+      if (field.type === "reference-array") {
+        payload[field.name] = Array.isArray(formData[field.name]) ? formData[field.name] : [];
+        continue;
       }
     }
 
@@ -204,11 +279,94 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
             ) : null}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {fields.map((field) => (
-                <div key={field.name} className={field.type === "textarea" || field.type === "json" ? "sm:col-span-2" : ""}>
-                  <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
+                <div key={field.name} className={field.type === "textarea" || field.type === "json" || field.type === "array-string" || field.type === "array-object" || field.type === "reference-array" ? "sm:col-span-2" : ""}>
+                  <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 mb-1">
                     {field.label}
                   </label>
-                  {field.type === "textarea" || field.type === "json" ? (
+                  
+                  {field.type === "reference-array" ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                      {referenceData[field.name]?.map((item: any) => (
+                        <label key={item._id} className="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-md border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={(formData[field.name] || []).includes(String(item._id))}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setFormData((prev: any) => {
+                                const arr = prev[field.name] || [];
+                                if (checked) {
+                                  return { ...prev, [field.name]: [...arr, String(item._id)] };
+                                }
+                                return { ...prev, [field.name]: arr.filter((id: string) => id !== String(item._id)) };
+                              });
+                            }}
+                            className="h-4 w-4 rounded border-gray-300 text-[#6869F9] focus:ring-[#6869F9]"
+                          />
+                          {item[field.referenceLabelField || "name"]}
+                        </label>
+                      ))}
+                      {!referenceData[field.name] && <div className="text-sm text-gray-500">Loading...</div>}
+                      {referenceData[field.name]?.length === 0 && <div className="text-sm text-gray-500">No items available.</div>}
+                    </div>
+                  ) : field.type === "array-string" ? (
+                    <div className="space-y-2">
+                      {(Array.isArray(formData[field.name]) ? formData[field.name] : []).map((val: string, idx: number) => (
+                        <div key={idx} className="flex gap-2">
+                          <input
+                            type="text"
+                            value={val}
+                            onChange={(e) => handleArrayChange(field.name, idx, e.target.value)}
+                            placeholder={field.placeholder || "Enter value"}
+                            className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                          />
+                          <button type="button" onClick={() => removeArrayItem(field.name, idx)} className="text-red-500 hover:text-red-700">
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-string")} className="text-sm text-[#6869F9] font-medium hover:underline">
+                        + Add {field.label}
+                      </button>
+                    </div>
+                  ) : field.type === "array-object" ? (
+                    <div className="space-y-4">
+                      {(Array.isArray(formData[field.name]) ? formData[field.name] : []).map((val: any, idx: number) => (
+                        <div key={idx} className="relative rounded-lg border border-gray-200 bg-gray-50 p-4">
+                          <button type="button" onClick={() => removeArrayItem(field.name, idx)} className="absolute right-2 top-2 text-red-500 hover:text-red-700">
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-2">
+                            {field.objectSchema?.map(sub => (
+                              <div key={sub.name} className={sub.type === "textarea" ? "sm:col-span-2" : ""}>
+                                <label className="block text-xs font-medium text-gray-700">{sub.label}</label>
+                                {sub.type === "textarea" ? (
+                                  <textarea
+                                    value={val[sub.name] || ""}
+                                    onChange={(e) => handleArrayChange(field.name, idx, e.target.value, sub.name)}
+                                    rows={2}
+                                    placeholder={sub.placeholder}
+                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                                  />
+                                ) : (
+                                  <input
+                                    type={sub.type}
+                                    value={val[sub.name] || ""}
+                                    onChange={(e) => handleArrayChange(field.name, idx, e.target.value, sub.name)}
+                                    placeholder={sub.placeholder}
+                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-object")} className="text-sm text-[#6869F9] font-medium hover:underline">
+                        + Add {field.label}
+                      </button>
+                    </div>
+                  ) : field.type === "textarea" || field.type === "json" ? (
                     <textarea
                       id={field.name}
                       name={field.name}

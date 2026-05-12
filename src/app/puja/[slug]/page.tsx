@@ -50,6 +50,7 @@ type PujaOffering = {
   name: string;
   price: number;
   description: string;
+  badge?: string;
   imageUrl?: string;
 };
 
@@ -100,6 +101,7 @@ type Puja = {
   details: PujaDetails;
   packages: PujaPackage[];
   offerings: PujaOffering[];
+  gallery?: string[];
 };
 
 type Countdown = {
@@ -161,10 +163,23 @@ export default function PujaDetailPage() {
   const [showPackageModal, setShowPackageModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
   const [userDetails, setUserDetails] = useState({ name: "", whatsapp: "" });
   const [selectedExtraIds, setSelectedExtraIds] = useState<string[]>([]);
   const [countdown, setCountdown] = useState<Countdown>(defaultCountdown);
   const [activeTab, setActiveTab] = useState("about");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const hasGallery = puja?.gallery && puja.gallery.length > 0;
+  const images = hasGallery ? [puja.imageUrl, ...puja.gallery!] : [puja?.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"];
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
 
   const toggleExtra = (id: string) => {
     setSelectedExtraIds(prev => 
@@ -310,9 +325,9 @@ export default function PujaDetailPage() {
       <Navbar />
       <main className="min-h-screen bg-white pb-24">
         {loading ? (
-          <div className="mx-auto max-w-6xl px-6 py-20 text-center text-[#6869F9]">Loading puja details...</div>
+          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center text-[#6869F9]">Loading puja details...</div>
         ) : !puja ? (
-          <div className="mx-auto max-w-6xl px-6 py-20 text-center">
+          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
             <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-semibold text-white">
               Back to Pujas
@@ -322,7 +337,7 @@ export default function PujaDetailPage() {
           <>
             {/* -- Breadcrumb (sticky below navbar) -- */}
             <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-              <div className="mx-auto max-w-6xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+              <div className="mx-auto max-w-[1300px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
                 <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
                 <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
@@ -332,11 +347,11 @@ export default function PujaDetailPage() {
             </nav>
 
             {/* -- Hero -- */}
-            <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+            <div className="mx-auto max-w-[1300px] px-4 py-6 md:px-6">
               <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-                {/* Left: Image */}
-                <div className="relative overflow-hidden rounded-2xl">
-                  <img src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"} alt={puja.title} className="w-full object-cover h-[350px] md:h-[450px]" />
+                {/* Left: Image Carousel */}
+                <div className="relative overflow-hidden rounded-2xl group cursor-pointer" onClick={() => setShowGallery(true)}>
+                  <img src={images[currentImageIndex]} alt={puja.title} className="w-full object-contain bg-[#f8f7ff] h-[350px] md:h-[450px] transition-opacity duration-300" />
                   
                   {/* Top Left Badge */}
                   {(puja.badge || puja.shortTitle) && (
@@ -347,15 +362,48 @@ export default function PujaDetailPage() {
                     </div>
                   )}
 
-                  {/* Swipe Button (Decorative to match screenshot) */}
-                  <div className="absolute left-4 bottom-4">
-                    <button className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
-                      SWIPE 
-                      <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </div>
+                  {/* Navigation Arrows */}
+                  {images.length > 1 && (
+                    <>
+                      <button onClick={handlePrevImage} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-800 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white shadow-md">
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                      </button>
+                      <button onClick={handleNextImage} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-800 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white shadow-md">
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                      </button>
+
+                      {/* Dots */}
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                        {images.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setCurrentImageIndex(idx)}
+                            className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#F47820] w-4" : "bg-white/60 hover:bg-white/80"}`}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Swipe Button */}
+                      <div className="absolute left-4 bottom-4">
+                        <button onClick={handleNextImage} className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-black/60">
+                          SWIPE 
+                          <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  {images.length <= 1 && (
+                    <div className="absolute left-4 bottom-4">
+                      <button className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
+                        SWIPE 
+                        <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right: Details panel */}
@@ -448,7 +496,7 @@ export default function PujaDetailPage() {
 
             {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
             <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
-              <div className="mx-auto max-w-6xl px-4 md:px-6">
+              <div className="mx-auto max-w-[1300px] px-4 md:px-6">
                 <div className="flex items-center justify-between overflow-x-auto no-scrollbar w-full gap-4">
                   {sectionTabs.map((tab) => (
                     <button
@@ -705,7 +753,7 @@ export default function PujaDetailPage() {
         {/* -- Sticky bottom booking bar -- */}
         {puja && !countdown.expired && (
           <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
-            <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+            <div className="mx-auto flex max-w-[1300px] items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="truncate text-sm font-bold text-[#3b0764]">{selectedPackage?.name ?? "Select a package"}</p>
                 <p className="text-xl font-extrabold text-[#6869F9]">Rs. {selectedPackage?.price ?? "—"}</p>
@@ -1050,21 +1098,31 @@ export default function PujaDetailPage() {
                  </h3>
                  <div className="space-y-4">
                     {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                       <div key={extra.id} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-4 group hover:border-[#6869F9]/30 transition-all">
-                          <div className="h-16 w-16 rounded-xl overflow-hidden bg-gray-50 shrink-0">
-                             <img src={extra.imageUrl} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                             <h4 className="font-bold text-[13px] text-[#1f1f1f] truncate">{extra.name}</h4>
-                             <p className="text-[#6869F9] font-bold text-[13px] mt-0.5">Rs. {extra.price}</p>
-                          </div>
-                          <button 
-                            onClick={() => toggleExtra(extra.id)}
-                            className="bg-white text-[#6869F9] border border-[#6869F9] h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#6869F9] hover:text-white transition-all active:scale-95"
-                          >
-                             + Add
-                          </button>
-                       </div>
+                       <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
+                           {extra.badge && (
+                              <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
+                                 <i className="fa-solid fa-box"></i> {extra.badge}
+                              </div>
+                           )}
+                           <div className="flex-1 min-w-0 pt-0.5">
+                              <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
+                              {extra.description && (
+                                 <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
+                              )}
+                              <p className="text-[#0a7a5c] font-bold text-[15px] mt-2">₹{extra.price}</p>
+                           </div>
+                           <div className="flex flex-col items-center gap-2.5 shrink-0">
+                              <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
+                                 <img src={extra.imageUrl} className="w-full h-full object-cover" />
+                              </div>
+                              <button 
+                                onClick={() => toggleExtra(extra.id)}
+                                className="bg-white text-[#0a7a5c] border border-[#0a7a5c] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#0a7a5c] hover:text-white transition-all active:scale-95 shadow-sm"
+                              >
+                                 + Add
+                              </button>
+                           </div>
+                        </div>
                     ))}
                  </div>
 
@@ -1098,6 +1156,71 @@ export default function PujaDetailPage() {
                  </button>
               </div>
            </div>
+        </div>
+      )}
+      {/* Gallery Modal */}
+      {showGallery && (
+        <div className="fixed inset-0 z-[200] flex flex-col bg-black">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 md:p-6 text-white">
+            <button onClick={() => setShowGallery(false)} className="flex items-center gap-4 hover:text-gray-300">
+              <ArrowLeftIcon className="h-5 w-5" />
+              <span className="font-bold text-lg">Puja Gallery</span>
+            </button>
+            <button className="flex items-center gap-2 rounded-full bg-[#1b2b25] px-4 py-2 text-sm font-semibold text-[#48c985] hover:bg-[#253b33] border border-[#253b33]">
+              <i className="fa-brands fa-whatsapp"></i> Share
+            </button>
+          </div>
+
+          {/* Main Image */}
+          <div className="flex flex-1 items-center justify-center overflow-hidden p-4 relative group">
+            <img src={images[currentImageIndex]} className="max-h-[60vh] w-auto max-w-full object-contain" />
+          </div>
+
+          {/* Thumbnails and Actions */}
+          <div className="flex flex-col items-center pb-6">
+            {images.length > 1 && (
+              <div className="flex items-center gap-3 mb-6">
+                <button onClick={handlePrevImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 text-xs transition-colors">
+                   <i className="fa-solid fa-chevron-left"></i>
+                </button>
+                {images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#F47820]" : "bg-white/40 hover:bg-white/60"}`}
+                  />
+                ))}
+                <button onClick={handleNextImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-[#F47820] text-white hover:bg-[#e06b1a] text-xs transition-colors">
+                   <i className="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
+            
+            <div className="flex overflow-x-auto gap-3 px-4 max-w-full no-scrollbar pb-4 justify-center">
+              {images.map((img, idx) => (
+                <button 
+                  key={idx} 
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`h-[72px] w-[108px] shrink-0 rounded-md overflow-hidden border-[3px] transition-colors ${idx === currentImageIndex ? "border-[#2563eb]" : "border-transparent opacity-50 hover:opacity-100"}`}
+                >
+                  <img src={img} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+            
+            <div className="w-full max-w-xl px-4 mt-2">
+              <button 
+                onClick={() => {
+                  setShowGallery(false);
+                  setShowPackageModal(true);
+                }}
+                className="w-full bg-[#00b268] text-white py-4 rounded-xl font-bold text-[15px] hover:bg-[#009e5c] transition-colors shadow-lg shadow-[#00b268]/20 flex items-center justify-center gap-2"
+              >
+                Explore Puja Packages Now <ArrowLeftIcon className="h-4 w-4 rotate-180" />
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>

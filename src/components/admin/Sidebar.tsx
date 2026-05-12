@@ -11,18 +11,18 @@ import {
   ArrowLeftOnRectangleIcon,
   ShoppingBagIcon,
   WrenchScrewdriverIcon,
-  ChatBubbleLeftRightIcon
+  ChatBubbleLeftRightIcon,
+  GiftIcon
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon },
   { name: "Pujas", href: "/admin/pujas", icon: SparklesIcon },
+  { name: "Offerings", href: "/admin/offerings", icon: GiftIcon },
   { name: "Chadhava", href: "/admin/chadhava", icon: ShoppingBagIcon },
-  { name: "Panchang", href: "/admin/panchang", icon: CalendarIcon },
   { name: "Temples", href: "/admin/temples", icon: BuildingLibraryIcon },
   { name: "Library", href: "/admin/library", icon: BookOpenIcon },
-  { name: "Astro Tools", href: "/admin/astro-tools", icon: WrenchScrewdriverIcon },
   { name: "Store", href: "/admin/store", icon: ShoppingBagIcon },
   { name: "Reviews", href: "/admin/reviews", icon: ChatBubbleLeftRightIcon },
 ];
