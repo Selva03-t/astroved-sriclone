@@ -16,7 +16,18 @@ async function requestAuth<T>(path: string, init?: RequestInit): Promise<AuthApi
     },
   });
 
-  const payload = (await response.json()) as AuthApiResponse<T>;
+  const raw = await response.text();
+  let payload: AuthApiResponse<T>;
+
+  try {
+    payload = JSON.parse(raw) as AuthApiResponse<T>;
+  } catch {
+    throw new Error(
+      response.ok
+        ? "Invalid response from server"
+        : `Request failed (${response.status}). Confirm MONGODB_URI and redeploy if this is production.`
+    );
+  }
 
   if (!response.ok || payload.success === false) {
     throw new Error(payload.error || "Authentication request failed");

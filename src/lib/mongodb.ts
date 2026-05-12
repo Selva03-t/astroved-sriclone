@@ -1,33 +1,26 @@
 import { MongoClient } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
-  throw new Error('Please add MONGODB_URI to .env.local');
+  throw new Error(
+    'Missing MONGODB_URI: add it to .env.local locally, or in Vercel under Project Settings → Environment Variables (Production).'
+  );
 }
 
 const uri = process.env.MONGODB_URI;
 const options = {};
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
-
-if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>;
-  };
-
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    globalWithMongo._mongoClientPromise = client.connect();
-  }
-  clientPromise = globalWithMongo._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
+interface MongoGlobal {
+  _mongoClientPromise?: Promise<MongoClient>;
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
+const globalWithMongo = globalThis as typeof globalThis & MongoGlobal;
+
+// One client promise per runtime isolate (recommended for Next.js on Vercel).
+if (!globalWithMongo._mongoClientPromise) {
+  const client = new MongoClient(uri, options);
+  globalWithMongo._mongoClientPromise = client.connect();
+}
+
+const clientPromise: Promise<MongoClient> = globalWithMongo._mongoClientPromise;
+
 export default clientPromise;
