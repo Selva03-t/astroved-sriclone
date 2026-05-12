@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import { COUNTRIES, DEFAULT_COUNTRY } from "@/lib/auth/countries";
 import { authService } from "@/services/authService";
 import type { SignupPayload } from "@/types/auth";
 import CountryPhoneField from "@/components/auth/CountryPhoneField";
@@ -128,6 +128,32 @@ export default function SignupPage() {
                   placeholder="Enter your email"
                   className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
+              </label>
+
+              <label className="block text-sm font-medium text-[#5a3b8a] sm:col-span-2">
+                Country
+                <input
+                  type="text"
+                  list="astroved-country-list"
+                  value={formData.country.name}
+                  onChange={(event) => {
+                    const nextName = event.target.value;
+                    const match = COUNTRIES.find((c) => c.name.toLowerCase() === nextName.toLowerCase());
+                    if (match) {
+                      updateField("country", match);
+                      return;
+                    }
+                    // Keep user's typed text visible while they search; do not mutate country object.
+                    updateField("country", { ...formData.country, name: nextName });
+                  }}
+                  placeholder="Enter your country"
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                />
+                <datalist id="astroved-country-list">
+                  {COUNTRIES.map((c, idx) => (
+                    <option key={`${c.isoCode}-${c.dialCode}-${idx}`} value={c.name} />
+                  ))}
+                </datalist>
               </label>
 
               <CountryPhoneField
