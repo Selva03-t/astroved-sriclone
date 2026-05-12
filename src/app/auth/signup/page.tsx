@@ -6,6 +6,7 @@ import { COUNTRIES, DEFAULT_COUNTRY } from "@/lib/auth/countries";
 import { authService } from "@/services/authService";
 import type { SignupPayload } from "@/types/auth";
 import CountryPhoneField from "@/components/auth/CountryPhoneField";
+import PasswordField from "@/components/auth/PasswordField";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[0-9]{6,15}$/;
@@ -34,32 +35,30 @@ export default function SignupPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [separateWhatsapp, setSeparateWhatsapp] = useState(false);
   const passwordStrength = getPasswordStrength(formData.password);
 
   const isFormValid = useMemo(() => {
+    const whatsappOk = !separateWhatsapp || phoneRegex.test(formData.whatsapp ?? "");
     return (
       formData.name.trim().length > 1 &&
       emailRegex.test(formData.email) &&
       phoneRegex.test(formData.phone) &&
-      phoneRegex.test(formData.whatsapp) &&
+      whatsappOk &&
       passwordStrength >= 3 &&
       formData.password === formData.confirmPassword
     );
-  }, [formData, passwordStrength]);
+  }, [formData, passwordStrength, separateWhatsapp]);
 
   const updateField = <K extends keyof SignupPayload>(key: K, value: SignupPayload[K]) => {
     setFormData((current) => ({ ...current, [key]: value }));
   };
 
-  const updateNumber = (key: "phone" | "whatsapp", value: string) => {
-    updateField(key, value.replace(/[^0-9]/g, ""));
-  };
-
   const validateForm = () => {
     if (!formData.name.trim()) return "Full name is required";
     if (!emailRegex.test(formData.email)) return "Enter a valid email address";
-    if (!phoneRegex.test(formData.phone)) return "Enter a valid phone number";
-    if (!phoneRegex.test(formData.whatsapp)) return "Enter a valid WhatsApp number";
+    if (!phoneRegex.test(formData.phone)) return "Enter a valid mobile number";
+    if (separateWhatsapp && !phoneRegex.test(formData.whatsapp ?? "")) return "Enter a valid WhatsApp number";
     if (passwordStrength < 3) return "Password must be at least 8 characters and include a letter and a number";
     if (formData.password !== formData.confirmPassword) return "Passwords do not match";
     return "";
@@ -84,6 +83,7 @@ export default function SignupPage() {
         ...formData,
         email: normalizedEmail,
         name: trimmedName,
+        whatsapp: separateWhatsapp ? (formData.whatsapp ?? "").replace(/[^0-9]/g, "") : "",
       });
 
       window.location.href = "/auth/login";
@@ -114,7 +114,7 @@ export default function SignupPage() {
                   value={formData.name}
                   onChange={(event) => updateField("name", event.target.value)}
                   placeholder="Enter your full name"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                  className="mt-2 box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
               </label>
 
@@ -126,7 +126,7 @@ export default function SignupPage() {
                   value={formData.email}
                   onChange={(event) => updateField("email", event.target.value)}
                   placeholder="Enter your email"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                  className="mt-2 box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
               </label>
 
@@ -147,7 +147,7 @@ export default function SignupPage() {
                     updateField("country", { ...formData.country, name: nextName });
                   }}
                   placeholder="Enter your country"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                  className="mt-2 box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
                 <datalist id="astroved-country-list">
                   {COUNTRIES.map((c, idx) => (
@@ -157,46 +157,64 @@ export default function SignupPage() {
               </label>
 
               <CountryPhoneField
-                label="Phone Number"
+                label="Mobile Number"
                 value={formData.phone}
                 onChange={(nextDigits) => updateField("phone", nextDigits)}
                 country={formData.country}
                 onCountryChange={(nextCountry) => updateField("country", nextCountry)}
-                placeholder="Phone number"
+                placeholder="Mobile number"
+                className="sm:col-span-2"
               />
 
-              <CountryPhoneField
-                label="WhatsApp Number"
-                value={formData.whatsapp}
-                onChange={(nextDigits) => updateField("whatsapp", nextDigits)}
-                country={formData.country}
-                onCountryChange={(nextCountry) => updateField("country", nextCountry)}
-                placeholder="WhatsApp number"
-              />
-
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Password
+              <div className="flex items-start gap-3 sm:col-span-2">
                 <input
-                  type="password"
-                  required
+                  id="separate-whatsapp"
+                  type="checkbox"
+                  checked={separateWhatsapp}
+                  onChange={(e) => {
+                    const on = e.target.checked;
+                    setSeparateWhatsapp(on);
+                    if (!on) updateField("whatsapp", "");
+                  }}
+                  className="mt-1 h-4 w-4 shrink-0 rounded border-[#d8c9fb] text-[#6869F9] focus:ring-[#ddd1ff]"
+                />
+                <label htmlFor="separate-whatsapp" className="text-sm font-medium text-[#5a3b8a] leading-snug cursor-pointer">
+                  Enter the whatsapp number
+                </label>
+              </div>
+
+              {separateWhatsapp && (
+                <CountryPhoneField
+                  label="WhatsApp Number"
+                  value={formData.whatsapp ?? ""}
+                  onChange={(nextDigits) => updateField("whatsapp", nextDigits)}
+                  country={formData.country}
+                  onCountryChange={(nextCountry) => updateField("country", nextCountry)}
+                  placeholder="WhatsApp number"
+                  className="sm:col-span-2"
+                />
+              )}
+
+              <div className="flex w-full flex-col gap-4 sm:col-span-2">
+                <PasswordField
+                  className="w-full"
+                  label="Password"
                   value={formData.password}
-                  onChange={(event) => updateField("password", event.target.value)}
+                  onChange={(v) => updateField("password", v)}
                   placeholder="Create a password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
-                />
-              </label>
-
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Confirm Password
-                <input
-                  type="password"
                   required
-                  value={formData.confirmPassword}
-                  onChange={(event) => updateField("confirmPassword", event.target.value)}
-                  placeholder="Confirm your password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                  autoComplete="new-password"
                 />
-              </label>
+                <PasswordField
+                  className="w-full"
+                  label="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={(v) => updateField("confirmPassword", v)}
+                  placeholder="Confirm your password"
+                  required
+                  autoComplete="new-password"
+                />
+              </div>
             </div>
 
             <div className="rounded-xl bg-[#f7f2ff] p-3 text-xs text-[#6f53a3]">

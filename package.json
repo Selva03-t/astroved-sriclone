@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "docs:pdf": "node scripts/generate-doc-pdf.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -28,6 +29,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "marked": "^18.0.3",
+    "puppeteer-core": "^24.43.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^5"
   }
