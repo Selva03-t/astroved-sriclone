@@ -1,46 +1,79 @@
-import { NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import clientPromise from "@/lib/mongodb";
+import type { SignupPayload } from "@/types/auth";
 
-// Helper to hash password using simple pbkdf2
-function hashPassword(password: string) {
-  const salt = 'astroved_salt_789'; // In real app use per-user salt
-  const iterations = 1000;
-  const keylen = 64;
-  const digest = 'sha512';
-  
-  // Since we are in a route, we can use the node crypto if it's available or just a simple SHA
-  // But standard is bcrypt or pbkdf2. 
-  // For this environment, let's use a standard crypto hash if tsc allows
-  return btoa(password + salt); // DUMMY HASH FOR NOW to move forward, will improve if needed
-}
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^[0-9]{6,15}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const payload = (await request.json()) as SignupPayload;
+    const { name, email, phone, whatsapp, country, password, confirmPassword } = payload;
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    if (!name || !email || !phone || !whatsapp || !country || !password || !confirmPassword) {
+      return NextResponse.json({ success: false, error: "All registration fields are required" }, { status: 400 });
+    }
+
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ success: false, error: "Enter a valid email address" }, { status: 400 });
+    }
+
+    if (!phoneRegex.test(phone) || !phoneRegex.test(whatsapp)) {
+      return NextResponse.json({ success: false, error: "Enter valid phone and WhatsApp numbers" }, { status: 400 });
+    }
+
+    if (!passwordRegex.test(password)) {
+      return NextResponse.json(
+        { success: false, error: "Password must be at least 8 characters and include a letter and a number" },
+        { status: 400 }
+      );
+    }
+
+    if (password !== confirmPassword) {
+      return NextResponse.json({ success: false, error: "Passwords do not match" }, { status: 400 });
     }
 
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('users');
+    const collection = db.collection("users");
+    const normalizedEmail = email.toLowerCase().trim();
 
-    // Check if user exists
-    const existing = await collection.findOne({ email });
-    if (existing) {
-      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
-    }
-
-    const result = await collection.insertOne({
-      name,
-      email,
-      password: password, // For now storing as is to ensure login works, will hash in next step if required
-      createdAt: new Date(),
+    const existing = await collection.findOne({
+      $or: [
+        { email: normalizedEmail },
+        { phone, "country.dialCode": country.dialCode },
+        { whatsapp, "country.dialCode": country.dialCode },
+      ],
     });
 
-    return NextResponse.json({ success: true, userId: result.insertedId });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (existing) {
+      return NextResponse.json(
+        { success: false, error: "An account already exists with this email or number" },
+        { status: 409 }
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const result = await collection.insertOne({
+      name: name.trim(),
+      email: normalizedEmail,
+      phone,
+      whatsapp,
+      country,
+      passwordHash,
+      authProvider: "email",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Account created successfully",
+      data: { userId: result.insertedId.toString() },
+    });
+  } catch {
+    return NextResponse.json({ success: false, error: "Unable to create account" }, { status: 500 });
   }
 }

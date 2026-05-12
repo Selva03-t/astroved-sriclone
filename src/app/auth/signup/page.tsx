@@ -1,121 +1,215 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { COUNTRIES, DEFAULT_COUNTRY, getCountryByIsoCode } from "@/lib/auth/countries";
+import { signupUser } from "@/lib/api/auth";
+import type { SignupPayload } from "@/types/auth";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^[0-9]{6,15}$/;
+
+function getPasswordStrength(password: string) {
+  const checks = [
+    password.length >= 8,
+    /[A-Za-z]/.test(password),
+    /\d/.test(password),
+    /[^A-Za-z0-9]/.test(password),
+  ];
+
+  return checks.filter(Boolean).length;
+}
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignupPayload>({
     name: "",
     email: "",
+    phone: "",
+    whatsapp: "",
+    country: DEFAULT_COUNTRY,
     password: "",
     confirmPassword: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const passwordStrength = getPasswordStrength(formData.password);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const isFormValid = useMemo(() => {
+    return (
+      formData.name.trim().length > 1 &&
+      emailRegex.test(formData.email) &&
+      phoneRegex.test(formData.phone) &&
+      phoneRegex.test(formData.whatsapp) &&
+      passwordStrength >= 3 &&
+      formData.password === formData.confirmPassword
+    );
+  }, [formData, passwordStrength]);
+
+  const updateField = <K extends keyof SignupPayload>(key: K, value: SignupPayload[K]) => {
+    setFormData((current) => ({ ...current, [key]: value }));
+  };
+
+  const updateNumber = (key: "phone" | "whatsapp", value: string) => {
+    updateField(key, value.replace(/[^0-9]/g, ""));
+  };
+
+  const validateForm = () => {
+    if (!formData.name.trim()) return "Full name is required";
+    if (!emailRegex.test(formData.email)) return "Enter a valid email address";
+    if (!phoneRegex.test(formData.phone)) return "Enter a valid phone number";
+    if (!phoneRegex.test(formData.whatsapp)) return "Enter a valid WhatsApp number";
+    if (passwordStrength < 3) return "Password must be at least 8 characters and include a letter and a number";
+    if (formData.password !== formData.confirmPassword) return "Passwords do not match";
+    return "";
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError("");
-    setLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
+    setLoading(true);
+
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        }),
+      await signupUser({
+        ...formData,
+        email: formData.email.toLowerCase().trim(),
+        name: formData.name.trim(),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Something went wrong");
-
-      // Redirect to login on success
       window.location.href = "/auth/login";
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="relative min-h-screen w-full flex items-center justify-center bg-[#fdfaff] overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
-      
-      <div className="relative z-10 w-full max-w-xl px-4 py-12">
-        <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
+    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#fdfaff]">
+      <div className="pointer-events-none absolute right-0 top-0 h-[800px] w-[800px] -translate-y-1/2 translate-x-1/3 rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-[600px] w-[600px] -translate-x-1/3 translate-y-1/2 rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl" />
+
+      <div className="relative z-10 w-full max-w-2xl px-4 py-12">
+        <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-8 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
           <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">Create Account</h1>
           <p className="mt-3 text-center text-base text-[#6a4e95]">Join astroved to explore sacred traditions.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[#5a3b8a]">Full Name</label>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm font-medium text-[#5a3b8a] sm:col-span-2">
+                Full Name
                 <input
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your name"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  onChange={(event) => updateField("name", event.target.value)}
+                  placeholder="Enter your full name"
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
-              </div>
+              </label>
 
-              <div>
-                <label className="block text-sm font-medium text-[#5a3b8a]">Email Address</label>
+              <label className="block text-sm font-medium text-[#5a3b8a] sm:col-span-2">
+                Email Address
                 <input
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(event) => updateField("email", event.target.value)}
                   placeholder="Enter your email"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
-              </div>
+              </label>
 
-              <div>
-                <label className="block text-sm font-medium text-[#5a3b8a]">Password</label>
+              <label className="block text-sm font-medium text-[#5a3b8a] sm:col-span-2">
+                Country
+                <select
+                  value={formData.country.isoCode}
+                  onChange={(event) => updateField("country", getCountryByIsoCode(event.target.value))}
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+                >
+                  {COUNTRIES.map((country) => (
+                    <option key={country.isoCode} value={country.isoCode}>
+                      {country.name} (+{country.dialCode})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block text-sm font-medium text-[#5a3b8a]">
+                Phone Number
+                <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+                  <span className="mr-3 text-base text-[#7b5db5]">+{formData.country.dialCode}</span>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(event) => updateNumber("phone", event.target.value)}
+                    placeholder="Phone number"
+                    className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
+                  />
+                </div>
+              </label>
+
+              <label className="block text-sm font-medium text-[#5a3b8a]">
+                WhatsApp Number
+                <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+                  <span className="mr-3 text-base text-[#7b5db5]">+{formData.country.dialCode}</span>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.whatsapp}
+                    onChange={(event) => updateNumber("whatsapp", event.target.value)}
+                    placeholder="WhatsApp number"
+                    className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
+                  />
+                </div>
+              </label>
+
+              <label className="block text-sm font-medium text-[#5a3b8a]">
+                Password
                 <input
                   type="password"
                   required
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(event) => updateField("password", event.target.value)}
                   placeholder="Create a password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
-              </div>
+              </label>
 
-              <div>
-                <label className="block text-sm font-medium text-[#5a3b8a]">Confirm Password</label>
+              <label className="block text-sm font-medium text-[#5a3b8a]">
+                Confirm Password
                 <input
                   type="password"
                   required
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  onChange={(event) => updateField("confirmPassword", event.target.value)}
                   placeholder="Confirm your password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
                 />
-              </div>
+              </label>
             </div>
 
-            {error && <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-3 rounded-lg">{error}</p>}
-            
+            <div className="rounded-xl bg-[#f7f2ff] p-3 text-xs text-[#6f53a3]">
+              Password strength:{" "}
+              <span className="font-semibold text-[#5657e8]">
+                {passwordStrength >= 4 ? "Strong" : passwordStrength >= 3 ? "Good" : "Needs letter, number, and 8 characters"}
+              </span>
+            </div>
+
+            {error && <p className="rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-500">{error}</p>}
+
             <button
               type="submit"
-              disabled={loading}
-              className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:opacity-50"
+              disabled={loading || !isFormValid}
+              className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>
@@ -123,18 +217,14 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center text-sm text-[#6f53a3]">
             Already have an account?{" "}
-            <Link
-              href="/auth/login"
-              className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
-            >
+            <Link href="/auth/login" className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]">
               Log in
             </Link>
           </p>
         </div>
       </div>
 
-      {/* Subtle Pattern */}
-      <div className="absolute bottom-10 right-10 opacity-10 pointer-events-none">
+      <div className="pointer-events-none absolute bottom-10 right-10 opacity-10">
         <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="60" cy="60" r="58" stroke="#6869F9" strokeWidth="2" strokeDasharray="10 10" />
           <path d="M60 20L65 55L100 60L65 65L60 100L55 65L20 60L55 55L60 20Z" fill="#6869F9" />
@@ -143,4 +233,3 @@ export default function SignupPage() {
     </main>
   );
 }
-

@@ -16,11 +16,18 @@ export async function GET() {
     }
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return NextResponse.json({ 
-       authenticated: true, 
-       user: { id: payload.userId, name: payload.name, email: payload.email } 
+    return NextResponse.json({
+       authenticated: true,
+       user: {
+         id: payload.userId,
+         name: payload.name,
+         email: payload.email,
+         phone: payload.phone,
+         whatsapp: payload.whatsapp,
+         country: payload.country,
+       }
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 }
