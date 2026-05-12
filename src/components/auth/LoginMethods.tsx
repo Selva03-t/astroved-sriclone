@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { COUNTRIES, DEFAULT_COUNTRY, getCountryByIsoCode } from "@/lib/auth/countries";
-import { loginWithEmail, resendOtp, sendOtp, verifyOtp } from "@/lib/api/auth";
+import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import { authService } from "@/services/authService";
 import type { CountryOption, LoginMethod, OtpPayload } from "@/types/auth";
+import CountryPhoneField from "@/components/auth/CountryPhoneField";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[0-9]{6,15}$/;
-const RESEND_SECONDS = 30;
 
 function MailIcon() {
   return (
@@ -47,30 +48,17 @@ function buildOtpPayload(method: LoginMethod, country: CountryOption, phone: str
 }
 
 export default function LoginMethods() {
-  const [method, setMethod] = useState<LoginMethod>("email");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialMethod = (searchParams?.get("method") as LoginMethod | null) ?? "email";
+  const [method, setMethod] = useState<LoginMethod>(initialMethod);
   const [country, setCountry] = useState<CountryOption>(DEFAULT_COUNTRY);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-  const [otpPayload, setOtpPayload] = useState<OtpPayload | null>(null);
-  const [isOtpScreen, setIsOtpScreen] = useState(false);
-  const [resendSeconds, setResendSeconds] = useState(RESEND_SECONDS);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
-
-  useEffect(() => {
-    if (!isOtpScreen || resendSeconds <= 0) return;
-
-    const timer = window.setTimeout(() => setResendSeconds((seconds) => seconds - 1), 1000);
-    return () => window.clearTimeout(timer);
-  }, [isOtpScreen, resendSeconds]);
-
-  useEffect(() => {
-    if (isOtpScreen) otpRefs.current[0]?.focus();
-  }, [isOtpScreen]);
 
   const isValid = useMemo(() => {
     if (method === "email") return emailRegex.test(email) && password.length > 0;
@@ -86,9 +74,6 @@ export default function LoginMethods() {
   const selectMethod = (nextMethod: LoginMethod) => {
     setMethod(nextMethod);
     setError("");
-    setIsOtpScreen(false);
-    setOtp(Array(6).fill(""));
-    setOtpPayload(null);
   };
 
   const setNumberValue = (nextValue: string) => {
@@ -113,78 +98,20 @@ export default function LoginMethods() {
 
     try {
       if (method === "email") {
-        await loginWithEmail({ email, password });
+        await authService.loginWithEmail({ email: email.toLowerCase().trim(), password });
         redirectAfterLogin();
         return;
       }
 
       const payload = buildOtpPayload(method, country, phone, whatsapp);
-      await sendOtp(payload);
-      setOtpPayload(payload);
-      setOtp(Array(6).fill(""));
-      setResendSeconds(RESEND_SECONDS);
-      setIsOtpScreen(true);
+      await authService.sendOtp(payload);
+      const nextParams = new URLSearchParams(window.location.search);
+      nextParams.set("method", payload.method);
+      nextParams.set("country", payload.country.isoCode);
+      nextParams.set("number", payload.number);
+      router.push(`/auth/otp?${nextParams.toString()}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOtpChange = (index: number, nextValue: string) => {
-    const digit = nextValue.replace(/[^0-9]/g, "").slice(-1);
-    const nextOtp = [...otp];
-    nextOtp[index] = digit;
-    setOtp(nextOtp);
-
-    if (digit && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handleVerifyOtp = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
-
-    if (!otpPayload) return;
-
-    const otpValue = otp.join("");
-    if (!/^[0-9]{6}$/.test(otpValue)) {
-      setError("Enter the 6-digit OTP");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await verifyOtp({ ...otpPayload, otp: otpValue });
-      redirectAfterLogin();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "OTP verification failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    if (!otpPayload || resendSeconds > 0) return;
-
-    setError("");
-    setLoading(true);
-
-    try {
-      await resendOtp(otpPayload);
-      setOtp(Array(6).fill(""));
-      setResendSeconds(RESEND_SECONDS);
-      otpRefs.current[0]?.focus();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to resend OTP");
     } finally {
       setLoading(false);
     }
@@ -197,162 +124,89 @@ export default function LoginMethods() {
     <div className="w-full max-w-xl rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
       <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">Welcome back</h1>
       <p className="mt-3 text-center text-base text-[#6a4e95]">
-        {isOtpScreen ? "Verify your one-time password to continue." : "Choose one method to sign in securely."}
+        Choose one method to sign in securely.
       </p>
 
-      {!isOtpScreen && (
-        <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl bg-[#f3ecff] p-3">
-          {(["email", "phone", "whatsapp"] as LoginMethod[]).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => selectMethod(tab)}
-              className={`flex transform-gpu items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${
-                method === tab
-                  ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
-                  : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
-              }`}
-            >
-              {tab === "email" && <MailIcon />}
-              {tab === "phone" && <PhoneIcon />}
-              {tab === "whatsapp" && <WhatsappIcon />}
-              <span>{tab === "whatsapp" ? "WhatsApp" : tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {isOtpScreen && otpPayload ? (
-        <form onSubmit={handleVerifyOtp} className="mt-8 space-y-5">
-          <div className="rounded-2xl border border-[#e1d5fb] bg-[#fcfaff] p-4 text-center text-sm text-[#6a4e95]">
-            OTP sent to +{otpPayload.country.dialCode} {otpPayload.number}
-          </div>
-
-          <div className="grid grid-cols-6 gap-2 sm:gap-3">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={(element) => {
-                  otpRefs.current[index] = element;
-                }}
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={1}
-                value={digit}
-                onChange={(event) => handleOtpChange(index, event.target.value)}
-                onKeyDown={(event) => handleOtpKeyDown(index, event)}
-                className="aspect-square w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] text-center text-xl font-semibold text-[#342151] outline-none transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
-              />
-            ))}
-          </div>
-
-          {error && <p className="rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-500">{error}</p>}
-
+      <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl bg-[#f3ecff] p-3">
+        {(["email", "phone", "whatsapp"] as LoginMethod[]).map((tab) => (
           <button
-            type="submit"
-            disabled={loading || otp.join("").length !== 6}
-            className="w-full rounded-xl bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
-          >
-            {loading ? "Verifying..." : "Verify OTP"}
-          </button>
-
-          <div className="flex flex-col items-center justify-between gap-3 text-sm text-[#6f53a3] sm:flex-row">
-            <button type="button" onClick={() => setIsOtpScreen(false)} className="font-semibold text-[#5657e8] transition-colors hover:text-[#4647c4]">
-              Change number
-            </button>
-            <button
-              type="button"
-              onClick={handleResendOtp}
-              disabled={resendSeconds > 0 || loading}
-              className="font-semibold text-[#5657e8] transition-colors hover:text-[#4647c4] disabled:cursor-not-allowed disabled:text-[#a288cf]"
-            >
-              {resendSeconds > 0 ? `Resend OTP in ${resendSeconds}s` : "Resend OTP"}
-            </button>
-          </div>
-        </form>
-      ) : (
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          {method === "email" ? (
-            <>
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Email Address
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="Enter your email"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
-                />
-              </label>
-
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Password
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Enter your password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff]"
-                />
-              </label>
-            </>
-          ) : (
-            <>
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Country Code
-                <select
-                  value={country.isoCode}
-                  onChange={(event) => setCountry(getCountryByIsoCode(event.target.value))}
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
-                >
-                  {COUNTRIES.map((countryOption) => (
-                    <option key={countryOption.isoCode} value={countryOption.isoCode}>
-                      {countryOption.name} (+{countryOption.dialCode})
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                {numberLabel}
-                <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
-                  <span className="mr-3 text-base text-[#7b5db5]">+{country.dialCode}</span>
-                  <input
-                    type="tel"
-                    value={numberValue}
-                    onChange={(event) => setNumberValue(event.target.value)}
-                    placeholder={`Enter your ${method === "whatsapp" ? "WhatsApp" : "phone"} number`}
-                    className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
-                  />
-                </div>
-              </label>
-            </>
-          )}
-
-          {error && <p className="rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-500">{error}</p>}
-
-          {method === "email" && (
-            <div className="flex justify-end">
-              <Link href="/auth/forgot-password" className="text-sm font-medium text-[#5657e8] transition-colors duration-300 hover:text-[#4647c4]">
-                Forgot password?
-              </Link>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={!isValid || loading}
-            className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              isValid && !loading
-                ? "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
-                : "cursor-not-allowed bg-[#d2c2ef]"
+            key={tab}
+            type="button"
+            onClick={() => selectMethod(tab)}
+            className={`flex transform-gpu items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${
+              method === tab
+                ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+                : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
             }`}
           >
-            {loading ? "Please wait..." : method === "email" ? "Log in" : "Send OTP"}
+            {tab === "email" && <MailIcon />}
+            {tab === "phone" && <PhoneIcon />}
+            {tab === "whatsapp" && <WhatsappIcon />}
+            <span>{tab === "whatsapp" ? "WhatsApp" : tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
           </button>
-        </form>
-      )}
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        {method === "email" ? (
+          <>
+            <label className="block text-sm font-medium text-[#5a3b8a]">
+              Email Address
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="Enter your email"
+                className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
+              />
+            </label>
+
+            <label className="block text-sm font-medium text-[#5a3b8a]">
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff]"
+              />
+            </label>
+          </>
+        ) : (
+          <>
+            <CountryPhoneField
+              label={numberLabel}
+              value={numberValue}
+              onChange={(nextDigits) => setNumberValue(nextDigits)}
+              country={country}
+              onCountryChange={(nextCountry) => setCountry(nextCountry)}
+              placeholder={`Enter your ${method === "whatsapp" ? "WhatsApp" : "phone"} number`}
+            />
+          </>
+        )}
+
+        {error && <p className="rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-500">{error}</p>}
+
+        {method === "email" && (
+          <div className="flex justify-end">
+            <Link href="/auth/forgot-password" className="text-sm font-medium text-[#5657e8] transition-colors duration-300 hover:text-[#4647c4]">
+              Forgot password?
+            </Link>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={!isValid || loading}
+          className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isValid && !loading
+              ? "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
+              : "cursor-not-allowed bg-[#d2c2ef]"
+          }`}
+        >
+          {loading ? "Please wait..." : method === "email" ? "Log in" : "Send OTP"}
+        </button>
+      </form>
 
       <p className="mt-4 text-center text-xs text-[#7a5ea8]">
         {method === "email"

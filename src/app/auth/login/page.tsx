@@ -1,6 +1,7 @@
 "use client";
 
 import LoginMethods from "@/components/auth/LoginMethods";
+import { Suspense } from "react";
 
 export default function LoginPage() {
   return (
@@ -10,7 +11,9 @@ export default function LoginPage() {
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
       
       <div className="relative z-10 w-full max-w-xl px-4 py-12">
-        <LoginMethods />
+        <Suspense>
+          <LoginMethods />
+        </Suspense>
       </div>
 
       {/* Subtle Bottom Pattern */}

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { COUNTRIES, DEFAULT_COUNTRY, getCountryByIsoCode } from "@/lib/auth/countries";
-import { signupUser } from "@/lib/api/auth";
+import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import { authService } from "@/services/authService";
 import type { SignupPayload } from "@/types/auth";
+import CountryPhoneField from "@/components/auth/CountryPhoneField";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[0-9]{6,15}$/;
@@ -77,10 +78,12 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      await signupUser({
+      const normalizedEmail = formData.email.toLowerCase().trim();
+      const trimmedName = formData.name.trim();
+      await authService.signupUser({
         ...formData,
-        email: formData.email.toLowerCase().trim(),
-        name: formData.name.trim(),
+        email: normalizedEmail,
+        name: trimmedName,
       });
 
       window.location.href = "/auth/login";
@@ -127,50 +130,23 @@ export default function SignupPage() {
                 />
               </label>
 
-              <label className="block text-sm font-medium text-[#5a3b8a] sm:col-span-2">
-                Country
-                <select
-                  value={formData.country.isoCode}
-                  onChange={(event) => updateField("country", getCountryByIsoCode(event.target.value))}
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]"
-                >
-                  {COUNTRIES.map((country) => (
-                    <option key={country.isoCode} value={country.isoCode}>
-                      {country.name} (+{country.dialCode})
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <CountryPhoneField
+                label="Phone Number"
+                value={formData.phone}
+                onChange={(nextDigits) => updateField("phone", nextDigits)}
+                country={formData.country}
+                onCountryChange={(nextCountry) => updateField("country", nextCountry)}
+                placeholder="Phone number"
+              />
 
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                Phone Number
-                <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
-                  <span className="mr-3 text-base text-[#7b5db5]">+{formData.country.dialCode}</span>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={(event) => updateNumber("phone", event.target.value)}
-                    placeholder="Phone number"
-                    className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
-                  />
-                </div>
-              </label>
-
-              <label className="block text-sm font-medium text-[#5a3b8a]">
-                WhatsApp Number
-                <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
-                  <span className="mr-3 text-base text-[#7b5db5]">+{formData.country.dialCode}</span>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.whatsapp}
-                    onChange={(event) => updateNumber("whatsapp", event.target.value)}
-                    placeholder="WhatsApp number"
-                    className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
-                  />
-                </div>
-              </label>
+              <CountryPhoneField
+                label="WhatsApp Number"
+                value={formData.whatsapp}
+                onChange={(nextDigits) => updateField("whatsapp", nextDigits)}
+                country={formData.country}
+                onCountryChange={(nextCountry) => updateField("country", nextCountry)}
+                placeholder="WhatsApp number"
+              />
 
               <label className="block text-sm font-medium text-[#5a3b8a]">
                 Password

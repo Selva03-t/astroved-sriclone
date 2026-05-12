@@ -9,20 +9,23 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 export async function POST(request: Request) {
   try {
-    const payload = (await request.json()) as SignupPayload;
-    const { name, email, phone, whatsapp, country, password, confirmPassword } = payload;
+    const { name, email, phone, whatsapp, country, password, confirmPassword } = (await request.json()) as SignupPayload;
 
-    if (!name || !email || !phone || !whatsapp || !country || !password || !confirmPassword) {
-      return NextResponse.json({ success: false, error: "All registration fields are required" }, { status: 400 });
+    if (!name?.trim()) {
+      return NextResponse.json({ success: false, error: "Full name is required" }, { status: 400 });
     }
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(String(email ?? "").toLowerCase().trim())) {
       return NextResponse.json({ success: false, error: "Enter a valid email address" }, { status: 400 });
+    }
+
+    if (!country?.dialCode || !country?.isoCode || !country?.name) {
+      return NextResponse.json({ success: false, error: "Select a country" }, { status: 400 });
     }
 
     if (!phoneRegex.test(phone) || !phoneRegex.test(whatsapp)) {
       return NextResponse.json({ success: false, error: "Enter valid phone and WhatsApp numbers" }, { status: 400 });
-    }
+    } 
 
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
@@ -63,7 +66,6 @@ export async function POST(request: Request) {
       whatsapp,
       country,
       passwordHash,
-      authProvider: "email",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
