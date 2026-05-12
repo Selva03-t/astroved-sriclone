@@ -257,72 +257,74 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-[#e8e2ff] bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {fields.slice(0, 3).map((field) => (
-                <th key={field.name} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  {field.label}
+      {!isAdding && (
+        <div className="overflow-hidden rounded-lg border border-[#e8e2ff] bg-white shadow-sm">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {fields.slice(0, 3).map((field) => (
+                  <th key={field.name} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    {field.label}
+                  </th>
+                ))}
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Actions
                 </th>
-              ))}
-              <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {loading ? (
-              <tr>
-                <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                  Loading...
-                </td>
               </tr>
-            ) : items.length === 0 ? (
-              <tr>
-                <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                  No items found.
-                </td>
-              </tr>
-            ) : (
-              items.map((item) => (
-                <tr key={item._id}>
-                  {fields.slice(0, 3).map((field) => (
-                    <td key={field.name} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                      {field.type === "url" && item[field.name] ? (
-                        <div className="flex items-center">
-                          <img src={item[field.name]} alt="" className="h-8 w-8 rounded object-cover mr-2" />
-                          <span className="truncate max-w-37.5">{item[field.name]}</span>
-                        </div>
-                      ) : (
-                        <span className="truncate max-w-50 block">{item[field.name]}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                    <div className="flex items-center justify-end gap-3">
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="text-[#5657e8] hover:text-[#4647c4]"
-                        aria-label="Edit item"
-                      >
-                        <PencilSquareIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="text-red-600 hover:text-red-900"
-                        aria-label="Delete item"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {loading ? (
+                <tr>
+                  <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
+                    Loading...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : items.length === 0 ? (
+                <tr>
+                  <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
+                    No items found.
+                  </td>
+                </tr>
+              ) : (
+                items.map((item) => (
+                  <tr key={item._id}>
+                    {fields.slice(0, 3).map((field) => (
+                      <td key={field.name} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                        {field.type === "url" && item[field.name] ? (
+                          <div className="flex items-center">
+                            <img src={item[field.name]} alt="" className="h-8 w-8 rounded object-cover mr-2" />
+                            <span className="truncate max-w-37.5">{item[field.name]}</span>
+                          </div>
+                        ) : (
+                          <span className="truncate max-w-50 block">{item[field.name]}</span>
+                        )}
+                      </td>
+                    ))}
+                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => handleEdit(item)}
+                          className="text-[#5657e8] hover:text-[#4647c4]"
+                          aria-label="Edit item"
+                        >
+                          <PencilSquareIcon className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="text-red-600 hover:text-red-900"
+                          aria-label="Delete item"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

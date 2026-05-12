@@ -404,39 +404,41 @@ export default function AdminTemplesPage() {
       )}
 
       {/* List */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Temple</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Location</th>
-              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">Loading...</td></tr> : 
-             items.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
-             items.map(item => (
-              <tr key={item._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    {item.heroImage || item.imageUrl ? <img src={item.heroImage || item.imageUrl} className="w-10 h-10 rounded-lg object-cover" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>}
-                    <div>
-                      <p className="font-medium text-gray-900">{item.name}</p>
-                      <p className="text-xs text-gray-500">{item.templeType}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
-                <td className="px-6 py-4 text-right">
-                  <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
-                  <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>
-                </td>
+      {!isAdding && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Temple</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Location</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">Loading...</td></tr> : 
+               items.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
+               items.map(item => (
+                <tr key={item._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {item.heroImage || item.imageUrl ? <img src={item.heroImage || item.imageUrl} className="w-10 h-10 rounded-lg object-cover" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>}
+                      <div>
+                        <p className="font-medium text-gray-900">{item.name}</p>
+                        <p className="text-xs text-gray-500">{item.templeType}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
+                  <td className="px-6 py-4 text-right">
+                    <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
+                    <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
