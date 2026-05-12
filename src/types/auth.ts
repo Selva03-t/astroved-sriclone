@@ -43,7 +43,8 @@ export interface SignupPayload {
   name: string;
   email: string;
   phone: string;
-  whatsapp: string;
+  /** Omit or empty when WhatsApp is the same as mobile; server defaults to phone. */
+  whatsapp?: string;
   country: CountryOption;
   password: string;
   confirmPassword: string;

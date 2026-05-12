@@ -23,9 +23,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Select a country" }, { status: 400 });
     }
 
-    if (!phoneRegex.test(phone) || !phoneRegex.test(whatsapp)) {
-      return NextResponse.json({ success: false, error: "Enter valid phone and WhatsApp numbers" }, { status: 400 });
-    } 
+    if (!phoneRegex.test(phone)) {
+      return NextResponse.json({ success: false, error: "Enter a valid mobile number" }, { status: 400 });
+    }
+
+    const whatsappDigits = String(whatsapp ?? "").replace(/[^0-9]/g, "");
+    const effectiveWhatsapp = whatsappDigits.length > 0 ? whatsappDigits : phone;
+    if (!phoneRegex.test(effectiveWhatsapp)) {
+      return NextResponse.json({ success: false, error: "Enter a valid WhatsApp number" }, { status: 400 });
+    }
 
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
@@ -47,7 +53,7 @@ export async function POST(request: Request) {
       $or: [
         { email: normalizedEmail },
         { phone, "country.dialCode": country.dialCode },
-        { whatsapp, "country.dialCode": country.dialCode },
+        { whatsapp: effectiveWhatsapp, "country.dialCode": country.dialCode },
       ],
     });
 
@@ -63,7 +69,7 @@ export async function POST(request: Request) {
       name: name.trim(),
       email: normalizedEmail,
       phone,
-      whatsapp,
+      whatsapp: effectiveWhatsapp,
       country,
       passwordHash,
       createdAt: new Date(),

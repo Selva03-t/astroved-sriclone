@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import PasswordField from "@/components/auth/PasswordField";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,19 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/login-prefill")
+      .then((res) => (res.ok ? res.json() : { email: "" }))
+      .then((data: { email?: string }) => {
+        if (!cancelled && data.email) setEmail(data.email);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +42,7 @@ export default function AdminLoginPage() {
         const data = await res.json();
         setError(data.error || "Login failed");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -43,7 +57,9 @@ export default function AdminLoginPage() {
             Admin Access
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Please enter your credentials to continue
+            Sign in with the credentials configured in{" "}
+            <code className="rounded bg-gray-100 px-1 text-xs">ADMIN_EMAIL</code> and{" "}
+            <code className="rounded bg-gray-100 px-1 text-xs">ADMIN_PASSWORD</code> on the server.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -61,6 +77,7 @@ export default function AdminLoginPage() {
                 id="email-address"
                 name="email"
                 type="email"
+                autoComplete="username"
                 required
                 className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                 placeholder="Email address"
@@ -68,21 +85,18 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <PasswordField
+              label="Password"
+              labelClassName="sr-only"
+              fieldWrapperClassName="relative"
+              value={password}
+              onChange={setPassword}
+              placeholder="Password"
+              required
+              autoComplete="current-password"
+              inputClassName="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-3 pr-10 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+              toggleButtonClassName="absolute right-1.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            />
           </div>
 
           <div>
