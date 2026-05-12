@@ -1,0 +1,695 @@
+"use client";
+import React, { useEffect, useState, useCallback } from "react";
+import Navbar from "@/components/layout/Navbar";
+import { SparklesIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useTranslation } from "@/contexts/LanguageContext";
+import { ReviewsSection } from "@/app/dashboard/page";
+import HowItWorksCarousel from "@/components/common/HowItWorksCarousel";
+
+interface Puja {
+  _id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  imageUrl: string;
+  badge?: string;
+  shortTitle?: string;
+  buttonText: string;
+  location?: string;
+  date?: string;
+  slug?: string;
+  details?: {
+    benefits?: { title: string; description: string }[];
+    templeLocation?: string;
+  };
+}
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
+// --- filter config ------------------------------------------------------------
+// Each option has a `value` (what we store) and `keywords` (matched against puja text)
+const filterGroups = [
+  {
+    label: "Deity",
+    options: [
+      { value: "All", keywords: [] },
+      { value: "Ganapathi", keywords: ["ganapathi", "ganesh", "ganesha", "vinayaka"] },
+      { value: "Lakshmi", keywords: ["lakshmi", "laxmi"] },
+      { value: "Shiva", keywords: ["shiva", "shiv", "mahadev", "shankar"] },
+      { value: "Vishnu", keywords: ["vishnu", "narayan", "narayana"] },
+      { value: "Hanuman", keywords: ["hanuman", "anjaneya", "maruti"] },
+      { value: "Durga", keywords: ["durga", "devi", "kali", "ambika"] },
+      { value: "Saraswati", keywords: ["saraswati", "saraswathi"] },
+    ],
+  },
+  {
+    label: "Tithis",
+    options: [
+      { value: "All", keywords: [] },
+      { value: "Ekadashi", keywords: ["ekadashi"] },
+      { value: "Purnima", keywords: ["purnima", "poornima", "full moon"] },
+      { value: "Amavasya", keywords: ["amavasya", "new moon"] },
+      { value: "Pradosh", keywords: ["pradosh", "pradosham"] },
+      { value: "Navami", keywords: ["navami"] },
+    ],
+  },
+  {
+    label: "Dosha",
+    options: [
+      { value: "All", keywords: [] },
+      { value: "Mangal Dosha", keywords: ["mangal", "manglik"] },
+      { value: "Kala Sarpa", keywords: ["kala sarpa", "kalasarpa", "kalsarpa"] },
+      { value: "Pitru Dosha", keywords: ["pitru", "pitra", "ancestor"] },
+      { value: "Shani Dosha", keywords: ["shani", "saturn", "sade sati"] },
+    ],
+  },
+  {
+    label: "Benefits",
+    options: [
+      { value: "All", keywords: [] },
+      { value: "Prosperity", keywords: ["prosperity", "wealth", "financial", "money", "abundance", "lakshmi"] },
+      { value: "Protection", keywords: ["protection", "shield", "guard", "safety"] },
+      { value: "Peace", keywords: ["peace", "shanti", "calm", "harmony"] },
+      { value: "Health", keywords: ["health", "healing", "disease", "wellness"] },
+      { value: "Career", keywords: ["career", "job", "business", "success", "growth"] },
+      { value: "Marriage", keywords: ["marriage", "wedding", "vivah", "spouse"] },
+    ],
+  },
+  {
+    label: "Location",
+    options: [
+      { value: "All", keywords: [] },
+      { value: "Tamil Nadu", keywords: ["tamil nadu", "tamilnadu"] },
+      { value: "Karnataka", keywords: ["karnataka", "bangalore", "bengaluru", "mysore"] },
+      { value: "Kerala", keywords: ["kerala"] },
+      { value: "Uttar Pradesh", keywords: ["uttar pradesh", "varanasi", "kashi", "mathura", "vrindavan", "ujjain"] },
+      { value: "Andhra Pradesh", keywords: ["andhra", "tirupati", "hyderabad"] },
+      { value: "Rajasthan", keywords: ["rajasthan", "jaipur", "pushkar"] },
+    ],
+  },
+];
+
+type FilterState = Record<string, string>; // label ? selected value ("All" means no filter)
+
+const defaultFilters: FilterState = {
+  Deity: "All",
+  Tithis: "All",
+  Dosha: "All",
+  Benefits: "All",
+  Location: "All",
+};
+
+const filterOptionImages: Record<string, string> = {
+  Ganapathi: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+  Lakshmi: "/images/Lakshmi-Homam.jpg",
+  Shiva: "/images/Navagraha-Shanti-Puja.jpg",
+  Vishnu: "/images/Lakshmi-Beej-Mantra.jpg",
+  Hanuman: "/images/Navagraha-Shanti-Puja.jpg",
+  Durga: "/images/maa-kali.jpg",
+  Saraswati: "/images/Maa-saraswathi.jpg",
+  Ekadashi: "/images/Lakshmi-Beej-Mantra.jpg",
+  Purnima: "/images/Maa-saraswathi.jpg",
+  Amavasya: "/images/maa-kali.jpg",
+  Pradosh: "/images/Navagraha-Shanti-Puja.jpg",
+  Navami: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+  "Mangal Dosha": "/images/Navagraha-Shanti-Puja.jpg",
+  "Kala Sarpa": "/images/maa-kali.jpg",
+  "Pitru Dosha": "/images/Lakshmi-Homam.jpg",
+  "Shani Dosha": "/images/Navagraha-Shanti-Puja.jpg",
+  Prosperity: "/images/Lakshmi-Homam.jpg",
+  Protection: "/images/maa-kali.jpg",
+  Peace: "/images/Maa-saraswathi.jpg",
+  Health: "/images/Lakshmi-Beej-Mantra.jpg",
+  Career: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+  Marriage: "/images/Lakshmi-Homam.jpg",
+  "Tamil Nadu": "/images/Maa-saraswathi.jpg",
+  Karnataka: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+  Kerala: "/images/Lakshmi-Beej-Mantra.jpg",
+  "Uttar Pradesh": "/images/Navagraha-Shanti-Puja.jpg",
+  "Andhra Pradesh": "/images/Lakshmi-Homam.jpg",
+  Rajasthan: "/images/maa-kali.jpg",
+};
+
+/** Returns true if the puja matches ALL active filters */
+function pujaMatchesFilters(puja: Puja, filters: FilterState): boolean {
+  const searchText = [
+    puja.title,
+    puja.subtitle,
+    puja.description,
+    puja.location,
+    puja.badge,
+    ...(puja.details?.benefits?.map((b) => `${b.title} ${b.description}`) ?? []),
+    puja.details?.templeLocation,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  for (const group of filterGroups) {
+    const selected = filters[group.label];
+    if (!selected || selected === "All") continue;
+
+    const optionConfig = group.options.find((o) => o.value === selected);
+    if (!optionConfig || optionConfig.keywords.length === 0) continue;
+
+    const matches = optionConfig.keywords.some((kw) => searchText.includes(kw));
+    if (!matches) return false;
+  }
+  return true;
+}
+
+function PujaFilterModal({
+  filters,
+  onClose,
+  onApply,
+  onClear,
+}: {
+  filters: FilterState;
+  onClose: () => void;
+  onApply: (filters: FilterState) => void;
+  onClear: () => void;
+}) {
+  const [draftFilters, setDraftFilters] = useState<FilterState>(filters);
+
+  const selectFilter = (label: string, value: string) => {
+    setDraftFilters((prev) => ({
+      ...prev,
+      [label]: prev[label] === value ? "All" : value,
+    }));
+  };
+
+  const renderCheckboxOption = (groupLabel: string, value: string) => {
+    const selected = draftFilters[groupLabel] === value;
+
+    return (
+      <button
+        key={value}
+        type="button"
+        onClick={() => selectFilter(groupLabel, value)}
+        className="flex w-full items-start gap-3 text-left"
+        aria-pressed={selected}
+      >
+        <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition ${
+          selected ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-gray-200 bg-white text-transparent"
+        }`}>
+          <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
+            <path d="M2.2 6.2 4.8 8.7 9.8 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+        <span className="text-base font-bold leading-6 text-[#1f2937]">{value}</span>
+      </button>
+    );
+  };
+
+  const deityGroup = filterGroups.find((group) => group.label === "Deity");
+  const compactGroups = filterGroups.filter((group) => ["Tithis", "Dosha", "Benefits"].includes(group.label));
+  const locationGroup = filterGroups.find((group) => group.label === "Location");
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827]/55 px-4 py-6 backdrop-blur-[1px]">
+      <div className="flex max-h-[92vh] w-full max-w-[920px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]">
+        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+          <h3 className="text-xl font-black text-[#1f1f1f]">Puja Filters</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close puja filters"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 transition hover:bg-gray-100"
+          >
+            <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="overflow-y-auto px-6 py-7">
+          <div className="space-y-9">
+            {deityGroup && (
+              <section>
+                <h4 className="mb-5 text-xl font-black text-[#1f1f1f]">{deityGroup.label}</h4>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {deityGroup.options
+                    .filter((option) => option.value !== "All")
+                    .map((option) => {
+                      const selected = draftFilters[deityGroup.label] === option.value;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => selectFilter(deityGroup.label, option.value)}
+                          className="group text-center"
+                          aria-pressed={selected}
+                        >
+                          <span className={`relative mx-auto block h-24 w-24 overflow-hidden rounded-lg border-2 transition ${
+                            selected ? "border-[#2563eb] shadow-[0_0_0_3px_rgba(37,99,235,0.16)]" : "border-transparent"
+                          }`}>
+                            <img
+                              src={filterOptionImages[option.value] || "/images/Lakshmi-Homam.jpg"}
+                              alt={option.value}
+                              className="h-full w-full object-cover transition duration-200 group-hover:scale-105"
+                            />
+                            <span className={`absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded border bg-white shadow-sm transition ${
+                              selected ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-gray-200 text-transparent"
+                            }`}>
+                              <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
+                                <path d="M2.2 6.2 4.8 8.7 9.8 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                          </span>
+                          <span className="mt-2 block text-sm font-bold leading-5 text-[#1f2937]">
+                            {option.value}
+                          </span>
+                        </button>
+                      );
+                    })}
+                </div>
+              </section>
+            )}
+
+            <div className="grid gap-8 md:grid-cols-3">
+              {compactGroups.map((group) => (
+                <section key={group.label}>
+                  <h4 className="mb-5 text-xl font-black text-[#1f1f1f]">{group.label}</h4>
+                  <div className="space-y-4">
+                    {group.options
+                      .filter((option) => option.value !== "All")
+                      .map((option) => renderCheckboxOption(group.label, option.value))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            {locationGroup && (
+              <section>
+                <h4 className="mb-5 text-xl font-black text-[#1f1f1f]">{locationGroup.label}</h4>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {locationGroup.options
+                    .filter((option) => option.value !== "All")
+                    .map((option) => renderCheckboxOption(locationGroup.label, option.value))}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 border-t border-gray-100 px-6 py-5 sm:flex-row">
+          <button
+            type="button"
+            onClick={() => {
+              setDraftFilters(defaultFilters);
+              onClear();
+            }}
+            className="h-14 rounded border border-gray-200 bg-white px-12 text-base font-bold text-[#1f1f1f] transition hover:bg-gray-50"
+          >
+            Clear Filter
+          </button>
+          <button
+            type="button"
+            onClick={() => onApply(draftFilters)}
+            className="h-14 rounded bg-[#2563eb] px-14 text-base font-bold text-white shadow-sm transition hover:bg-[#1d4ed8]"
+          >
+            Apply Filter
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Main Page ----------------------------------------------------------------
+export default function PujaPage() {
+  const { t } = useTranslation();
+  const [allPujas, setAllPujas] = useState<Puja[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  // Fetch all pujas once
+  useEffect(() => {
+    fetch("/api/puja")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: Puja[]) => setAllPujas(Array.isArray(data) ? data : []))
+      .catch(() => setAllPujas([]))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  // Banner auto-rotate
+  useEffect(() => {
+    if (allPujas.length <= 1) return;
+    const id = setInterval(() => {
+      setCurrentIndex((prev) => (prev === allPujas.length - 1 ? 0 : prev + 1));
+    }, 4000);
+    return () => clearInterval(id);
+  }, [allPujas.length]);
+
+  const activeIndex = allPujas.length === 0 ? 0 : Math.min(currentIndex, allPujas.length - 1);
+
+  const clearFilters = () => setFilters(defaultFilters);
+  const applyFilters = useCallback((nextFilters: FilterState) => {
+    setFilters(nextFilters);
+    setIsFilterModalOpen(false);
+  }, []);
+
+  const hasActiveFilters = Object.entries(filters).some(([, v]) => v !== "All");
+
+  // -- Apply filters to get displayed pujas --
+  const displayedPujas = allPujas.filter((p) => pujaMatchesFilters(p, filters));
+  const howItWorksSteps = [
+    {
+      title: t.puja.step1Title,
+      description: t.puja.step1Desc,
+      imageSrc: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+      imageAlt: "Choose a puja from the list",
+      tag: "Book Puja",
+      cta: t.puja.bookNow,
+    },
+    {
+      title: t.puja.step2Title,
+      description: t.puja.step2Desc,
+      imageSrc: "/images/Lakshmi-Homam.jpg",
+      imageAlt: "Fill devotee information for the puja",
+      tag: "Sankalp Details",
+      cta: t.puja.bookNow,
+    },
+    {
+      title: t.puja.step3Title,
+      description: t.puja.step3Desc,
+      imageSrc: "/images/Navagraha-Shanti-Puja.jpg",
+      imageAlt: "Receive puja video on WhatsApp",
+      tag: "Puja Video",
+      cta: t.puja.bookNow,
+    },
+    {
+      title: t.puja.step4Title,
+      description: t.puja.step4Desc,
+      imageSrc: "/images/Maa-saraswathi.jpg",
+      imageAlt: "Receive aashirwad box at the registered address",
+      tag: "Aashirwad Box",
+      cta: t.puja.bookNow,
+    },
+  ];
+
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-[#f9f9ff] py-10">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+
+          {/* Page Heading */}
+          <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#3b0764] md:text-4xl">
+            {t.puja.heading}
+          </h1>
+
+          {/* Banner Carousel */}
+          {isLoading ? (
+            <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
+              <p className="text-base text-[#6869F9]">{t.puja.loading}</p>
+            </div>
+          ) : allPujas.length > 0 ? (
+            <>
+              <div className="relative overflow-hidden rounded-2xl border border-[#e3d9f8] shadow-[0_18px_48px_rgba(80,44,150,0.12)]">
+                <div className="overflow-hidden">
+                  <div
+                    className="flex transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                  >
+                    {allPujas.map((puja) => (
+                      <div key={puja._id} className="relative h-72 w-full shrink-0 md:h-96">
+                        <img src={puja.imageUrl} alt={puja.title} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+                        <div className="absolute inset-0 flex flex-col items-start justify-end gap-4 p-6 md:p-10">
+                          <h2 className="max-w-2xl text-2xl font-bold leading-tight text-white drop-shadow-lg md:text-4xl">
+                            {puja.title}
+                          </h2>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentIndex((p) => (p === 0 ? allPujas.length - 1 : p - 1))}
+                  aria-label="Previous slide"
+                  className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
+                >
+                  <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
+                    <path d="m12.5 4.5-5 5 5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentIndex((p) => (p === allPujas.length - 1 ? 0 : p + 1))}
+                  aria-label="Next slide"
+                  className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
+                >
+                  <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
+                    <path d="m7.5 4.5 5 5-5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Dots */}
+              <div className="mt-4 flex justify-center gap-2">
+                {allPujas.map((puja, index) => (
+                  <button
+                    key={puja._id}
+                    type="button"
+                    onClick={() => setCurrentIndex(index)}
+                    aria-label={`Go to puja ${index + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6869F9]" : "w-2 bg-[#d7cbef]"
+                      }`}
+                  />
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          {/* Section */}
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold text-[#3b0764] md:text-3xl">
+              {t.puja.sectionTitle}
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6869F9] md:text-base">
+              {t.puja.sectionSubtitle}
+            </p>
+
+            {/* -- Filter bar -- */}
+            <div className="mt-6">
+              <div className="flex flex-wrap items-center gap-3 pb-1">
+                <button
+                  type="button"
+                  onClick={() => setIsFilterModalOpen(true)}
+                  className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-[#6869F9] shadow-sm transition hover:border-[#6869F9]/40 hover:bg-[#f5f3ff]"
+                >
+                  <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+                    <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  </svg>
+                  {t.puja.filter}
+                </button>
+
+                <div className="h-6 w-px shrink-0 bg-gray-200" />
+
+                {filterGroups.map((group) => (
+                  <button
+                    key={group.label}
+                    type="button"
+                    onClick={() => setIsFilterModalOpen(true)}
+                    className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${
+                      filters[group.label] !== "All"
+                        ? "bg-[#6869F9] text-white shadow-sm"
+                        : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span>{filters[group.label] !== "All" ? filters[group.label] : group.label}</span>
+                    <svg
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      className="h-3.5 w-3.5"
+                    >
+                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                ))}
+
+                {/* Clear all */}
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100"
+                  >
+                    <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5">
+                      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                    {t.puja.clearAll}
+                  </button>
+                )}
+              </div>
+
+              {/* Active filter tags */}
+              {hasActiveFilters && (
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{t.puja.active}</span>
+                  {Object.entries(filters)
+                    .filter(([, v]) => v !== "All")
+                    .map(([key, val]) => (
+                      <span
+                        key={key}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-[#6869F9]/10 px-3 py-1 text-xs font-semibold text-[#6869F9]"
+                      >
+                        {key}: {val}
+                        <button
+                          type="button"
+                          onClick={() => setFilters((p) => ({ ...p, [key]: "All" }))}
+                          aria-label={`Remove ${key} filter`}
+                          className="ml-0.5 rounded-full hover:opacity-70 transition-opacity"
+                        >
+                          <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
+                            <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          </svg>
+                        </button>
+                      </span>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            {isFilterModalOpen && (
+              <PujaFilterModal
+                filters={filters}
+                onClose={() => setIsFilterModalOpen(false)}
+                onApply={applyFilters}
+                onClear={clearFilters}
+              />
+            )}
+
+            {/* Result count */}
+            {!isLoading && (
+              <p className="mt-4 text-sm text-[#6869F9]">
+                {hasActiveFilters
+                  ? `${t.puja.showingPujas} ${displayedPujas.length} ${t.puja.of} ${allPujas.length} ${t.puja.pujas}`
+                  : `${allPujas.length} ${t.puja.allPujas}`}
+              </p>
+            )}
+
+            {/* -- Puja Cards -- */}
+            {isLoading ? null : displayedPujas.length === 0 ? (
+              <div className="mt-16 flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c4b8ef] bg-white py-16 text-center">
+                <SparklesIcon className="h-10 w-10 text-[#6869F9]" />
+                <p className="text-lg font-semibold text-[#3b0764]">{t.puja.noMatch}</p>
+                <p className="text-sm text-[#6869F9]">{t.puja.noMatchSub}</p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="mt-2 rounded-full bg-[#6869F9] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5657e8] transition"
+                >
+                  {t.puja.clearFilters}
+                </button>
+              </div>
+            ) : (
+              <div className="mt-8 grid grid-cols-1 gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3">
+                {displayedPujas.map((puja) => (
+                  <div
+                    key={puja._id}
+                    className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col p-5"
+                  >
+                    {/* Image Section */}
+                    <div className="relative h-[220px] w-full rounded-xl overflow-hidden shrink-0">
+                      <img
+                        src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
+                        alt={puja.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {/* Top Left Badge */}
+                      <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+                        {puja.badge || "Special"}
+                      </div>
+                      {/* Bottom Left Badge */}
+                      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+                        BOOK PUJA
+                      </div>
+                    </div>
+                    
+                    {/* Content Section */}
+                    <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
+                      <p className="text-[#F47820] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+                        {puja.subtitle || "SPECIAL PUJA & YAGYA"}
+                      </p>
+                      <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
+                        {puja.title}
+                      </h3>
+                      <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-2 mb-6 flex-1">
+                        {puja.description || "Join us for this sacred ritual to seek divine blessings."}
+                      </p>
+                      
+                      {/* Location & Date */}
+                      <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span className="line-clamp-2 leading-tight">{puja.location || "Sacred Temple, India"}</span>
+                      </div>
+                      <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span className="leading-tight">{puja.date || t.puja.announcedSoon}</span>
+                      </div>
+
+                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#F47820] transition-colors flex items-center justify-center gap-1.5">
+                        {puja.buttonText || t.puja.bookNow}
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* -- Reviews -- */}
+          <section className="mt-20 border-t border-gray-100 pt-16 pb-16">
+            <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">{t.puja.devoteesTitle}</h2>
+            <p className="mt-2 mb-8 text-sm text-gray-600 md:text-base">{t.puja.devoteesSubtitle}</p>
+            <ReviewsSection />
+          </section>
+
+          {/* -- Stats Section -- */}
+          <section className="mt-20">
+            <h2 className="mb-2 text-2xl font-bold text-[#1f1f1f] md:text-3xl">
+              {t.puja.sacredJourney}
+            </h2>
+            <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
+                <h3 className="text-2xl font-black text-[#5657e8]">10,00,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.puja.pujasDone}</p>
+              </div>
+              <div className="rounded-2xl bg-gradient-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
+                <h3 className="text-2xl font-black text-[#6869F9]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.puja.happyDevotees}</p>
+              </div>
+              <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
+                <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#F47820]">{t.puja.famousTemples}</p>
+              </div>
+              <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
+                <h3 className="text-2xl font-black text-[#6869F9]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.puja.sankalpDesc}</p>
+              </div>
+            </div>
+          </section>
+
+          <HowItWorksCarousel title={t.puja.howItWorks} steps={howItWorksSteps} />
+        </div>
+      </main>
+    </>
+  );
+}
+
