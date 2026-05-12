@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated project PDF (keep Markdown + scripts; regenerate with npm run docs:pdf)
+docs/*.pdf

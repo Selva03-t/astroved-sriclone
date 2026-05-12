@@ -209,7 +209,13 @@ npm run lint     # ESLint
 
 ## 12. Document maintenance
 
-Update this file when major features, env vars, or flows change. Regenerate the PDF from this Markdown using your preferred toolchain (e.g. `md-to-pdf`, print-to-PDF from HTML, or CI artifact).
+Update this Markdown when major features, env vars, or flows change.
+
+The **`docs/*.pdf` output is not committed to Git** (it is gitignored). To generate a PDF locally after installing dependencies:
+
+```bash
+npm run docs:pdf
+```
 
 ---
 
