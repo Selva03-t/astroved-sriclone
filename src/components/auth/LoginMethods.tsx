@@ -7,6 +7,7 @@ import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
 import { authService } from "@/services/authService";
 import type { CountryOption, LoginMethod, OtpPayload } from "@/types/auth";
 import CountryPhoneField from "@/components/auth/CountryPhoneField";
+import PasswordField from "@/components/auth/PasswordField";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[0-9]{6,15}$/;
@@ -161,16 +162,14 @@ export default function LoginMethods() {
               />
             </label>
 
-            <label className="block text-sm font-medium text-[#5a3b8a]">
-              Password
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Enter your password"
-                className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff]"
-              />
-            </label>
+            <PasswordField
+              label="Password"
+              value={password}
+              onChange={setPassword}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              inputClassName="box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-0 pl-4 pr-12 text-base leading-normal text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff]"
+            />
           </>
         ) : (
           <>
@@ -218,6 +217,12 @@ export default function LoginMethods() {
         New to astroved?{" "}
         <Link href="/auth/signup" className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]">
           Register now
+        </Link>
+      </p>
+
+      <p className="mt-3 text-center text-xs text-[#7a5ea8]">
+        <Link href="/admin/login" className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 hover:text-[#4647c4]">
+          Admin sign in
         </Link>
       </p>
     </div>

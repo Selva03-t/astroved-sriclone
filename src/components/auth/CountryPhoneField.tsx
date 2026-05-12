@@ -12,6 +12,7 @@ type Props = {
   onCountryChange: (country: CountryOption) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
 };
 
 function mapIsoToLibCountry(isoCode: string) {
@@ -43,13 +44,14 @@ export default function CountryPhoneField({
   onCountryChange,
   placeholder,
   disabled,
+  className = "",
 }: Props) {
   const e164Like = `+${country.dialCode}${value}`;
 
   return (
-    <label className="block text-sm font-medium text-[#5a3b8a]">
+    <label className={`block text-sm font-medium text-[#5a3b8a] ${className}`}>
       {label}
-      <div className="mt-2 rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-3 py-2.5 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+      <div className="mt-2 flex min-h-12 items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-3 transition-all focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
         <PhoneInput
           value={e164Like}
           disabled={disabled}
