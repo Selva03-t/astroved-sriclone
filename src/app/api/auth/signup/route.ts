@@ -16,7 +16,7 @@ function hashPassword(password: string) {
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, phone, password } = await request.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     const result = await collection.insertOne({
       name,
       email,
+      phone: phone || "",
       password: password, // For now storing as is to ensure login works, will hash in next step if required
       createdAt: new Date(),
     });

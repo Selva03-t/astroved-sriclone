@@ -1,18 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const countries = [
+  { name: "India", code: "+91", flag: "https://flagcdn.com/w40/in.png" },
+  { name: "United States", code: "+1", flag: "https://flagcdn.com/w40/us.png" },
+  { name: "United Kingdom", code: "+44", flag: "https://flagcdn.com/w40/gb.png" },
+  { name: "Canada", code: "+1", flag: "https://flagcdn.com/w40/ca.png" },
+  { name: "Australia", code: "+61", flag: "https://flagcdn.com/w40/au.png" },
+  { name: "Germany", code: "+49", flag: "https://flagcdn.com/w40/de.png" },
+  { name: "France", code: "+33", flag: "https://flagcdn.com/w40/fr.png" },
+  { name: "United Arab Emirates", code: "+971", flag: "https://flagcdn.com/w40/ae.png" },
+  { name: "Saudi Arabia", code: "+966", flag: "https://flagcdn.com/w40/sa.png" },
+  { name: "Singapore", code: "+65", flag: "https://flagcdn.com/w40/sg.png" },
+];
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
+    countryCode: "+91",
     password: "",
     confirmPassword: "",
   });
 
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const selectedCountry = countries.find(c => c.code === formData.countryCode) || countries[0];
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCountryDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +61,7 @@ export default function SignupPage() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          phone: `${formData.countryCode}${formData.phone}`,
           password: formData.password
         }),
       });
@@ -83,6 +113,54 @@ export default function SignupPage() {
                   placeholder="Enter your email"
                   className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
                 />
+              </div>
+
+              <div className="relative">
+                <label className="block text-sm font-medium text-[#5a3b8a]">Phone Number</label>
+                <div className="mt-2 flex gap-2">
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                      className="flex h-full items-center gap-2 rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-3 py-3 text-base text-[#342151] outline-none hover:border-[#F47820] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all min-w-[110px]"
+                    >
+                      <img src={selectedCountry.flag} alt={selectedCountry.name} className="h-4 w-6 object-cover rounded-sm shadow-sm" />
+                      <span className="font-medium">{selectedCountry.code}</span>
+                      <svg className={`h-4 w-4 text-[#a288cf] transition-transform ${isCountryDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isCountryDropdownOpen && (
+                      <div className="absolute left-0 z-50 mt-2 max-h-60 w-64 overflow-y-auto rounded-xl border border-[#d8c9fb] bg-white p-2 shadow-xl backdrop-blur-md">
+                        {countries.map((country) => (
+                          <button
+                            key={`${country.name}-${country.code}`}
+                            type="button"
+                            onClick={() => {
+                              setFormData({ ...formData, countryCode: country.code });
+                              setIsCountryDropdownOpen(false);
+                            }}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-[#342151] hover:bg-[#f3ecff] transition-colors"
+                          >
+                            <img src={country.flag} alt={country.name} className="h-3 w-5 object-cover rounded-sm" />
+                            <span className="flex-1 font-medium">{country.name}</span>
+                            <span className="text-[#6a4e95] font-semibold">{country.code}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/[^0-9]/g, "") })}
+                    placeholder="Enter phone number"
+                    className="flex-1 rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  />
+                </div>
               </div>
 
               <div>

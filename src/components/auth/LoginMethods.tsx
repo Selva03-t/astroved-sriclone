@@ -72,6 +72,17 @@ export default function LoginMethods() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleResend = () => {
+    // Logic to trigger resend API would go here
+    console.log("Resending code to:", method === "phone" ? phone : whatsapp);
+    alert("Verification code resent!");
+  };
+
+  const switchMethod = (newMethod: LoginMethod) => {
+    setMethod(newMethod);
+    setError(""); // Clear error when switching tabs
+  };
+
   const isValid = useMemo(() => {
     if (method === "email") return emailRegex.test(email);
     if (method === "phone") return phoneRegex.test(phone);
@@ -141,11 +152,11 @@ export default function LoginMethods() {
       <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl bg-[#f3ecff] p-3">
         <button
           type="button"
-          onClick={() => setMethod("email")}
+          onClick={() => switchMethod("email")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "email"
               ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
-              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
+              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16_rgba(124,58,237,0.14)]"
           }`}
         >
           <MailIcon />
@@ -154,11 +165,11 @@ export default function LoginMethods() {
 
         <button
           type="button"
-          onClick={() => setMethod("phone")}
+          onClick={() => switchMethod("phone")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "phone"
-              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
-              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20_rgba(124,58,237,0.35)]"
+              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16_rgba(124,58,237,0.14)]"
           }`}
         >
           <PhoneIcon />
@@ -167,11 +178,11 @@ export default function LoginMethods() {
 
         <button
           type="button"
-          onClick={() => setMethod("whatsapp")}
+          onClick={() => switchMethod("whatsapp")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "whatsapp"
-              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
-              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20_rgba(124,58,237,0.35)]"
+              : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16_rgba(124,58,237,0.14)]"
           }`}
         >
           <WhatsappIcon />
@@ -239,6 +250,19 @@ export default function LoginMethods() {
         >
           {loading ? "Logging in..." : "Continue"}
         </button>
+
+        {(method === "phone" || method === "whatsapp") && (
+          <div className="flex flex-col items-center gap-2 mt-4">
+            <p className="text-sm text-[#7a5ea8]">Didn't receive the code?</p>
+            <button
+              type="button"
+              onClick={handleResend}
+              className="text-sm font-semibold text-[#5657e8] transition-all duration-300 hover:text-[#4647c4] hover:underline decoration-[#9898ff] underline-offset-4"
+            >
+              Resend Code
+            </button>
+          </div>
+        )}
       </form>
 
       <p className="mt-4 text-center text-xs text-[#7a5ea8]">
