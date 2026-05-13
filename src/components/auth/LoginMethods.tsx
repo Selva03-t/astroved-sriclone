@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
 import { authService } from "@/services/authService";
@@ -33,9 +33,22 @@ function PhoneIcon() {
 
 function WhatsappIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
-      <path d="M12 3.5A8.5 8.5 0 0 0 4.8 16.7L3.5 20.5l3.9-1.2A8.5 8.5 0 1 0 12 3.5Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
-      <path d="M9.3 8.8c.2-.5.5-.5.7-.5.2 0 .4 0 .6.5.2.6.7 1.6.8 1.7.1.1.1.2 0 .4-.1.2-.2.4-.3.5-.1.1-.2.2-.3.4-.1.1-.2.3 0 .5.2.2.7 1.2 1.8 1.9 1.4.9 2 .8 2.3.7.4-.1 1.2-1.1 1.3-1.5.1-.3.2-.3.3-.3.1 0 1 .4 1.2.5.2.1.3.2.3.3 0 .1-.2 1.1-.9 1.8-.8.8-1.9 1.2-2.6 1.1-.7-.1-2.1-.5-3.8-2.1-1.9-1.7-2.4-3.3-2.5-4.1-.1-.8.3-1.6.8-2.1Z" fill="currentColor" />
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5 flex-shrink-0">
+      <path
+        d="M12 3.5A8.5 8.5 0 0 0 4.8 16.7L3.5 20.5l3.9-1.2A8.5 8.5 0 1 0 12 3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      {/* Keep WhatsApp icon styling consistent (outline-only) */}
+      <path
+        d="M9.3 8.8c.2-.5.5-.5.7-.5.2 0 .4 0 .6.5.2.6.7 1.6.8 1.7.1.1.1.2 0 .4-.1.2-.2.4-.3.5-.1.1-.2.2-.3.4-.1.1-.2.3 0 .5.2.2.7 1.2 1.8 1.9 1.4.9 2 .8 2.3.7.4-.1 1.2-1.1 1.3-1.5.1-.3.2-.3.3-.3.1 0 1 .4 1.2.5.2.1.3.2.3.3 0 .1-.2 1.1-.9 1.8-.8.8-1.9 1.2-2.6 1.1-.7-.1-2.1-.5-3.8-2.1-1.9-1.7-2.4-3.3-2.5-4.1-.1-.8.3-1.6.8-2.1Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -51,7 +64,13 @@ function buildOtpPayload(method: LoginMethod, country: CountryOption, phone: str
 export default function LoginMethods() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialMethod = (searchParams?.get("method") as LoginMethod | null) ?? "email";
+  const roleParam = searchParams?.get("role");
+  const isAdminMode = roleParam === "admin";
+
+  const initialMethod = isAdminMode
+    ? "email"
+    : ((searchParams?.get("method") as LoginMethod | null) ?? "email");
+
   const [method, setMethod] = useState<LoginMethod>(initialMethod);
   const [country, setCountry] = useState<CountryOption>(DEFAULT_COUNTRY);
   const [email, setEmail] = useState("");
@@ -60,6 +79,22 @@ export default function LoginMethods() {
   const [whatsapp, setWhatsapp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isAdminMode) return;
+
+    let cancelled = false;
+    fetch("/api/admin/login-prefill")
+      .then((res) => (res.ok ? res.json() : { email: "" }))
+      .then((data: { email?: string }) => {
+        if (!cancelled && data.email) setEmail(data.email);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdminMode]);
 
   const isValid = useMemo(() => {
     if (method === "email") return emailRegex.test(email) && password.length > 0;
@@ -99,8 +134,49 @@ export default function LoginMethods() {
 
     try {
       if (method === "email") {
-        await authService.loginWithEmail({ email: email.toLowerCase().trim(), password });
-        redirectAfterLogin();
+        const normalizedEmail = email.toLowerCase().trim();
+
+        // If explicitly in admin mode, only try admin login.
+        if (isAdminMode) {
+          const res = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: normalizedEmail, password }),
+          });
+
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({} as { error?: string }));
+            setError(data.error || "Login failed");
+            return;
+          }
+
+          window.location.href = "/admin";
+          return;
+        }
+
+        // Normal mode: first try user login. If credentials don't match any user,
+        // fall back to admin login using the same email/password form.
+        try {
+          await authService.loginWithEmail({ email: normalizedEmail, password });
+          redirectAfterLogin();
+          return;
+        } catch {
+          // Ignore and try admin login fallback.
+        }
+
+        const adminRes = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: normalizedEmail, password }),
+        });
+
+        if (adminRes.ok) {
+          window.location.href = "/admin";
+          return;
+        }
+
+        const adminData = await adminRes.json().catch(() => ({} as { error?: string }));
+        setError(adminData.error || "Invalid email or password");
         return;
       }
 
@@ -120,6 +196,7 @@ export default function LoginMethods() {
 
   const numberValue = method === "whatsapp" ? whatsapp : phone;
   const numberLabel = method === "whatsapp" ? "WhatsApp Number" : "Phone Number";
+  const availableTabs: LoginMethod[] = isAdminMode ? ["email"] : ["email", "phone", "whatsapp"];
 
   return (
     <div className="w-full max-w-xl rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
@@ -128,8 +205,12 @@ export default function LoginMethods() {
         Choose one method to sign in securely.
       </p>
 
-      <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl bg-[#f3ecff] p-3">
-        {(["email", "phone", "whatsapp"] as LoginMethod[]).map((tab) => (
+      <div
+        className={`mt-8 grid gap-3 rounded-2xl bg-[#f3ecff] p-3 ${
+          isAdminMode ? "grid-cols-1" : "grid-cols-3"
+        }`}
+      >
+        {availableTabs.map((tab) => (
           <button
             key={tab}
             type="button"
@@ -220,11 +301,7 @@ export default function LoginMethods() {
         </Link>
       </p>
 
-      <p className="mt-3 text-center text-xs text-[#7a5ea8]">
-        <Link href="/admin/login" className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 hover:text-[#4647c4]">
-          Admin sign in
-        </Link>
-      </p>
+      {/* No separate admin sign-in section: /admin/login redirects into this shared form */}
     </div>
   );
 }
