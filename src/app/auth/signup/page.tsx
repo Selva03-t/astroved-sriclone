@@ -35,20 +35,18 @@ export default function SignupPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [separateWhatsapp, setSeparateWhatsapp] = useState(false);
+  const [isWhatsapp, setIsWhatsapp] = useState(false);
   const passwordStrength = getPasswordStrength(formData.password);
 
   const isFormValid = useMemo(() => {
-    const whatsappOk = !separateWhatsapp || phoneRegex.test(formData.whatsapp ?? "");
     return (
       formData.name.trim().length > 1 &&
       emailRegex.test(formData.email) &&
       phoneRegex.test(formData.phone) &&
-      whatsappOk &&
       passwordStrength >= 3 &&
       formData.password === formData.confirmPassword
     );
-  }, [formData, passwordStrength, separateWhatsapp]);
+  }, [formData, passwordStrength]);
 
   const updateField = <K extends keyof SignupPayload>(key: K, value: SignupPayload[K]) => {
     setFormData((current) => ({ ...current, [key]: value }));
@@ -58,7 +56,6 @@ export default function SignupPage() {
     if (!formData.name.trim()) return "Full name is required";
     if (!emailRegex.test(formData.email)) return "Enter a valid email address";
     if (!phoneRegex.test(formData.phone)) return "Enter a valid mobile number";
-    if (separateWhatsapp && !phoneRegex.test(formData.whatsapp ?? "")) return "Enter a valid WhatsApp number";
     if (passwordStrength < 3) return "Password must be at least 8 characters and include a letter and a number";
     if (formData.password !== formData.confirmPassword) return "Passwords do not match";
     return "";
@@ -83,7 +80,7 @@ export default function SignupPage() {
         ...formData,
         email: normalizedEmail,
         name: trimmedName,
-        whatsapp: separateWhatsapp ? (formData.whatsapp ?? "").replace(/[^0-9]/g, "") : "",
+        whatsapp: isWhatsapp ? formData.phone : "",
       });
 
       window.location.href = "/auth/login";
@@ -166,34 +163,18 @@ export default function SignupPage() {
                 className="sm:col-span-2"
               />
 
-              <div className="flex items-start gap-3 sm:col-span-2">
+              <div className="flex items-center gap-3 sm:col-span-2">
                 <input
-                  id="separate-whatsapp"
+                  id="is-whatsapp"
                   type="checkbox"
-                  checked={separateWhatsapp}
-                  onChange={(e) => {
-                    const on = e.target.checked;
-                    setSeparateWhatsapp(on);
-                    if (!on) updateField("whatsapp", "");
-                  }}
-                  className="mt-1 h-4 w-4 shrink-0 rounded border-[#d8c9fb] text-[#6869F9] focus:ring-[#ddd1ff]"
+                  checked={isWhatsapp}
+                  onChange={(e) => setIsWhatsapp(e.target.checked)}
+                  className="h-4 w-4 shrink-0 rounded border-[#d8c9fb] text-[#6869F9] focus:ring-[#ddd1ff]"
                 />
-                <label htmlFor="separate-whatsapp" className="text-sm font-medium text-[#5a3b8a] leading-snug cursor-pointer">
-                  Enter the whatsapp number
+                <label htmlFor="is-whatsapp" className="text-sm font-medium text-[#5a3b8a] cursor-pointer">
+                  Is this your WhatsApp number?
                 </label>
               </div>
-
-              {separateWhatsapp && (
-                <CountryPhoneField
-                  label="WhatsApp Number"
-                  value={formData.whatsapp ?? ""}
-                  onChange={(nextDigits) => updateField("whatsapp", nextDigits)}
-                  country={formData.country}
-                  onCountryChange={(nextCountry) => updateField("country", nextCountry)}
-                  placeholder="WhatsApp number"
-                  className="sm:col-span-2"
-                />
-              )}
 
               <div className="flex w-full flex-col gap-4 sm:col-span-2">
                 <PasswordField
