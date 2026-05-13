@@ -1,7 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+
+/** Puja card date stored as DD-MM-YYYY; native date input uses YYYY-MM-DD */
+function ddmmyyyyToIso(value: string): string {
+  const m = String(value).trim().match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (!m) return "";
+  const d = m[1].padStart(2, "0");
+  const mo = m[2].padStart(2, "0");
+  const y = m[3];
+  return `${y}-${mo}-${d}`;
+}
+
+function isoToDdmmyyyy(iso: string): string {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
+  const [y, mo, d] = iso.split("-");
+  return `${d}-${mo}-${y}`;
+}
 
 interface SubField {
   name: string;
@@ -13,7 +29,18 @@ interface SubField {
 interface Field {
   name: string;
   label: string;
-  type: "text" | "textarea" | "url" | "number" | "date" | "datetime-local" | "json" | "array-string" | "array-object" | "reference-array";
+  type:
+    | "text"
+    | "textarea"
+    | "url"
+    | "number"
+    | "date"
+    | "date-ddmmyyyy"
+    | "datetime-local"
+    | "json"
+    | "array-string"
+    | "array-object"
+    | "reference-array";
   required?: boolean;
   placeholder?: string;
   options?: string[];
@@ -26,9 +53,33 @@ interface ContentManagerProps {
   type: string;
   title: string;
   fields: Field[];
+  searchFields?: string[];
+  filterGroups?: {
+    label: string;
+    options: { value: string; keywords?: string[] }[];
+  }[];
+  /** Build Location filter options from saved puja rows (new locations appear automatically) */
+  dynamicPujaLocationFromItems?: boolean;
 }
 
-export default function ContentManager({ type, title, fields }: ContentManagerProps) {
+/** Stable empty default — avoid new [] each render (breaks useMemo + causes setState loops). */
+const EMPTY_FILTER_GROUPS: NonNullable<ContentManagerProps["filterGroups"]> = [];
+
+function filtersRecordEqual(a: Record<string, string>, b: Record<string, string>): boolean {
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  return keysA.every((k) => a[k] === b[k]);
+}
+
+export default function ContentManager({
+  type,
+  title,
+  fields,
+  searchFields = [],
+  filterGroups = EMPTY_FILTER_GROUPS,
+  dynamicPujaLocationFromItems = false,
+}: ContentManagerProps) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
@@ -37,6 +88,63 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [referenceData, setReferenceData] = useState<Record<string, any[]>>({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
+
+  const effectiveFilterGroups = useMemo(() => {
+    if (type !== "puja" || !dynamicPujaLocationFromItems) {
+      return filterGroups;
+    }
+
+    const locStrings = new Set<string>();
+    items.forEach((item) => {
+      const parts = [
+        item.location,
+        item.templeLocation,
+        item.templeVenue,
+        item.details && typeof item.details === "object" && item.details !== null
+          ? (item.details as { templeLocation?: string }).templeLocation
+          : undefined,
+      ].filter(Boolean) as string[];
+
+      parts.forEach((s) => {
+        const trimmed = s.trim();
+        if (trimmed) locStrings.add(trimmed);
+        trimmed.split(/[,|;]/).forEach((chunk) => {
+          const t = chunk.trim();
+          if (t) locStrings.add(t);
+        });
+      });
+    });
+
+    const sorted = Array.from(locStrings).sort((a, b) => a.localeCompare(b));
+    const locationGroup = {
+      label: "Location",
+      options: [
+        { value: "All" },
+        ...sorted.map((value) => ({ value, keywords: [value.toLowerCase()] })),
+      ],
+    };
+
+    const withoutStaticLocation = filterGroups.filter((g) => g.label !== "Location");
+    return [...withoutStaticLocation, locationGroup];
+  }, [type, dynamicPujaLocationFromItems, items, filterGroups]);
+
+  useEffect(() => {
+    setActiveFilters((prev) => {
+      const next: Record<string, string> = {};
+      effectiveFilterGroups.forEach((g) => {
+        const previous = prev[g.label];
+        const optionValues = new Set(g.options.map((o) => o.value));
+        next[g.label] =
+          previous !== undefined && optionValues.has(previous) ? previous : "All";
+      });
+      // Avoid infinite loops: new `{}` is never referentially equal; bail out if values unchanged.
+      if (filtersRecordEqual(prev, next)) return prev;
+      return next;
+    });
+  }, [effectiveFilterGroups]);
 
   useEffect(() => {
     fetchItems();
@@ -97,7 +205,8 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
     });
   };
 
-  const removeArrayItem = (fieldName: string, index: number) => {
+  const removeArrayItem = (fieldName: string, index: number, itemLabel = "item") => {
+    if (!window.confirm(`Are you sure you want to delete this ${itemLabel}?`)) return;
     setFormData((prev: any) => {
       const arr = Array.isArray(prev[fieldName]) ? [...prev[fieldName]] : [];
       arr.splice(index, 1);
@@ -201,6 +310,10 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
       }
     }
 
+    if (type === "puja" && !payload.status) {
+      payload.status = "active";
+    }
+
     setSubmitting(true);
     try {
       const endpoint = editingId
@@ -238,6 +351,42 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
     }
   };
 
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      const query = searchQuery.trim().toLowerCase();
+      if (query) {
+        const haystack = searchFields
+          .map((field) => String(item[field] ?? ""))
+          .join(" ")
+          .toLowerCase();
+        if (!haystack.includes(query)) return false;
+      }
+
+      for (const group of effectiveFilterGroups) {
+        const selected = activeFilters[group.label];
+        if (!selected || selected === "All") continue;
+        const option = group.options.find((opt) => opt.value === selected);
+        if (!option) continue;
+
+        const textToMatch = [
+          ...searchFields.map((field) => String(item[field] ?? "")),
+          JSON.stringify(item),
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        const keywords =
+          "keywords" in option && Array.isArray(option.keywords) && option.keywords.length > 0
+            ? option.keywords
+            : [option.value.toLowerCase()];
+        const matches = keywords.some((kw) => textToMatch.includes(kw.toLowerCase()));
+        if (!matches) return false;
+      }
+
+      return true;
+    });
+  }, [items, searchQuery, searchFields, effectiveFilterGroups, activeFilters]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -266,6 +415,67 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
         </div>
       </div>
 
+      {!isAdding && (
+        <div className="rounded-lg border border-[#e8e2ff] bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={`Search ${title.toLowerCase()}...`}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:max-w-sm"
+            />
+            {effectiveFilterGroups.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+                className="rounded-md border border-[#d8ceff] bg-white px-4 py-2 text-sm font-medium text-[#5657e8] hover:bg-[#f3f0ff]"
+              >
+                Filter
+              </button>
+            )}
+          </div>
+
+          {isFilterOpen && effectiveFilterGroups.length > 0 && (
+            <div className="mt-4 rounded-md border border-gray-200 bg-gray-50 p-4">
+              <div className="flex flex-wrap items-end gap-3">
+                {effectiveFilterGroups.map((group) => (
+                  <label key={group.label} className="min-w-[10rem] flex-1 text-sm text-gray-700 sm:max-w-[14rem]">
+                    <span className="mb-1 block font-medium">{group.label}</span>
+                    <select
+                      value={activeFilters[group.label] ?? "All"}
+                      onChange={(e) =>
+                        setActiveFilters((prev) => ({ ...prev, [group.label]: e.target.value }))
+                      }
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9]"
+                    >
+                      {group.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.value}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const cleared: Record<string, string> = {};
+                    effectiveFilterGroups.forEach((g) => {
+                      cleared[g.label] = "All";
+                    });
+                    setActiveFilters(cleared);
+                  }}
+                  className="shrink-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Clear filters
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {isAdding && (
         <div className="rounded-lg border border-[#e8e2ff] bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-medium text-[#241a46]">
@@ -279,12 +489,31 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
             ) : null}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {fields.map((field) => (
-                <div key={field.name} className={field.type === "textarea" || field.type === "json" || field.type === "array-string" || field.type === "array-object" || field.type === "reference-array" ? "sm:col-span-2" : ""}>
+                <div
+                  key={field.name}
+                  className={`${field.type === "textarea" || field.type === "json" || field.type === "array-string" || field.type === "array-object" || field.type === "reference-array" ? "sm:col-span-2" : ""} border-b border-gray-200 pb-4`}
+                >
                   <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 mb-1">
                     {field.label}
                   </label>
                   
-                  {field.type === "reference-array" ? (
+                  {field.type === "date-ddmmyyyy" ? (
+                    <input
+                      type="date"
+                      id={field.name}
+                      name={field.name}
+                      required={field.required}
+                      value={ddmmyyyyToIso(String(formData[field.name] ?? ""))}
+                      onChange={(e) => {
+                        const iso = e.target.value;
+                        setFormData((prev: Record<string, unknown>) => ({
+                          ...prev,
+                          [field.name]: iso ? isoToDdmmyyyy(iso) : "",
+                        }));
+                      }}
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                    />
+                  ) : field.type === "reference-array" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                       {referenceData[field.name]?.map((item: any) => (
                         <label key={item._id} className="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-md border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
@@ -320,12 +549,12 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                             placeholder={field.placeholder || "Enter value"}
                             className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                           />
-                          <button type="button" onClick={() => removeArrayItem(field.name, idx)} className="text-red-500 hover:text-red-700">
+                          <button type="button" onClick={() => removeArrayItem(field.name, idx, field.label)} className="text-red-500 hover:text-red-700">
                             <TrashIcon className="h-5 w-5" />
                           </button>
                         </div>
                       ))}
-                      <button type="button" onClick={() => addArrayItem(field.name, "array-string")} className="text-sm text-[#6869F9] font-medium hover:underline">
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-string")} className="mt-3 inline-flex text-sm text-[#6869F9] font-medium hover:underline">
                         + Add {field.label}
                       </button>
                     </div>
@@ -333,7 +562,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                     <div className="space-y-4">
                       {(Array.isArray(formData[field.name]) ? formData[field.name] : []).map((val: any, idx: number) => (
                         <div key={idx} className="relative rounded-lg border border-gray-200 bg-gray-50 p-4">
-                          <button type="button" onClick={() => removeArrayItem(field.name, idx)} className="absolute right-2 top-2 text-red-500 hover:text-red-700">
+                          <button type="button" onClick={() => removeArrayItem(field.name, idx, field.label)} className="absolute right-2 top-2 text-red-500 hover:text-red-700">
                             <TrashIcon className="h-5 w-5" />
                           </button>
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-2">
@@ -362,7 +591,7 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                           </div>
                         </div>
                       ))}
-                      <button type="button" onClick={() => addArrayItem(field.name, "array-object")} className="text-sm text-[#6869F9] font-medium hover:underline">
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-object")} className="mt-3 inline-flex text-sm text-[#6869F9] font-medium hover:underline">
                         + Add {field.label}
                       </button>
                     </div>
@@ -437,14 +666,14 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                     Loading...
                   </td>
                 </tr>
-              ) : items.length === 0 ? (
+              ) : filteredItems.length === 0 ? (
                 <tr>
                   <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
                     No items found.
                   </td>
                 </tr>
               ) : (
-                items.map((item) => (
+                filteredItems.map((item) => (
                   <tr key={item._id}>
                     {fields.slice(0, 3).map((field) => (
                       <td key={field.name} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
@@ -460,6 +689,54 @@ export default function ContentManager({ type, title, fields }: ContentManagerPr
                     ))}
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-3">
+                        {type === "puja" && (
+                          <>
+                            <span
+                              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                                item.status === "inactive"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-green-100 text-green-700"
+                              }`}
+                            >
+                              {item.status === "inactive" ? "Inactive" : "Active"}
+                            </span>
+                            <button
+                              onClick={async () => {
+                                const nextStatus = item.status === "inactive" ? "active" : "inactive";
+                                const payload = { ...item, status: nextStatus };
+                                delete payload._id;
+                                const res = await fetch(`/api/admin/content?type=${type}&id=${item._id}`, {
+                                  method: "PUT",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify(payload),
+                                });
+                                if (res.ok) fetchItems();
+                              }}
+                              className="rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                            >
+                              Mark {item.status === "inactive" ? "Active" : "Inactive"}
+                            </button>
+                            <a
+                              href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                            >
+                              View
+                            </a>
+                          </>
+                        )}
+
+                        {type === "chadhava" && (
+                          <a
+                            href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                          >
+                            View
+                          </a>
+                        )}
                         <button
                           onClick={() => handleEdit(item)}
                           className="text-[#5657e8] hover:text-[#4647c4]"

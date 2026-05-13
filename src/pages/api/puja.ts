@@ -527,7 +527,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const offeringsMap = Object.fromEntries(offeringsData.map(o => [String(o._id), o]));
 
       const normalized = (items as PujaRecord[]).map(p => normalizePuja(p, offeringsMap));
-      const source = normalized.length > 0 ? normalized : fallbackPujas.map(p => normalizePuja(p, offeringsMap));
+      const allPujas = normalized.length > 0 ? normalized : fallbackPujas.map(p => normalizePuja(p, offeringsMap));
+      const source = allPujas.filter(
+        (item) => String((item as Record<string, unknown>).status || "active").toLowerCase() !== "inactive"
+      );
 
       if (typeof slug === 'string' && slug.trim()) {
         const found = source.find((item) => item.slug === slug);

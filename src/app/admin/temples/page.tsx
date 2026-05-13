@@ -28,6 +28,9 @@ export default function AdminTemplesPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("All");
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState<TempleFormData>({
@@ -113,6 +116,21 @@ export default function AdminTemplesPage() {
       if (res.ok) fetchItems();
     } catch (e) { console.error(e); }
   };
+
+  const locationOptions = Array.from(
+    new Set(items.map((item) => `${item.city ?? ""}, ${item.state ?? ""}`.trim()).filter(Boolean))
+  );
+
+  const filteredItems = items.filter((item) => {
+    const query = searchQuery.trim().toLowerCase();
+    const locationText = `${item.city ?? ""}, ${item.state ?? ""}`;
+    if (query) {
+      const text = `${item.name} ${item.deity} ${item.templeType} ${item.city} ${item.state} ${item.slug}`.toLowerCase();
+      if (!text.includes(query)) return false;
+    }
+    if (selectedLocation !== "All" && locationText !== selectedLocation) return false;
+    return true;
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -211,6 +229,55 @@ export default function AdminTemplesPage() {
           </button>
         </div>
       </div>
+
+      {!isAdding && (
+        <div className="rounded-lg border border-[#e8e2ff] bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search temples..."
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:max-w-sm"
+            />
+            <button
+              type="button"
+              onClick={() => setShowFilterPanel((prev) => !prev)}
+              className="rounded-md border border-[#d8ceff] bg-white px-4 py-2 text-sm font-medium text-[#5657e8] hover:bg-[#f3f0ff]"
+            >
+              Filter
+            </button>
+          </div>
+          {showFilterPanel && (
+            <div className="mt-4 max-w-xl rounded-md border border-gray-200 bg-gray-50 p-4">
+              <div className="flex flex-wrap items-end gap-3">
+                <label className="min-w-[12rem] flex-1 text-sm text-gray-700">
+                  <span className="mb-1 block font-medium">Location</span>
+                  <select
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9]"
+                  >
+                    <option value="All">All</option>
+                    {locationOptions.map((location) => (
+                      <option key={location} value={location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLocation("All")}
+                  className="shrink-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Clear filter
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {isAdding && (
         <form id="temples-admin-form" onSubmit={handleSubmit} className="bg-white p-8 shadow-sm border border-gray-100 rounded-2xl space-y-8">
@@ -416,8 +483,8 @@ export default function AdminTemplesPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">Loading...</td></tr> : 
-               items.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
-               items.map(item => (
+               filteredItems.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
+               filteredItems.map(item => (
                 <tr key={item._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -430,6 +497,14 @@ export default function AdminTemplesPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
                   <td className="px-6 py-4 text-right">
+                    <a
+                      href={`/temples/${item.slug || String(item.name || "").toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-")}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mr-3 inline-flex rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                    >
+                      View
+                    </a>
                     <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
                     <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>
                   </td>

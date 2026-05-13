@@ -49,5 +49,12 @@ export default function AdminChadhavaPage() {
     { name: "faq5Answer", label: "FAQ 5 Answer", type: "textarea" },
   ];
 
-  return <ContentManager type="chadhava" title="Chadhava" fields={fields as any} />;
+  return (
+    <ContentManager
+      type="chadhava"
+      title="Chadhava"
+      fields={fields as any}
+      searchFields={["title", "subtitle", "description", "location", "slug"]}
+    />
+  );
 }
