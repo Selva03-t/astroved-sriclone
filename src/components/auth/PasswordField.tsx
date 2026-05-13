@@ -66,18 +66,45 @@ export default function PasswordField({
 
 function EyeIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-5 w-5" stroke="currentColor" strokeWidth="1.7">
-      <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z" strokeLinejoin="round" />
-      <circle cx="12" cy="12" r="3" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className="h-5 w-5 flex-shrink-0"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    >
+      <path
+        d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      {/* Fill the pupil so the icon looks correct */}
+      <circle cx="12" cy="12" r="3" fill="currentColor" />
     </svg>
   );
 }
 
 function EyeSlashIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-5 w-5" stroke="currentColor" strokeWidth="1.7">
-      <path d="M3 3l18 18M10.5 10.677a2 2 0 002.823 2.823M7.362 7.561C5.746 8.834 4.5 10.528 3.88 12c1.89 4.14 6.08 6 8.12 6 1.074 0 2.17-.24 3.202-.7M9.88 9.88a3 3 0 004.24 4.24" strokeLinecap="round" />
-      <path d="M6.21 6.21C4.6 7.24 3.25 8.86 2.46 10.71 4.35 14.85 8.54 17.5 12 17.5c1.55 0 3.13-.45 4.66-1.29" strokeLinecap="round" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className="h-5 w-5 flex-shrink-0"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    >
+      <path
+        d="M3 3l18 18M10.5 10.677a2 2 0 002.823 2.823M7.362 7.561C5.746 8.834 4.5 10.528 3.88 12c1.89 4.14 6.08 6 8.12 6 1.074 0 2.17-.24 3.202-.7M9.88 9.88a3 3 0 004.24 4.24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.21 6.21C4.6 7.24 3.25 8.86 2.46 10.71 4.35 14.85 8.54 17.5 12 17.5c1.55 0 3.13-.45 4.66-1.29"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

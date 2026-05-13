@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import Script from "next/script";
-import Footer from "@/components/layout/Footer";
-import AIAssistant from "@/components/ui/AIAssistant";
+import GlobalChrome from "@/components/layout/GlobalChrome";
 import { Providers } from "./Providers";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -16,8 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="flex-1">
             {children}
           </div>
-          <AIAssistant />
-          <Footer />
+          <GlobalChrome />
         </Providers>
         {/* Webpushr push-notification SDK */}
         <Script
