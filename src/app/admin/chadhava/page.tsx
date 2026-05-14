@@ -47,6 +47,12 @@ export default function AdminChadhavaPage() {
     { name: "faq4Answer", label: "FAQ 4 Answer", type: "textarea" },
     { name: "faq5Question", label: "FAQ 5 Question", type: "text" },
     { name: "faq5Answer", label: "FAQ 5 Answer", type: "textarea" },
+    {
+      name: "sectionOrder",
+      label: "Frontend Section Order",
+      type: "section-order",
+      options: ["hero", "offerings", "faqs"]
+    }
   ];
 
   return (

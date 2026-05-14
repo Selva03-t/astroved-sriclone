@@ -130,6 +130,12 @@ export default function AdminPujasPage() {
       type: "reference-array",
       referenceEndpoint: "/api/admin/content?type=offering",
       referenceLabelField: "name"
+    },
+    {
+      name: "sectionOrder",
+      label: "Frontend Section Order",
+      type: "section-order",
+      options: ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"]
     }
   ];
 

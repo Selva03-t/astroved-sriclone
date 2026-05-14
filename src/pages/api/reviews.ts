@@ -13,7 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await collection.insertOne(data);
       return res.status(201).json({ _id: result.insertedId, ...data });
     } else if (req.method === 'GET') {
-      const items = await collection.find({}).toArray();
+      // Public: only return approved reviews. Pass ?all=1 for admin panel.
+      const filter = req.query.all === '1' ? {} : { approved: true };
+      const items = await collection.find(filter).toArray();
       return res.status(200).json(items);
     } else if (req.method === 'DELETE') {
       const { id } = req.query;

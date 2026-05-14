@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon, EyeIcon, Bars3Icon } from "@heroicons/react/24/outline";
 
 export default function AdminTemplesPage() {
   interface TempleFormData {
@@ -17,6 +17,7 @@ export default function AdminTemplesPage() {
     relatedArticles: string[]; relatedTemples: string[]; relatedPujas: string[];
     featured: boolean; popular: boolean;
     metaTitle: string; metaDescription: string;
+    sectionOrder: string[];
   }
 
   interface TempleItem extends TempleFormData {
@@ -45,10 +46,13 @@ export default function AdminTemplesPage() {
     faq: [],
     relatedArticles: [""], relatedTemples: [""], relatedPujas: [""],
     featured: false, popular: false,
-    metaTitle: "", metaDescription: ""
+    metaTitle: "", metaDescription: "",
+    sectionOrder: ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
   });
 
   const templeTypes = ["Shiva Temple", "Vishnu Temple", "Devi Temple", "Murugan Temple", "Hanuman Temple", "Jyotirlinga", "Shakti Peetha", "Pilgrimage Site"];
+  
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -85,7 +89,8 @@ export default function AdminTemplesPage() {
       faq: [],
       relatedArticles: [""], relatedTemples: [""], relatedPujas: [""],
       featured: false, popular: false,
-      metaTitle: "", metaDescription: ""
+      metaTitle: "", metaDescription: "",
+      sectionOrder: ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
     });
     setEditingId(null);
   };
@@ -103,7 +108,8 @@ export default function AdminTemplesPage() {
       relatedArticles: item.relatedArticles?.length ? item.relatedArticles : [""],
       relatedTemples: item.relatedTemples?.length ? item.relatedTemples : [""],
       relatedPujas: item.relatedPujas?.length ? item.relatedPujas : [""],
-      featured: !!item.featured, popular: !!item.popular
+      featured: !!item.featured, popular: !!item.popular,
+      sectionOrder: item.sectionOrder?.length ? item.sectionOrder : ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
     });
     setEditingId(String(item._id));
     setIsAdding(true);
@@ -459,6 +465,35 @@ export default function AdminTemplesPage() {
             <div className="space-y-4">
               <input placeholder="Meta Title" value={formData.metaTitle} onChange={e=>handleChange("metaTitle", e.target.value)} className="border p-2 rounded w-full" />
               <textarea placeholder="Meta Description" rows={2} value={formData.metaDescription} onChange={e=>handleChange("metaDescription", e.target.value)} className="border p-2 rounded w-full" />
+            </div>
+          </section>
+
+          {/* SECTION M */}
+          <section>
+            <h3 className="text-lg font-semibold border-b pb-2 mb-4">Section M - Frontend Layout Order</h3>
+            <div className="space-y-2">
+              {formData.sectionOrder.map((item, idx) => (
+                <div
+                  key={item}
+                  draggable
+                  onDragStart={() => setDraggedItemIndex(idx)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (draggedItemIndex === null || draggedItemIndex === idx) return;
+                    const newOrder = [...formData.sectionOrder];
+                    const [draggedItem] = newOrder.splice(draggedItemIndex, 1);
+                    newOrder.splice(idx, 0, draggedItem);
+                    handleChange("sectionOrder", newOrder);
+                    setDraggedItemIndex(null);
+                  }}
+                  className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-move hover:border-[#6869F9] transition-colors"
+                >
+                  <Bars3Icon className="h-5 w-5 text-gray-400" />
+                  <span className="font-medium text-gray-700 capitalize">{item.replace(/([A-Z])/g, ' $1').trim()}</span>
+                </div>
+              ))}
+              <p className="text-xs text-gray-500 mt-2">Drag and drop to reorder the sections displayed on the temple details page.</p>
             </div>
           </section>
 

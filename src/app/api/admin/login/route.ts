@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import clientPromise from "@/lib/mongodb";
+// @ts-ignore
 import bcrypt from "bcryptjs";
 
 const JWT_SECRET = new TextEncoder().encode(

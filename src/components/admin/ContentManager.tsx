@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { PencilSquareIcon, PlusIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon, EyeIcon, Bars3Icon } from "@heroicons/react/24/outline";
 
 /** Puja card date stored as DD-MM-YYYY; native date input uses YYYY-MM-DD */
 function ddmmyyyyToIso(value: string): string {
@@ -40,7 +40,8 @@ interface Field {
     | "json"
     | "array-string"
     | "array-object"
-    | "reference-array";
+    | "reference-array"
+    | "section-order";
   required?: boolean;
   placeholder?: string;
   options?: string[];
@@ -60,6 +61,8 @@ interface ContentManagerProps {
   }[];
   /** Build Location filter options from saved puja rows (new locations appear automatically) */
   dynamicPujaLocationFromItems?: boolean;
+  /** Review-only mode: hide Add/Edit, show Approve/Unapprove */
+  reviewMode?: boolean;
 }
 
 /** Stable empty default — avoid new [] each render (breaks useMemo + causes setState loops). */
@@ -72,6 +75,8 @@ function filtersRecordEqual(a: Record<string, string>, b: Record<string, string>
   return keysA.every((k) => a[k] === b[k]);
 }
 
+const PAGE_SIZE = 10;
+
 export default function ContentManager({
   type,
   title,
@@ -79,6 +84,7 @@ export default function ContentManager({
   searchFields = [],
   filterGroups = EMPTY_FILTER_GROUPS,
   dynamicPujaLocationFromItems = false,
+  reviewMode = false,
 }: ContentManagerProps) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +97,9 @@ export default function ContentManager({
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>({});
+  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [viewingReview, setViewingReview] = useState<any | null>(null);
 
   const effectiveFilterGroups = useMemo(() => {
     if (type !== "puja" || !dynamicPujaLocationFromItems) {
@@ -242,8 +251,8 @@ export default function ContentManager({
         draft[field.name] = raw === undefined || raw === null ? "" : JSON.stringify(raw, null, 2);
         return;
       }
-      if (field.type === "array-string" || field.type === "array-object" || field.type === "reference-array") {
-        draft[field.name] = Array.isArray(raw) ? raw : [];
+      if (field.type === "array-string" || field.type === "array-object" || field.type === "reference-array" || field.type === "section-order") {
+        draft[field.name] = Array.isArray(raw) && raw.length > 0 ? raw : (field.type === "section-order" ? field.options || [] : []);
         return;
       }
 
@@ -306,6 +315,11 @@ export default function ContentManager({
 
       if (field.type === "reference-array") {
         payload[field.name] = Array.isArray(formData[field.name]) ? formData[field.name] : [];
+        continue;
+      }
+
+      if (field.type === "section-order") {
+        payload[field.name] = formData[field.name] || field.options || [];
         continue;
       }
     }
@@ -387,6 +401,13 @@ export default function ContentManager({
     });
   }, [items, searchQuery, searchFields, effectiveFilterGroups, activeFilters]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+  const pagedItems = filteredItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  // Reset to page 1 whenever filters/search change
+  const prevFilterKey = useMemo(() => searchQuery + JSON.stringify(activeFilters), [searchQuery, activeFilters]);
+  useEffect(() => { setCurrentPage(1); }, [prevFilterKey]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -402,16 +423,23 @@ export default function ContentManager({
               {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
             </button>
           )}
-          <button
-            onClick={handleOpenAdd}
-            className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
-              isAdding
-                ? "bg-gray-500 hover:bg-gray-600"
-                : "bg-[#6869F9] hover:bg-[#5657e8]"
-            }`}
-          >
-            {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
-          </button>
+          {!reviewMode && (
+            <button
+              onClick={handleOpenAdd}
+              className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
+                isAdding
+                  ? "bg-gray-500 hover:bg-gray-600"
+                  : "bg-[#6869F9] hover:bg-[#5657e8]"
+              }`}
+            >
+              {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
+            </button>
+          )}
+          {reviewMode && isAdding && (
+            <button onClick={resetForm} className="flex items-center rounded-md px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-600">
+              Cancel
+            </button>
+          )}
         </div>
       </div>
 
@@ -538,6 +566,32 @@ export default function ContentManager({
                       {!referenceData[field.name] && <div className="text-sm text-gray-500">Loading...</div>}
                       {referenceData[field.name]?.length === 0 && <div className="text-sm text-gray-500">No items available.</div>}
                     </div>
+                  ) : field.type === "section-order" ? (
+                    <div className="space-y-2 mt-2">
+                      {(Array.isArray(formData[field.name]) && formData[field.name].length > 0 ? formData[field.name] : field.options || []).map((item: string, idx: number) => (
+                        <div
+                          key={item}
+                          draggable
+                          onDragStart={() => setDraggedItemIndex(idx)}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            if (draggedItemIndex === null || draggedItemIndex === idx) return;
+                            const currentOrder = Array.isArray(formData[field.name]) && formData[field.name].length > 0 ? formData[field.name] : field.options || [];
+                            const newOrder = [...currentOrder];
+                            const [draggedItem] = newOrder.splice(draggedItemIndex, 1);
+                            newOrder.splice(idx, 0, draggedItem);
+                            setFormData((prev: any) => ({ ...prev, [field.name]: newOrder }));
+                            setDraggedItemIndex(null);
+                          }}
+                          className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-move hover:border-[#6869F9] transition-colors"
+                        >
+                          <Bars3Icon className="h-5 w-5 text-gray-400" />
+                          <span className="font-medium text-gray-700 capitalize">{item.replace(/-/g, " ")}</span>
+                        </div>
+                      ))}
+                      <p className="text-xs text-gray-500 mt-2">Drag and drop to reorder sections on the frontend.</p>
+                    </div>
                   ) : field.type === "array-string" ? (
                     <div className="space-y-2">
                       {(Array.isArray(formData[field.name]) ? formData[field.name] : []).map((val: string, idx: number) => (
@@ -649,61 +703,70 @@ export default function ContentManager({
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                {fields.slice(0, 3).map((field) => (
-                  <th key={field.name} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    {field.label}
-                  </th>
-                ))}
-                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Actions
-                </th>
+                {reviewMode ? (
+                  <>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">User Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Product / Puja</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Rating</th>
+                  </>
+                ) : (
+                  fields.slice(0, 3).map((field) => (
+                    <th key={field.name} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      {field.label}
+                    </th>
+                  ))
+                )}
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {loading ? (
-                <tr>
-                  <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
-              ) : filteredItems.length === 0 ? (
-                <tr>
-                  <td colSpan={fields.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                    No items found.
-                  </td>
-                </tr>
+                <tr><td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">Loading...</td></tr>
+              ) : pagedItems.length === 0 ? (
+                <tr><td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No items found.</td></tr>
               ) : (
-                filteredItems.map((item) => (
+                pagedItems.map((item) => (
                   <tr key={item._id}>
-                    {fields.slice(0, 3).map((field) => (
-                      <td key={field.name} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                        {field.type === "url" && item[field.name] ? (
-                          <div className="flex items-center">
-                            <img src={item[field.name]} alt="" className="h-8 w-8 rounded object-cover mr-2" />
-                            <span className="truncate max-w-37.5">{item[field.name]}</span>
+                    {reviewMode ? (
+                      <>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          <div className="flex items-center gap-2">
+                            {item.avatarUrl && <img src={item.avatarUrl} className="h-7 w-7 rounded-full object-cover" alt="" />}
+                            <span className="font-medium">{item.name}</span>
                           </div>
-                        ) : (
-                          <span className="truncate max-w-50 block">{item[field.name]}</span>
-                        )}
-                      </td>
-                    ))}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700 max-w-[180px] truncate">{item.productItem || item.pujaName || item.type || "—"}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700">{item.rating ? `${'★'.repeat(Number(item.rating))} (${item.rating})` : "—"}</td>
+                      </>
+                    ) : (
+                      fields.slice(0, 3).map((field) => (
+                        <td key={field.name} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                          {field.type === "url" && item[field.name] ? (
+                            <div className="flex items-center">
+                              <img src={item[field.name]} alt="" className="h-8 w-8 rounded object-cover mr-2" />
+                              <span className="truncate max-w-37.5">{item[field.name]}</span>
+                            </div>
+                          ) : (
+                            <span className="truncate max-w-50 block">{item[field.name]}</span>
+                          )}
+                        </td>
+                      ))
+                    )}
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-3">
-                        {type === "puja" && (
+                        {reviewMode ? (
                           <>
-                            <span
-                              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-                                item.status === "inactive"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-green-100 text-green-700"
-                              }`}
+                            <button
+                              onClick={() => setViewingReview(item)}
+                              className="text-[#5657e8] hover:text-[#4647c4]"
+                              title="View review"
                             >
-                              {item.status === "inactive" ? "Inactive" : "Active"}
-                            </span>
+                              <EyeIcon className="h-5 w-5" />
+                            </button>
                             <button
                               onClick={async () => {
-                                const nextStatus = item.status === "inactive" ? "active" : "inactive";
-                                const payload = { ...item, status: nextStatus };
+                                const nextStatus = item.approved ? false : true;
+                                const payload = { ...item, approved: nextStatus };
                                 delete payload._id;
                                 const res = await fetch(`/api/admin/content?type=${type}&id=${item._id}`, {
                                   method: "PUT",
@@ -712,49 +775,54 @@ export default function ContentManager({
                                 });
                                 if (res.ok) fetchItems();
                               }}
-                              className="rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                              className={`rounded-md border px-2 py-1 text-xs font-semibold ${
+                                item.approved
+                                  ? "border-red-300 text-red-600 hover:bg-red-50"
+                                  : "border-green-400 text-green-700 hover:bg-green-50"
+                              }`}
                             >
-                              Mark {item.status === "inactive" ? "Active" : "Inactive"}
+                              {item.approved ? "Unapprove" : "Approve"}
                             </button>
-                            <a
-                              href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[#5657e8] hover:text-[#4647c4]"
-                              aria-label="View puja"
-                              title="View puja"
-                            >
-                              <EyeIcon className="h-5 w-5" />
-                            </a>
+                            <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900" aria-label="Delete">
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            {type === "puja" && (
+                              <>
+                                <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${item.status === "inactive" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                                  {item.status === "inactive" ? "Inactive" : "Active"}
+                                </span>
+                                <button
+                                  onClick={async () => {
+                                    const nextStatus = item.status === "inactive" ? "active" : "inactive";
+                                    const payload = { ...item, status: nextStatus }; delete payload._id;
+                                    const res = await fetch(`/api/admin/content?type=${type}&id=${item._id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                                    if (res.ok) fetchItems();
+                                  }}
+                                  className="rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                                >
+                                  Mark {item.status === "inactive" ? "Active" : "Inactive"}
+                                </button>
+                                <a href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#5657e8] hover:text-[#4647c4]" title="View puja">
+                                  <EyeIcon className="h-5 w-5" />
+                                </a>
+                              </>
+                            )}
+                            {type === "chadhava" && (
+                              <a href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#5657e8] hover:text-[#4647c4]" title="View chadhava">
+                                <EyeIcon className="h-5 w-5" />
+                              </a>
+                            )}
+                            <button onClick={() => handleEdit(item)} className="text-[#5657e8] hover:text-[#4647c4]" aria-label="Edit item">
+                              <PencilSquareIcon className="h-5 w-5" />
+                            </button>
+                            <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900" aria-label="Delete item">
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
                           </>
                         )}
-
-                        {type === "chadhava" && (
-                          <a
-                            href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-[#5657e8] hover:text-[#4647c4]"
-                            aria-label="View chadhava"
-                            title="View chadhava"
-                          >
-                            <EyeIcon className="h-5 w-5" />
-                          </a>
-                        )}
-                        <button
-                          onClick={() => handleEdit(item)}
-                          className="text-[#5657e8] hover:text-[#4647c4]"
-                          aria-label="Edit item"
-                        >
-                          <PencilSquareIcon className="h-5 w-5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="text-red-600 hover:text-red-900"
-                          aria-label="Delete item"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -762,8 +830,90 @@ export default function ContentManager({
               )}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-6 py-3">
+              <p className="text-sm text-gray-500">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filteredItems.length)} of {filteredItems.length}
+              </p>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-40"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`rounded-md border px-3 py-1.5 text-sm ${
+                      page === currentPage
+                        ? "border-[#6869F9] bg-[#6869F9] text-white"
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Review Detail Modal */}
+      {viewingReview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setViewingReview(null)}>
+          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                {viewingReview.avatarUrl && <img src={viewingReview.avatarUrl} className="h-12 w-12 rounded-full object-cover" alt="" />}
+                <div>
+                  <p className="font-bold text-gray-900">{viewingReview.name}</p>
+                  <p className="text-xs text-gray-500">{viewingReview.productItem || viewingReview.pujaName || viewingReview.type || ""}</p>
+                </div>
+              </div>
+              <button onClick={() => setViewingReview(null)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">×</button>
+            </div>
+            {viewingReview.rating && (
+              <p className="text-yellow-500 text-lg mb-2">{'★'.repeat(Number(viewingReview.rating))}{'☆'.repeat(5 - Number(viewingReview.rating))}</p>
+            )}
+            {viewingReview.videoUrl ? (
+              <video src={viewingReview.videoUrl} controls className="w-full rounded-lg mb-3" />
+            ) : null}
+            <p className="text-gray-700 text-sm leading-relaxed mb-4 whitespace-pre-wrap">{viewingReview.content}</p>
+            <div className="flex items-center justify-between">
+              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${viewingReview.approved ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                {viewingReview.approved ? "Approved" : "Pending Approval"}
+              </span>
+              <button
+                onClick={async () => {
+                  const nextStatus = viewingReview.approved ? false : true;
+                  const payload = { ...viewingReview, approved: nextStatus }; delete payload._id;
+                  const res = await fetch(`/api/admin/content?type=${type}&id=${viewingReview._id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                  if (res.ok) { fetchItems(); setViewingReview({ ...viewingReview, approved: nextStatus }); }
+                }}
+                className={`rounded-md border px-4 py-1.5 text-sm font-semibold ${
+                  viewingReview.approved ? "border-red-300 text-red-600 hover:bg-red-50" : "border-green-400 text-green-700 hover:bg-green-50"
+                }`}
+              >
+                {viewingReview.approved ? "Unapprove" : "Approve"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
 }
+

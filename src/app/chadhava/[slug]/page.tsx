@@ -33,6 +33,7 @@ interface ChadhavaRecord {
   slug: string;
   offerings: Offering[];
   faqs: Faq[];
+  sectionOrder?: string[];
 }
 
 export default function ChadhavaDetailPage() {
@@ -299,133 +300,143 @@ export default function ChadhavaDetailPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="bg-white py-12 lg:py-16 border-b border-gray-100">
-        <div className="mx-auto max-w-[1150px] px-6 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
-          <div className="relative w-full flex flex-col items-center">
-             <div className="relative w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-gray-50">
-               <img 
-                 src={carouselImages[currentImageIndex]} 
-                 alt={data.title} 
-                 className="w-full aspect-[16/10] object-cover transition-opacity duration-300"
-               />
-               {carouselImages.length > 1 && (
-                 <>
-                   <button 
-                     onClick={handlePrevImage}
-                     className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
-                   >
-                      <i className="fa-solid fa-chevron-left text-[12px]"></i>
-                   </button>
-                   <button 
-                     onClick={handleNextImage}
-                     className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
-                   >
-                      <i className="fa-solid fa-chevron-right text-[12px]"></i>
-                   </button>
-                 </>
-               )}
-             </div>
-             {/* Dots */}
-             {carouselImages.length > 1 && (
-               <div className="flex items-center gap-2 mt-5">
-                  {carouselImages.map((_, idx) => (
-                    <button 
-                      key={idx}
-                      onClick={() => handleDotClick(idx)}
-                      className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#6869F9]' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+      {(data.sectionOrder && data.sectionOrder.length > 0 ? data.sectionOrder : ["about", "offerings", "faq"]).map((sectionId: string) => {
+        if (sectionId === "about") {
+          return (
+            <section key="about" className="bg-white py-12 lg:py-16 border-b border-gray-100">
+              <div className="mx-auto max-w-[1150px] px-6 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
+                <div className="relative w-full flex flex-col items-center">
+                  <div className="relative w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-gray-50">
+                    <img 
+                      src={carouselImages[currentImageIndex]} 
+                      alt={data.title} 
+                      className="w-full aspect-[16/10] object-cover transition-opacity duration-300"
                     />
-                  ))}
-               </div>
-             )}
-          </div>
-          <div className="lg:pl-4">
-            <h1 className="text-3xl lg:text-[34px] font-bold text-[#687383] leading-tight mb-6">
-              {data.heroTitle || data.title}
-            </h1>
-            <div className="text-[15px] text-[#555] leading-[1.7] mb-6">
-              <p className="flex items-center gap-2">
-                <SparklesIcon className="h-5 w-5 shrink-0 text-[#6869F9]" />
-                <strong>What happens when the offering is made?</strong>
-              </p>
-              <div className={`mt-2 transition-all ${!isExpanded ? 'line-clamp-4' : ''}`}>
-                 {data.content ? data.content : data.description}
-              </div>
-              <button 
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#6869F9] transition-colors"
-              >
-                {isExpanded ? 'Read less' : 'Read more'}
-              </button>
-            </div>
-            
-            <div className="flex items-center gap-4 mt-8">
-                <div className="flex -space-x-2">
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=1" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=2" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=3" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=4" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=5" alt="user" /></div>
+                    {carouselImages.length > 1 && (
+                      <>
+                        <button 
+                          onClick={handlePrevImage}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
+                        >
+                            <i className="fa-solid fa-chevron-left text-[12px]"></i>
+                        </button>
+                        <button 
+                          onClick={handleNextImage}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-all text-gray-700 hover:scale-110 active:scale-95"
+                        >
+                            <i className="fa-solid fa-chevron-right text-[12px]"></i>
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  {/* Dots */}
+                  {carouselImages.length > 1 && (
+                    <div className="flex items-center gap-2 mt-5">
+                        {carouselImages.map((_, idx) => (
+                          <button 
+                            key={idx}
+                            onClick={() => handleDotClick(idx)}
+                            className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#6869F9]' : 'w-2 bg-gray-300 hover:bg-gray-400'}`}
+                          />
+                        ))}
+                    </div>
+                  )}
                 </div>
-            </div>
-            <p className="text-[15px] text-[#555] leading-relaxed mt-4">
-               Till now <span className="text-[#6869F9] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Offerings Selector */}
-      <section className="py-10 lg:py-16 bg-[#f8f8f8]">
-        <div className="mx-auto max-w-[1000px] px-6">
-          <h2 className="text-[28px] font-bold text-[#111827] mb-8">Choose an offering</h2>
-          
-          <div className="flex flex-col border-t border-[#ececec]">
-            {data.offerings.map((off, index) => {
-              const qty = cart[off.id] || 0;
-              const isHighlight = index === data.offerings.length - 1 && data.offerings.length > 1; // Highlight the last offering if there are multiple
-              
-              if (isHighlight) {
-                return (
-                  <HighlightOffering 
-                    key={off.id}
-                    offering={off}
-                    qty={qty}
-                    onToggle={toggleOffering as any}
-                    onUpdateQty={updateQuantity}
-                  />
-                );
-              }
-              
-              return (
-                <OfferingCard
-                  key={off.id}
-                  offering={off}
-                  qty={qty}
-                  onToggle={toggleOffering as any}
-                  onUpdateQty={updateQuantity}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="py-16 bg-white border-t border-[#ececec]">
-        <div className="mx-auto max-w-[1000px] px-6">
-           <h2 className="text-[28px] font-bold text-[#111827] mb-8">Frequently asked Questions</h2>
-           <div className="flex flex-col border-t border-[#ececec]">
-              {data.faqs.map((faq, i) => (
-                <FAQAccordion
-                  key={i}
-                  question={faq.question}
-                  answer={faq.answer}
-                />
-              ))}
-           </div>
-        </div>
-      </section>
+                <div className="lg:pl-4">
+                  <h1 className="text-3xl lg:text-[34px] font-bold text-[#687383] leading-tight mb-6">
+                    {data.heroTitle || data.title}
+                  </h1>
+                  <div className="text-[15px] text-[#555] leading-[1.7] mb-6">
+                    <p className="flex items-center gap-2">
+                      <SparklesIcon className="h-5 w-5 shrink-0 text-[#6869F9]" />
+                      <strong>What happens when the offering is made?</strong>
+                    </p>
+                    <div className={`mt-2 transition-all ${!isExpanded ? 'line-clamp-4' : ''}`}>
+                        {data.content ? data.content : data.description}
+                    </div>
+                    <button 
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#6869F9] transition-colors"
+                    >
+                      {isExpanded ? 'Read less' : 'Read more'}
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 mt-8">
+                      <div className="flex -space-x-2">
+                        <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=1" alt="user" /></div>
+                        <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=2" alt="user" /></div>
+                        <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=3" alt="user" /></div>
+                        <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=4" alt="user" /></div>
+                        <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=5" alt="user" /></div>
+                      </div>
+                  </div>
+                  <p className="text-[15px] text-[#555] leading-relaxed mt-4">
+                      Till now <span className="text-[#6869F9] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
+                  </p>
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (sectionId === "offerings") {
+          return (
+            <section key="offerings" className="py-10 lg:py-16 bg-[#f8f8f8]">
+              <div className="mx-auto max-w-[1000px] px-6">
+                <h2 className="text-[28px] font-bold text-[#111827] mb-8">Choose an offering</h2>
+                
+                <div className="flex flex-col border-t border-[#ececec]">
+                  {data.offerings.map((off, index) => {
+                    const qty = cart[off.id] || 0;
+                    const isHighlight = index === data.offerings.length - 1 && data.offerings.length > 1; // Highlight the last offering if there are multiple
+                    
+                    if (isHighlight) {
+                      return (
+                        <HighlightOffering 
+                          key={off.id}
+                          offering={off}
+                          qty={qty}
+                          onToggle={toggleOffering as any}
+                          onUpdateQty={updateQuantity}
+                        />
+                      );
+                    }
+                    
+                    return (
+                      <OfferingCard
+                        key={off.id}
+                        offering={off}
+                        qty={qty}
+                        onToggle={toggleOffering as any}
+                        onUpdateQty={updateQuantity}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (sectionId === "faq") {
+          return (
+            <section key="faq" className="py-16 bg-white border-t border-[#ececec]">
+              <div className="mx-auto max-w-[1000px] px-6">
+                  <h2 className="text-[28px] font-bold text-[#111827] mb-8">Frequently asked Questions</h2>
+                  <div className="flex flex-col border-t border-[#ececec]">
+                    {data.faqs.map((faq, i) => (
+                      <FAQAccordion
+                        key={i}
+                        question={faq.question}
+                        answer={faq.answer}
+                      />
+                    ))}
+                  </div>
+              </div>
+            </section>
+          );
+        }
+        return null;
+      })}
 
       {/* Cart Bar */}
       {selectedCount > 0 && (
