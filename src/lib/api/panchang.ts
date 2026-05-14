@@ -1,4 +1,5 @@
-export interface PanchangParams {
+  
+  export interface PanchangParams {
   date?: string; // YYYY-MM-DD
   latitude?: number;
   longitude?: number;
@@ -392,6 +393,7 @@ function getDummyPanchangData(queryDate?: string) {
   const nak = nakshatras[d % nakshatras.length];
   const { amanta, purnimanta } = getLunarMonths(base, 'Krishna');
   const { vikram, shaka }      = getSamvat(base);
+
 
   return {
     queryDate:  base.toISOString(),

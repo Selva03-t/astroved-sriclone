@@ -12,7 +12,8 @@ import {
   ShoppingBagIcon,
   WrenchScrewdriverIcon,
   ChatBubbleLeftRightIcon,
-  GiftIcon
+  GiftIcon,
+  UserCircleIcon
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
@@ -44,9 +45,15 @@ export default function Sidebar() {
 
   return (
     <div className="flex h-screen w-64 flex-col border-r border-[#d8ceff] bg-white">
-      <div className="flex h-16 items-center justify-center border-b border-[#d8ceff] bg-[#6869F9]">
-        <span className="text-xl font-bold text-white">AstroVed Admin</span>
-      </div>
+      <Link 
+        href="/admin/profile"
+        className="flex flex-col items-center justify-center border-b border-[#d8ceff] bg-[#6869F9] hover:bg-[#5657e8] transition-colors py-6"
+      >
+        <div className="bg-white/20 p-2 rounded-full mb-3">
+          <UserCircleIcon className="h-12 w-12 text-white" />
+        </div>
+        <span className="text-lg font-bold text-white tracking-wide">Admin Profile</span>
+      </Link>
       <nav className="flex-1 space-y-1 px-2 py-4">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;

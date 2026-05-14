@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 export default function AdminTemplesPage() {
   interface TempleFormData {
@@ -497,13 +497,15 @@ export default function AdminTemplesPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
                   <td className="px-6 py-4 text-right">
-                    <a
+                     <a
                       href={`/temples/${item.slug || String(item.name || "").toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="mr-3 inline-flex rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                      className="mr-3 text-[#5657e8] hover:text-[#4647c4]"
+                      aria-label="View temple"
+                      title="View temple"
                     >
-                      View
+                      <EyeIcon className="w-5 h-5 inline" />
                     </a>
                     <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
                     <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>

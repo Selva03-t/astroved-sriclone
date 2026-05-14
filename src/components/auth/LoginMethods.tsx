@@ -244,7 +244,7 @@ export default function LoginMethods() {
               onChange={setPassword}
               placeholder="Enter your password"
               autoComplete="current-password"
-              inputClassName="box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-0 pl-4 pr-12 text-base leading-normal text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff]"
+              inputClassName="box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-0 pl-4 pr-12 text-base leading-normal text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff] [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
             />
           </>
         ) : (

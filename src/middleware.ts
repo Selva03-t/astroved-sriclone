@@ -16,11 +16,17 @@ function isUserProtectedPath(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes, but allow /admin/login
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  // Protect /admin and /api/admin routes, but allow login endpoints
+  const isAdminPath = pathname.startsWith('/admin') && pathname !== '/admin/login';
+  const isAdminApi = pathname.startsWith('/api/admin') && pathname !== '/api/admin/login';
+
+  if (isAdminPath || isAdminApi) {
     const token = request.cookies.get('adminToken')?.value;
 
     if (!token) {
+      if (isAdminApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
@@ -28,6 +34,9 @@ export async function middleware(request: NextRequest) {
       await jwtVerify(token, JWT_SECRET);
       return NextResponse.next();
     } catch (error) {
+      if (isAdminApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
@@ -61,5 +70,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/booking/:path*', '/bookings/:path*', '/payment/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/booking/:path*', '/bookings/:path*', '/payment/:path*'],
 };

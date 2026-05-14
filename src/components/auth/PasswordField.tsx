@@ -27,7 +27,7 @@ export default function PasswordField({
   autoComplete = "current-password",
   className = "",
   labelClassName = "block text-sm font-medium text-[#5a3b8a]",
-  inputClassName = "box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-0 pl-4 pr-12 text-base leading-normal text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff]",
+  inputClassName = "box-border h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-0 pl-4 pr-12 text-base leading-normal text-[#342151] outline-none placeholder:text-[#a288cf] transition-all focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden",
   toggleButtonClassName = "absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-[#6e52a0] transition-colors hover:bg-[#f3ecff] hover:text-[#4e2b86]",
   fieldWrapperClassName = "relative mt-2",
 }: Props) {

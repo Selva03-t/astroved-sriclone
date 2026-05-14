@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 /** Puja card date stored as DD-MM-YYYY; native date input uses YYYY-MM-DD */
 function ddmmyyyyToIso(value: string): string {
@@ -720,9 +720,11 @@ export default function ContentManager({
                               href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                              className="text-[#5657e8] hover:text-[#4647c4]"
+                              aria-label="View puja"
+                              title="View puja"
                             >
-                              View
+                              <EyeIcon className="h-5 w-5" />
                             </a>
                           </>
                         )}
@@ -732,9 +734,11 @@ export default function ContentManager({
                             href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="rounded-md border border-[#d8ceff] px-2 py-1 text-xs text-[#5657e8] hover:bg-[#f3f0ff]"
+                            className="text-[#5657e8] hover:text-[#4647c4]"
+                            aria-label="View chadhava"
+                            title="View chadhava"
                           >
-                            View
+                            <EyeIcon className="h-5 w-5" />
                           </a>
                         )}
                         <button
