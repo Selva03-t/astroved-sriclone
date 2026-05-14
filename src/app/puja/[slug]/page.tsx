@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -102,6 +102,7 @@ type Puja = {
   packages: PujaPackage[];
   offerings: PujaOffering[];
   gallery?: string[];
+  sectionOrder?: string[];
 };
 
 type Countdown = {
@@ -169,6 +170,10 @@ export default function PujaDetailPage() {
   const [countdown, setCountdown] = useState<Countdown>(defaultCountdown);
   const [activeTab, setActiveTab] = useState("about");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [dbReviews, setDbReviews] = useState<any[]>([]);
+  const [reviewsShown, setReviewsShown] = useState(3);
+  const [activeCarouselDot, setActiveCarouselDot] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const hasGallery = puja?.gallery && puja.gallery.length > 0;
   const images = hasGallery ? [puja.imageUrl, ...puja.gallery!] : [puja?.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"];
@@ -187,6 +192,43 @@ export default function PujaDetailPage() {
     );
   };
 
+  const SCROLL_CARD_WIDTH = 336;
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = SCROLL_CARD_WIDTH;
+      const maxDotIndex = 3;
+      setActiveCarouselDot((prev) => {
+        if (direction === 'left') {
+          return Math.max(prev - 1, 0);
+        }
+        return Math.min(prev + 1, maxDotIndex);
+      });
+
+      if (direction === 'left') {
+        carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
+
+  // Handle carousel scroll to update active dot
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleCarouselScroll = () => {
+      const scrollLeft = carousel.scrollLeft;
+      const activeIndex = Math.round(scrollLeft / SCROLL_CARD_WIDTH);
+      setActiveCarouselDot(Math.max(0, Math.min(activeIndex, 3)));
+    };
+
+    carousel.addEventListener('scroll', handleCarouselScroll);
+    handleCarouselScroll();
+    return () => carousel.removeEventListener('scroll', handleCarouselScroll);
+  }, []);
+
   const extrasTotal = (puja?.offerings || [])
     .filter(o => selectedExtraIds.includes(o.id))
     .reduce((sum, o) => sum + o.price, 0);
@@ -195,15 +237,20 @@ export default function PujaDetailPage() {
   const highPrice = selectedPackage ? Math.round(selectedPackage.price * 1.2) : null;
   const totalAmount = (selectedPackage?.price || 0) + extrasTotal;
 
-  const sectionTabs = [
-    { id: "about", label: "About Puja" },
-    { id: "benefits", label: "Benefits" },
-    { id: "process", label: "Process" },
-    { id: "temple", label: "Temple Details" },
-    { id: "packages", label: "Packages" },
-    { id: "reviews", label: "Reviews" },
-    { id: "faqs", label: "FAQs" },
-  ];
+  const defaultSectionOrder = ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"];
+  const currentSectionOrder = puja?.sectionOrder && puja.sectionOrder.length > 0 ? puja.sectionOrder : defaultSectionOrder;
+
+  const allSectionTabs: Record<string, { id: string; label: string }> = {
+    about: { id: "about", label: "About Puja" },
+    benefits: { id: "benefits", label: "Benefits" },
+    process: { id: "process", label: "Process" },
+    temple: { id: "temple", label: "Temple Details" },
+    packages: { id: "packages", label: "Packages" },
+    reviews: { id: "reviews", label: "Reviews" },
+    faqs: { id: "faqs", label: "FAQs" },
+  };
+
+  const sectionTabs = currentSectionOrder.map(id => allSectionTabs[id]).filter(Boolean);
 
   const reviews = [
     {
@@ -301,6 +348,14 @@ export default function PujaDetailPage() {
 
     return () => clearInterval(timer);
   }, [puja]);
+
+  // Fetch approved reviews from DB
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setDbReviews(data); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -528,224 +583,350 @@ export default function PujaDetailPage() {
 
             {/* -- Flat Content Sections -- */}
             <div className="mx-auto max-w-6xl px-4 md:px-6 pt-10">
-
-              {/* -- About Puja -- */}
-              <section id="about" className="border-b border-gray-100 pb-10">
-                <h2 className="flex items-start gap-3 text-[24px] font-bold text-[#1f1f1f] leading-snug">
-                  <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#F47820]" />
-                  <span>{puja.details?.heroTitle || "Are enemies repeatedly troubling you or is your court case stuck? Through the special grace of Maa Bagalamukhi, perform the sacred Havan to remove obstacles and open the path to victory."}</span>
-                </h2>
-                <div className="mt-6 space-y-6 text-[16px] leading-[1.9] text-gray-700">
-                  <p>{puja.details.about || "In Sanatan Dharma, this puja is regarded as a divine power who can pacify negative energies and help control the influence of enemies. She holds a special place and is especially worshipped during times of conflict."}</p>
-                  
-                  <div className="space-y-2">
-                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><BuildingLibraryIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of Temple</p>
-                    <p>Located in this sacred land, it is considered highly powerful and spiritually significant for worship. Situated along the holy river, it has long been a center of deep spiritual practices.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><FireIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of this Havan</p>
-                    <p>The main highlight of this puja is the special havan performed. In Sanatan tradition, this symbolizes the destruction of negative energies and harmful forces. When offerings are made into the sacred fire, it represents the burning away of obstacles.</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* -- Benefits -- */}
-              <section id="benefits" className="border-b border-gray-100 py-10">
-                <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
-                <div className="mt-8 grid gap-8 md:grid-cols-3">
-                  {puja.details.benefits.map((b, idx) => (
-                    <div key={`benefit-${idx}`} className="flex gap-4">
-                      <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#F47820] text-xl">
-                        {(() => {
-                          const BenefitIcon = BENEFIT_ICONS[idx % BENEFIT_ICONS.length];
-                          return <BenefitIcon className="h-5 w-5" />;
-                        })()}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[#1f1f1f] text-[17px]">{b.title}</h3>
-                        <p className="mt-2 text-[15px] leading-[1.8] text-gray-600 line-clamp-3">{b.description}</p>
-                        <button type="button" className="mt-2 text-[14px] font-semibold text-[#F47820] hover:text-[#5b21b6]">Read more</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* -- Process -- */}
-              <section id="process" className="border-b border-gray-100 py-10">
-                <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
-                <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                  {puja.details.process.map((step, idx) => (
-                    <div key={`process-${idx}`} className="flex gap-4">
-                      <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#F47820] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
-                      <div>
-                        <h3 className="font-bold text-[#1f1f1f] text-[16px]">{step.title}</h3>
-                        <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{step.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* -- Temple Details -- */}
-              <section id="temple" className="border-b border-gray-100 py-10">
-                <h2 className="text-[24px] font-bold text-gray-900">{puja.details.templeName}, {puja.details.templeLocation}</h2>
-                <div className="mt-6 grid gap-8 md:grid-cols-[1fr_1.5fr]">
-                  <img src={puja.imageUrl} alt={puja.details.templeName} className="h-64 w-full rounded-2xl object-cover shadow-sm" />
-                  <div className="space-y-4 text-[16px] leading-[1.9] text-gray-700 text-justify">
-                    <p>{puja.details.templeNote || "This temple is known for powerful prosperity rituals and ancient worship traditions."}</p>
-                    <p>{puja.details.about}</p>
-                    <p>Devotees believe prayers offered here remove obstacles, invite abundance, and support career, finance, and family harmony.</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* -- All Packages Includes -- */}
-              <section className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">All Puja Packages includes</h2>
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  {puja.details.inclusions.map((item, idx) => (
-                    <div key={`incl-${idx}`} className="flex items-start gap-3">
-                      <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6869F9]/20">
-                        <CheckIcon className="h-3 w-3 text-[#6869F9]" />
-                      </div>
-                      <p className="text-sm leading-6 text-gray-700 font-medium">{item}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 flex items-start gap-3 rounded-xl bg-[#f5f3ff] border border-[#ddd6fe] p-4 text-[#5b21b6]">
-                  <GiftIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#6869F9]" />
-                  <p className="text-sm font-semibold leading-6">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
-                </div>
-              </section>
-
-              {/* -- Package Selection -- */}
-              <section id="packages" className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">Select your puja package</h2>
-                <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                  {puja.packages.map((pkg, idx) => {
-                    const isSelected = selectedPackage?.id === pkg.id;
-                    const isRecommended = idx === 2;
-                    return (
-                      <button
-                        key={`pkg-${pkg.id}-${idx}`}
-                        type="button"
-                        onClick={() => setSelectedPackageId(pkg.id)}
-                        className={`relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300 ${
-                          isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
-                        }`}
-                      >
-                        {isRecommended && (
-                          <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white">Recommended</div>
-                        )}
-                        <div className="flex flex-1 flex-col p-5">
-                          {/* Person badge + radio */}
-                          <div className="flex items-center justify-between">
-                            <span className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-bold ${PERSON_COLORS[idx] ?? PERSON_COLORS[0]}`}>
-                              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
-                                <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z" />
-                              </svg>
-                              {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
-                            </span>
-                            <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
-                              isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
-                            }`}>
-                              {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
-                            </div>
-                          </div>
-                          {/* Name + image row */}
-                          <div className="mt-4 flex items-end justify-between gap-3">
-                            <div className="flex-1">
-                              <h4 className="font-bold text-gray-900 leading-snug">{PKG_NAMES[idx] || pkg.name}</h4>
-                              <div className="mt-3">
-                                <p className="text-xl font-black text-[#6869F9]">Rs. {pkg.price}</p>
-                                <p className="text-xs font-bold text-gray-400 line-through">Rs. {Math.round(pkg.price * 1.2)}</p>
-                              </div>
-                            </div>
-                            <img
-                              src={puja.imageUrl}
-                              alt={pkg.name}
-                              className="h-20 w-20 shrink-0 rounded-xl object-cover object-top shadow-sm"
-                            />
-                          </div>
+              {currentSectionOrder.map((sectionId) => {
+                if (sectionId === "about") {
+                  return (
+                    <section id="about" key="about" className="border-b border-gray-100 pb-10">
+                      <h2 className="flex items-start gap-3 text-[24px] font-bold text-[#1f1f1f] leading-snug">
+                        <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#F47820]" />
+                        <span>{puja.details?.heroTitle || "Are enemies repeatedly troubling you or is your court case stuck? Through the special grace of Maa Bagalamukhi, perform the sacred Havan to remove obstacles and open the path to victory."}</span>
+                      </h2>
+                      <div className="mt-6 space-y-6 text-[16px] leading-[1.9] text-gray-700">
+                        <p>{puja.details.about || "In Sanatan Dharma, this puja is regarded as a divine power who can pacify negative energies and help control the influence of enemies. She holds a special place and is especially worshipped during times of conflict."}</p>
+                        
+                        <div className="space-y-2">
+                          <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><BuildingLibraryIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of Temple</p>
+                          <p>Located in this sacred land, it is considered highly powerful and spiritually significant for worship. Situated along the holy river, it has long been a center of deep spiritual practices.</p>
                         </div>
-                        {isSelected && (
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6869F9] rotate-45 z-10"></div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
 
-                {/* Expanded Description Section for Selected Package */}
-                {selectedPackage && (
-                  <div className="mt-6 rounded-xl border border-[#ddd6fe] bg-[#f5f3ff] p-5">
-                    <h4 className="text-sm font-bold text-[#5b21b6]">{PKG_NAMES[puja.packages.findIndex(p => p.id === selectedPackage.id)] || selectedPackage.name}</h4>
-                    <div className="mt-3 space-y-2">
-                      <div className="flex items-start gap-2">
-                        <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#5b21b6]" />
-                        <p className="text-xs leading-5 text-gray-600">Our temple Pandit Ji recommends this package as the sacred puja invokes powerful blessings, protecting the entire family from fear, negativity, and unseen obstacles while strengthening courage and devotion.</p>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#5b21b6]" />
-                        <p className="text-xs leading-5 text-gray-600">With dedicated mantra chanting and sacred offerings, this ritual helps remove life challenges, enhance inner strength, and bless the household with stability, confidence, and peace.</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </section>
-
-              {/* -- Reviews -- */}
-              <section id="reviews" className="border-b border-gray-100 py-10">
-                <h2 className="text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
-                <p className="mt-1.5 text-sm text-gray-500">Read what our devotees have to say about AstroVed.</p>
-                <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  {reviews.map((review) => (
-                    <div key={review.name} className="rounded-xl border border-gray-100 p-5 shadow-sm bg-white hover:shadow-md transition-shadow">
-                      <p className="text-sm leading-6 text-gray-600 italic">"{review.text}"</p>
-                      <p className="mt-4 text-sm font-bold text-gray-900">{review.name}</p>
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{review.place}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-10 divide-y divide-gray-100">
-                  {userReviews.map((review) => (
-                    <div key={review.name} className="py-6">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f7ff] text-sm font-bold text-[#6869F9] border border-[#6869F9]/20 shadow-sm">{review.name[0]}</div>
-                        <div>
-                          <p className="text-sm font-bold text-gray-900">{review.name}</p>
-                          <p className="text-[11px] font-semibold text-gray-400">{review.date}</p>
+                        <div className="space-y-2">
+                          <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><FireIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of this Havan</p>
+                          <p>The main highlight of this puja is the special havan performed. In Sanatan tradition, this symbolizes the destruction of negative energies and harmful forces. When offerings are made into the sacred fire, it represents the burning away of obstacles.</p>
                         </div>
                       </div>
-                      <div className="mt-2 flex items-center gap-0.5 text-amber-400">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <StarIcon key={star} className="h-4 w-4" />
+                    </section>
+                  );
+                }
+
+                if (sectionId === "benefits") {
+                  return (
+                    <section id="benefits" key="benefits" className="border-b border-gray-100 py-10">
+                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
+                      <div className="mt-8 grid gap-8 md:grid-cols-3">
+                        {puja.details.benefits.map((b, idx) => (
+                          <div key={`benefit-${idx}`} className="flex gap-4">
+                            <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#F47820] text-xl">
+                              {(() => {
+                                const BenefitIcon = BENEFIT_ICONS[idx % BENEFIT_ICONS.length];
+                                return <BenefitIcon className="h-5 w-5" />;
+                              })()}
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-[#1f1f1f] text-[17px]">{b.title}</h3>
+                              <p className="mt-2 text-[15px] leading-[1.8] text-gray-600 line-clamp-3">{b.description}</p>
+                              <button type="button" className="mt-2 text-[14px] font-semibold text-[#F47820] hover:text-[#5b21b6]">Read more</button>
+                            </div>
+                          </div>
                         ))}
                       </div>
-                      <p className="mt-2 text-sm leading-6 text-gray-600">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+                    </section>
+                  );
+                }
 
-              {/* -- FAQs -- */}
-              <section id="faqs" className="py-10">
-                <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
-                <div className="mt-6 divide-y divide-gray-100">
-                  {puja.details.faq.map((item, idx) => (
-                    <details key={`faq-${idx}`} className="group py-5">
-                      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
-                        {item.question}
-                        <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#6869F9] group-open:border-[#6869F9]/20 transition-colors">+</span>
-                      </summary>
-                      <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
-                    </details>
-                  ))}
-                </div>
-              </section>
+                if (sectionId === "process") {
+                  return (
+                    <section id="process" key="process" className="border-b border-gray-100 py-10">
+                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
+                      <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                        {puja.details.process.map((step, idx) => (
+                          <div key={`process-${idx}`} className="flex gap-4">
+                            <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#F47820] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
+                            <div>
+                              <h3 className="font-bold text-[#1f1f1f] text-[16px]">{step.title}</h3>
+                              <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{step.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                }
 
+                if (sectionId === "temple") {
+                  return (
+                    <section id="temple" key="temple" className="border-b border-gray-100 py-10">
+                      <h2 className="text-[24px] font-bold text-gray-900">{puja.details.templeName}, {puja.details.templeLocation}</h2>
+                      <div className="mt-6 grid gap-8 md:grid-cols-[1fr_1.5fr]">
+                        <img src={puja.imageUrl} alt={puja.details.templeName} className="h-64 w-full rounded-2xl object-cover shadow-sm" />
+                        <div className="space-y-4 text-[16px] leading-[1.9] text-gray-700 text-justify">
+                          <p>{puja.details.templeNote || "This temple is known for powerful prosperity rituals and ancient worship traditions."}</p>
+                          <p>{puja.details.about}</p>
+                          <p>Devotees believe prayers offered here remove obstacles, invite abundance, and support career, finance, and family harmony.</p>
+                        </div>
+                      </div>
+                    </section>
+                  );
+                }
+
+                if (sectionId === "packages") {
+                  return (
+                    <React.Fragment key="packages">
+                      {/* -- All Packages Includes -- */}
+                      <section className="border-b border-gray-100 py-10">
+                        <h2 className="text-2xl font-bold text-gray-900">All Puja Packages includes</h2>
+                        <div className="mt-6 grid gap-4 md:grid-cols-2">
+                          {puja.details.inclusions.map((item, idx) => (
+                            <div key={`incl-${idx}`} className="flex items-start gap-3">
+                              <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6869F9]/20">
+                                <CheckIcon className="h-3 w-3 text-[#6869F9]" />
+                              </div>
+                              <p className="text-sm leading-6 text-gray-700 font-medium">{item}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-6 flex items-start gap-3 rounded-xl bg-[#f5f3ff] border border-[#ddd6fe] p-4 text-[#5b21b6]">
+                          <GiftIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#6869F9]" />
+                          <p className="text-sm font-semibold leading-6">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
+                        </div>
+                      </section>
+
+                      {/* -- Package Selection -- */}
+                      <section id="packages" className="border-b border-gray-100 py-10">
+                        <h2 className="text-2xl font-bold text-gray-900">Select your puja package</h2>
+                        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                          {puja.packages.map((pkg, idx) => {
+                            const isSelected = selectedPackage?.id === pkg.id;
+                            const isRecommended = idx === 2;
+                            return (
+                              <button
+                                key={`pkg-${pkg.id}-${idx}`}
+                                type="button"
+                                onClick={() => setSelectedPackageId(pkg.id)}
+                                className={`relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300 ${
+                                  isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
+                                }`}
+                              >
+                                {isRecommended && (
+                                  <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white">Recommended</div>
+                                )}
+                                <div className="flex flex-1 flex-col p-5">
+                                  {/* Person badge + radio */}
+                                  <div className="flex items-center justify-between">
+                                    <span className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-bold ${PERSON_COLORS[idx] ?? PERSON_COLORS[0]}`}>
+                                      <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
+                                        <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z" />
+                                      </svg>
+                                      {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
+                                    </span>
+                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
+                                      isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
+                                    }`}>
+                                      {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
+                                    </div>
+                                  </div>
+                                  {/* Name + image row */}
+                                  <div className="mt-4 flex items-end justify-between gap-3">
+                                    <div className="flex-1">
+                                      <h4 className="font-bold text-gray-900 leading-snug">{PKG_NAMES[idx] || pkg.name}</h4>
+                                      <div className="mt-3">
+                                        <p className="text-xl font-black text-[#6869F9]">Rs. {pkg.price}</p>
+                                        <p className="text-xs font-bold text-gray-400 line-through">Rs. {Math.round(pkg.price * 1.2)}</p>
+                                      </div>
+                                    </div>
+                                    <img
+                                      src={puja.imageUrl}
+                                      alt={pkg.name}
+                                      className="h-20 w-20 shrink-0 rounded-xl object-cover object-top shadow-sm"
+                                    />
+                                  </div>
+                                </div>
+                                {isSelected && (
+                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6869F9] rotate-45 z-10"></div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Expanded Description Section for Selected Package */}
+                        {selectedPackage && (
+                          <div className="mt-6 rounded-xl border border-[#ddd6fe] bg-[#f5f3ff] p-5">
+                            <h4 className="text-sm font-bold text-[#5b21b6]">{PKG_NAMES[puja.packages.findIndex(p => p.id === selectedPackage.id)] || selectedPackage.name}</h4>
+                            <div className="mt-3 space-y-2">
+                              <div className="flex items-start gap-2">
+                                <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#5b21b6]" />
+                                <p className="text-xs leading-5 text-gray-600">Our temple Pandit Ji recommends this package as the sacred puja invokes powerful blessings, protecting the entire family from fear, negativity, and unseen obstacles while strengthening courage and devotion.</p>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#5b21b6]" />
+                                <p className="text-xs leading-5 text-gray-600">With dedicated mantra chanting and sacred offerings, this ritual helps remove life challenges, enhance inner strength, and bless the household with stability, confidence, and peace.</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </section>
+                    </React.Fragment>
+                  );
+                }
+
+                if (sectionId === "reviews") {
+                  const REVIEWS_PAGE_SIZE = 3;
+                  const videoReviews = dbReviews.filter(r => r.type === "video" || r.videoUrl);
+                  const textCarouselReviews = dbReviews.filter(r => !r.videoUrl);
+                  const carouselReviews = [...videoReviews, ...textCarouselReviews];
+                  const userReviewsList = dbReviews.slice(0, reviewsShown);
+
+                  return (
+                    <section id="reviews" key="reviews" className="border-b border-gray-100 py-10">
+                      {/* Header */}
+                      <h2 className="text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
+                      <p className="mt-1 text-sm text-gray-500">Read to what our beloved devotees have to say about AstroVed.</p>
+
+                      {dbReviews.length === 0 ? (
+                        <p className="mt-8 text-sm text-gray-400 italic">No reviews yet.</p>
+                      ) : (
+                        <>
+                          {/* ── Carousel ── */}
+                          {carouselReviews.length > 0 && (
+                            <div className="mt-6 relative">
+                              <div ref={carouselRef} className="flex gap-4 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
+                                {carouselReviews.map((review, idx) => (
+                                  <div key={review._id || idx} className="snap-center shrink-0 w-[320px]">
+                                    {review.videoUrl ? (
+                                      <div className="w-full h-[220px] rounded-xl overflow-hidden bg-black shadow-sm">
+                                        <video src={review.videoUrl} controls className="w-full h-full object-cover" />
+                                      </div>
+                                    ) : (
+                                      <div className="w-full h-[220px] rounded-xl bg-white border border-gray-200 shadow-sm p-5 flex items-center overflow-hidden">
+                                        <p className="text-[14px] text-gray-700 italic leading-relaxed line-clamp-6">
+                                          {review.content}
+                                        </p>
+                                      </div>
+                                    )}
+                                    {/* avatar + name + location */}
+                                    <div className="mt-4 flex items-center gap-3 px-1">
+                                      {review.avatarUrl ? (
+                                        <img src={review.avatarUrl} className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0" alt={review.name} />
+                                      ) : (
+                                        <div className="h-10 w-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
+                                          {review.name?.[0] ?? "?"}
+                                        </div>
+                                      )}
+                                      <div className="min-w-0">
+                                        <p className="text-[13px] font-bold text-gray-800 truncate">{review.name}</p>
+                                        {review.productItem && (
+                                          <p className="text-[12px] text-gray-400 truncate">{review.productItem}</p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Dots */}
+                              <div className="mt-6 flex justify-center items-center gap-6">
+                                <button onClick={() => scrollCarousel('left')} className="h-10 w-10 rounded-full bg-[#6869F9] text-white flex items-center justify-center hover:bg-[#5657e8] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
+                                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 rotate-180"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
+                                </button>
+                                <div className="flex gap-2">
+                                  {carouselReviews.slice(0, Math.min(carouselReviews.length, 4)).map((_, i) => (
+                                    <div key={i} className={`rounded-full transition-all ${i === activeCarouselDot ? "w-4 h-2.5 bg-[#6869F9]" : "w-2.5 h-2.5 bg-gray-300"}`} />
+                                  ))}
+                                </div>
+                                <button onClick={() => scrollCarousel('right')} className="h-10 w-10 rounded-full bg-[#6869F9] text-white flex items-center justify-center hover:bg-[#5657e8] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
+                                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* ── User Reviews ── */}
+                          <div className="mt-10">
+                            <h3 className="text-xl font-bold text-gray-900">User Reviews</h3>
+                            <p className="mt-1 text-sm text-gray-500">Reviews from our devotees who booked Puja with us</p>
+
+                            <div className="mt-6 space-y-4">
+                              {userReviewsList.map((review, idx) => (
+                                <div key={review._id || idx} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                  {/* Avatar + Name + Date */}
+                                  <div className="flex items-center gap-4">
+                                    {review.avatarUrl ? (
+                                      <img src={review.avatarUrl} className="h-12 w-12 rounded-full object-cover border border-gray-200 shrink-0" alt={review.name} />
+                                    ) : (
+                                      <div className="h-12 w-12 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-bold text-gray-500 shrink-0">
+                                        {review.name?.[0] ?? "?"}
+                                      </div>
+                                    )}
+                                    <div className="flex-1">
+                                      <p className="text-base font-bold text-gray-900">{review.name}</p>
+                                      {review.createdAt && (
+                                        <p className="text-[12px] text-gray-400 mt-0.5">
+                                          {new Date(review.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* Stars */}
+                                  {review.rating && (
+                                    <div className="mt-3 flex items-center gap-0.5">
+                                      {[1,2,3,4,5].map(star => (
+                                        <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#F47820]" : "text-gray-200"}`} fill="currentColor">
+                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                      ))}
+                                    </div>
+                                  )}
+
+                                  {/* Content */}
+                                  {review.videoUrl ? (
+                                    <video src={review.videoUrl} controls className="mt-4 w-full max-w-sm rounded-xl" />
+                                  ) : (
+                                    <p className="mt-3 text-base leading-7 text-gray-700">{review.content}</p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* View More */}
+                            {reviewsShown < dbReviews.length && (
+                              <div className="mt-6 flex justify-center">
+                                <button
+                                  onClick={() => setReviewsShown(prev => prev + REVIEWS_PAGE_SIZE)}
+                                  className="border border-gray-300 text-gray-700 px-20 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-colors rounded"
+                                >
+                                  View More
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </section>
+                  );
+                }
+
+                if (sectionId === "faqs") {
+                  return (
+                    <section id="faqs" key="faqs" className="py-10">
+                      <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
+                      <div className="mt-6 divide-y divide-gray-100">
+                        {puja.details.faq.map((item, idx) => (
+                          <details key={`faq-${idx}`} className="group py-5">
+                            <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
+                              {item.question}
+                              <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#6869F9] group-open:border-[#6869F9]/20 transition-colors">+</span>
+                            </summary>
+                            <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
+                          </details>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                }
+
+                return null;
+              })}
             </div>
           </>
         )}
