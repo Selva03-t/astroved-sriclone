@@ -16,10 +16,46 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Email and password are required" }, { status: 400 });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // 1. Check if it's admin credentials
+    const adminEmailEnv = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
+    const adminPasswordEnv = process.env.ADMIN_PASSWORD || '';
+    
+    let isAdminMatch = false;
     const client = await clientPromise;
     const db = client.db();
+
+    const adminDoc = await db.collection("admins").findOne({});
+
+    if (normalizedEmail === adminEmailEnv && password === adminPasswordEnv) {
+      isAdminMatch = true;
+    } else if (adminDoc && adminDoc.email === normalizedEmail) {
+      isAdminMatch = await bcrypt.compare(password, adminDoc.password);
+    }
+
+    if (isAdminMatch) {
+      const token = await new SignJWT({ role: 'admin', email: normalizedEmail })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setExpirationTime('24h')
+        .sign(JWT_SECRET);
+
+      const response = NextResponse.json({ success: true, isAdmin: true });
+      
+      response.cookies.set('adminToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24, // 24 hours
+        path: '/',
+      });
+
+      return response;
+    }
+
+    // 2. Normal user login check
     const collection = db.collection("users");
-    const user = await collection.findOne({ email: email.toLowerCase().trim() });
+    const user = await collection.findOne({ email: normalizedEmail });
 
     if (!user?.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
       return NextResponse.json({ success: false, error: "Invalid email or password" }, { status: 401 });

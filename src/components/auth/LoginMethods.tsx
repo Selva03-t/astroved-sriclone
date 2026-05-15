@@ -71,6 +71,7 @@ export default function LoginMethods() {
   const [whatsapp, setWhatsapp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const isValid = useMemo(() => {
     if (method === "email") return emailRegex.test(email);
@@ -117,7 +118,7 @@ export default function LoginMethods() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      // Redirect based on role
+      // Redirect based on data.isAdmin
       if (data.isAdmin) {
          window.location.href = "/admin";
          return;
@@ -203,14 +204,25 @@ export default function LoginMethods() {
         {method === "email" && (
            <label className="block text-sm font-medium text-[#5a3b8a]">
               Password
-              <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#e0dcff]">
+              <div className="relative mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#e0dcff]">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="Enter your password"
-                  className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
+                  className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf] pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 p-1 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                >
+                  {showPassword ? (
+                    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  )}
+                </button>
               </div>
            </label>
         )}
