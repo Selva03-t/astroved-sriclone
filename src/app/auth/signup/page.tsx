@@ -2,11 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import CountryPhoneField from "@/components/auth/CountryPhoneField";
+import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import type { CountryOption } from "@/types/auth";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    phone: "",
+    country: DEFAULT_COUNTRY as CountryOption,
+    isWhatsappNumber: false,
     password: "",
     confirmPassword: "",
   });
@@ -29,11 +36,7 @@ export default function SignupPage() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        }),
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
@@ -61,16 +64,29 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[#5a3b8a]">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your name"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#5a3b8a]">First Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    placeholder="First Name"
+                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#5a3b8a]">Last Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    placeholder="Last Name"
+                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  />
+                </div>
               </div>
 
               <div>
@@ -83,6 +99,27 @@ export default function SignupPage() {
                   placeholder="Enter your email"
                   className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
                 />
+              </div>
+
+              <CountryPhoneField
+                label="Phone Number"
+                value={formData.phone}
+                onChange={(phone) => setFormData({ ...formData, phone })}
+                country={formData.country}
+                onCountryChange={(country) => setFormData({ ...formData, country })}
+              />
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isWhatsappNumber"
+                  checked={formData.isWhatsappNumber}
+                  onChange={(e) => setFormData({ ...formData, isWhatsappNumber: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#6869F9] focus:ring-[#6869F9]"
+                />
+                <label htmlFor="isWhatsappNumber" className="text-sm text-[#5a3b8a] select-none cursor-pointer">
+                  This is my WhatsApp number
+                </label>
               </div>
 
               <div>

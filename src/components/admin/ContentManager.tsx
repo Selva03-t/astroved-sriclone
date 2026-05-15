@@ -411,7 +411,7 @@ export default function ContentManager({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-[#241a46]">{title}</h1>
+        <h1 className="text-2xl font-semibold text-brand-ink">{title}</h1>
         <div className="flex items-center gap-2">
           {isAdding && (
             <button
@@ -468,7 +468,7 @@ export default function ContentManager({
             <div className="mt-4 rounded-md border border-gray-200 bg-gray-50 p-4">
               <div className="flex flex-wrap items-end gap-3">
                 {effectiveFilterGroups.map((group) => (
-                  <label key={group.label} className="min-w-[10rem] flex-1 text-sm text-gray-700 sm:max-w-[14rem]">
+                  <label key={group.label} className="min-w-40 flex-1 text-sm text-gray-700 sm:max-w-56">
                     <span className="mb-1 block font-medium">{group.label}</span>
                     <select
                       value={activeFilters[group.label] ?? "All"}
@@ -506,7 +506,7 @@ export default function ContentManager({
 
       {isAdding && (
         <div className="rounded-lg border border-[#e8e2ff] bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-medium text-[#241a46]">
+          <h2 className="mb-4 text-lg font-medium text-brand-ink">
             {editingId ? `Edit ${title.slice(0, -1)}` : `Add New ${title.slice(0, -1)}`}
           </h2>
           <form id="content-manager-form" onSubmit={handleSubmit} className="space-y-4">
@@ -636,7 +636,7 @@ export default function ContentManager({
                                     type={sub.type}
                                     value={val[sub.name] || ""}
                                     onChange={(e) => handleArrayChange(field.name, idx, e.target.value, sub.name)}
-                                    placeholder={sub.placeholder}
+                                    placeholder={sub.placeholder || (sub.name.toLowerCase().includes("price") ? "$ Price" : undefined)}
                                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
                                   />
                                 )}
@@ -667,7 +667,7 @@ export default function ContentManager({
                         id={field.name}
                         name={field.name}
                         required={field.required}
-                        placeholder={field.placeholder}
+                        placeholder={field.placeholder || (field.name.toLowerCase().includes("price") ? "$ Price" : undefined)}
                         value={formData[field.name] || ""}
                         onChange={handleInputChange}
                         list={field.options ? `${field.name}-options` : undefined}
@@ -706,7 +706,7 @@ export default function ContentManager({
                 {reviewMode ? (
                   <>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">User Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Product / Puja</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Service</th>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Rating</th>
                   </>
                 ) : (
@@ -731,11 +731,10 @@ export default function ContentManager({
                       <>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           <div className="flex items-center gap-2">
-                            {item.avatarUrl && <img src={item.avatarUrl} className="h-7 w-7 rounded-full object-cover" alt="" />}
                             <span className="font-medium">{item.name}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700 max-w-[180px] truncate">{item.productItem || item.pujaName || item.type || "—"}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 max-w-[180px] truncate">{item.service || item.type || "—"}</td>
                         <td className="px-6 py-4 text-sm text-gray-700">{item.rating ? `${'★'.repeat(Number(item.rating))} (${item.rating})` : "—"}</td>
                       </>
                     ) : (
@@ -877,10 +876,9 @@ export default function ContentManager({
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                {viewingReview.avatarUrl && <img src={viewingReview.avatarUrl} className="h-12 w-12 rounded-full object-cover" alt="" />}
                 <div>
                   <p className="font-bold text-gray-900">{viewingReview.name}</p>
-                  <p className="text-xs text-gray-500">{viewingReview.productItem || viewingReview.pujaName || viewingReview.type || ""}</p>
+                  <p className="text-xs text-gray-500">{viewingReview.service || viewingReview.pujaName || viewingReview.type || ""}</p>
                 </div>
               </div>
               <button onClick={() => setViewingReview(null)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">×</button>

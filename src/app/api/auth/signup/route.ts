@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
-import type { SignupPayload } from "@/types/auth";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^[0-9]{6,15}$/;
@@ -9,10 +8,13 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 export async function POST(request: Request) {
   try {
-    const { name, email, phone, whatsapp, country, password, confirmPassword } = (await request.json()) as SignupPayload;
+    const body = await request.json();
+    const { firstName, lastName, email, phone, country, isWhatsappNumber, password, confirmPassword } = body;
 
-    if (!name?.trim()) {
-      return NextResponse.json({ success: false, error: "Full name is required" }, { status: 400 });
+    const name = `${firstName || ""} ${lastName || ""}`.trim();
+
+    if (!firstName?.trim()) {
+      return NextResponse.json({ success: false, error: "First name is required" }, { status: 400 });
     }
 
     if (!emailRegex.test(String(email ?? "").toLowerCase().trim())) {
@@ -27,12 +29,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Enter a valid mobile number" }, { status: 400 });
     }
 
-    const whatsappDigits = String(whatsapp ?? "").replace(/[^0-9]/g, "");
-    const effectiveWhatsapp = whatsappDigits.length > 0 ? whatsappDigits : phone;
-    if (!phoneRegex.test(effectiveWhatsapp)) {
-      return NextResponse.json({ success: false, error: "Enter a valid WhatsApp number" }, { status: 400 });
-    }
-
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
         { success: false, error: "Password must be at least 8 characters and include a letter and a number" },
@@ -40,8 +36,36 @@ export async function POST(request: Request) {
       );
     }
 
-    if (password !== confirmPassword) {
-      return NextResponse.json({ success: false, error: "Passwords do not match" }, { status: 400 });
+    // Call external Registration API
+    const formattedPhone = `${country.dialCode}|${phone}`;
+    const apiUrl = process.env.REGISTRATION_API_URL || "";
+    
+    if (apiUrl) {
+      try {
+        const externalRes = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            FirstName: firstName,
+            LastName: lastName,
+            UserName: email,
+            Password: password,
+            PhoneNumber: formattedPhone,
+            ShopName: "AstroVed",
+            Currency: "INR",
+            IsWhatsappNumber: Boolean(isWhatsappNumber)
+          })
+        });
+        
+        const externalData = await externalRes.json();
+        
+        if (externalData.ErrorMessage) {
+          return NextResponse.json({ success: false, error: externalData.ErrorMessage }, { status: 400 });
+        }
+      } catch (err) {
+        console.error("External API Registration Error:", err);
+        // Depending on requirements, we might want to return an error here, but for now we proceed if the external call fails
+      }
     }
 
     const client = await clientPromise;
@@ -53,7 +77,6 @@ export async function POST(request: Request) {
       $or: [
         { email: normalizedEmail },
         { phone, "country.dialCode": country.dialCode },
-        { whatsapp: effectiveWhatsapp, "country.dialCode": country.dialCode },
       ],
     });
 
@@ -66,10 +89,12 @@ export async function POST(request: Request) {
 
     const passwordHash = await bcrypt.hash(password, 12);
     const result = await collection.insertOne({
-      name: name.trim(),
+      name,
+      firstName,
+      lastName,
       email: normalizedEmail,
       phone,
-      whatsapp: effectiveWhatsapp,
+      whatsapp: isWhatsappNumber ? phone : "",
       country,
       passwordHash,
       createdAt: new Date(),
@@ -81,7 +106,8 @@ export async function POST(request: Request) {
       message: "Account created successfully",
       data: { userId: result.insertedId.toString() },
     });
-  } catch {
+  } catch (error) {
+    console.error("Signup error:", error);
     return NextResponse.json({ success: false, error: "Unable to create account" }, { status: 500 });
   }
 }

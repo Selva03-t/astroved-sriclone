@@ -803,19 +803,12 @@ export default function PujaDetailPage() {
                                         </p>
                                       </div>
                                     )}
-                                    {/* avatar + name + location */}
+                                    {/* name + service */}
                                     <div className="mt-4 flex items-center gap-3 px-1">
-                                      {review.avatarUrl ? (
-                                        <img src={review.avatarUrl} className="h-10 w-10 rounded-full object-cover border border-gray-200 shrink-0" alt={review.name} />
-                                      ) : (
-                                        <div className="h-10 w-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
-                                          {review.name?.[0] ?? "?"}
-                                        </div>
-                                      )}
                                       <div className="min-w-0">
                                         <p className="text-[13px] font-bold text-gray-800 truncate">{review.name}</p>
-                                        {review.productItem && (
-                                          <p className="text-[12px] text-gray-400 truncate">{review.productItem}</p>
+                                        {review.service && (
+                                          <p className="text-[12px] text-gray-400 truncate">{review.service}</p>
                                         )}
                                       </div>
                                     </div>
@@ -848,21 +841,17 @@ export default function PujaDetailPage() {
                             <div className="mt-6 space-y-4">
                               {userReviewsList.map((review, idx) => (
                                 <div key={review._id || idx} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                                  {/* Avatar + Name + Date */}
+                                  {/* Name + Date */}
                                   <div className="flex items-center gap-4">
-                                    {review.avatarUrl ? (
-                                      <img src={review.avatarUrl} className="h-12 w-12 rounded-full object-cover border border-gray-200 shrink-0" alt={review.name} />
-                                    ) : (
-                                      <div className="h-12 w-12 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-bold text-gray-500 shrink-0">
-                                        {review.name?.[0] ?? "?"}
-                                      </div>
-                                    )}
                                     <div className="flex-1">
                                       <p className="text-base font-bold text-gray-900">{review.name}</p>
                                       {review.createdAt && (
                                         <p className="text-[12px] text-gray-400 mt-0.5">
                                           {new Date(review.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
                                         </p>
+                                      )}
+                                      {review.service && (
+                                        <p className="text-[12px] text-gray-500 mt-0.5 truncate">{review.service}</p>
                                       )}
                                     </div>
                                   </div>

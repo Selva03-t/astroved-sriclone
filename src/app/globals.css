@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -99,4 +99,38 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* React International Phone Overrides */
+.astroved-phone {
+  --react-international-phone-border-color: transparent;
+  --react-international-phone-background-color: transparent;
+  width: 100%;
+}
+
+.astroved-phone .react-international-phone-country-selector-button {
+  border: none !important;
+  background: transparent !important;
+  padding-left: 0;
+}
+
+.astroved-phone .react-international-phone-input {
+  border: none !important;
+  background: transparent !important;
+  width: 100%;
+  font-size: 1rem;
+  color: #342151;
+}
+
+.astroved-phone .react-international-phone-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.astroved-phone .react-international-phone-country-selector-dropdown {
+  background-color: white !important;
+  z-index: 50 !important;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 4px;
 }

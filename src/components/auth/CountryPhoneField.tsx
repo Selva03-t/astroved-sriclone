@@ -1,6 +1,7 @@
 "use client";
 
 import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import type { CountryOption } from "@/types/auth";
 import { COUNTRIES, DEFAULT_COUNTRY } from "@/lib/auth/countries";
 
