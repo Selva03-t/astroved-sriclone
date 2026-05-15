@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import CountryPhoneField from "@/components/auth/CountryPhoneField";
 import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
 import type { CountryOption } from "@/types/auth";
@@ -20,6 +21,10 @@ export default function SignupPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +59,8 @@ export default function SignupPage() {
   return (
     <main className="relative min-h-screen w-full flex items-center justify-center bg-[#fdfaff] overflow-hidden">
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-linear-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-linear-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
       
       <div className="relative z-10 w-full max-w-xl px-4 py-12">
         <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
@@ -124,26 +129,54 @@ export default function SignupPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[#5a3b8a]">Password</label>
-                <input
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Create a password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
-                />
+                <div className="relative mt-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
+                    placeholder="Create a password"
+                    className="w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 pr-12 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  />
+                  {(passwordFocused || formData.password.length > 0) && (
+                    <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                    >
+                      {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#5a3b8a]">Confirm Password</label>
-                <input
-                  type="password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  placeholder="Confirm your password"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
-                />
+                <div className="relative mt-2">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    onFocus={() => setConfirmPasswordFocused(true)}
+                    onBlur={() => setConfirmPasswordFocused(false)}
+                    placeholder="Confirm your password"
+                    className="w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 pr-12 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  />
+                  {(confirmPasswordFocused || formData.confirmPassword.length > 0) && (
+                    <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                    >
+                      {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -152,7 +185,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:opacity-50"
+              className="mt-6 w-full rounded-xl bg-linear-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:opacity-50"
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>
