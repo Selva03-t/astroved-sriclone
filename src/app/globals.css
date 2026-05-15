@@ -1,6 +1,5 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
-@import "react-international-phone/style.css";
 
 @theme {
   --color-brand-violet: #6869F9;
@@ -82,7 +81,7 @@ body {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 80s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -100,31 +99,4 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* react-international-phone styling to match AstroVed inputs */
-.astroved-phone {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.astroved-phone .react-international-phone-country-selector-button {
-  height: 48px;
-  border: 0;
-  background: transparent;
-}
-
-.astroved-phone .react-international-phone-input {
-  width: 100%;
-  height: 48px;
-  border: 0;
-  outline: none;
-  background: transparent;
-  font-size: 16px;
-  color: #342151;
-}
-
-.astroved-phone .react-international-phone-input::placeholder {
-  color: #a288cf;
 }

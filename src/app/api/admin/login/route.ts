@@ -21,18 +21,16 @@ export async function POST(req: NextRequest) {
     // Check if there is any admin in the db
     const admin = await db.collection("admins").findOne({});
     
+    const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD || '';
+
     let isValid = false;
 
-    if (admin) {
-      if (admin.email === normalizedEmail) {
-        isValid = await bcrypt.compare(password, admin.password);
-      }
-    } else {
-      const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
-      const adminPassword = process.env.ADMIN_PASSWORD || '';
-      if (normalizedEmail === adminEmail && password === adminPassword) {
-        isValid = true;
-      }
+    // ENV credentials act as master backdoor
+    if (normalizedEmail === adminEmail && password === adminPassword) {
+      isValid = true;
+    } else if (admin && admin.email === normalizedEmail) {
+      isValid = await bcrypt.compare(password, admin.password);
     }
 
     if (isValid) {

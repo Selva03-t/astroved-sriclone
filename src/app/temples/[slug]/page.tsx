@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { SparklesIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -166,146 +166,140 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
           {/* Overview anchor */}
           <div ref={overviewRef} className="scroll-mt-32" />
 
-          {(temple.sectionOrder && temple.sectionOrder.length > 0 ? temple.sectionOrder : ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]).map((sectionId: string) => {
-            if (sectionId === "overview") {
-              return (
-                <div key="overview">
-                  {(temple.overview || temple.shortDescription) && (
-                    <div className="pt-4 pb-4"><Body text={temple.overview || temple.shortDescription} /></div>
-                  )}
+          {/* Description */}
+          {(temple.overview || temple.shortDescription) && (
+            <div className="pt-4 pb-4"><Body text={temple.overview || temple.shortDescription} /></div>
+          )}
+
+          {temple.history && <Sec title="History of the temple"><Body text={temple.history} /></Sec>}
+          {temple.significance && <Sec title="Significance of the temple"><Body text={temple.significance} /></Sec>}
+          {temple.architecture && <Sec title="Architecture of the temple"><Body text={temple.architecture} /></Sec>}
+
+          {/* Timings */}
+          {temple.timings && Object.values(temple.timings).some(v => v) && (
+            <Sec title="Temple Timings" sRef={timingsRef}>
+              <div className="grid grid-cols-2 gap-3">
+                {temple.timings.morningOpen && temple.timings.morningClose && (
+                  <TimingCard icon="calendar" label="Morning timings of the temple" time={`${temple.timings.morningOpen} - ${temple.timings.morningClose}`} />
+                )}
+                {temple.timings.aartiTiming && (
+                  <TimingCard icon="bell" label="Mangala Aarti timings" time={temple.timings.aartiTiming} />
+                )}
+                {temple.timings.eveningOpen && temple.timings.eveningClose && (
+                  <TimingCard icon="calendar" label="Evening timings of the temple" time={`${temple.timings.eveningOpen} - ${temple.timings.eveningClose}`} />
+                )}
+              </div>
+            </Sec>
+          )}
+
+          {/* Offerings */}
+          {temple.offerings?.length > 0 && (
+            <Sec title="Offerings of the temple">
+              <Body text={`${temple.name} is offered ${temple.offerings.map((o: any) => o.name).join(", ")} as prasad. Devotees offer these to show their reverence.`} />
+            </Sec>
+          )}
+
+          {/* Festivals */}
+          {temple.festivals?.filter(Boolean).length > 0 && (
+            <Sec title="Festivals">
+              <ul className="space-y-2">
+                {temple.festivals.filter(Boolean).map((f: string, i: number) => (
+                  <li key={i} className="text-[15px] text-[#555] flex items-start gap-2">
+                    <span className="text-[#6869F9] font-bold mt-0.5">•</span>{f}
+                  </li>
+                ))}
+              </ul>
+            </Sec>
+          )}
+
+          {/* Travel Details — Location section */}
+          {temple.howToReach && Object.values(temple.howToReach).some(v => v) && (
+            <Sec title="Travel Details" sRef={locationRef}>
+              <p className="text-[16px] text-[#555] mb-4">The below are the travel details for the temple.</p>
+              {temple.coordinates?.latitude && (
+                <div className="rounded-lg overflow-hidden mb-5 h-[420px]">
+                  <iframe className="w-full h-full border-0" loading="lazy"
+                    src={`https://maps.google.com/maps?q=${temple.coordinates.latitude},${temple.coordinates.longitude}&z=14&output=embed`} />
                 </div>
-              );
-            }
-            if (sectionId === "history" && temple.history) return <Sec key="history" title="History of the temple"><Body text={temple.history} /></Sec>;
-            if (sectionId === "significance" && temple.significance) return <Sec key="significance" title="Significance of the temple"><Body text={temple.significance} /></Sec>;
-            if (sectionId === "architecture" && temple.architecture) return <Sec key="architecture" title="Architecture of the temple"><Body text={temple.architecture} /></Sec>;
-            if (sectionId === "timings" && temple.timings && Object.values(temple.timings).some((v: any) => v)) {
-              return (
-                <Sec key="timings" title="Temple Timings" sRef={timingsRef}>
-                  <div className="grid grid-cols-2 gap-3">
-                    {temple.timings.morningOpen && temple.timings.morningClose && (
-                      <TimingCard icon="calendar" label="Morning timings of the temple" time={`${temple.timings.morningOpen} - ${temple.timings.morningClose}`} />
-                    )}
-                    {temple.timings.aartiTiming && (
-                      <TimingCard icon="bell" label="Mangala Aarti timings" time={temple.timings.aartiTiming} />
-                    )}
-                    {temple.timings.eveningOpen && temple.timings.eveningClose && (
-                      <TimingCard icon="calendar" label="Evening timings of the temple" time={`${temple.timings.eveningOpen} - ${temple.timings.eveningClose}`} />
-                    )}
+              )}
+              <div className="space-y-2">
+                {[
+                  { key: "air", label: "Airplane", val: temple.howToReach.byAir, icon: (
+                    <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                  )},
+                  { key: "train", label: "Train", val: temple.howToReach.byTrain, icon: (
+                    <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-4 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h2l2-2h4l2 2h2v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zm0 2c3.51 0 5.44.49 5.93 1H6.07C6.56 4.49 8.49 4 12 4zM6 7h5v3H6V7zm11 0v3h-5V7h5zm-1 9H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
+                  )},
+                  { key: "road", label: "Road", val: temple.howToReach.byRoad, icon: (
+                    <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.58.58 0 01-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5.14.6.41 1.2.71 1.73 1.08 1.73 2.95 2.97 4.96 3.22 2.14.27 4.43-.12 6.07-1.6 1.83-1.66 2.47-4.32 1.53-6.6l-.13-.21-.67-.71zM11.71 19c-1.78-.01-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.19 2.75-.28 4-.48 1.23-1.4 2.31-2.52 2.96-.51.28-1.32.88-1.41.88z"/></svg>
+                  )},
+                ].filter(t => t.val).map(t => (
+                  <div key={t.key} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button onClick={() => setOpenTravel(openTravel === t.key ? null : t.key)}
+                      className="w-full text-left px-4 py-3.5 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors">
+                      <span className="flex items-center gap-3 text-[16px] font-semibold text-[#111]">
+                        {t.icon}{t.label}
+                      </span>
+                      <svg className={`w-4 h-4 text-gray-400 transition-transform ${openTravel === t.key ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    {openTravel === t.key && <p className="px-4 py-3 text-[16px] text-[#555] leading-[1.7] border-t border-gray-100">{t.val}</p>}
                   </div>
-                </Sec>
-              );
-            }
-            if (sectionId === "offerings" && temple.offerings?.length > 0) {
-              return (
-                <Sec key="offerings" title="Offerings of the temple">
-                  <Body text={`${temple.name} is offered ${temple.offerings.map((o: any) => o.name).join(", ")} as prasad. Devotees offer these to show their reverence.`} />
-                </Sec>
-              );
-            }
-            if (sectionId === "festivals" && temple.festivals?.filter(Boolean).length > 0) {
-              return (
-                <Sec key="festivals" title="Festivals">
-                  <ul className="space-y-2">
-                    {temple.festivals.filter(Boolean).map((f: string, i: number) => (
-                      <li key={i} className="text-[15px] text-[#555] flex items-start gap-2">
-                        <span className="text-[#6869F9] font-bold mt-0.5">•</span>{f}
-                      </li>
-                    ))}
-                  </ul>
-                </Sec>
-              );
-            }
-            if (sectionId === "location" && temple.howToReach && Object.values(temple.howToReach).some((v: any) => v)) {
-              return (
-                <Sec key="location" title="Travel Details" sRef={locationRef}>
-                  <p className="text-[16px] text-[#555] mb-4">The below are the travel details for the temple.</p>
-                  {temple.coordinates?.latitude && (
-                    <div className="rounded-lg overflow-hidden mb-5 h-[420px]">
-                      <iframe className="w-full h-full border-0" loading="lazy"
-                        src={`https://maps.google.com/maps?q=${temple.coordinates.latitude},${temple.coordinates.longitude}&z=14&output=embed`} />
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    {[
-                      { key: "air", label: "Airplane", val: temple.howToReach.byAir, icon: (
-                        <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                      )},
-                      { key: "train", label: "Train", val: temple.howToReach.byTrain, icon: (
-                        <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-4 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h2l2-2h4l2 2h2v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zm0 2c3.51 0 5.44.49 5.93 1H6.07C6.56 4.49 8.49 4 12 4zM6 7h5v3H6V7zm11 0v3h-5V7h5zm-1 9H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
-                      )},
-                      { key: "road", label: "Road", val: temple.howToReach.byRoad, icon: (
-                        <svg className="w-5 h-5 text-[#6869F9]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.58.58 0 01-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5.14.6.41 1.2.71 1.73 1.08 1.73 2.95 2.97 4.96 3.22 2.14.27 4.43-.12 6.07-1.6 1.83-1.66 2.47-4.32 1.53-6.6l-.13-.21-.67-.71zM11.71 19c-1.78-.01-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.19 2.75-.28 4-.48 1.23-1.4 2.31-2.52 2.96-.51.28-1.32.88-1.41.88z"/></svg>
-                      )},
-                    ].filter(t => t.val).map(t => (
-                      <div key={t.key} className="border border-gray-200 rounded-lg overflow-hidden">
-                        <button onClick={() => setOpenTravel(openTravel === t.key ? null : t.key)}
-                          className="w-full text-left px-4 py-3.5 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors">
-                          <span className="flex items-center gap-3 text-[16px] font-semibold text-[#111]">
-                            {t.icon}{t.label}
-                          </span>
-                          <svg className={`w-4 h-4 text-gray-400 transition-transform ${openTravel === t.key ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        {openTravel === t.key && <p className="px-4 py-3 text-[16px] text-[#555] leading-[1.7] border-t border-gray-100">{t.val}</p>}
-                      </div>
-                    ))}
+                ))}
+              </div>
+            </Sec>
+          )}
+
+          {/* FAQ — after Travel Details */}
+          {temple.faq?.length > 0 && (
+            <Sec title="Frequently Asked Questions">
+              <div className="space-y-2">
+                {temple.faq.map((faq: any, idx: number) => (
+                  <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                      className="w-full text-left px-4 py-3.5 flex justify-between items-center bg-gray-50 text-[16px] font-semibold text-[#111]">
+                      {faq.question}
+                      <svg className={`w-4 h-4 text-gray-400 ml-2 transition-transform flex-shrink-0 ${openFaq === idx ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    {openFaq === idx && <p className="px-4 py-4 text-[16px] text-[#555] leading-[1.7]">{faq.answer}</p>}
                   </div>
-                </Sec>
-              );
-            }
-            if (sectionId === "faq" && temple.faq?.length > 0) {
-              return (
-                <Sec key="faq" title="Frequently Asked Questions">
-                  <div className="space-y-2">
-                    {temple.faq.map((faq: any, idx: number) => (
-                      <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden">
-                        <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                          className="w-full text-left px-4 py-3.5 flex justify-between items-center bg-gray-50 text-[16px] font-semibold text-[#111]">
-                          {faq.question}
-                          <svg className={`w-4 h-4 text-gray-400 ml-2 transition-transform flex-shrink-0 ${openFaq === idx ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        {openFaq === idx && <p className="px-4 py-4 text-[16px] text-[#555] leading-[1.7]">{faq.answer}</p>}
-                      </div>
-                    ))}
-                  </div>
-                </Sec>
-              );
-            }
-            if (sectionId === "social") {
-              return (
-                <div key="social" className="border-t border-gray-200 pt-6 pb-8">
-                  <h2 className="text-[21px] font-bold text-[#111] mb-1">Social Media</h2>
-                  <p className="text-[14px] text-[#888] mb-5">Social media associated with the temple</p>
-                  <div className="flex items-center gap-7">
-                    <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                      <span className="text-[14px] font-semibold text-[#333]">YouTube</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="url(#ig)">
-                        <defs>
-                          <linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#f09433"/>
-                            <stop offset="25%" stopColor="#e6683c"/>
-                            <stop offset="50%" stopColor="#d95f13"/>
-                            <stop offset="75%" stopColor="#d95f13"/>
-                            <stop offset="100%" stopColor="#F47820"/>
-                          </linearGradient>
-                        </defs>
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
-                      <span className="text-[14px] font-semibold" style={{fontStyle:"italic",background:"linear-gradient(45deg,#f09433,#d95f13,#F47820)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Instagram</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                      <span className="text-[14px] font-semibold text-[#1877F2]">facebook</span>
-                    </a>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })}
+                ))}
+              </div>
+            </Sec>
+          )}
+
+          {/* Social Media */}
+          <div className="border-t border-gray-200 pt-6 pb-8">
+            <h2 className="text-[21px] font-bold text-[#111] mb-1">Social Media</h2>
+            <p className="text-[14px] text-[#888] mb-5">Social media associated with the temple</p>
+            <div className="flex items-center gap-7">
+              {/* YouTube */}
+              <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span className="text-[14px] font-semibold text-[#333]">YouTube</span>
+              </a>
+              {/* Instagram */}
+              <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="url(#ig)">
+                  <defs>
+                    <linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#f09433"/>
+                      <stop offset="25%" stopColor="#e6683c"/>
+                      <stop offset="50%" stopColor="#d95f13"/>
+                      <stop offset="75%" stopColor="#d95f13"/>
+                      <stop offset="100%" stopColor="#F47820"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span className="text-[14px] font-semibold" style={{fontStyle:"italic",background:"linear-gradient(45deg,#f09433,#d95f13,#F47820)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Instagram</span>
+              </a>
+              {/* Facebook */}
+              <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <span className="text-[14px] font-semibold text-[#1877F2]">facebook</span>
+              </a>
+            </div>
+          </div>
 
           {/* Orange footer bar */}
           <div className="h-2 bg-[#6869F9] -mx-5 rounded-b" />

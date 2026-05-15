@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon, EyeIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function AdminTemplesPage() {
   interface TempleFormData {
@@ -17,7 +17,6 @@ export default function AdminTemplesPage() {
     relatedArticles: string[]; relatedTemples: string[]; relatedPujas: string[];
     featured: boolean; popular: boolean;
     metaTitle: string; metaDescription: string;
-    sectionOrder: string[];
   }
 
   interface TempleItem extends TempleFormData {
@@ -29,9 +28,6 @@ export default function AdminTemplesPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("All");
-  const [showFilterPanel, setShowFilterPanel] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState<TempleFormData>({
@@ -46,13 +42,10 @@ export default function AdminTemplesPage() {
     faq: [],
     relatedArticles: [""], relatedTemples: [""], relatedPujas: [""],
     featured: false, popular: false,
-    metaTitle: "", metaDescription: "",
-    sectionOrder: ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
+    metaTitle: "", metaDescription: ""
   });
 
   const templeTypes = ["Shiva Temple", "Vishnu Temple", "Devi Temple", "Murugan Temple", "Hanuman Temple", "Jyotirlinga", "Shakti Peetha", "Pilgrimage Site"];
-  
-  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -89,8 +82,7 @@ export default function AdminTemplesPage() {
       faq: [],
       relatedArticles: [""], relatedTemples: [""], relatedPujas: [""],
       featured: false, popular: false,
-      metaTitle: "", metaDescription: "",
-      sectionOrder: ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
+      metaTitle: "", metaDescription: ""
     });
     setEditingId(null);
   };
@@ -108,8 +100,7 @@ export default function AdminTemplesPage() {
       relatedArticles: item.relatedArticles?.length ? item.relatedArticles : [""],
       relatedTemples: item.relatedTemples?.length ? item.relatedTemples : [""],
       relatedPujas: item.relatedPujas?.length ? item.relatedPujas : [""],
-      featured: !!item.featured, popular: !!item.popular,
-      sectionOrder: item.sectionOrder?.length ? item.sectionOrder : ["overview", "history", "significance", "architecture", "timings", "offerings", "festivals", "location", "faq", "social"]
+      featured: !!item.featured, popular: !!item.popular
     });
     setEditingId(String(item._id));
     setIsAdding(true);
@@ -122,21 +113,6 @@ export default function AdminTemplesPage() {
       if (res.ok) fetchItems();
     } catch (e) { console.error(e); }
   };
-
-  const locationOptions = Array.from(
-    new Set(items.map((item) => `${item.city ?? ""}, ${item.state ?? ""}`.trim()).filter(Boolean))
-  );
-
-  const filteredItems = items.filter((item) => {
-    const query = searchQuery.trim().toLowerCase();
-    const locationText = `${item.city ?? ""}, ${item.state ?? ""}`;
-    if (query) {
-      const text = `${item.name} ${item.deity} ${item.templeType} ${item.city} ${item.state} ${item.slug}`.toLowerCase();
-      if (!text.includes(query)) return false;
-    }
-    if (selectedLocation !== "All" && locationText !== selectedLocation) return false;
-    return true;
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -235,55 +211,6 @@ export default function AdminTemplesPage() {
           </button>
         </div>
       </div>
-
-      {!isAdding && (
-        <div className="rounded-lg border border-[#e8e2ff] bg-white p-4 shadow-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search temples..."
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:max-w-sm"
-            />
-            <button
-              type="button"
-              onClick={() => setShowFilterPanel((prev) => !prev)}
-              className="rounded-md border border-[#d8ceff] bg-white px-4 py-2 text-sm font-medium text-[#5657e8] hover:bg-[#f3f0ff]"
-            >
-              Filter
-            </button>
-          </div>
-          {showFilterPanel && (
-            <div className="mt-4 max-w-xl rounded-md border border-gray-200 bg-gray-50 p-4">
-              <div className="flex flex-wrap items-end gap-3">
-                <label className="min-w-[12rem] flex-1 text-sm text-gray-700">
-                  <span className="mb-1 block font-medium">Location</span>
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9]"
-                  >
-                    <option value="All">All</option>
-                    {locationOptions.map((location) => (
-                      <option key={location} value={location}>
-                        {location}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setSelectedLocation("All")}
-                  className="shrink-0 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Clear filter
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {isAdding && (
         <form id="temples-admin-form" onSubmit={handleSubmit} className="bg-white p-8 shadow-sm border border-gray-100 rounded-2xl space-y-8">
@@ -468,35 +395,6 @@ export default function AdminTemplesPage() {
             </div>
           </section>
 
-          {/* SECTION M */}
-          <section>
-            <h3 className="text-lg font-semibold border-b pb-2 mb-4">Section M - Frontend Layout Order</h3>
-            <div className="space-y-2">
-              {formData.sectionOrder.map((item, idx) => (
-                <div
-                  key={item}
-                  draggable
-                  onDragStart={() => setDraggedItemIndex(idx)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    if (draggedItemIndex === null || draggedItemIndex === idx) return;
-                    const newOrder = [...formData.sectionOrder];
-                    const [draggedItem] = newOrder.splice(draggedItemIndex, 1);
-                    newOrder.splice(idx, 0, draggedItem);
-                    handleChange("sectionOrder", newOrder);
-                    setDraggedItemIndex(null);
-                  }}
-                  className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-move hover:border-[#6869F9] transition-colors"
-                >
-                  <Bars3Icon className="h-5 w-5 text-gray-400" />
-                  <span className="font-medium text-gray-700 capitalize">{item.replace(/([A-Z])/g, ' $1').trim()}</span>
-                </div>
-              ))}
-              <p className="text-xs text-gray-500 mt-2">Drag and drop to reorder the sections displayed on the temple details page.</p>
-            </div>
-          </section>
-
           <div className="flex justify-end pt-4 border-t">
             <button disabled={submitting} type="submit" className="bg-[#6869F9] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#5657e8] transition-colors">
               {submitting ? "Saving..." : editingId ? "Update Temple" : "Save Temple"}
@@ -506,51 +404,39 @@ export default function AdminTemplesPage() {
       )}
 
       {/* List */}
-      {!isAdding && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Temple</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Location</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {loading ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">Loading...</td></tr> : 
-               filteredItems.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
-               filteredItems.map(item => (
-                <tr key={item._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {item.heroImage || item.imageUrl ? <img src={item.heroImage || item.imageUrl} className="w-10 h-10 rounded-lg object-cover" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>}
-                      <div>
-                        <p className="font-medium text-gray-900">{item.name}</p>
-                        <p className="text-xs text-gray-500">{item.templeType}</p>
-                      </div>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Temple</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">Location</th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {loading ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">Loading...</td></tr> : 
+             items.length === 0 ? <tr><td colSpan={3} className="p-6 text-center text-gray-500">No temples found.</td></tr> :
+             items.map(item => (
+              <tr key={item._id} className="hover:bg-gray-50">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    {item.heroImage || item.imageUrl ? <img src={item.heroImage || item.imageUrl} className="w-10 h-10 rounded-lg object-cover" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg"></div>}
+                    <div>
+                      <p className="font-medium text-gray-900">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.templeType}</p>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
-                  <td className="px-6 py-4 text-right">
-                     <a
-                      href={`/temples/${item.slug || String(item.name || "").toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-")}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mr-3 text-[#5657e8] hover:text-[#4647c4]"
-                      aria-label="View temple"
-                      title="View temple"
-                    >
-                      <EyeIcon className="w-5 h-5 inline" />
-                    </a>
-                    <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
-                    <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600">{item.city}, {item.state}</td>
+                <td className="px-6 py-4 text-right">
+                  <button onClick={()=>handleEdit(item)} className="text-blue-600 hover:text-blue-800 mr-3"><PencilSquareIcon className="w-5 h-5 inline"/></button>
+                  <button onClick={()=>handleDelete(item._id)} className="text-red-600 hover:text-red-800"><TrashIcon className="w-5 h-5 inline"/></button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

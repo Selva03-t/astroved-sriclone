@@ -10,12 +10,6 @@ interface User {
   name?: string;
   email?: string;
   phone?: string;
-  whatsapp?: string;
-  country?: {
-    name?: string;
-    isoCode?: string;
-    dialCode?: string;
-  };
   gender?: string;
   dob?: string;
   placeOfBirth?: string;
@@ -160,16 +154,7 @@ export default function ProfilePage() {
                   </svg>
                   <span className="w-16 text-gray-400">Phone</span>
                   <span className="font-medium text-gray-800">
-                    {user?.phone ? `${user.country?.dialCode ? `+${user.country.dialCode} ` : ""}${user.phone}` : user?.email || "Not added"}
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center gap-3 text-sm text-gray-500">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-gray-400">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                  <span className="w-16 text-gray-400">WhatsApp</span>
-                  <span className="font-medium text-gray-800">
-                    {user?.whatsapp ? `${user.country?.dialCode ? `+${user.country.dialCode} ` : ""}${user.whatsapp}` : "Not added"}
+                    {user?.phone || user?.email || "Not added"}
                   </span>
                 </div>
               </div>
@@ -192,16 +177,6 @@ export default function ProfilePage() {
                   </button>
                 </div>
                 <div className="space-y-3 text-sm">
-                  <InfoRow
-                    icon={
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-gray-400">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    }
-                    label="Country"
-                    value={user?.country?.name}
-                    placeholder="Add Country"
-                  />
                   <InfoRow
                     icon={
                       <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-gray-400">
