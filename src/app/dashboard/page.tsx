@@ -20,41 +20,45 @@ const navigationItems = [
 const banners = [
   {
     id: 1,
-    title: "Download Our App",
-    subtitle: "Get access to exclusive offers and features on the go",
-    buttonText: "Download Now",
-    bgColor: "bg-gradient-to-r from-[#6869F9] to-[#5657e8]",
-    textColor: "text-white",
+    title: "Offer AstroVed Puja and Chadhava at 100+ sacred temples in your Name and Gotra to your beloved deity.",
+    titleHighlight: "",
+    subtitle: "",
+    buttons: [
+      { text: "Explore Pujas", variant: "outline", href: "/puja" },
+      { text: "Participate Now", variant: "solid", href: "/puja" }
+    ],
     image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
-    className: "object-cover",
   },
   {
     id: 2,
-    title: "Special Puja",
-    subtitle: "Book your sacred puja rituals with our expert priests",
-    buttonText: "Book Now",
-    bgColor: "bg-gradient-to-r from-[#6869F9] to-[#F47820]",
-    textColor: "text-white",
+    title: "AstroVed Special ",
+    titleHighlight: "Puja",
+    subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples — from the comfort of your home.",
+    buttons: [
+      { text: "Book Puja", variant: "solid", href: "/puja" }
+    ],
     image: "/images/Navagraha-Shanti-Puja.jpg",
   },
   {
     id: 3,
-    title: "Special Chadhava",
-    subtitle: "Offer Chadhava at 100+ sacred temples across India",
-    buttonText: "Book Chadhava",
-    bgColor: "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#6869F9]",
-    textColor: "text-white",
+    title: "AstroVed",
+    titleHighlight: "",
+    titleColor: "text-yellow-400",
+    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on AstroVed.",
+    buttons: [
+      { text: "Download App", variant: "solid", action: "scroll-bottom" }
+    ],
     image: "/images/Lakshmi-Homam.jpg",
   },
   {
     id: 4,
-    title: "Akshaya Tritiya",
-    subtitle: "Participate in the most auspicious day of the year",
-    buttonText: "",
-    bgColor: "bg-white",
-    textColor: "text-[#1f1f1f]",
+    title: "AstroVed Special ",
+    titleHighlight: "Chadhava",
+    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on AstroVed.",
+    buttons: [
+      { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
+    ],
     image: "/images/maa-kali.jpg",
-    showContent: false,
   },
 ];
 
@@ -65,7 +69,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % banners.length);
-    }, 2000);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, []);
@@ -77,60 +81,103 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-500 ${index === currentBanner ? "opacity-100" : "opacity-0"
-                }`}
+              className={`absolute inset-0 transition-opacity duration-700 ${
+                index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
             >
-              {banner.image ? (
-                <div className="relative h-full w-full">
-                  <Image
-                    src={banner.image}
-                    alt={banner.title}
-                    fill
-                    className="object-cover object-top"
-                  
-                    priority
-                  />
-                  {banner.showContent && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-black/20 px-6 py-16 text-center">
-                      <h2 className="max-w-2xl text-4xl font-bold leading-tight text-white sm:text-5xl">
-                        {banner.title}
-                      </h2>
-                      <p className="max-w-xl text-lg text-white opacity-90">
-                        {banner.subtitle}
-                      </p>
-                      <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6869F9] transition hover:bg-gray-100">
-                        {banner.buttonText}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={`flex h-full flex-col items-center justify-center gap-6 px-6 py-16 text-center ${banner.bgColor}`}>
-                  <h2 className={`max-w-2xl text-4xl font-bold leading-tight ${banner.textColor} sm:text-5xl`}>
+              <div className="relative h-full w-full bg-[#3e1a22]">
+                <Image
+                  src={banner.image || "/images/placeholder.jpg"}
+                  alt={banner.title}
+                  fill
+                  className="object-cover object-right md:object-center opacity-90"
+                  priority={index === 0}
+                />
+                {/* Gradient overlay to ensure text legibility */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1f0b11]/95 via-[#1f0b11]/70 to-transparent md:w-[75%]" />
+                
+                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 max-w-5xl text-left">
+                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
                     {banner.title}
+                    {banner.titleHighlight && (
+                      <span className="text-[#ffc107]">{banner.titleHighlight}</span>
+                    )}
                   </h2>
-                  <p className={`max-w-xl text-lg ${banner.textColor} opacity-90`}>
-                    {banner.subtitle}
-                  </p>
-                  <button className="mt-4 rounded-full bg-white px-8 py-3 font-semibold text-[#6869F9] transition hover:bg-gray-100">
-                    {banner.buttonText}
-                  </button>
+                  {banner.subtitle && (
+                    <p className="text-[16px] md:text-[18px] font-medium text-gray-200 mb-10 max-w-2xl leading-relaxed">
+                      {banner.subtitle}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-4">
+                    {banner.buttons.map((btn: any, i) => {
+                      const buttonClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 ${
+                        btn.variant === 'solid'
+                          ? "bg-white text-[#1f1f1f] hover:bg-gray-100"
+                          : "bg-transparent border border-white text-white hover:bg-white/10"
+                      }`;
+
+                      if (btn.href) {
+                        return (
+                          <Link key={i} href={btn.href} className={buttonClass}>
+                            {btn.text}
+                          </Link>
+                        );
+                      }
+
+                      if (btn.action === "scroll-bottom") {
+                        return (
+                          <button 
+                            key={i}
+                            className={buttonClass}
+                            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                          >
+                            {btn.text}
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button key={i} className={buttonClass}>
+                          {btn.text}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           ))}
 
-          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-3">
+          {/* Navigation Arrows */}
+          <button
+            onClick={() => setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/40 flex items-center justify-center text-white hover:bg-black/60 transition-colors backdrop-blur-sm z-20 opacity-0 group-hover:opacity-100"
+            aria-label="Previous banner"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          
+          <button
+            onClick={() => setCurrentBanner((prev) => (prev + 1) % banners.length)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/40 flex items-center justify-center text-white hover:bg-black/60 transition-colors backdrop-blur-sm z-20 opacity-0 group-hover:opacity-100"
+            aria-label="Next banner"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2 z-20">
             {banners.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentBanner(index)}
-                className={`h-2 w-2 rounded-full transition ${index === currentBanner ? "bg-white w-8" : "bg-white/50"
-                  }`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  index === currentBanner ? "bg-white w-8" : "bg-white/50 w-1.5 hover:bg-white/80"
+                }`}
                 aria-label={`Go to banner ${index + 1}`}
               />
             ))}
