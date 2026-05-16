@@ -36,6 +36,21 @@ export default function SignupPage() {
       setLoading(false);
       return;
     }
+    if (formData.country.isoCode.toUpperCase() === 'IN') {
+      const indianPhoneRegex = /^[6-9]\d{9}$/;
+      if (!indianPhoneRegex.test(formData.phone)) {
+        setError("Enter a valid 10-digit Indian mobile number starting with 6-9");
+        setLoading(false);
+        return;
+      }
+    } else {
+      const phoneRegex = /^[0-9]{6,15}$/;
+      if (!phoneRegex.test(formData.phone)) {
+        setError("Enter a valid mobile number");
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const res = await fetch("/api/auth/signup", {
@@ -61,7 +76,7 @@ export default function SignupPage() {
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-linear-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-linear-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
-      
+
       <div className="relative z-10 w-full max-w-xl px-4 py-12">
         <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
           <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">Create Account</h1>
@@ -181,7 +196,7 @@ export default function SignupPage() {
             </div>
 
             {error && <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-3 rounded-lg">{error}</p>}
-            
+
             <button
               type="submit"
               disabled={loading}

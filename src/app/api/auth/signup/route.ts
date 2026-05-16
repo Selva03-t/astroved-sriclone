@@ -25,8 +25,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Select a country" }, { status: 400 });
     }
 
-    if (!phoneRegex.test(phone)) {
-      return NextResponse.json({ success: false, error: "Enter a valid mobile number" }, { status: 400 });
+    if (country.isoCode.toUpperCase() === 'IN') {
+      const indianPhoneRegex = /^[6-9]\d{9}$/;
+      if (!indianPhoneRegex.test(phone)) {
+        return NextResponse.json({ success: false, error: "Enter a valid 10-digit Indian mobile number starting with 6-9" }, { status: 400 });
+      }
+    } else {
+      if (!phoneRegex.test(phone)) {
+        return NextResponse.json({ success: false, error: "Enter a valid mobile number" }, { status: 400 });
+      }
     }
 
     if (!passwordRegex.test(password)) {
