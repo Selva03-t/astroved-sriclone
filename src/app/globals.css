@@ -140,3 +140,8 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+body.puja-checkout-active footer,
+body.puja-checkout-active [data-global-chrome="assistant"] {
+  display: none;
+}

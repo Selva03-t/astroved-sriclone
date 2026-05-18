@@ -127,8 +127,8 @@ export default function LoginMethods() {
       // Redirect back to where we came from or dashboard
       const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl") || "/dashboard";
       window.location.href = callbackUrl;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
