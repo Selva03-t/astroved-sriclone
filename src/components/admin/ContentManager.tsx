@@ -100,6 +100,7 @@ export default function ContentManager({
   const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewingReview, setViewingReview] = useState<any | null>(null);
+  const [currencyRates, setCurrencyRates] = useState<{usd: number, myr: number} | null>(null);
 
   const effectiveFilterGroups = useMemo(() => {
     if (type !== "puja" || !dynamicPujaLocationFromItems) {
@@ -158,6 +159,20 @@ export default function ContentManager({
   useEffect(() => {
     fetchItems();
     
+    // Fetch currency settings
+    fetch("/api/admin/content?type=currency")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const rates = data[0];
+          setCurrencyRates({
+            usd: Number(rates.usdConversionRate) || 0,
+            myr: Number(rates.myrConversionRate) || 0
+          });
+        }
+      })
+      .catch(console.error);
+    
     // Fetch any reference data
     fields.forEach(async (f) => {
       if (f.type === "reference-array" && f.referenceEndpoint) {
@@ -191,14 +206,47 @@ export default function ContentManager({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
+    setFormData((prev: any) => {
+      const next = { ...prev, [name]: value };
+      
+      // Auto-calculate currencies
+      if (currencyRates && name.endsWith("INR")) {
+        const baseName = name.replace(/INR$/, "");
+        const valNum = Number(value);
+        if (!isNaN(valNum) && valNum > 0) {
+          const usdField = baseName + "USD";
+          const myrField = baseName + "MYR";
+          
+          if (fields.some(f => f.name === usdField)) {
+             next[usdField] = (valNum * currencyRates.usd).toFixed(2);
+          }
+          if (fields.some(f => f.name === myrField)) {
+             next[myrField] = (valNum * currencyRates.myr).toFixed(2);
+          }
+        }
+      }
+      
+      return next;
+    });
   };
 
   const handleArrayChange = (fieldName: string, index: number, value: any, subField?: string) => {
     setFormData((prev: any) => {
       const arr = Array.isArray(prev[fieldName]) ? [...prev[fieldName]] : [];
       if (subField) {
-        arr[index] = { ...arr[index], [subField]: value };
+        const itemObj = { ...arr[index], [subField]: value };
+        
+        // Auto-calculate for array objects (e.g. packages)
+        if (currencyRates && subField.endsWith("INR")) {
+           const baseName = subField.replace(/INR$/, "");
+           const valNum = Number(value);
+           if (!isNaN(valNum) && valNum > 0) {
+               itemObj[baseName + "USD"] = (valNum * currencyRates.usd).toFixed(2);
+               itemObj[baseName + "MYR"] = (valNum * currencyRates.myr).toFixed(2);
+           }
+        }
+        
+        arr[index] = itemObj;
       } else {
         arr[index] = value;
       }

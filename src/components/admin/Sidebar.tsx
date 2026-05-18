@@ -13,7 +13,8 @@ import {
   WrenchScrewdriverIcon,
   ChatBubbleLeftRightIcon,
   GiftIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  CurrencyDollarIcon
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
@@ -26,6 +27,7 @@ const menuItems = [
   { name: "Library", href: "/admin/library", icon: BookOpenIcon },
   { name: "Store", href: "/admin/store", icon: ShoppingBagIcon },
   { name: "Reviews", href: "/admin/reviews", icon: ChatBubbleLeftRightIcon },
+  { name: "Currency Settings", href: "/admin/currency", icon: CurrencyDollarIcon },
 ];
 
 export default function Sidebar() {
@@ -68,7 +70,7 @@ export default function Sidebar() {
               }`}
             >
               <item.icon
-                className={`mr-3 h-6 w-6 flex-shrink-0 ${
+                className={`mr-3 h-6 w-6 shrink-0 ${
                   isActive ? "text-[#5657e8]" : "text-gray-400 group-hover:text-[#6869F9]"
                 }`}
                 aria-hidden="true"
@@ -83,7 +85,7 @@ export default function Sidebar() {
           className="w-full group flex items-center rounded-md px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
         >
           <ArrowLeftOnRectangleIcon
-            className="mr-3 h-6 w-6 flex-shrink-0 text-red-500 group-hover:text-red-600"
+            className="mr-3 h-6 w-6 shrink-0 text-red-500 group-hover:text-red-600"
             aria-hidden="true"
           />
           Logout

@@ -66,7 +66,6 @@ export default function AdminPujasPage() {
     { name: "date", label: "Date (DD-MM-YYYY)", type: "date-ddmmyyyy" },
     { name: "eventDateTime", label: "Countdown Date & Time", type: "datetime-local", placeholder: "2026-04-19T18:30" },
     { name: "buttonText", label: "Button Text", type: "text" },
-    { name: "price", label: "Price", type: "number" },
 
     { name: "heroTitle", label: "Hero Title", type: "text" },
     { name: "heroSubtitle", label: "Hero Subtitle", type: "textarea" },
@@ -120,7 +119,9 @@ export default function AdminPujasPage() {
       type: "array-object",
       objectSchema: [
         { name: "name", label: "Package Name", type: "text" },
-        { name: "price", label: "Price", type: "number" },
+        { name: "priceINR", label: "Price (INR)", type: "number" },
+        { name: "priceUSD", label: "Price (USD)", type: "number" },
+        { name: "priceMYR", label: "Price (MYR)", type: "number" },
         { name: "description", label: "Description", type: "textarea" }
       ]
     },

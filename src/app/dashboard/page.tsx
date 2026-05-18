@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] max-h-[550px] lg:max-h-[600px] 2xl:max-h-[700px] overflow-hidden group">
+        <div className="relative w-full aspect-video md:aspect-21/9 max-h-[550px] lg:max-h-[600px] 2xl:max-h-[700px] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -123,7 +123,7 @@ export default function DashboardPage() {
                 </div>
                 
                 <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 max-w-[65%] text-left z-10">
-                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.25] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
+                  <h2 className={`text-3xl md:text-[44px] font-bold leading-tight mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
                     {banner.title}
                     {banner.titleHighlight && (
                       <span className="text-[#ffc107]">{banner.titleHighlight}</span>

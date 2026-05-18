@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import {
   ArrowLeftIcon,
   BuildingLibraryIcon,
@@ -30,7 +31,6 @@ const BENEFIT_ICONS = [
   CheckBadgeIcon,
 ];
 const PERSON_LABELS = ["1 Person", "2 Person", "4 Person", "6 Person"];
-const PKG_NAMES = ["Individual Puja", "Partner Puja", "Family + Bhog", "Joint Family + Bhog"];
 const PERSON_COLORS = [
   "bg-violet-50 text-violet-600",
   "bg-pink-50 text-pink-600",
@@ -41,14 +41,20 @@ const PERSON_COLORS = [
 type PujaPackage = {
   id: string;
   name: string;
-  price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
+  price?: number; // legacy
   description: string;
 };
 
 type PujaOffering = {
   id: string;
   name: string;
-  price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
+  price?: number; // legacy
   description: string;
   badge?: string;
   imageUrl?: string;
@@ -158,6 +164,12 @@ export default function PujaDetailPage() {
   const params = useParams<{ slug: string }>();
   const slugParam = params?.slug;
   const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam;
+  const { currency, currencySymbol } = useCurrency();
+  
+  const getDisplayPrice = (item: any) => {
+    return item[`price${currency}`] ?? item.price ?? 0;
+  };
+
   const [puja, setPuja] = useState<Puja | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
@@ -231,11 +243,12 @@ export default function PujaDetailPage() {
 
   const extrasTotal = (puja?.offerings || [])
     .filter(o => selectedExtraIds.includes(o.id))
-    .reduce((sum, o) => sum + o.price, 0);
+    .reduce((sum, o) => sum + getDisplayPrice(o), 0);
 
   const selectedPackage = puja?.packages?.find((pkg) => pkg.id === selectedPackageId) ?? puja?.packages?.[0] ?? null;
-  const highPrice = selectedPackage ? Math.round(selectedPackage.price * 1.2) : null;
-  const totalAmount = (selectedPackage?.price || 0) + extrasTotal;
+  const pkgPrice = selectedPackage ? getDisplayPrice(selectedPackage) : 0;
+  const highPrice = selectedPackage ? Math.round(pkgPrice * 1.2) : null;
+  const totalAmount = pkgPrice + extrasTotal;
 
   const defaultSectionOrder = ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"];
   const currentSectionOrder = puja?.sectionOrder && puja.sectionOrder.length > 0 ? puja.sectionOrder : defaultSectionOrder;
@@ -702,12 +715,12 @@ export default function PujaDetailPage() {
                                 key={`pkg-${pkg.id}-${idx}`}
                                 type="button"
                                 onClick={() => setSelectedPackageId(pkg.id)}
-                                className={`relative flex flex-col overflow-hidden rounded-2xl border-2 text-left transition-all duration-300 ${
+                                className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${
                                   isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
                                 }`}
                               >
                                 {isRecommended && (
-                                  <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white">Recommended</div>
+                                  <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white rounded-t-xl">RECOMMENDED</div>
                                 )}
                                 <div className="flex flex-1 flex-col p-5">
                                   {/* Person badge + radio */}
@@ -725,12 +738,15 @@ export default function PujaDetailPage() {
                                     </div>
                                   </div>
                                   {/* Name + image row */}
-                                  <div className="mt-4 flex items-end justify-between gap-3">
-                                    <div className="flex-1">
-                                      <h4 className="font-bold text-gray-900 leading-snug">{PKG_NAMES[idx] || pkg.name}</h4>
+                                  <div className="mt-4 flex items-end justify-between gap-3 w-full min-w-0">
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="font-bold text-gray-900 leading-snug break-words">{pkg.name}</h4>
+                                      <p className="text-sm text-gray-600 mt-1 line-clamp-3 break-words">
+                                        {pkg.description || "Recommended for devotees."}
+                                      </p>
                                       <div className="mt-3">
-                                        <p className="text-xl font-black text-[#6869F9]">Rs. {pkg.price}</p>
-                                        <p className="text-xs font-bold text-gray-400 line-through">Rs. {Math.round(pkg.price * 1.2)}</p>
+                                        <p className="text-xl font-black text-[#6869F9]">{currencySymbol} {getDisplayPrice(pkg)}</p>
+                                        <p className="text-xs font-bold text-gray-400 line-through">{currencySymbol} {Math.round(getDisplayPrice(pkg) * 1.2)}</p>
                                       </div>
                                     </div>
                                     <img
@@ -751,7 +767,7 @@ export default function PujaDetailPage() {
                         {/* Expanded Description Section for Selected Package */}
                         {selectedPackage && (
                           <div className="mt-6 rounded-xl border border-[#ddd6fe] bg-[#f5f3ff] p-5">
-                            <h4 className="text-sm font-bold text-[#5b21b6]">{PKG_NAMES[puja.packages.findIndex(p => p.id === selectedPackage.id)] || selectedPackage.name}</h4>
+                            <h4 className="text-sm font-bold text-[#5b21b6]">{selectedPackage.name}</h4>
                             <div className="mt-3 space-y-2">
                               <div className="flex items-start gap-2">
                                 <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#5b21b6]" />
@@ -926,7 +942,7 @@ export default function PujaDetailPage() {
             <div className="mx-auto flex max-w-[1300px] items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="truncate text-sm font-bold text-[#3b0764]">{selectedPackage?.name ?? "Select a package"}</p>
-                <p className="text-xl font-extrabold text-[#6869F9]">Rs. {selectedPackage?.price ?? "—"}</p>
+                <p className="text-xl font-extrabold text-[#6869F9]">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : "—"}</p>
               </div>
               <button
                 onClick={() => setShowPackageModal(true)}
@@ -1051,7 +1067,7 @@ export default function PujaDetailPage() {
                    className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
                  >
                     <div className="text-left">
-                       <p className="text-xl font-bold">Rs. {selectedPackage?.price || '0'}</p>
+                       <p className="text-xl font-bold">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</p>
                        <p className="text-[10px] font-medium uppercase opacity-80">{selectedPackage?.name}</p>
                     </div>
                     <div className="flex items-center gap-4 font-bold uppercase tracking-widest text-sm">
@@ -1191,7 +1207,7 @@ export default function PujaDetailPage() {
                        <div className="flex justify-between items-start mb-4">
                           <div>
                              <h3 className="font-bold text-[#1f1f1f] text-lg mb-1">{selectedPackage?.name}</h3>
-                             <p className="text-[#6869F9] font-extrabold text-xl">Rs. {selectedPackage?.price}</p>
+                             <p className="#6869F9] font-extrabold text-xl">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</p>
                           </div>
                           <div className="bg-[#6869F9]/10 text-[#6869F9] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
                              Primary Package
@@ -1218,7 +1234,7 @@ export default function PujaDetailPage() {
                              </div>
                              <div>
                                 <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
-                                <p className="text-[#6869F9] font-bold text-sm">Rs. {extra.price}</p>
+                                <p className="text-[#6869F9] font-bold text-sm">{currencySymbol} {getDisplayPrice(extra)}</p>
                              </div>
                           </div>
                           <button 
@@ -1243,17 +1259,17 @@ export default function PujaDetailPage() {
                        <div className="space-y-4 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
                              <span>{selectedPackage?.name}</span>
-                             <span className="text-gray-900">Rs. {selectedPackage?.price}.0</span>
+                             <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}.0</span>
                           </div>
                           {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
                              <div key={extra.id} className="flex justify-between">
                                 <span>{extra.name}</span>
-                                <span className="text-gray-900">Rs. {extra.price}.0</span>
+                                <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
                              </div>
                           ))}
                           <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
                              <span>Total Amount</span>
-                             <span className="text-[#6869F9]">Rs. {totalAmount}.0</span>
+                             <span className="text-[#6869F9]">{currencySymbol} {totalAmount}.0</span>
                           </div>
                        </div>
                     </div>
@@ -1313,7 +1329,7 @@ export default function PujaDetailPage() {
                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
                     <span>{1 + selectedExtraIds.length} Sevas selected</span>
                     <span className="opacity-50">•</span>
-                    <span className="text-lg">Rs. {totalAmount}</span>
+                    <span className="text-lg">{currencySymbol} {totalAmount}</span>
                  </div>
                  <button 
                    onClick={() => {
