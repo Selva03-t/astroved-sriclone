@@ -6,6 +6,9 @@ type PujaPackage = {
   id: string;
   name: string;
   price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
   description: string;
 };
 
@@ -45,6 +48,9 @@ type PujaOffering = {
   id: string;
   name: string;
   price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
   description: string;
   imageUrl?: string;
 };
@@ -74,18 +80,23 @@ type PujaRecord = {
 const normalizeOfferings = (items: unknown) => {
   if (!Array.isArray(items) || items.length === 0) {
     return [
-      { id: "e1", name: "Vastra Daan", price: 501, description: "Offer sacred clothes to the deity", imageUrl: "https://cdn.astroved.com/images/puja/vastra-daan.jpg" },
-      { id: "e2", name: "Anna Daan", price: 1101, description: "Feed the needy in your name", imageUrl: "https://cdn.astroved.com/images/puja/anna-daan.jpg" },
-      { id: "e3", name: "Deep Daan", price: 251, description: "Lighting lamps for prosperity", imageUrl: "https://cdn.astroved.com/images/puja/deep-daan.jpg" },
-      { id: "e4", name: "Gau Seva", price: 501, description: "Feeding sacred cows", imageUrl: "https://cdn.astroved.com/images/puja/gau-seva.jpg" },
+      { id: "e1", name: "Vastra Daan", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Offer sacred clothes to the deity", imageUrl: "https://cdn.astroved.com/images/puja/vastra-daan.jpg" },
+      { id: "e2", name: "Anna Daan", price: 1101, priceINR: 1101, priceUSD: 14, priceMYR: 57, description: "Feed the needy in your name", imageUrl: "https://cdn.astroved.com/images/puja/anna-daan.jpg" },
+      { id: "e3", name: "Deep Daan", price: 251, priceINR: 251, priceUSD: 3, priceMYR: 13, description: "Lighting lamps for prosperity", imageUrl: "https://cdn.astroved.com/images/puja/deep-daan.jpg" },
+      { id: "e4", name: "Gau Seva", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Feeding sacred cows", imageUrl: "https://cdn.astroved.com/images/puja/gau-seva.jpg" },
     ];
   }
   return items.map((item, index) => {
     const off = item as Partial<PujaOffering>;
+    const priceSource = off.priceINR ?? off.price ?? 0;
+    const numericPrice = typeof priceSource === 'number' ? priceSource : Number(priceSource);
     return {
       id: off.id || `extra-${index + 1}`,
       name: off.name || "Special Offering",
-      price: typeof off.price === 'number' ? off.price : Number(off.price || 0),
+      price: numericPrice,
+      priceINR: typeof off.priceINR === 'number' ? off.priceINR : Number(off.priceINR || numericPrice),
+      priceUSD: typeof off.priceUSD === 'number' ? off.priceUSD : Number(off.priceUSD || 0),
+      priceMYR: typeof off.priceMYR === 'number' ? off.priceMYR : Number(off.priceMYR || 0),
       description: off.description || "Divine offering for the deity",
       imageUrl: off.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=200&q=80"
     };
@@ -155,9 +166,9 @@ const normalizePackages = (items: unknown, fallback: PujaPackage[]) => {
         return null;
       }
 
-      const pkg = item as Partial<PujaPackage> & { title?: string; amount?: number | string };
+      const pkg = item as Partial<PujaPackage> & { title?: string; amount?: number | string; priceINR?: number | string; priceUSD?: number | string; priceMYR?: number | string };
       const name = typeof pkg.name === 'string' && pkg.name.trim() ? pkg.name.trim() : pkg.title;
-      const priceSource = pkg.price ?? pkg.amount;
+      const priceSource = pkg.priceINR ?? pkg.price ?? pkg.amount;
       const numericPrice = typeof priceSource === 'number' ? priceSource : Number(priceSource);
 
       if (!name || Number.isNaN(numericPrice)) {
@@ -173,13 +184,16 @@ const normalizePackages = (items: unknown, fallback: PujaPackage[]) => {
         id: safeId,
         name,
         price: numericPrice,
+        priceINR: typeof pkg.priceINR === 'number' ? pkg.priceINR : Number(pkg.priceINR || 0),
+        priceUSD: typeof pkg.priceUSD === 'number' ? pkg.priceUSD : Number(pkg.priceUSD || 0),
+        priceMYR: typeof pkg.priceMYR === 'number' ? pkg.priceMYR : Number(pkg.priceMYR || 0),
         description:
           typeof pkg.description === 'string' && pkg.description.trim().length > 0
             ? pkg.description.trim()
             : `Recommended for ${name.toLowerCase()} devotees.`,
-      };
+      } as PujaPackage;
     })
-    .filter((item): item is PujaPackage => item !== null);
+    .filter((item): item is NonNullable<typeof item> => item !== null);
 
   return parsed.length > 0 ? parsed : fallback;
 };

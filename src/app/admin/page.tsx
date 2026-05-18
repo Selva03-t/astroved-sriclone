@@ -33,7 +33,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-[#241a46]">Admin Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-brand-ink">Admin Dashboard</h1>
       
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
@@ -50,19 +50,7 @@ export default function AdminDashboard() {
         ))}
       </div>
     
-      <div className="mt-8">
-        <div className="rounded-lg border border-[#e8e2ff] bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-medium text-[#241a46]">Quick Actions</h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <a href="/admin/pujas" className="flex items-center justify-center rounded-md border border-transparent bg-[#6869F9] px-4 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#5657e8]">
-              Add New Puja
-            </a>
-            <a href="/admin/temples" className="flex items-center justify-center rounded-md border border-[#d8ceff] bg-white px-4 py-3 text-sm font-medium text-[#5657e8] shadow-sm transition-all hover:bg-[#f3f0ff]">
-              Manage Temples
-            </a>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }
