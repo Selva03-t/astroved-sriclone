@@ -293,7 +293,7 @@ export default function ChadhavaDetailPage() {
         <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
           <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <Link href="/chadhava" className="hover:text-gray-800 transition-colors">AstroVed Chadhava Seva</Link>
+          <Link href="/chadhava" className="hover:text-gray-800 transition-colors">DivineAlign Chadhava Seva</Link>
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
           <span className="text-[#6869F9] truncate max-w-[300px] font-bold">{data.title}</span>
         </div>

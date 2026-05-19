@@ -169,7 +169,7 @@ export default function AstroToolsPage() {
           <div className="pb-16 max-w-3xl">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Astrology Calculators</h3>
             <p className="text-[15px] text-gray-600 leading-[1.9]">
-              At AstroVed, we bring the wisdom of ancient Vedic astrology to your fingertips.
+              At DivineAlign, we bring the wisdom of ancient Vedic astrology to your fingertips.
               Our goal is to help you understand your life, personality, relationships, and future
               with the help of easy and accurate astrology tools. Whether you want to check your
               birth chart, find your moon sign, or know today&apos;s{" "}

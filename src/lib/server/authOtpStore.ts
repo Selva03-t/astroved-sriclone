@@ -7,11 +7,11 @@ interface StoredOtp extends OtpPayload {
 
 const OTP_TTL_MS = 5 * 60 * 1000;
 const store = globalThis as typeof globalThis & {
-  astrovedOtpStore?: Map<string, StoredOtp>;
+  divinealignOtpStore?: Map<string, StoredOtp>;
 };
 
-const otpStore = store.astrovedOtpStore ?? new Map<string, StoredOtp>();
-store.astrovedOtpStore = otpStore;
+const otpStore = store.divinealignOtpStore ?? new Map<string, StoredOtp>();
+store.divinealignOtpStore = otpStore;
 
 export const OTP_RESEND_SECONDS = 30;
 const OTP_PROVIDER_TIMEOUT_MS = Number(process.env.AUTH_OTP_PROVIDER_TIMEOUT_MS ?? 5000);

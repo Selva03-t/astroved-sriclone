@@ -26,7 +26,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   // Load language from localStorage on mount
   useEffect(() => {
-    const storedLang = localStorage.getItem("astroved_lang") as SupportedLanguages;
+    const storedLang = localStorage.getItem("divinealign_lang") as SupportedLanguages;
     if (storedLang && Object.keys(translations).includes(storedLang)) {
       setLanguageState(storedLang);
     }
@@ -34,7 +34,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const setLanguage = (lang: SupportedLanguages) => {
     setLanguageState(lang);
-    localStorage.setItem("astroved_lang", lang);
+    localStorage.setItem("divinealign_lang", lang);
   };
 
   // Basic translation function using dot notation (e.g., 'nav.home')

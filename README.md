@@ -1,4 +1,4 @@
-# Astroved Project Overview
+# DivineAlign Project Overview
 
 ## Purpose
 

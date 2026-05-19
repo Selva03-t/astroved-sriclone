@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'astroved_secret_key_123'
+  process.env.JWT_SECRET || 'divinealign_secret_key_123'
 );
 
 export async function POST(request: Request) {

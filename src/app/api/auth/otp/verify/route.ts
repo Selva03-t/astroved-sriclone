@@ -5,7 +5,7 @@ import { SignJWT } from "jose";
 import type { VerifyOtpPayload } from "@/types/auth";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "astroved_secret_key_123"
+  process.env.JWT_SECRET || "divinealign_secret_key_123"
 );
 
 export async function POST(request: Request) {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       existing ??
       (
         await collection.insertOne({
-          name: "AstroVed User",
+          name: "DivineAlign User",
           [numberField]: number,
           country,
           authProvider: method,
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       );
 
     const userId = "insertedId" in user ? user.insertedId.toString() : user._id.toString();
-    const userName = "insertedId" in user ? "AstroVed User" : user.name;
+    const userName = "insertedId" in user ? "DivineAlign User" : user.name;
 
     const token = await new SignJWT({
       userId,

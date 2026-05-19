@@ -58,7 +58,7 @@ export async function POST(request: Request) {
             UserName: email,
             Password: password,
             PhoneNumber: formattedPhone,
-            ShopName: "AstroVed",
+            ShopName: "DivineAlign",
             Currency: "INR",
             IsWhatsappNumber: Boolean(isWhatsappNumber)
           })

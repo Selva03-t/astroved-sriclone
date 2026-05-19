@@ -80,7 +80,7 @@ export default function SignupPage() {
       <div className="relative z-10 w-full max-w-xl px-4 py-12">
         <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
           <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">Create Account</h1>
-          <p className="mt-3 text-center text-base text-[#6a4e95]">Join astroved to explore sacred traditions.</p>
+          <p className="mt-3 text-center text-base text-[#6a4e95]">Join divinealign to explore sacred traditions.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div className="space-y-4">

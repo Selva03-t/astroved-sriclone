@@ -25,7 +25,7 @@ export default function ContactPage() {
           <div className="rounded-sm border border-gray-100 bg-white px-6 py-8 text-center shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
             <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#F47820]">Contact Us</p>
             <h1 className="mt-3 text-3xl font-black text-[#6f1d1b] md:text-4xl">
-              AstroVed Office Address
+              DivineAlign Office Address
             </h1>
             <p className="mt-6 text-xl font-semibold text-[#6f1d1b]">
               FirstPrinciple AppsForBharat Private Limited

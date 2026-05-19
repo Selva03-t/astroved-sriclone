@@ -32,7 +32,7 @@ const banners = [
   },
   {
     id: 2,
-    title: "AstroVed Special ",
+    title: "DivineAlign Special ",
     titleHighlight: "Puja",
     subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples — from the comfort of your home.",
     buttons: [
@@ -43,10 +43,10 @@ const banners = [
   },
   {
     id: 3,
-    title: "AstroVed",
+    title: "DivineAlign",
     titleHighlight: "",
     titleColor: "text-yellow-400",
-    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on AstroVed.",
+    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on DivineAlign.",
     buttons: [
       { text: "Download App", variant: "solid", action: "scroll-bottom" }
     ],
@@ -55,9 +55,9 @@ const banners = [
   },
   {
     id: 4,
-    title: "AstroVed Special ",
+    title: "DivineAlign Special ",
     titleHighlight: "Chadhava",
-    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on AstroVed.",
+    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on DivineAlign.",
     buttons: [
       { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
     ],
@@ -237,11 +237,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* AstroVed Special Pujas Section */}
+      {/* DivineAlign Special Pujas Section */}
       <section className="bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
-            <span className="text-[rgb(107,76,154)]">AstroVed</span> {t.home.specialPujas}
+            <span className="text-[rgb(107,76,154)]">DivineAlign</span> {t.home.specialPujas}
           </h2>
           <p className="text-center text-[17px] font-medium text-gray-700 mb-14 max-w-2xl mx-auto leading-relaxed">
             {t.home.specialPujasSubtitle}

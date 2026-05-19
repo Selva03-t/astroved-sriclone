@@ -17,7 +17,7 @@ export default function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ role: "ai" | "user"; text: string }[]>([
-    { role: "ai", text: "Namaste! 🙏 Welcome to AstroVed. How can I assist you on your spiritual journey today?" },
+    { role: "ai", text: "Namaste! 🙏 Welcome to DivineAlign. How can I assist you on your spiritual journey today?" },
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -53,13 +53,11 @@ export default function AIAssistant() {
         }`}
         aria-label="Open AI Assistant"
       >
-        <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-orange-50 overflow-hidden p-2">
-          <Image
-            src="https://cdn.astroved.com/images/images-av/AstroVed-Logo.svg"
-            alt="AstroVed Logo"
-            width={60}
-            height={20}
-            className="object-contain"
+        <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-orange-50 overflow-hidden p-3">
+          <img
+            src="/images/logo.png"
+            alt="DivineAlign Logo"
+            className="max-h-full max-w-full object-contain"
           />
         </div>
       </button>
@@ -75,17 +73,15 @@ export default function AIAssistant() {
         {/* Header */}
         <div className="flex items-center justify-between bg-gradient-to-r from-[#8b2323] to-[#b33030] px-4 py-3.5 text-white">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-16 items-center justify-center rounded bg-white/20 backdrop-blur-sm px-1">
-               <Image
-                 src="https://cdn.astroved.com/images/images-av/AstroVed-Logo.svg"
-                 alt="AstroVed Logo"
-                 width={50}
-                 height={20}
-                 className="object-contain filter brightness-0 invert"
+            <div className="flex h-8 w-20 items-center justify-center rounded bg-white/20 backdrop-blur-sm p-1.5">
+               <img
+                 src="/images/logo.png"
+                 alt="DivineAlign Logo"
+                 className="max-h-full max-w-full object-contain brightness-0 invert"
                />
             </div>
             <div>
-              <h3 className="font-semibold text-sm">AstroVed AI</h3>
+              <h3 className="font-semibold text-sm">DivineAlign AI</h3>
               <p className="text-xs text-red-100">Online & ready to help</p>
             </div>
           </div>
@@ -103,13 +99,11 @@ export default function AIAssistant() {
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
               {msg.role === "ai" && (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 text-[#8b2323] shadow-sm overflow-hidden p-1">
-                   <Image
-                     src="https://cdn.astroved.com/images/images-av/AstroVed-Logo.svg"
-                     alt="AstroVed Logo"
-                     width={24}
-                     height={24}
-                     className="object-contain object-left max-w-none w-[60px]"
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 text-[#8b2323] shadow-sm overflow-hidden p-1.5">
+                   <img
+                     src="/images/logo.png"
+                     alt="DivineAlign Logo"
+                     className="max-h-full max-w-full object-contain"
                    />
                 </div>
               )}

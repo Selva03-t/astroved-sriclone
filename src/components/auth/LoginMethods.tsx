@@ -260,7 +260,7 @@ export default function LoginMethods() {
       </p>
 
       <p className="mt-5 text-center text-sm text-[#6f53a3]">
-        New to astroved?{" "}
+        New to divinealign?{" "}
         <Link
           href="/auth/signup"
           className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"

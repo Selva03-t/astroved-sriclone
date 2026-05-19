@@ -80,10 +80,10 @@ function PaymentContent() {
          <div className="flex-1 space-y-8">
             <div className="flex items-center gap-4">
                <div className="h-16 w-16 rounded-2xl bg-white shadow-sm flex items-center justify-center p-3 border border-gray-100">
-                  <img src="https://cdn.astroved.com/images/images-av/AstroVed-Logo.svg" alt="AstroVed" className="w-full" />
+                  <img src="/images/logo.png" alt="DivineAlign" className="max-h-full max-w-full object-contain" />
                </div>
                <div>
-                  <h2 className="text-lg font-bold text-gray-900">AstroVed Chadhava Seva</h2>
+                  <h2 className="text-lg font-bold text-gray-900">DivineAlign Chadhava Seva</h2>
                   <p className="text-sm text-gray-400">Payment for Spiritual Offerings</p>
                </div>
             </div>
