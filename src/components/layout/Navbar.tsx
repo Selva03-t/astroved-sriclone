@@ -201,7 +201,7 @@ export default function Navbar() {
               className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
             >
               {user ? (
-                <div className="h-full w-full flex items-center justify-center bg-[#1f1f1f] text-white rounded-full font-bold text-xs uppercase">
+                <div className="h-full w-full flex items-center justify-center bg-[#6869F9] text-white rounded-full font-bold text-xs uppercase">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -225,9 +225,9 @@ export default function Navbar() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="p-5 border-b border-gray-50 bg-[#1f1f1f]/5">
+                  <div className="p-5 border-b border-gray-50 bg-[#6869F9]/5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-[#1f1f1f] text-white rounded-full flex items-center justify-center font-bold">
+                      <div className="h-10 w-10 bg-[#6869F9] text-white rounded-full flex items-center justify-center font-bold">
                         {user.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">

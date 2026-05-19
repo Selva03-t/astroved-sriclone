@@ -209,7 +209,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-[#1f1f1f] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
+      <div className="bg-[#6869F9] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
         <div className="animate-marquee whitespace-nowrap flex items-center">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
