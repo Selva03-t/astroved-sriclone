@@ -102,7 +102,7 @@ export default function DashboardPage() {
                     src={banner.image || "/images/placeholder.jpg"}
                     alt={banner.title}
                     fill
-                    className="object-cover object-right opacity-80 md:opacity-100"
+                    className="object-cover object-[center_15%] md:object-[75%_15%] opacity-80 md:opacity-100"
                     priority={index === 0}
                   />
                 </div>
