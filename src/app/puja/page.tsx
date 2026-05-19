@@ -466,7 +466,7 @@ export default function PujaPage() {
                     type="button"
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to puja ${index + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#1f1f1f]" : "w-2 bg-[#d7cbef]"
+                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6869F9]" : "w-2 bg-[#d7cbef]"
                       }`}
                   />
                 ))}
@@ -489,7 +489,7 @@ export default function PujaPage() {
                 <button
                   type="button"
                   onClick={() => setIsFilterModalOpen(true)}
-                  className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-[#1f1f1f] shadow-sm transition hover:border-[#1f1f1f]/40 hover:bg-[#f5f3ff]"
+                  className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-[#6869F9] shadow-sm transition hover:border-[#6869F9]/40 hover:bg-[#f5f3ff]"
                 >
                   <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                     <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -506,7 +506,7 @@ export default function PujaPage() {
                     onClick={() => setIsFilterModalOpen(true)}
                     className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${
                       filters[group.label] !== "All"
-                        ? "bg-[#1f1f1f] text-white shadow-sm"
+                        ? "bg-[#6869F9] text-white shadow-sm"
                         : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
                     }`}
                   >
@@ -545,7 +545,7 @@ export default function PujaPage() {
                     .map(([key, val]) => (
                       <span
                         key={key}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-[#1f1f1f]/10 px-3 py-1 text-xs font-semibold text-[#1f1f1f]"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-[#6869F9]/10 px-3 py-1 text-xs font-semibold text-[#6869F9]"
                       >
                         {key}: {val}
                         <button
@@ -591,7 +591,7 @@ export default function PujaPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-2 rounded-full bg-[#1f1f1f] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#000000] transition"
+                  className="mt-2 rounded-full bg-[#6869F9] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5657e8] transition"
                 >
                   {t.puja.clearFilters}
                 </button>
@@ -615,7 +615,7 @@ export default function PujaPage() {
                         {puja.badge || "Special"}
                       </div>
                       {/* Bottom Left Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#1f1f1f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+                      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
                         BOOK PUJA
                       </div>
                     </div>
@@ -642,7 +642,7 @@ export default function PujaPage() {
                         <span className="leading-tight">{puja.date || t.puja.announcedSoon}</span>
                       </div>
 
-                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#1f1f1f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#F47820] transition-colors flex items-center justify-center gap-1.5">
+                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5">
                         {puja.buttonText || t.puja.bookNow}
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                       </Link>
