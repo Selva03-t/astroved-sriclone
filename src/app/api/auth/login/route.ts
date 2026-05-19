@@ -5,7 +5,8 @@ import {
   authenticatePasswordLogin,
   mapLoginInfoToUser,
 } from "@/lib/server/astrovedAuthApi";
-import { attachUserSession } from "@/lib/server/authSession";
+import { attachUserSession, getJwtSecret } from "@/lib/server/authSession";
+import { SignJWT } from "jose";
 
 export const runtime = "nodejs";
 
@@ -18,6 +19,33 @@ export async function POST(request: Request) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    // ── Admin check ──────────────────────────────────────────────────────────
+    // Check against master admin credentials from .env.local BEFORE hitting
+    // the backend API. This keeps admin login fully independent from user auth.
+    const adminEmail = (process.env.ADMIN_EMAIL || "").toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD || "";
+
+    if (adminEmail && normalizedEmail === adminEmail && password === adminPassword) {
+      const adminToken = await new SignJWT({ role: "admin", email: normalizedEmail })
+        .setProtectedHeader({ alg: "HS256" })
+        .setIssuedAt()
+        .setExpirationTime("24h")
+        .sign(getJwtSecret());
+
+      const response = NextResponse.json({ success: true, isAdmin: true });
+
+      response.cookies.set("adminToken", adminToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24, // 24 hours
+        path: "/",
+      });
+
+      return response;
+    }
+    // ── End admin check ──────────────────────────────────────────────────────
 
     const loginInfo = await authenticatePasswordLogin({
       email: normalizedEmail,
