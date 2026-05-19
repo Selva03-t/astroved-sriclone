@@ -163,7 +163,7 @@ export default function AstroPageLayout({
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
           <Link href="/astro-tools" className="hover:text-gray-800 transition-colors">Astrology Calculator</Link>
           <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <span className="text-[#6869F9] truncate max-w-[300px] font-bold">{breadcrumb}</span>
+          <span className="text-[#1f1f1f] truncate max-w-[300px] font-bold">{breadcrumb}</span>
         </div>
       </nav>
 
@@ -232,4 +232,5 @@ export default function AstroPageLayout({
     </div>
   );
 }
+
 

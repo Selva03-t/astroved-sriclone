@@ -17,7 +17,7 @@ interface LagnaResult {
 const ELEMENT_BG: Record<string, { bg: string; border: string; text: string }> = {
   Fire:  { bg: "#fff7ed", border: "#fed7aa", text: "#c2410c" },
   Earth: { bg: "#f0fdf4", border: "#bbf7d0", text: "#5b21b6" },
-  Air:   { bg: "#eff6ff", border: "#bfdbfe", text: "#5657e8" },
+  Air:   { bg: "#eff6ff", border: "#bfdbfe", text: "#000000" },
   Water: { bg: "#ecfeff", border: "#a5f3fc", text: "#155e75" },
 };
 
@@ -58,11 +58,11 @@ export default function LagnaPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
+              <Link href="/" className="hover:text-[#1f1f1f]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#1f1f1f]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#6869F9] font-medium">Kundali Lagna Calculator</span>
+              <span className="text-[#1f1f1f] font-medium">Kundali Lagna Calculator</span>
             </nav>
           </div>
         </div>
@@ -177,4 +177,5 @@ export default function LagnaPage() {
     </>
   );
 }
+
 

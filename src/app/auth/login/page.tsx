@@ -16,12 +16,13 @@ export default function LoginPage() {
       {/* Subtle Bottom Pattern */}
       <div className="absolute bottom-10 left-10 opacity-10 pointer-events-none">
         <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="60" r="58" stroke="#6869F9" strokeWidth="2" strokeDasharray="10 10" />
-          <circle cx="60" cy="60" r="40" stroke="#6869F9" strokeWidth="1" />
-          <path d="M60 20V40M60 80V100M20 60H40M80 60H100" stroke="#6869F9" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="60" cy="60" r="58" stroke="#1f1f1f" strokeWidth="2" strokeDasharray="10 10" />
+          <circle cx="60" cy="60" r="40" stroke="#1f1f1f" strokeWidth="1" />
+          <path d="M60 20V40M60 80V100M20 60H40M80 60H100" stroke="#1f1f1f" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
     </main>
   );
 }
+
 

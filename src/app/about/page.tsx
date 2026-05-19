@@ -64,7 +64,7 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
             {stats.map((item) => (
               <div key={item.label} className="rounded-2xl border border-gray-100 bg-white p-7 text-center shadow-sm">
-                <p className="text-4xl font-black text-[#6869F9]">{item.value}</p>
+                <p className="text-4xl font-black text-[#1f1f1f]">{item.value}</p>
                 <p className="mt-2 text-sm font-semibold text-gray-600">{item.label}</p>
               </div>
             ))}
@@ -83,3 +83,4 @@ export default function AboutPage() {
     </>
   );
 }
+

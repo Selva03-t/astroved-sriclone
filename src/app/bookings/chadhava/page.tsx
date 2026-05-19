@@ -59,7 +59,7 @@ export default function MyChadhavaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't made any chadhava offerings yet. Join the tradition today.</p>
                <button 
                  onClick={() => window.location.href = '/chadhava'}
-                 className="bg-[#6869F9] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#5657e8]"
+                 className="bg-[#1f1f1f] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#000000]"
                >
                   Explore Chadhava
                </button>
@@ -82,7 +82,7 @@ export default function MyChadhavaBookings() {
                         </div>
                      </div>
                      <div className="text-center sm:text-right">
-                        <div className="text-2xl font-black text-[#6869F9] mb-1">Rs. {booking.amount}</div>
+                        <div className="text-2xl font-black text-[#1f1f1f] mb-1">Rs. {booking.amount}</div>
                         <p className="text-[10px] font-bold text-gray-300 uppercase">Transaction ID: {booking._id.substr(-8).toUpperCase()}</p>
                      </div>
                   </div>
@@ -95,4 +95,5 @@ export default function MyChadhavaBookings() {
     </main>
   );
 }
+
 

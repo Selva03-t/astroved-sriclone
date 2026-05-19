@@ -126,7 +126,7 @@ export default function SignupPage() {
                   type="checkbox"
                   checked={formData.isWhatsappNumber}
                   onChange={(e) => setFormData({ ...formData, isWhatsappNumber: e.target.checked })}
-                  className="h-4 w-4 rounded border-[#8d849c] accent-[#6869F9]"
+                  className="h-4 w-4 rounded border-[#8d849c] accent-[#1f1f1f]"
                 />
                 This is also my WhatsApp number
               </label>
@@ -189,7 +189,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(104,105,249,0.22)] transition-all hover:brightness-110 disabled:opacity-50"
+              className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#1f1f1f] to-[#F47820] px-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(104,105,249,0.22)] transition-all hover:brightness-110 disabled:opacity-50"
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>
@@ -199,7 +199,7 @@ export default function SignupPage() {
             Already have an account?{" "}
             <Link
               href="/auth/login"
-              className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
+              className="font-semibold text-[#000000] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
             >
               Log in
             </Link>
@@ -210,11 +210,12 @@ export default function SignupPage() {
       {/* Subtle Pattern */}
       <div className="absolute bottom-10 right-10 opacity-10 pointer-events-none">
         <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="60" r="58" stroke="#6869F9" strokeWidth="2" strokeDasharray="10 10" />
-          <path d="M60 20L65 55L100 60L65 65L60 100L55 65L20 60L55 55L60 20Z" fill="#6869F9" />
+          <circle cx="60" cy="60" r="58" stroke="#1f1f1f" strokeWidth="2" strokeDasharray="10 10" />
+          <path d="M60 20L65 55L100 60L65 65L60 100L55 65L20 60L55 55L60 20Z" fill="#1f1f1f" />
         </svg>
       </div>
     </main>
   );
 }
+
 

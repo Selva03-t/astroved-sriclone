@@ -71,7 +71,7 @@ function PaymentContent() {
            <p className="text-gray-500">Your Chadhava offering has been booked successfully. You will receive updates on WhatsApp.</p>
            <button 
              onClick={() => window.location.href = '/dashboard'}
-             className="w-full bg-[#6869F9] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#F47820]"
+             className="w-full bg-[#1f1f1f] text-white py-4 rounded-xl font-bold uppercase transition-all hover:bg-[#F47820]"
            >
               Back to Dashboard
            </button>
@@ -179,7 +179,7 @@ function PaymentContent() {
 
                     <button 
                       onClick={handlePay}
-                      className="w-full bg-[#F47820] text-white py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-[#6869F9] transition-all active:scale-95 mt-4"
+                      className="w-full bg-[#F47820] text-white py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-[#1f1f1f] transition-all active:scale-95 mt-4"
                     >
                        Pay Now
                     </button>
@@ -207,5 +207,6 @@ export default function PaymentPage() {
     </Suspense>
   );
 }
+
 
 

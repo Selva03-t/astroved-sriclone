@@ -88,7 +88,7 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
             </div>
             <div className="px-2 pb-2 pt-4">
               {activeStep.tag && (
-                <span className="rounded bg-[#f5f3ff] px-3 py-1 text-xs font-bold text-[#6869F9]">
+                <span className="rounded bg-[#f5f3ff] px-3 py-1 text-xs font-bold text-[#1f1f1f]">
                   {activeStep.tag}
                 </span>
               )}
@@ -146,3 +146,4 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
     </section>
   );
 }
+

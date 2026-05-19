@@ -412,7 +412,7 @@ export default function PujaPage() {
           {/* Banner Carousel */}
           {isLoading ? (
             <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
-              <p className="text-base text-[#6869F9]">{t.puja.loading}</p>
+              <p className="text-base text-[#1f1f1f]">{t.puja.loading}</p>
             </div>
           ) : allPujas.length > 0 ? (
             <>
@@ -466,7 +466,7 @@ export default function PujaPage() {
                     type="button"
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to puja ${index + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6869F9]" : "w-2 bg-[#d7cbef]"
+                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#1f1f1f]" : "w-2 bg-[#d7cbef]"
                       }`}
                   />
                 ))}
@@ -479,7 +479,7 @@ export default function PujaPage() {
             <h2 className="text-2xl font-bold text-[#3b0764] md:text-3xl">
               {t.puja.sectionTitle}
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6869F9] md:text-base">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#1f1f1f] md:text-base">
               {t.puja.sectionSubtitle}
             </p>
 
@@ -489,7 +489,7 @@ export default function PujaPage() {
                 <button
                   type="button"
                   onClick={() => setIsFilterModalOpen(true)}
-                  className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-[#6869F9] shadow-sm transition hover:border-[#6869F9]/40 hover:bg-[#f5f3ff]"
+                  className="flex shrink-0 items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-[#1f1f1f] shadow-sm transition hover:border-[#1f1f1f]/40 hover:bg-[#f5f3ff]"
                 >
                   <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                     <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -506,7 +506,7 @@ export default function PujaPage() {
                     onClick={() => setIsFilterModalOpen(true)}
                     className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${
                       filters[group.label] !== "All"
-                        ? "bg-[#6869F9] text-white shadow-sm"
+                        ? "bg-[#1f1f1f] text-white shadow-sm"
                         : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
                     }`}
                   >
@@ -545,7 +545,7 @@ export default function PujaPage() {
                     .map(([key, val]) => (
                       <span
                         key={key}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-[#6869F9]/10 px-3 py-1 text-xs font-semibold text-[#6869F9]"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-[#1f1f1f]/10 px-3 py-1 text-xs font-semibold text-[#1f1f1f]"
                       >
                         {key}: {val}
                         <button
@@ -575,7 +575,7 @@ export default function PujaPage() {
 
             {/* Result count */}
             {!isLoading && (
-              <p className="mt-4 text-sm text-[#6869F9]">
+              <p className="mt-4 text-sm text-[#1f1f1f]">
                 {hasActiveFilters
                   ? `${t.puja.showingPujas} ${displayedPujas.length} ${t.puja.of} ${allPujas.length} ${t.puja.pujas}`
                   : `${allPujas.length} ${t.puja.allPujas}`}
@@ -585,13 +585,13 @@ export default function PujaPage() {
             {/* -- Puja Cards -- */}
             {isLoading ? null : displayedPujas.length === 0 ? (
               <div className="mt-16 flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-[#c4b8ef] bg-white py-16 text-center">
-                <SparklesIcon className="h-10 w-10 text-[#6869F9]" />
+                <SparklesIcon className="h-10 w-10 text-[#1f1f1f]" />
                 <p className="text-lg font-semibold text-[#3b0764]">{t.puja.noMatch}</p>
-                <p className="text-sm text-[#6869F9]">{t.puja.noMatchSub}</p>
+                <p className="text-sm text-[#1f1f1f]">{t.puja.noMatchSub}</p>
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-2 rounded-full bg-[#6869F9] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#5657e8] transition"
+                  className="mt-2 rounded-full bg-[#1f1f1f] px-6 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#000000] transition"
                 >
                   {t.puja.clearFilters}
                 </button>
@@ -615,7 +615,7 @@ export default function PujaPage() {
                         {puja.badge || "Special"}
                       </div>
                       {/* Bottom Left Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+                      <div className="absolute bottom-3 left-3 bg-[#1f1f1f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
                         BOOK PUJA
                       </div>
                     </div>
@@ -642,7 +642,7 @@ export default function PujaPage() {
                         <span className="leading-tight">{puja.date || t.puja.announcedSoon}</span>
                       </div>
 
-                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#F47820] transition-colors flex items-center justify-center gap-1.5">
+                      <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#1f1f1f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#F47820] transition-colors flex items-center justify-center gap-1.5">
                         {puja.buttonText || t.puja.bookNow}
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                       </Link>
@@ -668,20 +668,20 @@ export default function PujaPage() {
             <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
-                <h3 className="text-2xl font-black text-[#5657e8]">10,00,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.puja.pujasDone}</p>
+                <h3 className="text-2xl font-black text-[#000000]">10,00,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]">{t.puja.pujasDone}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
-                <h3 className="text-2xl font-black text-[#6869F9]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.puja.happyDevotees}</p>
+                <h3 className="text-2xl font-black text-[#1f1f1f]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
                 <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
                 <p className="mt-1 text-sm font-semibold text-[#F47820]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#6869F9]">{t.puja.sankalp}</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6869F9]/80">{t.puja.sankalpDesc}</p>
+                <h3 className="text-2xl font-black text-[#1f1f1f]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.sankalpDesc}</p>
               </div>
             </div>
           </section>
@@ -692,4 +692,5 @@ export default function PujaPage() {
     </>
   );
 }
+
 

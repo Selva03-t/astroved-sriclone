@@ -65,11 +65,11 @@ export default function MangalDoshaPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
+              <Link href="/" className="hover:text-[#1f1f1f]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#1f1f1f]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#6869F9] font-medium">Mangal Dosha Calculator</span>
+              <span className="text-[#1f1f1f] font-medium">Mangal Dosha Calculator</span>
             </nav>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function MangalDoshaPage() {
                       <ul className="space-y-2">
                         {data.remedies.map((r, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                            <span className="text-[#6869F9] mt-0.5 flex-shrink-0">•</span>
+                            <span className="text-[#1f1f1f] mt-0.5 flex-shrink-0">•</span>
                             {r}
                           </li>
                         ))}
@@ -191,4 +191,5 @@ export default function MangalDoshaPage() {
     </>
   );
 }
+
 

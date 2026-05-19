@@ -34,13 +34,13 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#6869F9] focus:ring-2 focus:ring-[#e0dcff] transition-all"
+                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#1f1f1f] focus:ring-2 focus:ring-[#e0dcff] transition-all"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110"
+                  className="w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#1f1f1f] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110"
                 >
                   Send Reset Link
                 </button>
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="mt-8 text-sm font-medium text-[#5657e8] hover:underline"
+                className="mt-8 text-sm font-medium text-[#000000] hover:underline"
               >
                 Didn't receive the email? Try again
               </button>
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             Back to{" "}
             <Link
               href="/auth/login"
-              className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
+              className="font-semibold text-[#000000] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
             >
               Log in
             </Link>
@@ -80,4 +80,5 @@ export default function ForgotPasswordPage() {
     </main>
   );
 }
+
 

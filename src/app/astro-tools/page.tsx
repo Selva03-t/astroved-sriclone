@@ -17,7 +17,7 @@ const ACTIVE: CalculatorCardProps[] = [
     id: "nakshatra",
     title: "Nakshatra Finder",
     description: "Helps you find your janma nakshatra",
-    accentHex: "#6869F9",
+    accentHex: "#1f1f1f",
     imageUrl: ZODIAC_IMG,
     href: "/astro-tools/nakshatra",
     live: true,
@@ -115,7 +115,7 @@ export default function AstroToolsPage() {
           <div className="max-w-6xl mx-auto text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
             <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
             <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-            <span className="text-[#6869F9] font-bold">Free Astrology Calculators</span>
+            <span className="text-[#1f1f1f] font-bold">Free Astrology Calculators</span>
           </div>
         </nav>
 
@@ -182,4 +182,5 @@ export default function AstroToolsPage() {
     </>
   );
 }
+
 

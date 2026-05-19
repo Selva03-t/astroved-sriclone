@@ -57,7 +57,7 @@ export default function LibraryPage() {
              </div>
           ) : items.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
-               <BookOpenIcon className="mx-auto mb-4 h-12 w-12 text-[#6869F9]" />
+               <BookOpenIcon className="mx-auto mb-4 h-12 w-12 text-[#1f1f1f]" />
                <p className="text-gray-500 font-medium">The library shelves are being stocked. Please visit later.</p>
             </div>
           ) : (
@@ -93,4 +93,5 @@ export default function LibraryPage() {
     </>
   );
 }
+
 

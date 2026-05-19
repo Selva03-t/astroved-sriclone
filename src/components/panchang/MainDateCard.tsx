@@ -21,7 +21,7 @@ export default function MainDateCard({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#6869F9]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#1f1f1f]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{formattedDate}</h2>
       </div>
       
@@ -54,4 +54,5 @@ export default function MainDateCard({ data }: { data: any }) {
     </div>
   );
 }
+
 

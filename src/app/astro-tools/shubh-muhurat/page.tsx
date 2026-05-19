@@ -81,11 +81,11 @@ export default function ShubhMuhuratPage() {
         <div style={{ backgroundColor: "#fff8f0", borderBottom: "1px solid #f0e0c8" }} className="py-4">
           <div className="max-w-5xl mx-auto px-6">
             <nav className="flex items-center gap-2 text-sm text-gray-400">
-              <Link href="/" className="hover:text-[#6869F9]">Home</Link>
+              <Link href="/" className="hover:text-[#1f1f1f]">Home</Link>
               <span>/</span>
-              <Link href="/astro-tools" className="hover:text-[#6869F9]">Astrology Calculator</Link>
+              <Link href="/astro-tools" className="hover:text-[#1f1f1f]">Astrology Calculator</Link>
               <span>/</span>
-              <span className="text-[#6869F9] font-medium">Shubh Muhurat Finder</span>
+              <span className="text-[#1f1f1f] font-medium">Shubh Muhurat Finder</span>
             </nav>
           </div>
         </div>
@@ -118,8 +118,8 @@ export default function ShubhMuhuratPage() {
                         className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold border transition text-left"
                         style={{
                           backgroundColor: selectedPurpose === p.label ? "#fff8ed" : "#f9fafb",
-                          borderColor: selectedPurpose === p.label ? "#6869F9" : "#e5e7eb",
-                          color: selectedPurpose === p.label ? "#6869F9" : "#374151",
+                          borderColor: selectedPurpose === p.label ? "#1f1f1f" : "#e5e7eb",
+                          color: selectedPurpose === p.label ? "#1f1f1f" : "#374151",
                         }}>
                         <Icon className="h-4 w-4 shrink-0" />
                         <span className="leading-tight">{p.label.split(" / ")[0]}</span>
@@ -229,4 +229,5 @@ export default function ShubhMuhuratPage() {
     </>
   );
 }
+
 

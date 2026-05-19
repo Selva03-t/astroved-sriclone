@@ -35,7 +35,7 @@ export default function MyPujaBookings() {
       
       <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-12">
          <div className="flex items-center gap-4 mb-8">
-            <div className="h-12 w-12 bg-violet-100 text-[#6869F9] rounded-2xl flex items-center justify-center text-xl">
+            <div className="h-12 w-12 bg-violet-100 text-[#1f1f1f] rounded-2xl flex items-center justify-center text-xl">
                <i className="fa-solid fa-calendar-check"></i>
             </div>
             <div>
@@ -59,7 +59,7 @@ export default function MyPujaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't booked any pujas yet. Explore our sacred services to start your journey.</p>
                <button 
                  onClick={() => window.location.href = '/puja'}
-                 className="bg-[#6869F9] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#5657e8]"
+                 className="bg-[#1f1f1f] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#000000]"
                >
                   Explore Pujas
                </button>
@@ -82,7 +82,7 @@ export default function MyPujaBookings() {
                         </div>
                      </div>
                      <div className="text-center sm:text-right">
-                        <div className="text-2xl font-black text-[#6869F9] mb-1">Rs. {booking.amount}</div>
+                        <div className="text-2xl font-black text-[#1f1f1f] mb-1">Rs. {booking.amount}</div>
                         <button className="text-xs font-bold text-[#F47820] hover:underline">View Certificate</button>
                      </div>
                   </div>
@@ -95,4 +95,5 @@ export default function MyPujaBookings() {
     </main>
   );
 }
+
 

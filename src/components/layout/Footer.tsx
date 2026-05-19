@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-gradient-to-br from-[#2b2d70] via-[#4647c4] to-[#6869F9] text-white">
+    <footer className="w-full bg-gradient-to-br from-[#2b2d70] via-[#4647c4] to-[#1f1f1f] text-white">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-8">
           {/* Logo and Description */}
@@ -120,8 +120,9 @@ function SocialIcon({ platform, href }: { platform: string; href: string }) {
     facebook: "fa-brands fa-facebook-f",
   };
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="h-8 w-8 bg-white rounded-full flex items-center justify-center text-[#6869F9] text-sm cursor-pointer hover:bg-gray-100 transition-all shadow-sm">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="h-8 w-8 bg-white rounded-full flex items-center justify-center text-[#1f1f1f] text-sm cursor-pointer hover:bg-gray-100 transition-all shadow-sm">
       <i className={icons[platform] || "fa-solid fa-share-nodes"}></i>
     </a>
   );
 }
+

@@ -49,7 +49,7 @@ export default function Sidebar() {
     <div className="flex h-screen w-64 flex-col border-r border-[#d8ceff] bg-white">
       <Link 
         href="/admin/profile"
-        className="flex flex-col items-center justify-center border-b border-[#d8ceff] bg-[#6869F9] hover:bg-[#5657e8] transition-colors py-6"
+        className="flex flex-col items-center justify-center border-b border-[#d8ceff] bg-[#1f1f1f] hover:bg-[#000000] transition-colors py-6"
       >
         <div className="bg-white/20 p-2 rounded-full mb-3">
           <UserCircleIcon className="h-12 w-12 text-white" />
@@ -65,13 +65,13 @@ export default function Sidebar() {
               href={item.href}
               className={`group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-[#f3f0ff] text-[#5657e8]"
-                  : "text-gray-600 hover:bg-[#f3f0ff] hover:text-[#5657e8]"
+                  ? "bg-[#f3f0ff] text-[#000000]"
+                  : "text-gray-600 hover:bg-[#f3f0ff] hover:text-[#000000]"
               }`}
             >
               <item.icon
                 className={`mr-3 h-6 w-6 shrink-0 ${
-                  isActive ? "text-[#5657e8]" : "text-gray-400 group-hover:text-[#6869F9]"
+                  isActive ? "text-[#000000]" : "text-gray-400 group-hover:text-[#1f1f1f]"
                 }`}
                 aria-hidden="true"
               />
@@ -92,10 +92,11 @@ export default function Sidebar() {
         </button>
       </nav>
       <div className="border-t border-[#d8ceff] p-4 font-semibold text-gray-500">
-          <Link href="/dashboard" className="flex items-center hover:text-[#5657e8]">
+          <Link href="/dashboard" className="flex items-center hover:text-[#000000]">
             <span className="mr-2">←</span> Back to Site
           </Link>
       </div>
     </div>
   );
 }
+

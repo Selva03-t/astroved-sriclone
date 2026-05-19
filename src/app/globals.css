@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-violet: #6869F9;
+  --color-brand-violet: #1f1f1f;
   --color-brand-orange: #F47820;
   --color-brand-orange-dark: #d95f13;
   --color-brand-ink: #241a46;
@@ -13,8 +13,8 @@
   --color-primary-violet-200: #d8ceff;
   --color-primary-violet-300: #b9abff;
   --color-primary-violet-400: #9189ff;
-  --color-primary-violet-500: #6869F9;
-  --color-primary-violet-600: #5657e8;
+  --color-primary-violet-500: #1f1f1f;
+  --color-primary-violet-600: #000000;
   --color-primary-violet-700: #4647c4;
   --color-primary-violet-800: #373895;
   --color-primary-violet-900: #2b2d70;
@@ -24,8 +24,8 @@
   --color-blue-200: #d8ceff;
   --color-blue-300: #b9abff;
   --color-blue-400: #9189ff;
-  --color-blue-500: #6869F9;
-  --color-blue-600: #5657e8;
+  --color-blue-500: #1f1f1f;
+  --color-blue-600: #000000;
   --color-blue-700: #4647c4;
   --color-blue-800: #373895;
   --color-blue-900: #2b2d70;
@@ -35,8 +35,8 @@
   --color-violet-200: #d8ceff;
   --color-violet-300: #b9abff;
   --color-violet-400: #9189ff;
-  --color-violet-500: #6869F9;
-  --color-violet-600: #5657e8;
+  --color-violet-500: #1f1f1f;
+  --color-violet-600: #000000;
   --color-violet-700: #4647c4;
   --color-violet-800: #373895;
   --color-violet-900: #2b2d70;
@@ -54,7 +54,7 @@
 }
 
 :root {
-  --brand-violet: #6869F9;
+  --brand-violet: #1f1f1f;
   --brand-orange: #F47820;
   --brand-orange-dark: #d95f13;
   --brand-ink: #241a46;
@@ -149,3 +149,4 @@ body.puja-checkout-active footer,
 body.puja-checkout-active [data-global-chrome="assistant"] {
   display: none;
 }
+

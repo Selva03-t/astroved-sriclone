@@ -466,7 +466,7 @@ export default function ContentManager({
               form="content-manager-form"
               type="submit"
               disabled={submitting}
-              className="flex items-center rounded-md bg-[#6869F9] px-4 py-2 text-sm font-medium text-white hover:bg-[#5657e8] disabled:opacity-50"
+              className="flex items-center rounded-md bg-[#1f1f1f] px-4 py-2 text-sm font-medium text-white hover:bg-[#000000] disabled:opacity-50"
             >
               {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
             </button>
@@ -477,7 +477,7 @@ export default function ContentManager({
               className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
                 isAdding
                   ? "bg-gray-500 hover:bg-gray-600"
-                  : "bg-[#6869F9] hover:bg-[#5657e8]"
+                  : "bg-[#1f1f1f] hover:bg-[#000000]"
               }`}
             >
               {isAdding ? "Cancel" : <><PlusIcon className="mr-2 h-5 w-5" /> Add New</>}
@@ -499,13 +499,13 @@ export default function ContentManager({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`Search ${title.toLowerCase()}...`}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:max-w-sm"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:max-w-sm"
             />
             {effectiveFilterGroups.length > 0 && (
               <button
                 type="button"
                 onClick={() => setIsFilterOpen((prev) => !prev)}
-                className="rounded-md border border-[#d8ceff] bg-white px-4 py-2 text-sm font-medium text-[#5657e8] hover:bg-[#f3f0ff]"
+                className="rounded-md border border-[#d8ceff] bg-white px-4 py-2 text-sm font-medium text-[#000000] hover:bg-[#f3f0ff]"
               >
                 Filter
               </button>
@@ -523,7 +523,7 @@ export default function ContentManager({
                       onChange={(e) =>
                         setActiveFilters((prev) => ({ ...prev, [group.label]: e.target.value }))
                       }
-                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9]"
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f]"
                     >
                       {group.options.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -587,7 +587,7 @@ export default function ContentManager({
                           [field.name]: iso ? isoToDdmmyyyy(iso) : "",
                         }));
                       }}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                     />
                   ) : field.type === "reference-array" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
@@ -606,7 +606,7 @@ export default function ContentManager({
                                 return { ...prev, [field.name]: arr.filter((id: string) => id !== String(item._id)) };
                               });
                             }}
-                            className="h-4 w-4 rounded border-gray-300 text-[#6869F9] focus:ring-[#6869F9]"
+                            className="h-4 w-4 rounded border-gray-300 text-[#1f1f1f] focus:ring-[#1f1f1f]"
                           />
                           {item[field.referenceLabelField || "name"]}
                         </label>
@@ -632,7 +632,7 @@ export default function ContentManager({
                             setFormData((prev: any) => ({ ...prev, [field.name]: newOrder }));
                             setDraggedItemIndex(null);
                           }}
-                          className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-move hover:border-[#6869F9] transition-colors"
+                          className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg cursor-move hover:border-[#1f1f1f] transition-colors"
                         >
                           <Bars3Icon className="h-5 w-5 text-gray-400" />
                           <span className="font-medium text-gray-700 capitalize">{item.replace(/-/g, " ")}</span>
@@ -649,14 +649,14 @@ export default function ContentManager({
                             value={val}
                             onChange={(e) => handleArrayChange(field.name, idx, e.target.value)}
                             placeholder={field.placeholder || "Enter value"}
-                            className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                            className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                           />
                           <button type="button" onClick={() => removeArrayItem(field.name, idx, field.label)} className="text-red-500 hover:text-red-700">
                             <TrashIcon className="h-5 w-5" />
                           </button>
                         </div>
                       ))}
-                      <button type="button" onClick={() => addArrayItem(field.name, "array-string")} className="mt-3 inline-flex text-sm text-[#6869F9] font-medium hover:underline">
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-string")} className="mt-3 inline-flex text-sm text-[#1f1f1f] font-medium hover:underline">
                         + Add {field.label}
                       </button>
                     </div>
@@ -677,7 +677,7 @@ export default function ContentManager({
                                     onChange={(e) => handleArrayChange(field.name, idx, e.target.value, sub.name)}
                                     rows={2}
                                     placeholder={sub.placeholder}
-                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                                   />
                                 ) : (
                                   <input
@@ -685,7 +685,7 @@ export default function ContentManager({
                                     value={val[sub.name] || ""}
                                     onChange={(e) => handleArrayChange(field.name, idx, e.target.value, sub.name)}
                                     placeholder={sub.placeholder || (sub.name.toLowerCase().includes("price") ? "$ Price" : undefined)}
-                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                                   />
                                 )}
                               </div>
@@ -693,7 +693,7 @@ export default function ContentManager({
                           </div>
                         </div>
                       ))}
-                      <button type="button" onClick={() => addArrayItem(field.name, "array-object")} className="mt-3 inline-flex text-sm text-[#6869F9] font-medium hover:underline">
+                      <button type="button" onClick={() => addArrayItem(field.name, "array-object")} className="mt-3 inline-flex text-sm text-[#1f1f1f] font-medium hover:underline">
                         + Add {field.label}
                       </button>
                     </div>
@@ -706,7 +706,7 @@ export default function ContentManager({
                       value={formData[field.name] || ""}
                       onChange={handleInputChange}
                       rows={field.type === "json" ? 8 : 3}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                     />
                   ) : (
                     <>
@@ -719,7 +719,7 @@ export default function ContentManager({
                         value={formData[field.name] || ""}
                         onChange={handleInputChange}
                         list={field.options ? `${field.name}-options` : undefined}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#6869F9] sm:text-sm"
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#1f1f1f] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                       />
                       {field.options && (
                         <datalist id={`${field.name}-options`}>
@@ -737,7 +737,7 @@ export default function ContentManager({
               <button
                 type="submit"
                 disabled={submitting}
-                className="rounded-md bg-[#6869F9] px-6 py-2 text-sm font-medium text-white hover:bg-[#5657e8] disabled:opacity-50"
+                className="rounded-md bg-[#1f1f1f] px-6 py-2 text-sm font-medium text-white hover:bg-[#000000] disabled:opacity-50"
               >
                 {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
               </button>
@@ -805,7 +805,7 @@ export default function ContentManager({
                           <>
                             <button
                               onClick={() => setViewingReview(item)}
-                              className="text-[#5657e8] hover:text-[#4647c4]"
+                              className="text-[#000000] hover:text-[#4647c4]"
                               title="View review"
                             >
                               <EyeIcon className="h-5 w-5" />
@@ -852,17 +852,17 @@ export default function ContentManager({
                                 >
                                   Mark {item.status === "inactive" ? "Active" : "Inactive"}
                                 </button>
-                                <a href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#5657e8] hover:text-[#4647c4]" title="View puja">
+                                <a href={`/puja/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#000000] hover:text-[#4647c4]" title="View puja">
                                   <EyeIcon className="h-5 w-5" />
                                 </a>
                               </>
                             )}
                             {type === "chadhava" && (
-                              <a href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#5657e8] hover:text-[#4647c4]" title="View chadhava">
+                              <a href={`/chadhava/${item.slug || String(item.title || "").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-")}`} target="_blank" rel="noreferrer" className="text-[#000000] hover:text-[#4647c4]" title="View chadhava">
                                 <EyeIcon className="h-5 w-5" />
                               </a>
                             )}
-                            <button onClick={() => handleEdit(item)} className="text-[#5657e8] hover:text-[#4647c4]" aria-label="Edit item">
+                            <button onClick={() => handleEdit(item)} className="text-[#000000] hover:text-[#4647c4]" aria-label="Edit item">
                               <PencilSquareIcon className="h-5 w-5" />
                             </button>
                             <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900" aria-label="Delete item">
@@ -898,7 +898,7 @@ export default function ContentManager({
                     onClick={() => setCurrentPage(page)}
                     className={`rounded-md border px-3 py-1.5 text-sm ${
                       page === currentPage
-                        ? "border-[#6869F9] bg-[#6869F9] text-white"
+                        ? "border-[#1f1f1f] bg-[#1f1f1f] text-white"
                         : "border-gray-300 text-gray-700 hover:bg-gray-50"
                     }`}
                   >
@@ -962,4 +962,5 @@ export default function ContentManager({
     </div>
   );
 }
+
 

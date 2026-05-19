@@ -159,7 +159,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("email")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "email"
-              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#1f1f1f] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -172,7 +172,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("phone")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "phone"
-              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#1f1f1f] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -185,7 +185,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("whatsapp")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "whatsapp"
-              ? "bg-gradient-to-r from-[#F47820] to-[#6869F9] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
+              ? "bg-gradient-to-r from-[#F47820] to-[#1f1f1f] text-white shadow-[0_8px_20px_rgba(124,58,237,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -218,7 +218,7 @@ export default function LoginMethods() {
         {method === "email" && (
            <label className="block text-sm font-medium text-[#5a3b8a]">
               Password
-              <div className="relative mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#e0dcff]">
+              <div className="relative mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#1f1f1f] focus-within:ring-2 focus-within:ring-[#e0dcff]">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
@@ -247,7 +247,7 @@ export default function LoginMethods() {
           <div className="flex justify-end">
             <Link
               href="/auth/forgot-password"
-              className="text-sm font-medium text-[#5657e8] transition-colors duration-300 hover:text-[#4647c4]"
+              className="text-sm font-medium text-[#000000] transition-colors duration-300 hover:text-[#4647c4]"
             >
               Forgot password?
             </Link>
@@ -259,7 +259,7 @@ export default function LoginMethods() {
           disabled={!isValid || loading}
           className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isValid && !loading
-              ? "bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] shadow-[0_10px_24_rgba(104,105,249,0.35)] hover:brightness-110"
+              ? "bg-gradient-to-r from-[#1f1f1f] via-[#1f1f1f] to-[#000000] shadow-[0_10px_24_rgba(104,105,249,0.35)] hover:brightness-110"
               : "cursor-not-allowed bg-[#d2c2ef]"
           }`}
         >
@@ -277,7 +277,7 @@ export default function LoginMethods() {
         New to divinealign?{" "}
         <Link
           href="/auth/signup"
-          className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
+          className="font-semibold text-[#000000] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
         >
           Register now
         </Link>
@@ -286,3 +286,4 @@ export default function LoginMethods() {
   );
 }
         
+

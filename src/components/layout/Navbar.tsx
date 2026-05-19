@@ -109,7 +109,7 @@ export default function Navbar() {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors hover:text-[#6869F9]"
+                    className="transition-colors hover:text-[#1f1f1f]"
                   >
                     {t(`nav.${item.key}`)}
                   </a>
@@ -118,8 +118,8 @@ export default function Navbar() {
                     href={item.path}
                     className={
                       isActivePath(item.path)
-                        ? "text-[#6869F9] font-bold"
-                        : "transition-colors hover:text-[#6869F9]"
+                        ? "text-[#1f1f1f] font-bold"
+                        : "transition-colors hover:text-[#1f1f1f]"
                     }
                   >
                     {t(`nav.${item.key}`)}
@@ -180,8 +180,8 @@ export default function Navbar() {
                         onClick={() => { setLanguage(lang.code as SupportedLanguage); setLangOpen(false); }}
                         className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                           language === lang.code
-                            ? "text-[#6869F9] bg-blue-50 font-bold"
-                            : "text-gray-700 hover:bg-blue-50 hover:text-[#6869F9] font-medium"
+                            ? "text-[#1f1f1f] bg-blue-50 font-bold"
+                            : "text-gray-700 hover:bg-blue-50 hover:text-[#1f1f1f] font-medium"
                         }`}
                       >
                         {lang.label}
@@ -201,7 +201,7 @@ export default function Navbar() {
               className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
             >
               {user ? (
-                <div className="h-full w-full flex items-center justify-center bg-[#6869F9] text-white rounded-full font-bold text-xs uppercase">
+                <div className="h-full w-full flex items-center justify-center bg-[#1f1f1f] text-white rounded-full font-bold text-xs uppercase">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -225,13 +225,13 @@ export default function Navbar() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="p-5 border-b border-gray-50 bg-[#6869F9]/5">
+                  <div className="p-5 border-b border-gray-50 bg-[#1f1f1f]/5">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-[#6869F9] text-white rounded-full flex items-center justify-center font-bold">
+                      <div className="h-10 w-10 bg-[#1f1f1f] text-white rounded-full flex items-center justify-center font-bold">
                         {user.name.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-[#6869F9] uppercase tracking-wider">Namaste,</p>
+                        <p className="text-xs font-bold text-[#1f1f1f] uppercase tracking-wider">Namaste,</p>
                         <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
                       </div>
                     </div>
@@ -267,7 +267,7 @@ export default function Navbar() {
 
                     <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
+                        <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#1f1f1f] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookPuja")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -278,7 +278,7 @@ export default function Navbar() {
 
                     <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
+                        <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#1f1f1f] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.bookChadhava")}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -366,7 +366,7 @@ export default function Navbar() {
                     <Link
                       href={item.path}
                       className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                        isActivePath(item.path) ? "bg-[#6869F9]/10 text-[#6869F9]" : "text-gray-700 hover:bg-gray-50"
+                        isActivePath(item.path) ? "bg-[#1f1f1f]/10 text-[#1f1f1f]" : "text-gray-700 hover:bg-gray-50"
                       }`}
                     >
                       {t(`nav.${item.key}`)}
@@ -385,7 +385,7 @@ export default function Navbar() {
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang as SupportedLanguage)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#6869F9] text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#1f1f1f] text-white" : "bg-gray-100 text-gray-700"}`}
                 >
                   {languageDisplayNames[lang]}
                 </button>
@@ -396,7 +396,7 @@ export default function Navbar() {
           <div className="mt-3 border-t border-gray-100 pt-3">
             {user ? (
               <>
-                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#6869F9]">Namaste, {user.name}</p>
+                <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">Namaste, {user.name}</p>
                 <div className="mt-2 space-y-1">
                   <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Profile</Link>
                   <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Puja Bookings</Link>
@@ -424,4 +424,5 @@ export default function Navbar() {
     </section>
   );
 }
+
 

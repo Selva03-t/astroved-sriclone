@@ -39,7 +39,7 @@ export default function AdminDashboard() {
         {stats.map((stat) => (
           <div key={stat.name} className="overflow-hidden rounded-lg border border-[#e8e2ff] bg-white px-4 py-5 shadow-sm transition-all hover:shadow-md sm:p-6">
             <dt className="truncate text-sm font-medium text-gray-500">{stat.name}</dt>
-            <dd className="mt-1 text-3xl font-semibold tracking-tight text-[#5657e8]">
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-[#000000]">
               {loading ? (
                 <span className="inline-block h-8 w-12 animate-pulse bg-gray-200 rounded"></span>
               ) : (
@@ -54,3 +54,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

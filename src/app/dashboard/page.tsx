@@ -209,7 +209,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
+      <div className="bg-[#1f1f1f] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
         <div className="animate-marquee whitespace-nowrap flex items-center">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
@@ -267,7 +267,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
-              <p className="text-[#6869F9] font-bold text-base mb-3">{t.home.trustedBy}</p>
+              <p className="text-[#1f1f1f] font-bold text-base mb-3">{t.home.trustedBy}</p>
               <h2 className="text-4xl lg:text-[40px] font-bold leading-tight mb-5">
                 {t.home.largestPlatform}
               </h2>
@@ -389,7 +389,7 @@ export default function DashboardPage() {
             <p className="text-lg text-gray-600 mb-4">
               {t.home.articlesSubtitle}
             </p>
-            <Link href="/library" className="inline-flex items-center text-[#6869F9] font-bold text-sm hover:underline">
+            <Link href="/library" className="inline-flex items-center text-[#1f1f1f] font-bold text-sm hover:underline">
               {t.home.readAll} <span className="ml-1">→</span>
             </Link>
           </div>
@@ -408,7 +408,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.aartiDesc}
               </p>
-              <Link href="/library?tab=aarti" className="text-[#6869F9] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=aarti" className="text-[#1f1f1f] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -426,7 +426,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.chalisaDesc}
               </p>
-              <Link href="/library?tab=chalisa" className="text-[#6869F9] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=chalisa" className="text-[#1f1f1f] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -444,7 +444,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.mantraDesc}
               </p>
-              <Link href="/library?tab=mantra" className="text-[#6869F9] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=mantra" className="text-[#1f1f1f] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -462,7 +462,7 @@ export default function DashboardPage() {
               <p className="text-gray-600 text-[15px] leading-relaxed mb-6 flex-1">
                 {t.home.ayurvedicDesc}
               </p>
-              <Link href="/library?tab=remedies" className="text-[#6869F9] font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/library?tab=remedies" className="text-[#1f1f1f] font-bold text-xs uppercase tracking-wider hover:underline">
                 {t.home.readAll}
               </Link>
             </div>
@@ -643,7 +643,7 @@ export function ReviewsSection() {
           {reviews.map((_, idx) => (
             <div
               key={idx}
-              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#6869F9]" : "w-1.5 bg-[#cbd5e1]"
+              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#1f1f1f]" : "w-1.5 bg-[#cbd5e1]"
                 }`}
             ></div>
           ))}
@@ -652,7 +652,7 @@ export function ReviewsSection() {
         {/* Right Arrow */}
         <button
           onClick={() => handleScroll('right')}
-          className="h-8 w-8 rounded-full bg-[#6869F9] flex items-center justify-center shadow-md hover:bg-violet-700 active:scale-95 transition-all"
+          className="h-8 w-8 rounded-full bg-[#1f1f1f] flex items-center justify-center shadow-md hover:bg-violet-700 active:scale-95 transition-all"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
@@ -691,7 +691,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         {puja.badge || "Special"}
       </div>
       {/* Bottom Left Badge */}
-      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+      <div className="absolute bottom-3 left-3 bg-[#1f1f1f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
         BOOK PUJA
       </div>
     </div>
@@ -718,7 +718,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         <span className="leading-tight">{(puja as any).date || "Upcoming Auspicious Date"}</span>
       </div>
 
-      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5">
+      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#1f1f1f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#000000] transition-colors flex items-center justify-center gap-1.5">
         {puja.buttonText || "PARTICIPATE"}
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </Link>
@@ -758,7 +758,7 @@ export function PujaCardsSection() {
         ))}
       </div>
       <div className="mt-12">
-        <Link href="/puja" className="text-[#6869F9] text-xl hover:text-[#5657e8] transition-all flex items-center gap-2 group">
+        <Link href="/puja" className="text-[#1f1f1f] text-xl hover:text-[#000000] transition-all flex items-center gap-2 group">
           {t.home.viewAllPujas} <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
       </div>
@@ -767,3 +767,4 @@ export function PujaCardsSection() {
 }
 
 // Insert the PujaCardsSection below the filters and input
+

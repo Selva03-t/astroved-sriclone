@@ -161,7 +161,7 @@ export default function OtpClient() {
             <button
               type="submit"
               disabled={loading || otp.join("").length !== 6 || !otpPayload}
-              className="w-full rounded-xl bg-gradient-to-r from-[#6869F9] via-[#6869F9] to-[#5657e8] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
+              className="w-full rounded-xl bg-gradient-to-r from-[#1f1f1f] via-[#1f1f1f] to-[#000000] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
@@ -170,7 +170,7 @@ export default function OtpClient() {
               <button
                 type="button"
                 onClick={handleChangeNumber}
-                className="font-semibold text-[#5657e8] transition-colors hover:text-[#4647c4]"
+                className="font-semibold text-[#000000] transition-colors hover:text-[#4647c4]"
               >
                 Change number
               </button>
@@ -178,7 +178,7 @@ export default function OtpClient() {
                 type="button"
                 onClick={handleResendOtp}
                 disabled={resendSeconds > 0 || loading || !otpPayload}
-                className="font-semibold text-[#5657e8] transition-colors hover:text-[#4647c4] disabled:cursor-not-allowed disabled:text-[#a288cf]"
+                className="font-semibold text-[#000000] transition-colors hover:text-[#4647c4] disabled:cursor-not-allowed disabled:text-[#a288cf]"
               >
                 {resendSeconds > 0 ? `Resend OTP in ${resendSeconds}s` : "Resend OTP"}
               </button>
@@ -189,7 +189,7 @@ export default function OtpClient() {
             Want to use email instead?{" "}
             <Link
               href="/auth/login"
-              className="font-semibold text-[#5657e8] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
+              className="font-semibold text-[#000000] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#4647c4]"
             >
               Go to login
             </Link>
@@ -199,4 +199,5 @@ export default function OtpClient() {
     </main>
   );
 }
+
 
