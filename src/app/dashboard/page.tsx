@@ -139,7 +139,7 @@ export default function DashboardPage() {
                     {banner.buttons.map((btn: any, i) => {
                       const buttonClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 ${
                         btn.variant === 'solid'
-                          ? "bg-white text-[#1f1f1f] hover:bg-gray-100"
+                          ? "bg-[#6869F9] text-white hover:bg-[#5657e8]"
                           : "bg-transparent border border-white text-white hover:bg-white/10"
                       }`;
 
@@ -209,7 +209,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
+      <div className="bg-[#6869F9] py-4 md:py-5 overflow-hidden">
         <div className="animate-marquee whitespace-nowrap flex items-center">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
