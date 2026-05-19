@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden group">
+        <div className="relative w-full h-[400px] md:h-[440px] lg:h-[480px] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -209,8 +209,8 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-3 border-y border-violet-800 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap flex">
+      <div className="bg-[#6869F9] py-4 md:py-5 border-y border-violet-800 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap flex items-center">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
             "25+ Years of Expertise in Vedic Astrology",
@@ -228,9 +228,9 @@ export default function DashboardPage() {
             "7M Expert Consultations",
             "60M+ lives touched",
           ].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center mx-10 shrink-0">
-              <span className="text-yellow-300 text-base mr-3 rotate-45 inline-block">✦</span>
-              <span className="text-[15px] text-white font-semibold uppercase tracking-wide">
+            <div key={idx} className="inline-flex items-center mx-12 shrink-0">
+              <span className="text-yellow-300 text-lg md:text-xl mr-3.5 rotate-45 inline-block">✦</span>
+              <span className="text-base md:text-[17px] text-white font-bold uppercase tracking-wide">
                 {item}
               </span>
             </div>
