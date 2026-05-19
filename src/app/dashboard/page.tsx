@@ -28,6 +28,7 @@ const banners = [
       { text: "Participate Now", variant: "solid", href: "/puja" }
     ],
     image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+    baseColor: "#5b172a",
   },
   {
     id: 2,
@@ -38,6 +39,7 @@ const banners = [
       { text: "Book Puja", variant: "solid", href: "/puja" }
     ],
     image: "/images/Navagraha-Shanti-Puja.jpg",
+    baseColor: "#1e3a5f",
   },
   {
     id: 3,
@@ -49,6 +51,7 @@ const banners = [
       { text: "Download App", variant: "solid", action: "scroll-bottom" }
     ],
     image: "/images/Lakshmi-Homam.jpg",
+    baseColor: "#a62828",
   },
   {
     id: 4,
@@ -59,6 +62,7 @@ const banners = [
       { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
     ],
     image: "/images/maa-kali.jpg",
+    baseColor: "#2b1b1b",
   },
 ];
 
@@ -89,18 +93,35 @@ export default function DashboardPage() {
                 index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              <div className="relative h-full w-full bg-[#3e1a22]">
-                <Image
-                  src={banner.image || "/images/placeholder.jpg"}
-                  alt={banner.title}
-                  fill
-                  className="object-cover object-right md:object-center opacity-90"
-                  priority={index === 0}
-                />
-                {/* Gradient overlay to ensure text legibility */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#1f0b11]/95 via-[#1f0b11]/70 to-transparent md:w-[75%]" />
+              <div 
+                className="relative h-full w-full transition-colors duration-700"
+                style={{ backgroundColor: banner.baseColor || "#5b172a" }}
+              >
+                <div className="absolute inset-y-0 right-0 w-full md:w-[65%]">
+                  <Image
+                    src={banner.image || "/images/placeholder.jpg"}
+                    alt={banner.title}
+                    fill
+                    className="object-cover object-right opacity-80 md:opacity-100"
+                    priority={index === 0}
+                  />
+                  {/* Desktop merge effect */}
+                  <div 
+                    className="hidden md:block absolute inset-0"
+                    style={{
+                      background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} -10%, transparent 60%)`
+                    }}
+                  />
+                  {/* Mobile gradient overlay for legibility */}
+                  <div 
+                    className="absolute inset-0 md:hidden"
+                    style={{
+                      background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
+                    }}
+                  />
+                </div>
                 
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 max-w-5xl text-left">
+                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
                   <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
                     {banner.title}
                     {banner.titleHighlight && (
