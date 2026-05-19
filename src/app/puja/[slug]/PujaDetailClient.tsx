@@ -1291,7 +1291,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                {extra.description && (
                                   <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
                                )}
-                               <p className="text-[#0a7a5c] font-bold text-[15px] mt-2">{currencySymbol} {getDisplayPrice(extra)}</p>
+                               <p className="text-[#0a7a5c] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
                             </div>
                             <div className="flex flex-col items-center gap-2.5 shrink-0">
                                <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
