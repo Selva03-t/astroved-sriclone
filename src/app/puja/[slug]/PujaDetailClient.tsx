@@ -355,7 +355,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
         ) : !puja ? (
           <div className="mx-auto max-w-[1300px] px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
-            <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#1f1f1f] px-6 py-3 text-sm font-semibold text-white">
+            <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-semibold text-white">
               Back to Pujas
             </Link>
           </div>
@@ -508,7 +508,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   ) : (
                     <button
                       onClick={() => setShowPackageModal(true)}
-                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#1f1f1f] py-3.5 text-[16px] font-bold text-white hover:bg-[#F47820] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#6869F9] py-3.5 text-[16px] font-bold text-white hover:bg-[#F47820] transition-colors"
                     >
                       Select puja package
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -545,7 +545,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     >
                       {tab.label}
                       {activeTab === tab.id && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#1f1f1f] rounded-t-full" />
+                        <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#6869F9] rounded-t-full" />
                       )}
                     </button>
                   ))}
@@ -648,7 +648,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                         <div className="mt-6 grid gap-4 md:grid-cols-2">
                           {puja.details.inclusions.map((item, idx) => (
                             <div key={`incl-${idx}`} className="flex items-start gap-3">
-                              <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#1f1f1f]/20">
+                              <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6869F9]/20">
                                 <CheckIcon className="h-3 w-3 text-[#1f1f1f]" />
                               </div>
                               <p className="text-sm leading-6 text-gray-700 font-medium">{item}</p>
@@ -674,7 +674,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 type="button"
                                 onClick={() => setSelectedPackageId(pkg.id)}
                                 className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${
-                                  isSelected ? "border-[#1f1f1f] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#1f1f1f]/30 hover:shadow-md"
+                                  isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
                                 }`}
                               >
                                 {isRecommended && (
@@ -690,7 +690,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                       {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
                                     </span>
                                     <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
-                                      isSelected ? "border-[#1f1f1f] bg-[#1f1f1f]" : "border-gray-300"
+                                      isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
                                     }`}>
                                       {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
                                     </div>
@@ -703,7 +703,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                         {pkg.description || "Recommended for devotees."}
                                       </p>
                                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                                        <div className="bg-[#eef2ff] border border-[#1f1f1f]/10 rounded-lg px-2 py-0.5 flex flex-col justify-center">
+                                        <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-0.5 flex flex-col justify-center">
                                           <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
                                         </div>
                                         <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-0.5 flex flex-col justify-center">
@@ -719,7 +719,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                   </div>
                                 </div>
                                 {isSelected && (
-                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#1f1f1f] rotate-45 z-10"></div>
+                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6869F9] rotate-45 z-10"></div>
                                 )}
                               </button>
                             );
@@ -796,15 +796,15 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                               {/* Dots */}
                               <div className="mt-6 flex justify-center items-center gap-6">
-                                <button onClick={() => scrollCarousel('left')} className="h-10 w-10 rounded-full bg-[#1f1f1f] text-white flex items-center justify-center hover:bg-[#000000] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
+                                <button onClick={() => scrollCarousel('left')} className="h-10 w-10 rounded-full bg-[#6869F9] text-white flex items-center justify-center hover:bg-[#5657e8] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
                                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 rotate-180"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
                                 </button>
                                 <div className="flex gap-2">
                                   {carouselReviews.slice(0, Math.min(carouselReviews.length, 4)).map((_, i) => (
-                                    <div key={i} className={`rounded-full transition-all ${i === activeCarouselDot ? "w-4 h-2.5 bg-[#1f1f1f]" : "w-2.5 h-2.5 bg-gray-300"}`} />
+                                    <div key={i} className={`rounded-full transition-all ${i === activeCarouselDot ? "w-4 h-2.5 bg-[#6869F9]" : "w-2.5 h-2.5 bg-gray-300"}`} />
                                   ))}
                                 </div>
-                                <button onClick={() => scrollCarousel('right')} className="h-10 w-10 rounded-full bg-[#1f1f1f] text-white flex items-center justify-center hover:bg-[#000000] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
+                                <button onClick={() => scrollCarousel('right')} className="h-10 w-10 rounded-full bg-[#6869F9] text-white flex items-center justify-center hover:bg-[#5657e8] hover:shadow-lg transition-all duration-200 active:scale-95 shadow-md">
                                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
                                 </button>
                               </div>
@@ -882,9 +882,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           <details key={`faq-${idx}`} className="group py-5">
                             <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
                               {item.question}
-                              <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#1f1f1f] group-open:border-[#1f1f1f]/20 transition-colors">+</span>
+                              <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#1f1f1f] group-open:border-[#6869F9]/20 transition-colors">+</span>
                             </summary>
-                            <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#1f1f1f]/20">{item.answer}</p>
+                            <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
                           </details>
                         ))}
                       </div>
@@ -917,7 +917,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               </div>
               <button
                 onClick={() => setShowPackageModal(true)}
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#1f1f1f] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(105,105,250,0.4)] transition-all hover:bg-[#000000] active:scale-95"
+                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(104,105,249,0.4)] transition-all hover:bg-[#5657e8] active:scale-95"
               >
                 Book Puja
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -960,7 +960,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                  {/* Additional Offerings Note */}
                  <div className="mt-8 flex items-center gap-4 rounded-2xl bg-[#f0f9f4] p-4 text-[#0e8356]">
-                    <div className="h-10 w-10 shrink-0 bg-[#1f1f1f]/10 rounded-lg flex items-center justify-center">
+                    <div className="h-10 w-10 shrink-0 bg-[#6869F9]/10 rounded-lg flex items-center justify-center">
                        <i className="fa-solid fa-hand-holding-dollar text-lg"></i>
                     </div>
                     <p className="text-[13px] font-medium leading-relaxed">
@@ -978,7 +978,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                             onClick={() => setSelectedPackageId(pkg.id)}
                             className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all text-left ${
                               selectedPackageId === pkg.id 
-                                ? "border-[#1f1f1f] bg-[#1f1f1f]/5 shadow-lg" 
+                                ? "border-[#6869F9] bg-[#6869F9]/5 shadow-lg" 
                                 : "border-gray-100 hover:border-gray-200"
                             }`}
                           >
@@ -998,7 +998,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                     {idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person"}
                                  </div>
                                  <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                    selectedPackageId === pkg.id ? "border-[#1f1f1f] bg-[#1f1f1f]" : "border-gray-200"
+                                    selectedPackageId === pkg.id ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"
                                  }`}>
                                     {selectedPackageId === pkg.id && <CheckIcon className="h-4 w-4 text-white" />}
                                  </div>
@@ -1008,7 +1008,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                              <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">{pkg.description}</p>
                              
                              <div className="mt-auto pt-3 border-t border-gray-50 flex flex-wrap items-center gap-2">
-                                <div className="bg-[#eef2ff] border border-[#1f1f1f]/10 rounded-lg px-2 py-1 flex items-center justify-center">
+                                <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-1 flex items-center justify-center">
                                    <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
                                 </div>
                                 <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-1 flex items-center justify-center">
@@ -1044,7 +1044,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                          setShowDetailsModal(true);
                       }
                    }}
-                   className="flex w-full items-center justify-between rounded-2xl bg-[#1f1f1f] p-4 text-white shadow-xl shadow-[#1f1f1f]/20 hover:scale-[1.01] transition-transform"
+                   className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#1f1f1f]/20 hover:scale-[1.01] transition-transform"
                  >
                     <div className="text-left">
                        <div className="flex items-center gap-3">
@@ -1148,7 +1148,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       setShowReviewModal(true);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                    }}
-                   className="w-full bg-[#1f1f1f] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#F47820] transition-all disabled:opacity-50 disabled:grayscale mt-4"
+                   className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#F47820] transition-all disabled:opacity-50 disabled:grayscale mt-4"
                  >
                     Next
                  </button>
@@ -1165,8 +1165,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
            <div className="bg-white border-b border-gray-100 py-3 px-6 sticky top-0 z-10">
               <div className="mx-auto max-w-7xl flex items-center justify-between">
                  <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f]">
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#1f1f1f] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#1f1f1f] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
+                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
+                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
                     <div className="flex items-center gap-2 opacity-30"><div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px]">3</div> Make Payment</div>
                  </div>
                  <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500">
@@ -1195,7 +1195,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           <div>
                              <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
                              <div className="flex items-center gap-3">
-                                <div className="bg-[#eef2ff] border border-[#1f1f1f]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
+                                <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
                                    <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
                                 </div>
                                 {selectedPackage && (
@@ -1205,7 +1205,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 )}
                              </div>
                           </div>
-                          <div className="bg-[#1f1f1f]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
+                          <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
                              Primary Package
                           </div>
                        </div>
@@ -1275,12 +1275,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               {/* Right Column: Upsell */}
               <div>
                  <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
-                    <span className="h-1.5 w-6 bg-[#1f1f1f] rounded-full"></span>
+                    <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
                     Add more Divine offerings
                  </h3>
                  <div className="space-y-4">
                     {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                       <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#1f1f1f]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
+                       <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
                             {extra.badge && (
                                <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
                                   <i className="fa-solid fa-box"></i> {extra.badge}
@@ -1321,7 +1321,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
            {/* Floating Bottom Bar */}
            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#1f1f1f] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#1f1f1f]/20">
+              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#1f1f1f]/20">
                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
                     <span>{1 + selectedExtraIds.length} Sevas selected</span>
                     <span className="opacity-50">•</span>
@@ -1408,4 +1408,5 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
     </>
   );
 }
+
 
