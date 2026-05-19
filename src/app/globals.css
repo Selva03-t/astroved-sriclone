@@ -101,30 +101,34 @@ body {
   scrollbar-width: none;
 }
 
-/* React International Phone Overrides */
 .astroved-phone {
+  width: 100%;
+  --react-international-phone-border-radius: 0;
   --react-international-phone-border-color: transparent;
   --react-international-phone-background-color: transparent;
-  width: 100%;
+  --react-international-phone-text-color: #342151;
+  --react-international-phone-font-size: 16px;
+}
+
+.astroved-phone .react-international-phone-country-selector-button,
+.astroved-phone .react-international-phone-input {
+  border: 0;
+  background: transparent;
+  height: 36px;
 }
 
 .astroved-phone .react-international-phone-country-selector-button {
-  border: none !important;
-  background: transparent !important;
-  padding-left: 0;
+  padding: 0 10px 0 0;
 }
 
 .astroved-phone .react-international-phone-input {
-  border: none !important;
-  background: transparent !important;
   width: 100%;
-  font-size: 1rem;
   color: #342151;
+  font-size: 16px;
 }
 
 .astroved-phone .react-international-phone-input:focus {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
 }
 
 .astroved-phone .react-international-phone-country-selector-dropdown {

@@ -1,9 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'astroved_secret_key_123'
-);
+import { getJwtSecret } from '@/lib/server/authSession';
 
 const USER_PROTECTED_PATHS = ['/payment'];
 
@@ -31,9 +28,9 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecret());
       return NextResponse.next();
-    } catch (error) {
+    } catch {
       if (isAdminApi) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
@@ -54,9 +51,9 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecret());
       return NextResponse.next();
-    } catch (error) {
+    } catch {
       const loginUrl = new URL('/auth/login', request.url);
       loginUrl.searchParams.set(
         'callbackUrl',

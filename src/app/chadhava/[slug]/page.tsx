@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 import { OfferingCard } from "@/components/chadhava/OfferingCard";
@@ -37,7 +37,6 @@ interface ChadhavaRecord {
 
 export default function ChadhavaDetailPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
   const slug = params?.slug as string;
   const [data, setData] = useState<ChadhavaRecord | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,9 +44,8 @@ export default function ChadhavaDetailPage() {
   // Cart State
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showModal, setShowModal] = useState(false);
-  const [showSankalpaModal, setShowSankalpaModal] = useState(false);
   const [step, setStep] = useState(1); // 1: Details, 2: Review, 3: Completed
-  const [userInfo, setUserInfo] = useState({ whatsapp: "", name: "", gotra: "", address: "" });
+  const [userInfo, setUserInfo] = useState({ whatsapp: "", name: "" });
 
   // UI State
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,81 +61,6 @@ export default function ChadhavaDetailPage() {
       })
       .catch(() => setLoading(false));
   }, [slug]);
-
-  useEffect(() => {
-    if (!data || searchParams?.get("resumeCheckout") !== "chadhava") return;
-
-    const pendingCheckout = window.sessionStorage.getItem("pendingChadhavaCheckout");
-    if (!pendingCheckout) return;
-
-    try {
-      const checkout = JSON.parse(pendingCheckout) as {
-        cart?: Record<string, number>;
-        userInfo?: Partial<typeof userInfo>;
-      };
-
-      if (checkout.cart) setCart(checkout.cart);
-      if (checkout.userInfo) setUserInfo(prev => ({ ...prev, ...checkout.userInfo }));
-
-      setShowModal(false);
-      setStep(2);
-      setShowSankalpaModal(true);
-      window.sessionStorage.removeItem("pendingChadhavaCheckout");
-    } catch {
-      window.sessionStorage.removeItem("pendingChadhavaCheckout");
-    }
-  }, [data, searchParams]);
-
-  const redirectToLoginForChadhavaCheckout = () => {
-    window.sessionStorage.setItem(
-      "pendingChadhavaCheckout",
-      JSON.stringify({ cart, userInfo })
-    );
-
-    const callbackUrl = `${window.location.pathname}?resumeCheckout=chadhava`;
-    window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
-  };
-
-  const proceedToChadhavaSankalpa = async () => {
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/me");
-      if (!res.ok) {
-        redirectToLoginForChadhavaCheckout();
-        return;
-      }
-
-      const authData = await res.json();
-      if (!authData.authenticated) {
-        redirectToLoginForChadhavaCheckout();
-        return;
-      }
-
-      setShowSankalpaModal(true);
-    } catch (err) {
-      console.error(err);
-      redirectToLoginForChadhavaCheckout();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const goToChadhavaPayment = () => {
-    if (!data) return;
-
-    const params = new URLSearchParams({
-      amount: String(selectedTotal),
-      type: "chadhava",
-      title: data.title,
-      name: userInfo.name,
-      gotra: userInfo.gotra,
-      address: userInfo.address,
-      wa: userInfo.whatsapp,
-    });
-
-    window.location.href = `/payment?${params.toString()}`;
-  };
 
   const toggleOffering = (off: Offering) => {
     setCart((prev) => {
@@ -330,74 +253,33 @@ export default function ChadhavaDetailPage() {
                  <span>Rs. {selectedTotal}</span>
               </div>
               <button 
-                onClick={proceedToChadhavaSankalpa}
+                onClick={async () => {
+                   setLoading(true);
+                   try {
+                      const res = await fetch("/api/auth/me");
+                      const authData = await res.json();
+
+                      if (!authData.authenticated) {
+                         const currentUrl = encodeURIComponent(window.location.href);
+                         window.location.href = `/auth/login?callbackUrl=${currentUrl}`;
+                         return;
+                      }
+
+                      // Proceed to payment
+                      window.location.href = `/payment?amount=${selectedTotal}&type=chadhava&title=${encodeURIComponent(data.title)}`;
+                   } catch (err) {
+                      console.error(err);
+                      alert("Authentication error. Please try again.");
+                   } finally {
+                      setLoading(false);
+                   }
+                }}
                 className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm"
               >
                  {loading ? "Checking Session..." : "Proceed to Payment"} <i className="fa-solid fa-arrow-right"></i>
               </button>
            </div>
         </div>
-        {showSankalpaModal && (
-          <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-             <div className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-[32px] bg-white p-8 shadow-2xl">
-                <div className="mb-7 flex items-center gap-4">
-                   <button
-                     onClick={() => setShowSankalpaModal(false)}
-                     className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
-                   >
-                      <i className="fa-solid fa-arrow-left"></i>
-                   </button>
-                   <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#6869F9]">After Login</p>
-                      <h3 className="text-xl font-bold text-gray-900">Fill Name, Gotra & Address</h3>
-                   </div>
-                </div>
-
-                <div className="space-y-5">
-                   <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-gray-900">Full Name</span>
-                      <input
-                        type="text"
-                        value={userInfo.name}
-                        onChange={(event) => setUserInfo(prev => ({ ...prev, name: event.target.value }))}
-                        className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4 font-semibold text-gray-900 outline-none transition-all focus:border-[#6869F9] focus:bg-white"
-                        placeholder="Enter devotee name"
-                      />
-                   </label>
-
-                   <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-gray-900">Gotra</span>
-                      <input
-                        type="text"
-                        value={userInfo.gotra}
-                        onChange={(event) => setUserInfo(prev => ({ ...prev, gotra: event.target.value }))}
-                        className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4 font-semibold text-gray-900 outline-none transition-all focus:border-[#6869F9] focus:bg-white"
-                        placeholder="Enter gotra"
-                      />
-                   </label>
-
-                   <label className="block">
-                      <span className="mb-2 block text-sm font-bold text-gray-900">Complete Address</span>
-                      <textarea
-                        value={userInfo.address}
-                        onChange={(event) => setUserInfo(prev => ({ ...prev, address: event.target.value }))}
-                        rows={4}
-                        className="w-full resize-none rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4 font-semibold text-gray-900 outline-none transition-all focus:border-[#6869F9] focus:bg-white"
-                        placeholder="House number, street, city, state, pincode"
-                      />
-                   </label>
-
-                   <button
-                     disabled={!userInfo.name.trim() || !userInfo.gotra.trim() || !userInfo.address.trim()}
-                     onClick={goToChadhavaPayment}
-                     className="w-full rounded-2xl bg-[#6869F9] py-5 text-sm font-extrabold uppercase tracking-widest text-white shadow-xl shadow-[#6869F9]/20 transition-all hover:bg-[#F47820] active:scale-95 disabled:opacity-50 disabled:grayscale"
-                   >
-                      Continue to Payment
-                   </button>
-                </div>
-             </div>
-          </div>
-        )}
       </div>
     );
   }
@@ -509,7 +391,7 @@ export default function ChadhavaDetailPage() {
                     key={off.id}
                     offering={off}
                     qty={qty}
-                    onToggle={toggleOffering}
+                    onToggle={toggleOffering as any}
                     onUpdateQty={updateQuantity}
                   />
                 );
@@ -520,7 +402,7 @@ export default function ChadhavaDetailPage() {
                   key={off.id}
                   offering={off}
                   qty={qty}
-                  onToggle={toggleOffering}
+                  onToggle={toggleOffering as any}
                   onUpdateQty={updateQuantity}
                 />
               );

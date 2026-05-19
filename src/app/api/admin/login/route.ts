@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import clientPromise from "@/lib/mongodb";
+import { getJwtSecret } from "@/lib/server/authSession";
 // @ts-ignore
 import bcrypt from "bcryptjs";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'astroved_secret_key_123'
-);
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,7 +34,7 @@ export async function POST(req: NextRequest) {
       const token = await new SignJWT({ role: 'admin', email: normalizedEmail })
         .setProtectedHeader({ alg: 'HS256' })
         .setExpirationTime('24h')
-        .sign(JWT_SECRET);
+        .sign(getJwtSecret());
 
       const response = NextResponse.json({ success: true });
       

@@ -8,11 +8,14 @@ export interface CountryOption {
 
 export interface AuthUser {
   id: string;
+  customerId?: string;
   name: string;
   email?: string;
   phone?: string;
   whatsapp?: string;
   country?: CountryOption;
+  currency?: "INR" | "USD" | "MYR";
+  loginProvider?: LoginMethod;
 }
 
 export interface AuthApiResponse<T = unknown> {
@@ -40,9 +43,12 @@ export interface VerifyOtpPayload extends OtpPayload {
 }
 
 export interface SignupPayload {
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   phone: string;
+  isWhatsappNumber?: boolean;
   /** Omit or empty when WhatsApp is the same as mobile; server defaults to phone. */
   whatsapp?: string;
   country: CountryOption;
