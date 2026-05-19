@@ -105,21 +105,23 @@ export default function DashboardPage() {
                     className="object-cover object-right opacity-80 md:opacity-100"
                     priority={index === 0}
                   />
-                  {/* Desktop merge effect */}
-                  <div 
-                    className="hidden md:block absolute inset-0"
-                    style={{
-                      background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} -10%, transparent 60%)`
-                    }}
-                  />
-                  {/* Mobile gradient overlay for legibility */}
-                  <div 
-                    className="absolute inset-0 md:hidden"
-                    style={{
-                      background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
-                    }}
-                  />
                 </div>
+
+                {/* Desktop merge effect (spans full width to hide the container edge) */}
+                <div 
+                  className="hidden md:block absolute inset-0"
+                  style={{
+                    background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 35%, transparent 65%)`
+                  }}
+                />
+
+                {/* Mobile gradient overlay for legibility */}
+                <div 
+                  className="absolute inset-0 md:hidden"
+                  style={{
+                    background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
+                  }}
+                />
                 
                 <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
                   <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
