@@ -9,7 +9,7 @@ export default function AuspiciousTimings({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#1f1f1f] justify-between">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#6869F9] justify-between">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{t("panchang.auspiciousTimings")} & {t("panchang.inauspiciousTimings")}</h2>
         <button className="text-gray-400 hover:text-gray-600">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

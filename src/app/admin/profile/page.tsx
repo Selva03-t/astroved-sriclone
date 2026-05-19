@@ -169,7 +169,7 @@ export default function AdminProfilePage() {
     return (
       <div className="flex h-[80vh] items-center justify-center">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1f1f1f]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6869F9]"></div>
           <p className="mt-4 text-gray-500 font-medium">Loading profile...</p>
         </div>
       </div>
@@ -267,7 +267,7 @@ export default function AdminProfilePage() {
                 <button
                   type="submit"
                   disabled={savingProfile}
-                  className="inline-flex items-center gap-x-2 rounded-lg bg-[#1f1f1f] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#000000] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f1f1f] disabled:opacity-60 transition-all"
+                  className="inline-flex items-center gap-x-2 rounded-lg bg-[#6869F9] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#5657e8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f1f1f] disabled:opacity-60 transition-all"
                 >
                   {savingProfile ? (
                     <>

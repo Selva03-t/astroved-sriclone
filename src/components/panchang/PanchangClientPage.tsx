@@ -158,7 +158,7 @@ export default function PanchangClientPage() {
             <button
               onClick={() => setSelectedDate(getTodayStr())}
               className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
-                isToday ? "bg-[#1f1f1f] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                isToday ? "bg-[#6869F9] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
               }`}
             >
               Today
@@ -166,7 +166,7 @@ export default function PanchangClientPage() {
             <button
               onClick={() => setSelectedDate(getTomorrowStr())}
               className={`px-5 py-2 rounded-xl text-[14px] font-medium transition-colors ${
-                isTomorrow ? "bg-[#1f1f1f] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                isTomorrow ? "bg-[#6869F9] text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
               }`}
             >
               Tomorrow
@@ -213,7 +213,7 @@ export default function PanchangClientPage() {
           <div className="flex flex-col gap-6">
 
             {/* Heading */}
-            <div className="flex items-center pl-3 border-l-[3px] border-[#1f1f1f] h-6">
+            <div className="flex items-center pl-3 border-l-[3px] border-[#6869F9] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">{displayDateLabel}</h2>
             </div>
 
@@ -241,7 +241,7 @@ export default function PanchangClientPage() {
 
             {/* Auspicious–Inauspicious Timings */}
             <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#1f1f1f] h-6">
+              <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#6869F9] h-6">
                 <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Auspicious-Inauspicious Timings</h2>
                 <HelpIcon />
               </div>
@@ -304,7 +304,7 @@ export default function PanchangClientPage() {
 
           {/* ══════════════ COLUMN 2 ══════════════ */}
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#1f1f1f] h-6">
+            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#6869F9] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Panchang</h2>
               <HelpIcon />
             </div>
@@ -336,7 +336,7 @@ export default function PanchangClientPage() {
 
           {/* ══════════════ COLUMN 3 ══════════════ */}
           <div className="flex flex-col gap-6" style={{ height: "780px" }}>
-            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#1f1f1f] h-6">
+            <div className="flex items-center gap-2 pl-3 border-l-[3px] border-[#6869F9] h-6">
               <h2 className="text-[17px] font-semibold text-[#1f1f1f]">Upcoming festivals</h2>
             </div>
             <div

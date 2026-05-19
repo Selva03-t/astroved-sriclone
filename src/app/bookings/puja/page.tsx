@@ -59,7 +59,7 @@ export default function MyPujaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't booked any pujas yet. Explore our sacred services to start your journey.</p>
                <button 
                  onClick={() => window.location.href = '/puja'}
-                 className="bg-[#1f1f1f] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#000000]"
+                 className="bg-[#6869F9] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#5657e8]"
                >
                   Explore Pujas
                </button>
@@ -83,7 +83,7 @@ export default function MyPujaBookings() {
                      </div>
                      <div className="text-center sm:text-right">
                         <div className="text-2xl font-black text-[#1f1f1f] mb-1">Rs. {booking.amount}</div>
-                        <button className="text-xs font-bold text-[#F47820] hover:underline">View Certificate</button>
+                        <button className="text-xs font-bold text-[#6869F9] hover:underline">View Certificate</button>
                      </div>
                   </div>
                ))}

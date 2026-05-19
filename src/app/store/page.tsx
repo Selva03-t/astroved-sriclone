@@ -37,7 +37,7 @@ const StorePage = () => {
               <p className="text-gray-500 text-sm mt-2">{product.description}</p>
               <p className="text-violet-600 font-bold mt-4 text-lg">{product.price}</p>
               
-              <button className="mt-6 w-full py-3 bg-violet-500 text-white font-bold rounded-xl hover:bg-violet-700 transition-all">
+              <button className="mt-6 w-full py-3 bg-violet-500 text-white font-bold rounded-xl hover:bg-[#5657e8] transition-all">
                 View Details
               </button>
             </div>

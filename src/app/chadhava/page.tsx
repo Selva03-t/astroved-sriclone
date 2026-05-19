@@ -89,7 +89,7 @@ export default function ChadhavaPage() {
                   t.chadhava.feature4
                 ].map((text, idx) => (
                   <li key={idx} className="flex items-center gap-3 text-gray-700 font-medium">
-                    <div className="h-5 w-5 rounded-full bg-[#1f1f1f] flex items-center justify-center shrink-0">
+                    <div className="h-5 w-5 rounded-full bg-[#6869F9] flex items-center justify-center shrink-0">
                        <i className="fa-solid fa-check text-[10px] text-white"></i>
                     </div>
                     {text}
@@ -98,7 +98,7 @@ export default function ChadhavaPage() {
               </ul>
 
               <div className="flex flex-wrap gap-4">
-                <a href="#upcoming" className="inline-block bg-[#1f1f1f] text-white px-10 py-3.5 rounded-xl font-bold text-base hover:bg-[#000000] transition-all shadow-lg shadow-green-900/10 active:scale-95 text-center">
+                <a href="#upcoming" className="inline-block bg-[#6869F9] text-white px-10 py-3.5 rounded-xl font-bold text-base hover:bg-[#5657e8] transition-all shadow-lg shadow-green-900/10 active:scale-95 text-center">
                   {t.chadhava.viewNow}
                 </a>
                 <a href="#how-it-works" className="inline-block bg-white text-gray-700 border border-gray-200 px-10 py-3.5 rounded-xl font-bold text-base hover:bg-gray-50 transition-all active:scale-95 text-center">
@@ -128,7 +128,7 @@ export default function ChadhavaPage() {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1f1f1f]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6869F9]"></div>
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-[32px] border border-dashed border-gray-200">
@@ -159,7 +159,7 @@ export default function ChadhavaPage() {
                       {item.description}
                     </p>
 
-                    <Link href={`/chadhava/${item.slug || String(item.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#1f1f1f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#000000] transition-colors flex items-center justify-center gap-1.5 mt-auto">
+                    <Link href={`/chadhava/${item.slug || String(item.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5 mt-auto">
                       {item.buttonText || t.chadhava.performSeva}
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </Link>
@@ -186,7 +186,7 @@ export default function ChadhavaPage() {
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
                 <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#F47820]">{t.chadhava.famousTemples}</p>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.chadhava.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
                 <h3 className="text-2xl font-black text-[#1f1f1f]">{t.chadhava.sankalp}</h3>

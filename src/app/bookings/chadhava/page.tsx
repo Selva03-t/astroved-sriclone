@@ -35,7 +35,7 @@ export default function MyChadhavaBookings() {
       
       <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-12">
          <div className="flex items-center gap-4 mb-8">
-            <div className="h-12 w-12 bg-blue-100 text-[#F47820] rounded-2xl flex items-center justify-center text-xl">
+            <div className="h-12 w-12 bg-blue-100 text-[#6869F9] rounded-2xl flex items-center justify-center text-xl">
                <i className="fa-solid fa-box-open"></i>
             </div>
             <div>
@@ -59,7 +59,7 @@ export default function MyChadhavaBookings() {
                <p className="text-gray-400 mb-8 max-w-xs mx-auto text-sm italic font-medium">You haven't made any chadhava offerings yet. Join the tradition today.</p>
                <button 
                  onClick={() => window.location.href = '/chadhava'}
-                 className="bg-[#1f1f1f] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#000000]"
+                 className="bg-[#6869F9] text-white px-8 py-4 rounded-2xl font-bold uppercase transition-all hover:bg-[#5657e8]"
                >
                   Explore Chadhava
                </button>

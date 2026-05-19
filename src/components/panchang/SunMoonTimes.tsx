@@ -10,7 +10,7 @@ export default function SunMoonTimes({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#1f1f1f]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#6869F9]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{t("panchang.sunAndMoon") || "Sunset-Sunrise"}</h2>
       </div>
       

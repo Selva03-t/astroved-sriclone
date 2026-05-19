@@ -404,7 +404,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           <button
                             key={idx}
                             onClick={() => setCurrentImageIndex(idx)}
-                            className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#F47820] w-4" : "bg-white/60 hover:bg-white/80"}`}
+                            className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#6869F9] w-4" : "bg-white/60 hover:bg-white/80"}`}
                           />
                         ))}
                       </div>
@@ -434,7 +434,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 {/* Right: Details panel */}
                 <div className="flex flex-col justify-center">
-                  <p className="text-[#F47820] text-[11px] font-bold uppercase tracking-widest mb-2">
+                  <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-2">
                     {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                   </p>
                   
@@ -462,17 +462,17 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     <div className="mb-5 border-t border-gray-100 pt-4">
                       <p className="text-[13px] font-bold text-[#1f1f1f] mb-2">Puja booking will close in :</p>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.days)}</span>
-                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Day</span>
+                        <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.days)}</span>
+                        <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Day</span>
                         
-                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.hours)}</span>
-                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Hours</span>
+                        <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.hours)}</span>
+                        <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Hours</span>
                         
-                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.minutes)}</span>
-                        <span className="text-[11px] font-medium text-[#F47820] uppercase mr-2">Mins</span>
+                        <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.minutes)}</span>
+                        <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Mins</span>
                         
-                        <span className="text-[22px] font-bold text-[#F47820]">{String(countdown.seconds)}</span>
-                        <span className="text-[11px] font-medium text-[#F47820] uppercase">Secs</span>
+                        <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.seconds)}</span>
+                        <span className="text-[11px] font-medium text-[#6869F9] uppercase">Secs</span>
                       </div>
                     </div>
                   )}
@@ -497,7 +497,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   </div>
                   
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
-                    Till now <span className="font-bold text-[#F47820]">3,00,000+ Devotees</span> have participated in Pujas conducted by DivineAlign Puja Seva.
+                    Till now <span className="font-bold text-[#6869F9]">3,00,000+ Devotees</span> have participated in Pujas conducted by DivineAlign Puja Seva.
                   </p>
 
                   {/* CTA */}
@@ -508,7 +508,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   ) : (
                     <button
                       onClick={() => setShowPackageModal(true)}
-                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#6869F9] py-3.5 text-[16px] font-bold text-white hover:bg-[#F47820] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#6869F9] py-3.5 text-[16px] font-bold text-white hover:bg-[#6869F9] transition-colors"
                     >
                       Select puja package
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -559,7 +559,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   return (
                     <section id="about" key="about" className="border-b border-gray-100 pb-10">
                       <h2 className="flex items-start gap-3 text-[24px] font-bold text-[#1f1f1f] leading-snug">
-                        <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#F47820]" />
+                        <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#6869F9]" />
                         <span>{puja.details?.heroTitle || "Sacred Havan for victory and peace."}</span>
                       </h2>
                       <div className="mt-6 space-y-6 text-[16px] leading-[1.9] text-gray-700">
@@ -586,7 +586,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       <div className="mt-8 grid gap-8 md:grid-cols-3">
                         {puja.details.benefits.map((b, idx) => (
                           <div key={`benefit-${idx}`} className="flex gap-4">
-                            <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#F47820] text-xl">
+                            <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#6869F9] text-xl">
                               {(() => {
                                 const BenefitIcon = BENEFIT_ICONS[idx % BENEFIT_ICONS.length];
                                 return <BenefitIcon className="h-5 w-5" />;
@@ -595,7 +595,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                             <div>
                               <h3 className="font-bold text-[#1f1f1f] text-[17px]">{b.title}</h3>
                               <p className="mt-2 text-[15px] leading-[1.8] text-gray-600 line-clamp-3">{b.description}</p>
-                              <button type="button" className="mt-2 text-[14px] font-semibold text-[#F47820] hover:text-[#5b21b6]">Read more</button>
+                              <button type="button" className="mt-2 text-[14px] font-semibold text-[#6869F9] hover:text-[#5b21b6]">Read more</button>
                             </div>
                           </div>
                         ))}
@@ -611,7 +611,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                         {puja.details.process.map((step, idx) => (
                           <div key={`process-${idx}`} className="flex gap-4">
-                            <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#F47820] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
+                            <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#6869F9] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
                             <div>
                               <h3 className="font-bold text-[#1f1f1f] text-[16px]">{step.title}</h3>
                               <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{step.description}</p>
@@ -838,7 +838,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                   {review.rating && (
                                     <div className="mt-3 flex items-center gap-0.5">
                                       {[1,2,3,4,5].map(star => (
-                                        <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#F47820]" : "text-gray-200"}`} fill="currentColor">
+                                        <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#6869F9]" : "text-gray-200"}`} fill="currentColor">
                                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                       ))}
@@ -1044,7 +1044,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                          setShowDetailsModal(true);
                       }
                    }}
-                   className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#1f1f1f]/20 hover:scale-[1.01] transition-transform"
+                   className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
                  >
                     <div className="text-left">
                        <div className="flex items-center gap-3">
@@ -1148,7 +1148,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       setShowReviewModal(true);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                    }}
-                   className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#F47820] transition-all disabled:opacity-50 disabled:grayscale mt-4"
+                   className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6869F9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
                  >
                     Next
                  </button>
@@ -1291,7 +1291,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                {extra.description && (
                                   <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
                                )}
-                               <p className="text-[#0a7a5c] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
+                               <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
                             </div>
                             <div className="flex flex-col items-center gap-2.5 shrink-0">
                                <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
@@ -1299,7 +1299,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                </div>
                                <button 
                                  onClick={() => toggleExtra(extra.id)}
-                                 className="bg-white text-[#0a7a5c] border border-[#0a7a5c] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#0a7a5c] hover:text-white transition-all active:scale-95 shadow-sm"
+                                 className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
                                >
                                   + Add
                                </button>
@@ -1321,7 +1321,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
            {/* Floating Bottom Bar */}
            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#1f1f1f]/20">
+              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
                     <span>{1 + selectedExtraIds.length} Sevas selected</span>
                     <span className="opacity-50">•</span>
@@ -1370,10 +1370,10 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   <button
                     key={idx}
                     onClick={() => setCurrentImageIndex(idx)}
-                    className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#F47820]" : "bg-white/40 hover:bg-white/60"}`}
+                    className={`h-2 w-2 rounded-full transition-all ${idx === currentImageIndex ? "bg-[#6869F9]" : "bg-white/40 hover:bg-white/60"}`}
                   />
                 ))}
-                <button onClick={handleNextImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-[#F47820] text-white hover:bg-[#e06b1a] text-xs transition-colors">
+                <button onClick={handleNextImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-[#6869F9] text-white hover:bg-[#e06b1a] text-xs transition-colors">
                    <i className="fa-solid fa-chevron-right"></i>
                 </button>
               </div>

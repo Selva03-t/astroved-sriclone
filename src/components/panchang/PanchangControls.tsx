@@ -64,13 +64,13 @@ export default function PanchangControls() {
       <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 hide-scrollbar">
         <button 
           onClick={() => handleDateChange(getTodayStr())}
-          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isToday ? 'bg-[#1f1f1f] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isToday ? 'bg-[#6869F9] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
         >
           {todayText}
         </button>
         <button 
           onClick={() => handleDateChange(getTomorrowStr())}
-          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isTomorrow ? 'bg-[#1f1f1f] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-bold transition-colors ${isTomorrow ? 'bg-[#6869F9] text-white' : 'text-gray-500 hover:bg-gray-100'}`}
         >
           {tomorrowText}
         </button>

@@ -219,7 +219,7 @@ export default function Navbar() {
                     <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas &amp; offers:</p>
                     <Link
                       href="/auth/login"
-                      className="block w-full bg-[#F47820] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#d95f13] transition-all"
+                      className="block w-full bg-[#6869F9] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#d95f13] transition-all"
                     >
                       {t("account.login")}
                     </Link>
@@ -243,7 +243,7 @@ export default function Navbar() {
                   <nav className="space-y-0.5">
                     <Link href={user ? "/profile" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
+                        <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.profile")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -251,7 +251,7 @@ export default function Navbar() {
 
                     <Link href={user ? "/bookings/puja" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
+                        <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.pujaBookings")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -259,7 +259,7 @@ export default function Navbar() {
 
                     <Link href={user ? "/bookings/chadhava" : "/auth/login"} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#F47820] transition-colors"></i>
+                        <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">{t("account.chadhavaBookings")}</span>
                       </div>
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
@@ -366,7 +366,7 @@ export default function Navbar() {
                     <Link
                       href={item.path}
                       className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                        isActivePath(item.path) ? "bg-[#1f1f1f]/10 text-[#1f1f1f]" : "text-gray-700 hover:bg-gray-50"
+                        isActivePath(item.path) ? "bg-[#6869F9]/10 text-[#1f1f1f]" : "text-gray-700 hover:bg-gray-50"
                       }`}
                     >
                       {t(`nav.${item.key}`)}
@@ -385,7 +385,7 @@ export default function Navbar() {
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang as SupportedLanguage)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#1f1f1f] text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#6869F9] text-white" : "bg-gray-100 text-gray-700"}`}
                 >
                   {languageDisplayNames[lang]}
                 </button>
@@ -413,7 +413,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/auth/login"
-                className="block w-full rounded-xl bg-[#F47820] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#d95f13]"
+                className="block w-full rounded-xl bg-[#6869F9] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#d95f13]"
               >
                 {t("account.login")}
               </Link>

@@ -23,10 +23,10 @@ export default function AboutPage() {
         <section className="border-b border-gray-100 bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:justify-between lg:px-8 lg:py-20">
             <div className="max-w-3xl">
-              <div className="mb-7 flex h-20 w-20 items-center justify-center rounded-full bg-[#fff3eb] text-3xl text-[#F47820] shadow-sm">
+              <div className="mb-7 flex h-20 w-20 items-center justify-center rounded-full bg-[#fff3eb] text-3xl text-[#6869F9] shadow-sm">
                 <i className="fa-solid fa-hands-praying" aria-hidden="true"></i>
               </div>
-              <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.18em] text-[#F47820]">
+              <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.18em] text-[#6869F9]">
                 About DivineAlign
               </p>
               <h1 className="text-4xl font-black leading-tight text-[#16111f] md:text-6xl">
@@ -37,7 +37,7 @@ export default function AboutPage() {
               </p>
               <a
                 href="#download-app"
-                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#F47820] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d95f13] active:scale-95"
+                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d95f13] active:scale-95"
               >
                 <i className="fa-solid fa-download" aria-hidden="true"></i>
                 Download App
@@ -49,7 +49,7 @@ export default function AboutPage() {
               <ul className="mt-5 space-y-4">
                 {features.map((feature) => (
                   <li key={feature} className="flex gap-3 text-[15px] leading-6 text-[#4b2f24]">
-                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F47820] text-[10px] text-white">
+                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#6869F9] text-[10px] text-white">
                       <i className="fa-solid fa-check" aria-hidden="true"></i>
                     </span>
                     <span>{feature}</span>

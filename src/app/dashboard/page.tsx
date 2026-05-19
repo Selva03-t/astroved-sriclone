@@ -137,11 +137,7 @@ export default function DashboardPage() {
                   )}
                   <div className="flex flex-wrap gap-4">
                     {banner.buttons.map((btn: any, i) => {
-                      const buttonClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 ${
-                        btn.variant === 'solid'
-                          ? "bg-[#6869F9] text-white hover:bg-[#5657e8]"
-                          : "bg-transparent border border-white text-white hover:bg-white/10"
-                      }`;
+                      const buttonClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
 
                       if (btn.href) {
                         return (
@@ -643,7 +639,7 @@ export function ReviewsSection() {
           {reviews.map((_, idx) => (
             <div
               key={idx}
-              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#1f1f1f]" : "w-1.5 bg-[#cbd5e1]"
+              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? "w-4 bg-[#6869F9]" : "w-1.5 bg-[#cbd5e1]"
                 }`}
             ></div>
           ))}
@@ -652,7 +648,7 @@ export function ReviewsSection() {
         {/* Right Arrow */}
         <button
           onClick={() => handleScroll('right')}
-          className="h-8 w-8 rounded-full bg-[#1f1f1f] flex items-center justify-center shadow-md hover:bg-violet-700 active:scale-95 transition-all"
+          className="h-8 w-8 rounded-full bg-[#6869F9] flex items-center justify-center shadow-md hover:bg-[#5657e8] active:scale-95 transition-all"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white"><path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" /></svg>
         </button>
@@ -698,7 +694,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
     
     {/* Content Section */}
     <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
-      <p className="text-[#F47820] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+      <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
         {puja.subtitle || "SPECIAL PUJA & YAGYA"}
       </p>
       <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">

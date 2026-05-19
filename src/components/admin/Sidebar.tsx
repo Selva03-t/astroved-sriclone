@@ -49,7 +49,7 @@ export default function Sidebar() {
     <div className="flex h-screen w-64 flex-col border-r border-[#d8ceff] bg-white">
       <Link 
         href="/admin/profile"
-        className="flex flex-col items-center justify-center border-b border-[#d8ceff] bg-[#1f1f1f] hover:bg-[#000000] transition-colors py-6"
+        className="flex flex-col items-center justify-center border-b border-[#d8ceff] bg-[#6869F9] hover:bg-[#5657e8] transition-colors py-6"
       >
         <div className="bg-white/20 p-2 rounded-full mb-3">
           <UserCircleIcon className="h-12 w-12 text-white" />

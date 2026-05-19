@@ -51,7 +51,7 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
               >
                 <span
                   className={`mt-0.5 flex h-8 w-12 shrink-0 items-center pl-3 text-sm font-black text-white shadow-sm transition-all duration-200 ${
-                    isActive ? "bg-[#F47820]" : "bg-[#ff9a37] group-hover:bg-[#F47820]"
+                    isActive ? "bg-[#6869F9]" : "bg-[#ff9a37] group-hover:bg-[#6869F9]"
                   }`}
                   style={{ clipPath: "polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%)" }}
                 >
@@ -70,7 +70,7 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
           })}
         </div>
 
-        <div className="relative min-h-[430px] overflow-hidden rounded-[26px] bg-[#F47820] px-8 py-10 shadow-[0_18px_48px_rgba(244,120,32,0.24)]">
+        <div className="relative min-h-[430px] overflow-hidden rounded-[26px] bg-[#6869F9] px-8 py-10 shadow-[0_18px_48px_rgba(244,120,32,0.24)]">
           <div className="pointer-events-none absolute left-4 top-1/2 hidden w-44 -translate-y-1/2 -translate-x-1/2 overflow-hidden rounded-xl bg-white opacity-55 blur-[1px] md:block">
             <img src={previousStep.imageSrc} alt="" className="h-56 w-full object-cover" />
           </div>
@@ -100,7 +100,7 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
               </p>
               <button
                 type="button"
-                className="mt-5 flex w-full items-center justify-center rounded-lg bg-[#F47820] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#d95f13]"
+                className="mt-5 flex w-full items-center justify-center rounded-lg bg-[#6869F9] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#d95f13]"
               >
                 {activeStep.cta || activeStep.title}
               </button>
@@ -138,7 +138,7 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
             onClick={() => setActiveIndex(index)}
             aria-label={`Go to how it works step ${index + 1}`}
             className={`h-2.5 rounded-full transition-all duration-200 ${
-              index === activeIndex ? "w-7 bg-[#F47820]" : "w-2.5 bg-gray-200 hover:bg-gray-300"
+              index === activeIndex ? "w-7 bg-[#6869F9]" : "w-2.5 bg-gray-200 hover:bg-gray-300"
             }`}
           />
         ))}

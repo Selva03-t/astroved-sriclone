@@ -21,7 +21,7 @@ export default function MainDateCard({ data }: { data: any }) {
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#1f1f1f]">
+      <div className="flex items-center gap-2 mb-4 pl-2 border-l-2 border-[#6869F9]">
         <h2 className="text-[15px] font-bold text-[#1f1f1f] tracking-wide">{formattedDate}</h2>
       </div>
       
@@ -47,7 +47,7 @@ export default function MainDateCard({ data }: { data: any }) {
         {data.festival && (
           <div className="pt-4">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1">{t("panchang.festival") || "Festival"}</p>
-            <p className="text-[#F47820] font-bold text-sm">{data.festival}</p>
+            <p className="text-[#6869F9] font-bold text-sm">{data.festival}</p>
           </div>
         )}
       </div>

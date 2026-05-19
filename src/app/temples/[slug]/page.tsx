@@ -45,7 +45,7 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  if (loading) return <div className="min-h-screen bg-white flex justify-center items-center"><Navbar /><div className="animate-spin h-9 w-9 border-4 border-[#1f1f1f] border-t-transparent rounded-full mt-20" /></div>;
+  if (loading) return <div className="min-h-screen bg-white flex justify-center items-center"><Navbar /><div className="animate-spin h-9 w-9 border-4 border-[#6869F9] border-t-transparent rounded-full mt-20" /></div>;
   if (!temple) return <div className="min-h-screen bg-white"><Navbar /><p className="text-center py-32 text-gray-500">Temple not found.</p></div>;
 
   const fallbacks = [
@@ -59,7 +59,7 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
 
   const Tab = ({ id, label, ref: tabRef }: { id: string; label: string; ref: React.RefObject<HTMLDivElement | null> }) => (
     <button onClick={() => scrollTo(tabRef, id)}
-      className={`px-6 py-4 text-[17px] font-semibold border-b-2 transition-all ${activeTab === id ? "border-[#1f1f1f] text-[#1f1f1f]" : "border-transparent text-gray-500 hover:text-gray-800"}`}>
+      className={`px-6 py-4 text-[17px] font-semibold border-b-2 transition-all ${activeTab === id ? "border-[#6869F9] text-[#1f1f1f]" : "border-transparent text-gray-500 hover:text-gray-800"}`}>
       {label}
     </button>
   );
@@ -302,7 +302,7 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Orange footer bar */}
-          <div className="h-2 bg-[#1f1f1f] -mx-5 rounded-b" />
+          <div className="h-2 bg-[#6869F9] -mx-5 rounded-b" />
         </div>
       </div>
     </main>
@@ -312,7 +312,7 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
 function TimingCard({ icon, label, time }: { icon: "calendar" | "bell"; label: string; time: string }) {
   return (
     <div className="bg-[#f7f7f7] rounded-xl p-4 flex items-start gap-3">
-      <div className="w-10 h-10 bg-[#1f1f1f] rounded-lg flex items-center justify-center flex-shrink-0">
+      <div className="w-10 h-10 bg-[#6869F9] rounded-lg flex items-center justify-center flex-shrink-0">
         {icon === "calendar"
           ? <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
           : <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>

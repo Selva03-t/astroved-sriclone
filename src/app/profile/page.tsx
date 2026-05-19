@@ -133,7 +133,7 @@ export default function ProfilePage() {
                     setEditField("general");
                     setShowEditModal(true);
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#000000] py-3 text-sm font-bold text-white hover:bg-[#4647c4] transition"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6869F9] py-3 text-sm font-bold text-white hover:bg-[#4647c4] transition"
                 >
                   Please complete your profile
                   <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -333,7 +333,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 rounded-xl bg-[#000000] py-2.5 text-sm font-bold text-white hover:bg-[#4647c4] transition disabled:opacity-60"
+                className="flex-1 rounded-xl bg-[#6869F9] py-2.5 text-sm font-bold text-white hover:bg-[#4647c4] transition disabled:opacity-60"
               >
                 {saving ? "Saving..." : "Save Changes"}
               </button>

@@ -622,7 +622,7 @@ export default function PujaPage() {
                     
                     {/* Content Section */}
                     <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
-                      <p className="text-[#F47820] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+                      <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
                         {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                       </p>
                       <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
@@ -677,7 +677,7 @@ export default function PujaPage() {
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
                 <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#F47820]">{t.puja.famousTemples}</p>
+                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
                 <h3 className="text-2xl font-black text-[#1f1f1f]">{t.puja.sankalp}</h3>

@@ -83,15 +83,15 @@ export default function TemplesPage() {
             
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#1f1f1f] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature1}</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#1f1f1f] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature2}</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#1f1f1f] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
+                <span className="flex-shrink-0 mt-1 h-5 w-5 rounded-[6px] bg-[#6869F9] flex items-center justify-center text-white text-xs font-bold shadow-sm">✓</span>
                 <span className="text-[#4F4F4F] font-medium text-[17px]">{t.temples.feature3}</span>
               </li>
             </ul>
@@ -99,7 +99,7 @@ export default function TemplesPage() {
             <div className="flex flex-wrap gap-4 pt-4">
               <button 
                 onClick={() => document.getElementById('temples-list')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-[#1f1f1f] hover:bg-[#F47820] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
+                className="bg-[#6869F9] hover:bg-[#6869F9] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
               >
                 {t.temples.exploreBtn}
               </button>
@@ -154,7 +154,7 @@ export default function TemplesPage() {
                 onClick={() => setActiveCity(loc.name)}
                 className={`group flex flex-col items-center gap-2 pb-3 min-w-max border-b-4 transition-all ${
                   activeCity === loc.name 
-                    ? "border-[#1f1f1f]" 
+                    ? "border-[#6869F9]" 
                     : "border-transparent opacity-80 hover:opacity-100 hover:border-gray-200"
                 }`}
               >
@@ -185,7 +185,7 @@ export default function TemplesPage() {
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-pulse flex flex-col items-center">
-              <div className="h-12 w-12 border-4 border-t-[#1f1f1f] border-[#1f1f1f]/30 rounded-full animate-spin mb-4"></div>
+              <div className="h-12 w-12 border-4 border-t-[#1f1f1f] border-[#6869F9]/30 rounded-full animate-spin mb-4"></div>
               <div className="text-gray-400 font-medium">{t.temples.loading}</div>
             </div>
           </div>

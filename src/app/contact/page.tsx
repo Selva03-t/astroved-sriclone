@@ -23,7 +23,7 @@ export default function ContactPage() {
       <main className="min-h-screen bg-white text-[#241a46]">
         <section className="mx-auto max-w-6xl px-6 py-14 lg:px-8">
           <div className="rounded-sm border border-gray-100 bg-white px-6 py-8 text-center shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
-            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#F47820]">Contact Us</p>
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#6869F9]">Contact Us</p>
             <h1 className="mt-3 text-3xl font-black text-[#6f1d1b] md:text-4xl">
               DivineAlign Office Address
             </h1>
@@ -57,7 +57,7 @@ export default function ContactPage() {
           <div className="mt-10 flex justify-center">
             <a
               href="#download-app"
-              className="inline-flex items-center gap-3 rounded-xl bg-[#F47820] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d95f13] active:scale-95"
+              className="inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d95f13] active:scale-95"
             >
               <i className="fa-solid fa-download" aria-hidden="true"></i>
               Download App
