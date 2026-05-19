@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
-import { verifyStoredOtp } from "@/lib/server/authOtpStore";
-import { SignJWT } from "jose";
 import type { VerifyOtpPayload } from "@/types/auth";
+import {
+  AstrovedAuthError,
+  mapLoginInfoToUser,
+  verifyOtpWithAstroved,
+} from "@/lib/server/astrovedAuthApi";
+import { attachUserSession } from "@/lib/server/authSession";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "divinealign_secret_key_123"
-);
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
@@ -16,55 +17,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Enter the 6-digit OTP" }, { status: 400 });
     }
 
-    const verified = verifyStoredOtp({ method, country, number }, otp);
-    if (!verified) {
-      return NextResponse.json({ success: false, error: "Invalid or expired OTP" }, { status: 401 });
-    }
-
-    const client = await clientPromise;
-    const db = client.db();
-    const collection = db.collection("users");
-    const numberField = method === "phone" ? "phone" : "whatsapp";
-    const existing = await collection.findOne({
-      [numberField]: number,
-      "country.dialCode": country.dialCode,
-    });
-
-    const user =
-      existing ??
-      (
-        await collection.insertOne({
-          name: "DivineAlign User",
-          [numberField]: number,
-          country,
-          authProvider: method,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-      );
-
-    const userId = "insertedId" in user ? user.insertedId.toString() : user._id.toString();
-    const userName = "insertedId" in user ? "DivineAlign User" : user.name;
-
-    const token = await new SignJWT({
-      userId,
-      name: userName,
-      [numberField]: number,
-      country,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("7d")
-      .sign(JWT_SECRET);
-
-    const authUser = {
-      id: userId,
-      name: userName,
-      phone: method === "phone" ? number : existing?.phone,
-      whatsapp: method === "whatsapp" ? number : existing?.whatsapp,
-      email: "insertedId" in user ? undefined : user.email,
-      country,
-    };
+    const loginInfo = await verifyOtpWithAstroved({ method, country, number, otp });
+    const authUser = mapLoginInfoToUser(loginInfo, { country, loginProvider: method });
 
     const response = NextResponse.json({
       success: true,
@@ -73,16 +27,18 @@ export async function POST(request: Request) {
       data: authUser,
     });
 
-    response.cookies.set("userToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
+    await attachUserSession(response, authUser);
 
     return response;
-  } catch {
+  } catch (error) {
+    if (error instanceof AstrovedAuthError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode });
+    }
+
+    if (error instanceof Error && error.message.includes("JWT_SECRET")) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+
     return NextResponse.json({ success: false, error: "Unable to verify OTP" }, { status: 500 });
   }
 }

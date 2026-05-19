@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import CountryPhoneField from "@/components/auth/CountryPhoneField";
 import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import CountryPhoneField from "@/components/auth/CountryPhoneField";
 import type { CountryOption } from "@/types/auth";
 
 export default function SignupPage() {
@@ -13,18 +12,16 @@ export default function SignupPage() {
     lastName: "",
     email: "",
     phone: "",
-    country: DEFAULT_COUNTRY as CountryOption,
     isWhatsappNumber: false,
     password: "",
     confirmPassword: "",
   });
+  const [country, setCountry] = useState<CountryOption>(DEFAULT_COUNTRY);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
-  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,27 +33,21 @@ export default function SignupPage() {
       setLoading(false);
       return;
     }
-    if (formData.country.isoCode.toUpperCase() === 'IN') {
-      const indianPhoneRegex = /^[6-9]\d{9}$/;
-      if (!indianPhoneRegex.test(formData.phone)) {
-        setError("Enter a valid 10-digit Indian mobile number starting with 6-9");
-        setLoading(false);
-        return;
-      }
-    } else {
-      const phoneRegex = /^[0-9]{6,15}$/;
-      if (!phoneRegex.test(formData.phone)) {
-        setError("Enter a valid mobile number");
-        setLoading(false);
-        return;
-      }
-    }
 
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          country,
+          isWhatsappNumber: formData.isWhatsappNumber,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+        }),
       });
 
       const data = await res.json();
@@ -64,8 +55,8 @@ export default function SignupPage() {
 
       // Redirect to login on success
       window.location.href = "/auth/login";
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to create account");
     } finally {
       setLoading(false);
     }
@@ -74,41 +65,41 @@ export default function SignupPage() {
   return (
     <main className="relative min-h-screen w-full flex items-center justify-center bg-[#fdfaff] overflow-hidden">
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-linear-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-linear-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-xl px-4 py-12">
-        <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
+      <div className="relative z-10 w-full max-w-xl px-4 py-10">
+        <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 px-6 py-8 shadow-[0_24px_70px_rgba(91,33,182,0.18)] backdrop-blur sm:px-10 sm:py-10">
           <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">Create Account</h1>
           <p className="mt-3 text-center text-base text-[#6a4e95]">Join divinealign to explore sacred traditions.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-[#5a3b8a]">First Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="First Name"
-                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#5a3b8a]">Last Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Last Name"
-                    className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
-                  />
-                </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-[#5a3b8a]">First Name</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  placeholder="Enter your first name"
+                  className="mt-2 h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-[#5a3b8a]">Last Name</label>
+                <input
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  placeholder="Enter your last name"
+                  className="mt-2 h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#5a3b8a]">Email Address</label>
                 <input
@@ -117,7 +108,7 @@ export default function SignupPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="Enter your email"
-                  className="mt-2 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                  className="mt-2 h-12 w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
                 />
               </div>
 
@@ -125,72 +116,70 @@ export default function SignupPage() {
                 label="Phone Number"
                 value={formData.phone}
                 onChange={(phone) => setFormData({ ...formData, phone })}
-                country={formData.country}
-                onCountryChange={(country) => setFormData({ ...formData, country })}
+                country={country}
+                onCountryChange={setCountry}
+                placeholder="Enter mobile number"
               />
 
-              <div className="flex items-center gap-2">
+              <label className="flex items-center gap-3 text-sm font-medium text-[#6a4e95]">
                 <input
                   type="checkbox"
-                  id="isWhatsappNumber"
                   checked={formData.isWhatsappNumber}
                   onChange={(e) => setFormData({ ...formData, isWhatsappNumber: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-300 text-[#6869F9] focus:ring-[#6869F9]"
+                  className="h-4 w-4 rounded border-[#8d849c] accent-[#6869F9]"
                 />
-                <label htmlFor="isWhatsappNumber" className="text-sm text-[#5a3b8a] select-none cursor-pointer">
-                  This is my WhatsApp number
-                </label>
-              </div>
+                This is also my WhatsApp number
+              </label>
 
               <div>
                 <label className="block text-sm font-medium text-[#5a3b8a]">Password</label>
-                <div className="relative mt-2">
+                <div className="relative mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 transition-all duration-300 focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    onFocus={() => setPasswordFocused(true)}
-                    onBlur={() => setPasswordFocused(false)}
                     placeholder="Create a password"
-                    className="w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 pr-12 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                    className="h-12 w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf] pr-10"
                   />
-                  {(passwordFocused || formData.password.length > 0) && (
-                    <button
-                      type="button"
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
-                    >
-                      {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 p-1 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
+                  </button>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#5a3b8a]">Confirm Password</label>
-                <div className="relative mt-2">
+                <div className="relative mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 transition-all duration-300 focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     required
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    onFocus={() => setConfirmPasswordFocused(true)}
-                    onBlur={() => setConfirmPasswordFocused(false)}
                     placeholder="Confirm your password"
-                    className="w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 pr-12 text-base text-[#342151] outline-none placeholder:text-[#a288cf] focus:border-[#F47820] focus:ring-2 focus:ring-[#ddd1ff] transition-all"
+                    className="h-12 w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf] pr-10"
                   />
-                  {(confirmPasswordFocused || formData.confirmPassword.length > 0) && (
-                    <button
-                      type="button"
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
-                    >
-                      {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 p-1 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  >
+                    {showConfirmPassword ? (
+                      <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -200,7 +189,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full rounded-xl bg-linear-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:opacity-50"
+              className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#6869F9] to-[#F47820] px-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(104,105,249,0.22)] transition-all hover:brightness-110 disabled:opacity-50"
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>

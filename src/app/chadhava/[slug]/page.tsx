@@ -258,7 +258,7 @@ export default function ChadhavaDetailPage() {
                    try {
                       const res = await fetch("/api/auth/me");
                       const authData = await res.json();
-                      
+
                       if (!authData.authenticated) {
                          const currentUrl = encodeURIComponent(window.location.href);
                          window.location.href = `/auth/login?callbackUrl=${currentUrl}`;

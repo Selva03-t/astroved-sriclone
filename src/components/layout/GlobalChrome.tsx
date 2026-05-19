@@ -15,9 +15,8 @@ export default function GlobalChrome() {
 
   return (
     <>
-      {!shouldHide && <AIAssistant />}
+      {!shouldHide && <div data-global-chrome="assistant"><AIAssistant /></div>}
       {!shouldHide && <Footer />}
     </>
   );
 }
-

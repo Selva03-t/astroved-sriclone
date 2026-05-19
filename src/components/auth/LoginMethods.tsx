@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { DEFAULT_COUNTRY } from "@/lib/auth/countries";
+import { authService } from "@/services/authService";
 
 type LoginMethod = "email" | "phone" | "whatsapp";
 
@@ -74,7 +76,7 @@ export default function LoginMethods() {
   const [showPassword, setShowPassword] = useState(false);
 
   const isValid = useMemo(() => {
-    if (method === "email") return emailRegex.test(email);
+    if (method === "email") return emailRegex.test(email) && password.length > 0;
     if (method === "phone") return phoneRegex.test(phone);
     return phoneRegex.test(whatsapp);
   }, [method, email, phone, whatsapp]);
@@ -109,26 +111,38 @@ export default function LoginMethods() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      if (method === "email") {
+        const data = await authService.loginWithEmail({ email, password });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
-
-      // Redirect based on data.isAdmin
-      if (data.isAdmin) {
+        if (data.isAdmin) {
          window.location.href = "/admin";
          return;
+        }
+
+        const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl") || "/dashboard";
+        window.location.href = callbackUrl;
+        return;
       }
 
-      // Redirect back to where we came from or dashboard
-      const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl") || "/dashboard";
-      window.location.href = callbackUrl;
-    } catch (err: any) {
-      setError(err.message);
+      const number = method === "phone" ? phone : whatsapp;
+      await authService.sendOtp({
+        method,
+        country: DEFAULT_COUNTRY,
+        number,
+      });
+
+      const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
+      const params = new URLSearchParams({
+        method,
+        country: DEFAULT_COUNTRY.isoCode,
+        number,
+      });
+
+      if (callbackUrl) params.set("callbackUrl", callbackUrl);
+
+      window.location.href = `/auth/otp?${params.toString()}`;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
@@ -189,7 +203,7 @@ export default function LoginMethods() {
               : "WhatsApp Number"}
           <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#F47820] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
             {(method === "phone" || method === "whatsapp") && (
-              <span className="mr-2 text-base text-[#7b5db5]">+</span>
+              <span className="mr-2 text-base text-[#7b5db5]">+{DEFAULT_COUNTRY.dialCode}</span>
             )}
             <input
               type={method === "email" ? "email" : "tel"}

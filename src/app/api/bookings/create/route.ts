@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'divinealign_secret_key_123'
-);
+import { getJwtSecret } from '@/lib/server/authSession';
 
 export async function POST(request: Request) {
   try {
@@ -16,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     const userId = payload.userId;
 
     const bookingData = await request.json();
@@ -32,6 +29,10 @@ export async function POST(request: Request) {
       bookingType: bookingData.type || 'puja', // 'puja' or 'chadhava'
       title: bookingData.title || (bookingData.type === 'chadhava' ? 'Spiritual Chadhava' : 'Sacred Puja Service'),
       amount: bookingData.amount,
+      devoteeName: bookingData.devoteeName || bookingData.name || '',
+      gotra: bookingData.gotra || '',
+      address: bookingData.address || '',
+      whatsapp: bookingData.whatsapp || bookingData.wa || '',
       items: bookingData.items || [],
       status: 'success',
       bookingDate: new Date(),
@@ -39,7 +40,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, bookingId: result.insertedId });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to create booking';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

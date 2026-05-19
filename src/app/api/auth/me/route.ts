@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'divinealign_secret_key_123'
-);
+import { getJwtSecret } from '@/lib/server/authSession';
 
 export async function GET() {
   try {
@@ -15,16 +12,19 @@ export async function GET() {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     return NextResponse.json({
        authenticated: true,
        user: {
          id: payload.userId,
+         customerId: payload.customerId,
          name: payload.name,
          email: payload.email,
          phone: payload.phone,
          whatsapp: payload.whatsapp,
          country: payload.country,
+         currency: payload.currency,
+         loginProvider: payload.loginProvider,
        }
     });
   } catch {

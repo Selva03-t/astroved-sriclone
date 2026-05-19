@@ -20,7 +20,7 @@ const navigationItems = [
 const banners = [
   {
     id: 1,
-    title: "Offer Vedic Puja and Chadhava at 100+ sacred temples in your Name and Gotra to your beloved deity.",
+    title: "Offer AstroVed Puja and Chadhava at 100+ sacred temples in your Name and Gotra to your beloved deity.",
     titleHighlight: "",
     subtitle: "",
     buttons: [
@@ -28,7 +28,6 @@ const banners = [
       { text: "Participate Now", variant: "solid", href: "/puja" }
     ],
     image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
-    bgHex: "#610c27", // Maroon
   },
   {
     id: 2,
@@ -39,7 +38,6 @@ const banners = [
       { text: "Book Puja", variant: "solid", href: "/puja" }
     ],
     image: "/images/Navagraha-Shanti-Puja.jpg",
-    bgHex: "#0a2647", // Dark Blue
   },
   {
     id: 3,
@@ -51,7 +49,6 @@ const banners = [
       { text: "Download App", variant: "solid", action: "scroll-bottom" }
     ],
     image: "/images/Lakshmi-Homam.jpg",
-    bgHex: "#5c1e06", // Deep Brown/Orange
   },
   {
     id: 4,
@@ -62,7 +59,6 @@ const banners = [
       { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
     ],
     image: "/images/maa-kali.jpg",
-    bgHex: "#3e0c61", // Deep Purple
   },
 ];
 
@@ -85,7 +81,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full aspect-video md:aspect-21/9 max-h-[550px] lg:max-h-[600px] 2xl:max-h-[700px] overflow-hidden group">
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -93,37 +89,19 @@ export default function DashboardPage() {
                 index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
-              <div 
-                className="relative h-full w-full transition-colors duration-700"
-                style={{ backgroundColor: banner.bgHex || "#610c27" }}
-              >
-                {/* Image restricted to the right side */}
-                <div className="absolute top-0 right-0 h-full w-full md:w-[60%]">
-                  <Image
-                    src={banner.image || "/images/placeholder.jpg"}
-                    alt={banner.title}
-                    fill
-                    className="object-cover object-center opacity-100"
-                    priority={index === 0}
-                  />
-                  {/* Merge effect: fades from solid background to transparent to blend the image edge */}
-                  <div 
-                    className="absolute inset-0"
-                    style={{
-                      background: `linear-gradient(to right, ${banner.bgHex || '#610c27'} 0%, ${banner.bgHex || '#610c27'}00 50%)`
-                    }}
-                  />
-                  {/* Additional gradient for mobile to fade bottom-up */}
-                  <div 
-                    className="absolute inset-0 md:hidden"
-                    style={{
-                      background: `linear-gradient(to top, ${banner.bgHex || '#610c27'} 0%, ${banner.bgHex || '#610c27'}00 80%)`
-                    }}
-                  />
-                </div>
+              <div className="relative h-full w-full bg-[#3e1a22]">
+                <Image
+                  src={banner.image || "/images/placeholder.jpg"}
+                  alt={banner.title}
+                  fill
+                  className="object-cover object-right md:object-center opacity-90"
+                  priority={index === 0}
+                />
+                {/* Gradient overlay to ensure text legibility */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1f0b11]/95 via-[#1f0b11]/70 to-transparent md:w-[75%]" />
                 
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 max-w-[65%] text-left z-10">
-                  <h2 className={`text-3xl md:text-[44px] font-bold leading-tight mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
+                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 max-w-5xl text-left">
+                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
                     {banner.title}
                     {banner.titleHighlight && (
                       <span className="text-[#ffc107]">{banner.titleHighlight}</span>
@@ -208,8 +186,8 @@ export default function DashboardPage() {
       </section>
 
       {/* Marquee Section */}
-      <div className="bg-[rgb(139,117,211)] py-4 md:py-5 overflow-hidden shadow-inner">
-        <div className="animate-marquee whitespace-nowrap flex items-center text-white text-lg md:text-xl font-medium tracking-wide">
+      <div className="bg-[#6869F9] py-3 border-y border-violet-800 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap flex">
           {[
             "#1 Vedic Remedies & Astrological Insights Provider",
             "25+ Years of Expertise in Vedic Astrology",

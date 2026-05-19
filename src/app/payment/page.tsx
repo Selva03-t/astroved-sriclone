@@ -8,6 +8,10 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 function PaymentContent() {
   const searchParams = useSearchParams();
   const amount = searchParams ? searchParams.get("amount") : "0";
+  const devoteeName = searchParams?.get("name") || "";
+  const devoteeGotra = searchParams?.get("gotra") || "";
+  const devoteeAddress = searchParams?.get("address") || "";
+  const devoteeWhatsapp = searchParams?.get("wa") || "";
   const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -36,6 +40,10 @@ function PaymentContent() {
           title: searchParams?.get("title") || "",
           amount: amount,
           orderId: orderId,
+          devoteeName,
+          gotra: devoteeGotra,
+          address: devoteeAddress,
+          whatsapp: devoteeWhatsapp,
           items: [] // In real app, pass items from cart
         })
       });
@@ -97,6 +105,28 @@ function PaymentContent() {
                   <span className="text-4xl font-extrabold text-gray-900">Rs. {amount}</span>
                   <span className="text-sm text-blue-600 font-bold hover:underline cursor-pointer">View Details</span>
                </div>
+               {(devoteeName || devoteeGotra || devoteeAddress) && (
+                  <div className="border-t border-gray-100 pt-5 text-sm text-gray-500 space-y-2">
+                     {devoteeName && (
+                        <div className="flex justify-between gap-4">
+                           <span className="font-semibold">Name</span>
+                           <span className="text-right text-gray-900">{devoteeName}</span>
+                        </div>
+                     )}
+                     {devoteeGotra && (
+                        <div className="flex justify-between gap-4">
+                           <span className="font-semibold">Gotra</span>
+                           <span className="text-right text-gray-900">{devoteeGotra}</span>
+                        </div>
+                     )}
+                     {devoteeAddress && (
+                        <div className="flex justify-between gap-4">
+                           <span className="font-semibold">Address</span>
+                           <span className="max-w-[260px] text-right text-gray-900">{devoteeAddress}</span>
+                        </div>
+                     )}
+                  </div>
+               )}
             </div>
 
             <div className="text-[10px] text-gray-400 font-medium uppercase tracking-widest text-center">

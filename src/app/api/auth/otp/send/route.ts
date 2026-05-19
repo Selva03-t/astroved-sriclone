@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { createOtp } from "@/lib/server/authOtpStore";
+import { AstrovedAuthError, requestOtp } from "@/lib/server/astrovedAuthApi";
 import type { OtpPayload } from "@/types/auth";
 
 const phoneRegex = /^[0-9]{6,15}$/;
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
@@ -12,14 +13,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Enter a valid number" }, { status: 400 });
     }
 
-    const data = await createOtp(payload);
+    const data = await requestOtp(payload);
 
     return NextResponse.json({
       success: true,
-      message: "OTP sent successfully",
-      data,
+      message: data.message,
+      data: { expiresIn: 30 },
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof AstrovedAuthError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode });
+    }
+
     return NextResponse.json({ success: false, error: "Unable to send OTP" }, { status: 500 });
   }
 }
