@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full h-[400px] md:h-[440px] lg:h-[480px] overflow-hidden group">
+        <div className="relative w-full h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -102,7 +102,7 @@ export default function DashboardPage() {
                     src={banner.image || "/images/placeholder.jpg"}
                     alt={banner.title}
                     fill
-                    className="object-cover object-[center_15%] md:object-[75%_15%] opacity-80 md:opacity-100"
+                    className="object-cover object-top md:object-right-top opacity-80 md:opacity-100"
                     priority={index === 0}
                   />
                 </div>
