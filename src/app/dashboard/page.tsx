@@ -691,7 +691,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         {puja.badge || "Special"}
       </div>
       {/* Bottom Left Badge */}
-      <div className="absolute bottom-3 left-3 bg-[#1f1f1f] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
+      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
         BOOK PUJA
       </div>
     </div>
@@ -718,7 +718,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         <span className="leading-tight">{(puja as any).date || "Upcoming Auspicious Date"}</span>
       </div>
 
-      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#1f1f1f] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#000000] transition-colors flex items-center justify-center gap-1.5">
+      <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5">
         {puja.buttonText || "PARTICIPATE"}
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
       </Link>
