@@ -245,26 +245,30 @@ function PujaFilterModal({
                           key={option.value}
                           type="button"
                           onClick={() => selectFilter(deityGroup.label, option.value)}
-                          className="group text-center"
+                          className="text-center"
                           aria-pressed={selected}
                         >
                           <span className={`relative mx-auto block h-24 w-24 overflow-hidden rounded-lg border-2 transition ${
-                            selected ? "border-[#2563eb] shadow-[0_0_0_3px_rgba(37,99,235,0.16)]" : "border-transparent"
+                            selected ? "border-[#5B5BF6] shadow-[0_0_0_3px_rgba(91,91,246,0.2)]" : "border-transparent hover:border-gray-200"
                           }`}>
                             <img
                               src={filterOptionImages[option.value] || "/images/Lakshmi-Homam.jpg"}
                               alt={option.value}
-                              className="h-full w-full object-cover transition duration-200 group-hover:scale-105"
+                              className="h-full w-full object-cover"
                             />
-                            <span className={`absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded border bg-white shadow-sm transition ${
-                              selected ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-gray-200 text-transparent"
-                            }`}>
-                              <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
-                                <path d="M2.2 6.2 4.8 8.7 9.8 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            </span>
+                            {/* Selected overlay with big centered checkmark */}
+                            {selected && (
+                              <span className="absolute inset-0 flex items-center justify-center bg-[#5B5BF6]/50">
+                                <svg viewBox="0 0 24 24" fill="none" className="h-10 w-10 drop-shadow-lg">
+                                  <circle cx="12" cy="12" r="11" fill="white" />
+                                  <path d="M6.5 12.5 10.5 16.5 17.5 8" stroke="#5B5BF6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </span>
+                            )}
                           </span>
-                          <span className="mt-2 block text-sm font-bold leading-5 text-[#1f2937]">
+                          <span className={`mt-2 block text-sm font-bold leading-5 ${
+                            selected ? "text-[#5B5BF6]" : "text-[#1f2937]"
+                          }`}>
                             {option.value}
                           </span>
                         </button>
@@ -668,20 +672,20 @@ export default function PujaPage() {
             <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
-                <h3 className="text-2xl font-black text-[#000000]">10,00,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]">{t.puja.pujasDone}</p>
+                <h3 className="text-2xl font-black text-[#2563eb]">10,00,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#3b82f6]">{t.puja.pujasDone}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
-                <h3 className="text-2xl font-black text-[#1f1f1f]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.happyDevotees}</p>
+                <h3 className="text-2xl font-black text-[#7c3aed]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#8b5cf6]">{t.puja.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
-                <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.puja.famousTemples}</p>
+                <h3 className="text-2xl font-black text-[#db2777]">100 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#ec4899]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#1f1f1f]">{t.puja.sankalp}</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.sankalpDesc}</p>
+                <h3 className="text-2xl font-black text-[#d97706]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#f59e0b]">{t.puja.sankalpDesc}</p>
               </div>
             </div>
           </section>

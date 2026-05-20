@@ -137,7 +137,9 @@ export default function DashboardPage() {
                   )}
                   <div className="flex flex-wrap gap-4">
                     {banner.buttons.map((btn: any, i) => {
-                      const buttonClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
+                      const outlineClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
+                      const solidClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-lg active:scale-95 bg-white text-[#5B5BF6] hover:bg-white/90 hover:shadow-xl`;
+                      const buttonClass = btn.variant === "outline" ? outlineClass : solidClass;
 
                       if (btn.href) {
                         return (
@@ -258,12 +260,12 @@ export default function DashboardPage() {
       </section>
 
       {/* Trust & Impact Section */}
-      <section className="bg-[#101c3d] py-16 md:py-20 text-white overflow-hidden">
+      <section className="bg-[#0f1c3d] py-16 md:py-20 text-white overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
-              <p className="text-[#1f1f1f] font-bold text-base mb-3">{t.home.trustedBy}</p>
+              <p className="text-[#f59e0b] font-bold text-sm mb-3 uppercase tracking-wide">{t.home.trustedBy}</p>
               <h2 className="text-4xl lg:text-[40px] font-bold leading-tight mb-5">
                 {t.home.largestPlatform}
               </h2>

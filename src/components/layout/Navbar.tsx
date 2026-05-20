@@ -118,8 +118,8 @@ export default function Navbar() {
                     href={item.path}
                     className={
                       isActivePath(item.path)
-                        ? "text-[#1f1f1f] font-bold"
-                        : "transition-colors hover:text-[#1f1f1f]"
+                        ? "text-[#5B5BF6] font-bold"
+                        : "transition-colors hover:text-[#5B5BF6]"
                     }
                   >
                     {t(`nav.${item.key}`)}
@@ -366,7 +366,7 @@ export default function Navbar() {
                     <Link
                       href={item.path}
                       className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                        isActivePath(item.path) ? "bg-[#6869F9]/10 text-[#1f1f1f]" : "text-gray-700 hover:bg-gray-50"
+                        isActivePath(item.path) ? "bg-[#5B5BF6]/10 text-[#5B5BF6] font-bold" : "text-gray-700 hover:bg-gray-50 hover:text-[#5B5BF6]"
                       }`}
                     >
                       {t(`nav.${item.key}`)}

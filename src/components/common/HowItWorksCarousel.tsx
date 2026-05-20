@@ -42,17 +42,12 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
             const isActive = index === activeIndex;
 
             return (
-              <button
+              <div
                 key={`${step.title}-${index}`}
-                type="button"
-                onClick={() => setActiveIndex(index)}
-                className="group flex w-full gap-4 text-left"
-                aria-label={`Show step ${index + 1}: ${step.title}`}
+                className="flex w-full gap-4 text-left"
               >
                 <span
-                  className={`mt-0.5 flex h-8 w-12 shrink-0 items-center pl-3 text-sm font-black text-white shadow-sm transition-all duration-200 ${
-                    isActive ? "bg-[#6869F9]" : "bg-[#ff9a37] group-hover:bg-[#6869F9]"
-                  }`}
+                  className="mt-0.5 flex h-8 w-12 shrink-0 items-center pl-3 text-sm font-black text-white shadow-sm bg-[#5B5BF6]"
                   style={{ clipPath: "polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%)" }}
                 >
                   {index + 1}
@@ -65,12 +60,12 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
                     {step.description}
                   </span>
                 </span>
-              </button>
+              </div>
             );
           })}
         </div>
 
-        <div className="relative min-h-[430px] overflow-hidden rounded-[26px] bg-[#6869F9] px-8 py-10 shadow-[0_18px_48px_rgba(244,120,32,0.24)]">
+        <div className="relative h-[460px] overflow-hidden rounded-[26px] bg-[#5B5BF6] px-8 py-10 shadow-[0_18px_48px_rgba(91,91,246,0.30)] flex items-center justify-center">
           <div className="pointer-events-none absolute left-4 top-1/2 hidden w-44 -translate-y-1/2 -translate-x-1/2 overflow-hidden rounded-xl bg-white opacity-55 blur-[1px] md:block">
             <img src={previousStep.imageSrc} alt="" className="h-56 w-full object-cover" />
           </div>
@@ -78,32 +73,32 @@ export default function HowItWorksCarousel({ title, steps }: HowItWorksCarouselP
             <img src={nextStep.imageSrc} alt="" className="h-56 w-full object-cover" />
           </div>
 
-          <div className="relative z-10 mx-auto max-w-[330px] rounded-xl bg-white p-3 shadow-[0_18px_44px_rgba(111,44,0,0.3)]">
+          <div className="relative z-10 w-full max-w-[310px] rounded-xl bg-white p-3 shadow-[0_18px_44px_rgba(91,91,246,0.25)]">
             <div className="overflow-hidden rounded-lg">
               <img
                 src={activeStep.imageSrc}
                 alt={activeStep.imageAlt}
-                className="h-44 w-full object-cover"
+                className="h-40 w-full object-cover"
               />
             </div>
-            <div className="px-2 pb-2 pt-4">
+            <div className="px-2 pb-2 pt-4" style={{ height: "148px", overflow: "hidden" }}>
               {activeStep.tag && (
                 <span className="rounded bg-[#f5f3ff] px-3 py-1 text-xs font-bold text-[#1f1f1f]">
                   {activeStep.tag}
                 </span>
               )}
-              <h3 className="mt-4 text-xl font-black leading-tight text-[#1f1f1f]">
+              <h3 className="mt-3 text-base font-black leading-tight text-[#1f1f1f] line-clamp-1">
                 {activeStep.title}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-gray-500">
+              <p className="mt-1.5 text-xs leading-5 text-gray-500 line-clamp-2">
                 {activeStep.description}
               </p>
-              <button
-                type="button"
-                className="mt-5 flex w-full items-center justify-center rounded-lg bg-[#6869F9] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#d95f13]"
+              <div
+                className="mt-3 flex w-full items-center justify-center rounded-lg bg-[#5B5BF6] px-4 py-2.5 text-xs font-bold text-white shadow-sm cursor-default select-none"
+                aria-hidden="true"
               >
-                {activeStep.cta || activeStep.title}
-              </button>
+                {activeStep.tag || activeStep.title}
+              </div>
             </div>
           </div>
 

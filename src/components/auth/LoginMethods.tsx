@@ -79,7 +79,7 @@ export default function LoginMethods() {
     if (method === "email") return emailRegex.test(email) && password.length > 0;
     if (method === "phone") return phoneRegex.test(phone);
     return phoneRegex.test(whatsapp);
-  }, [method, email, phone, whatsapp]);
+  }, [method, email, password, phone, whatsapp]);
 
   const placeholder =
     method === "email"
@@ -206,7 +206,9 @@ export default function LoginMethods() {
               <span className="mr-2 text-base text-[#7b5db5]">+{DEFAULT_COUNTRY.dialCode}</span>
             )}
             <input
-              type={method === "email" ? "email" : "tel"}
+              type={method === "email" ? "text" : "tel"}
+              inputMode={method === "email" ? "email" : "numeric"}
+              autoComplete={method === "email" ? "email" : "tel"}
               value={value}
               onChange={(event) => setValue(event.target.value)}
               placeholder={placeholder}
