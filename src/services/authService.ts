@@ -12,7 +12,7 @@ async function requestAuth<T>(path: string, init?: RequestInit): Promise<AuthApi
     ...init,
     headers: {
       "Content-Type": "application/json",
-      ...init?.headers,
+      ...init?.headers, 
     },
   });
 

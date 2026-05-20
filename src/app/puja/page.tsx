@@ -96,14 +96,14 @@ const filterGroups = [
   },
 ];
 
-type FilterState = Record<string, string>; // label ? selected value ("All" means no filter)
+type FilterState = Record<string, string[]>; // label -> array of selected values
 
 const defaultFilters: FilterState = {
-  Deity: "All",
-  Tithis: "All",
-  Dosha: "All",
-  Benefits: "All",
-  Location: "All",
+  Deity: [],
+  Tithis: [],
+  Dosha: [],
+  Benefits: [],
+  Location: [],
 };
 
 const filterOptionImages: Record<string, string> = {
@@ -153,14 +153,16 @@ function pujaMatchesFilters(puja: Puja, filters: FilterState): boolean {
     .toLowerCase();
 
   for (const group of filterGroups) {
-    const selected = filters[group.label];
-    if (!selected || selected === "All") continue;
+    const selectedValues = filters[group.label];
+    if (!selectedValues || selectedValues.length === 0) continue;
 
-    const optionConfig = group.options.find((o) => o.value === selected);
-    if (!optionConfig || optionConfig.keywords.length === 0) continue;
+    const groupMatches = selectedValues.some((selectedValue) => {
+      const optionConfig = group.options.find((o) => o.value === selectedValue);
+      if (!optionConfig || optionConfig.keywords.length === 0) return false;
+      return optionConfig.keywords.some((kw) => searchText.includes(kw));
+    });
 
-    const matches = optionConfig.keywords.some((kw) => searchText.includes(kw));
-    if (!matches) return false;
+    if (!groupMatches) return false;
   }
   return true;
 }
@@ -179,14 +181,18 @@ function PujaFilterModal({
   const [draftFilters, setDraftFilters] = useState<FilterState>(filters);
 
   const selectFilter = (label: string, value: string) => {
-    setDraftFilters((prev) => ({
-      ...prev,
-      [label]: prev[label] === value ? "All" : value,
-    }));
+    setDraftFilters((prev) => {
+      const current = prev[label] || [];
+      if (current.includes(value)) {
+        return { ...prev, [label]: current.filter((v) => v !== value) };
+      } else {
+        return { ...prev, [label]: [...current, value] };
+      }
+    });
   };
 
   const renderCheckboxOption = (groupLabel: string, value: string) => {
-    const selected = draftFilters[groupLabel] === value;
+    const selected = (draftFilters[groupLabel] || []).includes(value);
 
     return (
       <button
@@ -238,7 +244,7 @@ function PujaFilterModal({
                   {deityGroup.options
                     .filter((option) => option.value !== "All")
                     .map((option) => {
-                      const selected = draftFilters[deityGroup.label] === option.value;
+                      const selected = (draftFilters[deityGroup.label] || []).includes(option.value);
 
                       return (
                         <button
@@ -363,7 +369,7 @@ export default function PujaPage() {
     setIsFilterModalOpen(false);
   }, []);
 
-  const hasActiveFilters = Object.entries(filters).some(([, v]) => v !== "All");
+  const hasActiveFilters = Object.values(filters).some((arr) => arr && arr.length > 0);
 
   // -- Apply filters to get displayed pujas --
   const displayedPujas = allPujas.filter((p) => pujaMatchesFilters(p, filters));
@@ -503,18 +509,21 @@ export default function PujaPage() {
 
                 <div className="h-6 w-px shrink-0 bg-gray-200" />
 
-                {filterGroups.map((group) => (
+                {filterGroups.map((group) => {
+                  const activeCount = filters[group.label]?.length || 0;
+                  const isActive = activeCount > 0;
+                  return (
                   <button
                     key={group.label}
                     type="button"
                     onClick={() => setIsFilterModalOpen(true)}
                     className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${
-                      filters[group.label] !== "All"
+                      isActive
                         ? "bg-[#6869F9] text-white shadow-sm"
                         : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
                     }`}
                   >
-                    <span>{filters[group.label] !== "All" ? filters[group.label] : group.label}</span>
+                    <span>{isActive ? (activeCount === 1 ? filters[group.label][0] : `${group.label} (${activeCount})`) : group.label}</span>
                     <svg
                       viewBox="0 0 16 16"
                       fill="none"
@@ -523,7 +532,7 @@ export default function PujaPage() {
                       <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
-                ))}
+                )})}
 
                 {/* Clear all */}
                 {hasActiveFilters && (
@@ -545,16 +554,16 @@ export default function PujaPage() {
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{t.puja.active}</span>
                   {Object.entries(filters)
-                    .filter(([, v]) => v !== "All")
-                    .map(([key, val]) => (
+                    .filter(([, v]) => v && v.length > 0)
+                    .flatMap(([key, values]) => values.map((val) => (
                       <span
-                        key={key}
+                        key={`${key}-${val}`}
                         className="inline-flex items-center gap-1.5 rounded-full bg-[#6869F9]/10 px-3 py-1 text-xs font-semibold text-[#6869F9]"
                       >
                         {key}: {val}
                         <button
                           type="button"
-                          onClick={() => setFilters((p) => ({ ...p, [key]: "All" }))}
+                          onClick={() => setFilters((p) => ({ ...p, [key]: p[key].filter(v => v !== val) }))}
                           aria-label={`Remove ${key} filter`}
                           className="ml-0.5 rounded-full hover:opacity-70 transition-opacity"
                         >
@@ -563,7 +572,7 @@ export default function PujaPage() {
                           </svg>
                         </button>
                       </span>
-                    ))}
+                    )))}
                 </div>
               )}
             </div>

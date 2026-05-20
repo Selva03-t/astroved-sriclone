@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { useSearchParams } from "next/navigation";
+import LocationSearch, { CITIES } from "./LocationSearch";
 
 const localeMap: Record<string, string> = {
   en: "en-IN", hi: "hi-IN", ta: "ta-IN", te: "te-IN", kn: "kn-IN",
@@ -96,16 +97,18 @@ export default function PanchangClientPage() {
 
   const queryDate = searchParams?.get("date");
   const [selectedDate, setSelectedDate] = useState(queryDate || getTodayStr());
+  const defaultCity = CITIES.find(c => c.name.includes("Varanasi")) || CITIES[0];
+  const [selectedLocation, setSelectedLocation] = useState(defaultCity);
   const [data, setData] = useState<any>(getFallbackData(queryDate || getTodayStr()));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/panchang?date=${selectedDate}`)
+    fetch(`/api/panchang?date=${selectedDate}&lat=${selectedLocation.lat}&lon=${selectedLocation.lon}`)
       .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then((json) => { if (json && typeof json === "object") setData(json); setLoading(false); })
       .catch(() => { setData(getFallbackData(selectedDate)); setLoading(false); });
-  }, [selectedDate]);
+  }, [selectedDate, selectedLocation]);
 
   const isToday = selectedDate === getTodayStr();
   const isTomorrow = selectedDate === getTomorrowStr();
@@ -188,17 +191,7 @@ export default function PanchangClientPage() {
           </div>
           {/* Right: location */}
           <div className="relative flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 bg-white cursor-pointer min-w-[260px] hover:bg-gray-50 transition-colors">
-            <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <select className="appearance-none bg-transparent text-[14px] font-medium text-gray-700 outline-none w-full cursor-pointer">
-              <option>Varanasi, Uttar Pradesh, India</option>
-              <option>New Delhi, Delhi, India</option>
-              <option>Mumbai, Maharashtra, India</option>
-              <option>Chennai, Tamil Nadu, India</option>
-            </select>
-            <svg className="w-4 h-4 text-gray-400 flex-shrink-0 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            <LocationSearch onSelectLocation={setSelectedLocation} />
           </div>
         </div>
       </div>
