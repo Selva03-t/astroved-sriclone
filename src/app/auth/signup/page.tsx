@@ -65,8 +65,8 @@ export default function SignupPage() {
   return (
     <main className="relative min-h-screen w-full flex items-center justify-center bg-[#fdfaff] overflow-hidden">
       {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] rounded-full bg-linear-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[600px] h-[600px] rounded-full bg-linear-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-xl px-4 py-10">
         <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 px-6 py-8 shadow-[0_24px_70px_rgba(91,33,182,0.18)] backdrop-blur sm:px-10 sm:py-10">
@@ -189,7 +189,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-[#F47820] via-[#1f1f1f] to-[#F47820] px-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(104,105,249,0.22)] transition-all hover:brightness-110 disabled:opacity-50"
+              className="mt-5 h-12 w-full rounded-xl bg-linear-to-r from-[#F47820] via-[#1f1f1f] to-[#F47820] px-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(104,105,249,0.22)] transition-all hover:brightness-110 disabled:opacity-50"
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>

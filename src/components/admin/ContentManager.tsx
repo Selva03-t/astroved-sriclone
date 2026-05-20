@@ -63,6 +63,7 @@ interface ContentManagerProps {
   dynamicPujaLocationFromItems?: boolean;
   /** Review-only mode: hide Add/Edit, show Approve/Unapprove */
   reviewMode?: boolean;
+  hideAddButton?: boolean;
 }
 
 /** Stable empty default — avoid new [] each render (breaks useMemo + causes setState loops). */
@@ -85,6 +86,7 @@ export default function ContentManager({
   filterGroups = EMPTY_FILTER_GROUPS,
   dynamicPujaLocationFromItems = false,
   reviewMode = false,
+  hideAddButton = false,
 }: ContentManagerProps) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -471,7 +473,7 @@ export default function ContentManager({
               {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
             </button>
           )}
-          {!reviewMode && (
+          {!reviewMode && (!hideAddButton || isAdding) && (
             <button
               onClick={handleOpenAdd}
               className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${

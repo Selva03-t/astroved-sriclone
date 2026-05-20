@@ -6,6 +6,9 @@ type Offering = {
   id: string;
   name: string;
   price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
   description: string;
   imageUrl?: string;
 };
@@ -57,16 +60,27 @@ const buildOfferingsFromFlatFields = (record: ChadhavaRecord): Offering[] | unde
   const result: Offering[] = [];
   for (let i = 1; i <= 10; i += 1) {
     const name = getStringField(record, `offering${i}Name`);
-    const price = getNumberField(record, `offering${i}Price`);
+    const priceINR = getNumberField(record, `offering${i}PriceINR`);
+    const priceUSD = getNumberField(record, `offering${i}PriceUSD`);
+    const priceMYR = getNumberField(record, `offering${i}PriceMYR`);
+    const priceLegacy = getNumberField(record, `offering${i}Price`);
     const description = getStringField(record, `offering${i}Description`);
     const imageUrl = getStringField(record, `offering${i}ImageUrl`);
 
-    if (!name || price === undefined) continue;
+    if (!name) continue;
+
+    // Use priceINR or legacy price as standard price
+    const finalPriceINR = priceINR !== undefined ? priceINR : (priceLegacy !== undefined ? priceLegacy : 0);
+
+    if (priceINR === undefined && priceLegacy === undefined) continue;
 
     result.push({
       id: slugify(`${name}-${i}`),
       name,
-      price,
+      price: finalPriceINR,
+      priceINR: finalPriceINR,
+      priceUSD: priceUSD,
+      priceMYR: priceMYR,
       description: description || `Sacred offering for ${name}.`,
       imageUrl,
     });

@@ -4,8 +4,10 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import { CheckIcon } from "@heroicons/react/24/outline";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 function PaymentContent() {
+  const { currency, currencySymbol } = useCurrency();
   const searchParams = useSearchParams();
   const amount = searchParams ? searchParams.get("amount") : "0";
   const devoteeName = searchParams?.get("name") || "";
@@ -39,6 +41,7 @@ function PaymentContent() {
           type: searchParams?.get("type") || "puja",
           title: searchParams?.get("title") || "",
           amount: amount,
+          currency: currency,
           orderId: orderId,
           devoteeName,
           gotra: devoteeGotra,
@@ -102,7 +105,7 @@ function PaymentContent() {
                   <span>Order ID: {orderId || "AV_LOADING..."}</span>
                </div>
                <div className="flex justify-between items-end">
-                  <span className="text-4xl font-extrabold text-gray-900">Rs. {amount}</span>
+                  <span className="text-4xl font-extrabold text-gray-900">{currencySymbol} {amount}</span>
                   <span className="text-sm text-blue-600 font-bold hover:underline cursor-pointer">View Details</span>
                </div>
                {(devoteeName || devoteeGotra || devoteeAddress) && (

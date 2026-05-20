@@ -124,8 +124,8 @@ export default function OtpClient() {
 
   return (
     <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#fdfaff]">
-      <div className="pointer-events-none absolute right-0 top-0 h-[800px] w-[800px] -translate-y-1/2 translate-x-1/3 rounded-full bg-gradient-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-[600px] w-[600px] -translate-x-1/3 translate-y-1/2 rounded-full bg-gradient-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-0 h-[800px] w-[800px] -translate-y-1/2 translate-x-1/3 rounded-full bg-linear-to-br from-[#ede8ff] to-transparent opacity-60 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-[600px] w-[600px] -translate-x-1/3 translate-y-1/2 rounded-full bg-linear-to-tr from-[#e8e0ff] to-transparent opacity-50 blur-3xl" />
 
       <div className="relative z-10 w-full max-w-xl px-4 py-12">
         <div className="w-full rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
@@ -161,7 +161,7 @@ export default function OtpClient() {
             <button
               type="submit"
               disabled={loading || otp.join("").length !== 6 || !otpPayload}
-              className="w-full rounded-xl bg-gradient-to-r from-[#6869F9] to-[#5657e8] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
+              className="w-full rounded-xl bg-linear-to-r from-[#6869F9] to-[#5657e8] px-4 py-3.5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(104,105,249,0.35)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:bg-[#d2c2ef] disabled:bg-none disabled:shadow-none"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>

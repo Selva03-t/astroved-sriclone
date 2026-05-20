@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-gradient-to-br from-[#2b2d70] via-[#4647c4] to-[#1f1f1f] text-white">
+    <footer className="w-full bg-linear-to-br from-[#2b2d70] via-[#4647c4] to-[#1f1f1f] text-white">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-8">
           {/* Logo and Description */}

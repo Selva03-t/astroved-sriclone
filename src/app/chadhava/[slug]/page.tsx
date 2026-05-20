@@ -8,10 +8,15 @@ import { OfferingCard } from "@/components/chadhava/OfferingCard";
 import { HighlightOffering } from "@/components/chadhava/HighlightOffering";
 import { FAQAccordion } from "@/components/chadhava/FAQAccordion";
 import { PencilSquareIcon, SparklesIcon, TagIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useCurrency } from "@/contexts/CurrencyContext";
+
 interface Offering {
   id: string;
   name: string;
   price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
   description: string;
   imageUrl?: string;
 }
@@ -40,6 +45,11 @@ export default function ChadhavaDetailPage() {
   const slug = params?.slug as string;
   const [data, setData] = useState<ChadhavaRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  const { currency, currencySymbol } = useCurrency();
+  const getOfferingPrice = (off: any) => {
+    return off[`price${currency}`] ?? off.price ?? 0;
+  };
 
   // Cart State
   const [cart, setCart] = useState<Record<string, number>>({});
@@ -91,7 +101,7 @@ export default function ChadhavaDetailPage() {
   const selectedTotal = data?.offerings
     ? Object.entries(cart).reduce((total, [id, qty]) => {
         const off = data.offerings.find((o) => o.id === id);
-        return total + (off?.price || 0) * qty;
+        return total + (off ? getOfferingPrice(off) : 0) * qty;
       }, 0)
     : 0;
 
@@ -172,7 +182,7 @@ export default function ChadhavaDetailPage() {
                       <div className="flex justify-between items-start mb-4">
                          <div>
                             <h3 className="font-bold text-[#1f1f1f]">{item.name}</h3>
-                            <p className="text-gray-900 font-bold mt-1 text-sm">Rs. {item.price}</p>
+                            <p className="text-gray-900 font-bold mt-1 text-sm">{currencySymbol} {getOfferingPrice(item)}</p>
                          </div>
                          <div className="flex items-center gap-4 bg-[#6869F9] text-white px-3 py-1.5 rounded-lg text-sm font-bold">
                             <button onClick={() => updateQuantity(item.id, -1)} className="hover:scale-125">-</button>
@@ -206,12 +216,12 @@ export default function ChadhavaDetailPage() {
                        {selectedItems.map(item => (
                          <div key={item.id} className="flex justify-between">
                             <span>{item.name}</span>
-                            <span>Rs. {item.price * cart[item.id]}.0</span>
+                            <span>{currencySymbol} {(getOfferingPrice(item) * cart[item.id]).toFixed(2)}</span>
                          </div>
                        ))}
                        <div className="pt-4 border-t border-gray-100 flex justify-between text-lg font-extrabold text-[#1f1f1f]">
                           <span>Total Amount</span>
-                          <span>Rs. {selectedTotal}.0</span>
+                          <span>{currencySymbol} {selectedTotal.toFixed(2)}</span>
                        </div>
                     </div>
                  </div>
@@ -230,7 +240,7 @@ export default function ChadhavaDetailPage() {
                       <div className="flex-1">
                          <h4 className="font-bold text-[13px] text-[#1f1f1f] truncate w-32">{item.name}</h4>
                          <p className="text-gray-400 text-[10px] mt-0.5">{item.description.slice(0, 30)}...</p>
-                         <p className="text-[#1f1f1f] font-bold text-[13px] mt-1">Rs. {item.price}</p>
+                         <p className="text-[#1f1f1f] font-bold text-[13px] mt-1">{currencySymbol} {getOfferingPrice(item)}</p>
                       </div>
                       <button 
                         onClick={() => toggleOffering(item)}
@@ -250,7 +260,7 @@ export default function ChadhavaDetailPage() {
               <div className="flex items-center gap-4 text-sm font-bold">
                  <span>{selectedCount} Offerings</span>
                  <span className="opacity-50">•</span>
-                 <span>Rs. {selectedTotal}</span>
+                 <span>{currencySymbol} {selectedTotal}</span>
               </div>
               <button 
                 onClick={async () => {
@@ -307,7 +317,7 @@ export default function ChadhavaDetailPage() {
                <img 
                  src={carouselImages[currentImageIndex]} 
                  alt={data.title} 
-                 className="w-full aspect-[16/10] object-cover transition-opacity duration-300"
+                 className="w-full aspect-16/10 object-cover transition-opacity duration-300"
                />
                {carouselImages.length > 1 && (
                  <>
@@ -434,7 +444,7 @@ export default function ChadhavaDetailPage() {
               <div className="flex items-center gap-4 text-sm lg:text-base font-bold pl-4">
                  <span>{selectedCount} Offerings</span>
                  <span className="opacity-40">•</span>
-                 <span>Rs. {selectedTotal}</span>
+                 <span>{currencySymbol} {selectedTotal}</span>
               </div>
               <button 
                 onClick={() => setShowModal(true)}
@@ -448,7 +458,7 @@ export default function ChadhavaDetailPage() {
 
       {/* Details Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-100 flex items-center justify-center p-6 animate-in fade-in duration-300">
            <div className="bg-white rounded-[32px] w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-300 shadow-2xl">
               <div className="p-8 pb-4 flex items-center gap-4">
                  <button onClick={() => setShowModal(false)} className="h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors">

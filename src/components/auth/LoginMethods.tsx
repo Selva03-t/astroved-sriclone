@@ -159,7 +159,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("email")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "email"
-              ? "bg-gradient-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
+              ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -172,7 +172,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("phone")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "phone"
-              ? "bg-gradient-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
+              ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -185,7 +185,7 @@ export default function LoginMethods() {
           onClick={() => setMethod("whatsapp")}
           className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             method === "whatsapp"
-              ? "bg-gradient-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
+              ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
               : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
           }`}
         >
@@ -261,7 +261,7 @@ export default function LoginMethods() {
           disabled={!isValid || loading}
           className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isValid && !loading
-              ? "bg-gradient-to-r from-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
+              ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
               : "cursor-not-allowed bg-[#d2c2ef]"
           }`}
         >

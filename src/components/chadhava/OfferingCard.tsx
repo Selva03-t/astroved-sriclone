@@ -1,11 +1,15 @@
 "use client";
 import React from 'react';
 import { AddButton } from './AddButton';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 export interface Offering {
   id: string;
   name: string;
   price: number;
+  priceINR?: number;
+  priceUSD?: number;
+  priceMYR?: number;
   description: string;
   imageUrl?: string;
 }
@@ -18,6 +22,9 @@ interface OfferingCardProps {
 }
 
 export function OfferingCard({ offering, qty, onToggle, onUpdateQty }: OfferingCardProps) {
+  const { currency, currencySymbol } = useCurrency();
+  const dynamicPrice = (offering as any)[`price${currency}`] ?? offering.price;
+
   return (
     <div className="py-6 flex flex-row items-center justify-between gap-6 border-b border-[#ececec] group hover:bg-[#f8f8f8] transition-colors duration-300 px-4 md:px-6">
       <div className="flex-1 pr-2 md:pr-6">
@@ -25,10 +32,10 @@ export function OfferingCard({ offering, qty, onToggle, onUpdateQty }: OfferingC
         <p className="text-[#6b7280] text-sm mb-3 leading-relaxed">
            <span className="opacity-90">{offering.description.startsWith('✓') ? '' : '✓ '}{offering.description}</span>
         </p>
-        <div className="text-lg font-bold text-[#0f8f62]">₹{offering.price}</div>
+        <div className="text-lg font-bold text-[#0f8f62]">{currencySymbol}{dynamicPrice}</div>
       </div>
       <div className="flex flex-col items-center shrink-0 relative pb-3 w-[100px]">
-        <div className="relative h-[86px] w-[86px] bg-gradient-to-b from-[#f8f8f8] to-[#ececec] rounded-xl flex items-center justify-center p-2 border border-[#ececec]">
+        <div className="relative h-[86px] w-[86px] bg-linear-to-b from-[#f8f8f8] to-[#ececec] rounded-xl flex items-center justify-center p-2 border border-[#ececec]">
           <img src={offering.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=200&q=80"} alt={offering.name} className="w-full h-full object-contain rounded-md shadow-sm mix-blend-multiply" />
         </div>
         <div className="absolute -bottom-1 z-10">

@@ -8,6 +8,7 @@ interface Booking {
   _id: string;
   orderId: string;
   amount: string;
+  currency?: string;
   bookingDate: string;
   status: string;
   bookingType: string;
@@ -17,8 +18,28 @@ interface Booking {
 export default function MyChadhavaBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [customSymbols, setCustomSymbols] = useState<Record<string, string>>({
+    INR: "₹",
+    USD: "$",
+    MYR: "RM",
+  });
 
   useEffect(() => {
+    // Fetch custom currency symbols
+    fetch("/api/admin/content?type=currency")
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const settings = data[0];
+          setCustomSymbols({
+            INR: settings.inrSymbol || "₹",
+            USD: settings.usdSymbol || "$",
+            MYR: settings.myrSymbol || "RM",
+          });
+        }
+      })
+      .catch((err) => console.error("Error fetching dynamic currency symbols:", err));
+
     fetch("/api/bookings/me?type=chadhava")
       .then((res) => res.json())
       .then((data) => {
@@ -82,7 +103,7 @@ export default function MyChadhavaBookings() {
                         </div>
                      </div>
                      <div className="text-center sm:text-right">
-                        <div className="text-2xl font-black text-[#1f1f1f] mb-1">Rs. {booking.amount}</div>
+                        <div className="text-2xl font-black text-[#1f1f1f] mb-1">{customSymbols[booking.currency || "INR"] || "₹"} {booking.amount}</div>
                         <p className="text-[10px] font-bold text-gray-300 uppercase">Transaction ID: {booking._id.substr(-8).toUpperCase()}</p>
                      </div>
                   </div>

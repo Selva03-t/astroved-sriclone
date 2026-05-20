@@ -150,3 +150,25 @@ body.puja-checkout-active [data-global-chrome="assistant"] {
   display: none;
 }
 
+/* Beautiful and clean custom autofill styles that blend with theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #342151 !important;
+  box-shadow: 0 0 0px 1000px #fcfaff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #fcfaff inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input[type="password"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill:hover, 
+input[type="password"]:-webkit-autofill:focus, 
+input[type="password"]:-webkit-autofill:active {
+  -webkit-text-fill-color: #342151 !important;
+  box-shadow: 0 0 0px 1000px #faf8ff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #faf8ff inset !important;
+}
+
+
+

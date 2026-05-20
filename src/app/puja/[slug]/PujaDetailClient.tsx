@@ -698,8 +698,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                   {/* Name + image row */}
                                   <div className="mt-4 flex items-end justify-between gap-3 w-full min-w-0">
                                     <div className="flex-1 min-w-0">
-                                      <h4 className="font-bold text-gray-900 leading-snug break-words">{pkg.name}</h4>
-                                      <p className="text-sm text-gray-600 mt-1 line-clamp-3 break-words">
+                                      <h4 className="font-bold text-gray-900 leading-snug wrap-break-word">{pkg.name}</h4>
+                                      <p className="text-sm text-gray-600 mt-1 line-clamp-3 wrap-break-word">
                                         {pkg.description || "Recommended for devotees."}
                                       </p>
                                       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -931,7 +931,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
       {/* Package Selection Modal */}
       {showPackageModal && puja && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
            <div className="relative flex h-full max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-gray-100 p-6">
@@ -1068,7 +1068,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
       {/* Details Collection Modal */}
       {showDetailsModal && puja && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-110 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
            <div className="relative w-full max-w-md rounded-[32px] bg-white p-8 shadow-2xl">
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">
@@ -1159,7 +1159,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
       {/* Review Modal */}
       {showReviewModal && puja && (
-        <div className="fixed inset-0 z-[120] bg-[#f8f9fa] overflow-y-auto">
+        <div className="fixed inset-0 z-120 bg-[#f8f9fa] overflow-y-auto">
            <Navbar />
            {/* Review Breadcrumbs */}
            <div className="bg-white border-b border-gray-100 py-3 px-6 sticky top-0 z-10">
@@ -1342,7 +1342,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
       )}
       {/* Gallery Modal */}
       {showGallery && (
-        <div className="fixed inset-0 z-[200] flex flex-col bg-black">
+        <div className="fixed inset-0 z-200 flex flex-col bg-black">
           {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-6 text-white">
             <button onClick={() => setShowGallery(false)} className="flex items-center gap-4 hover:text-gray-300">

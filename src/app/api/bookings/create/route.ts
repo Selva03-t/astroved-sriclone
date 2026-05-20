@@ -29,6 +29,7 @@ export async function POST(request: Request) {
       bookingType: bookingData.type || 'puja', // 'puja' or 'chadhava'
       title: bookingData.title || (bookingData.type === 'chadhava' ? 'Spiritual Chadhava' : 'Sacred Puja Service'),
       amount: bookingData.amount,
+      currency: bookingData.currency || 'INR',
       devoteeName: bookingData.devoteeName || bookingData.name || '',
       gotra: bookingData.gotra || '',
       address: bookingData.address || '',

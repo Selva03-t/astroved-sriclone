@@ -163,7 +163,7 @@ export default function Navbar() {
               </svg>
             </button>
             {langOpen && (
-              <div className="absolute top-full right-0 mt-2 z-[90]">
+              <div className="absolute top-full right-0 mt-2 z-90">
                 <div className="bg-white rounded-xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.12)] overflow-hidden" style={{ minWidth: "140px" }}>
                   <div className="py-1">
                     {[
@@ -212,7 +212,7 @@ export default function Navbar() {
               )}
             </button>
 
-            <div className="pointer-events-none absolute right-0 top-full z-[80] w-[320px] pt-3 opacity-0 translate-y-3 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="pointer-events-none absolute right-0 top-full z-80 w-[320px] pt-3 opacity-0 translate-y-3 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
               <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden">
                 {!user ? (
                   <div className="p-5 border-b border-gray-50 bg-gray-50/30">

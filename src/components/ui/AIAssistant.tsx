@@ -53,7 +53,7 @@ export default function AIAssistant() {
         }`}
         aria-label="Open AI Assistant"
       >
-        <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-orange-50 overflow-hidden p-3">
+        <div className="relative flex h-full w-full items-center justify-center rounded-full bg-linear-to-br from-red-50 to-orange-50 overflow-hidden p-3">
           <img
             src="/images/logo.png"
             alt="DivineAlign Logo"
@@ -71,7 +71,7 @@ export default function AIAssistant() {
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between bg-gradient-to-r from-[#8b2323] to-[#b33030] px-4 py-3.5 text-white">
+        <div className="flex items-center justify-between bg-linear-to-r from-[#8b2323] to-[#b33030] px-4 py-3.5 text-white">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-20 items-center justify-center rounded bg-white/20 backdrop-blur-sm p-1.5">
                <img
@@ -158,7 +158,7 @@ export default function AIAssistant() {
               disabled={!message.trim()}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#8b2323] text-white transition-all hover:bg-[#701c1c] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
             >
-              <i className="fas fa-paper-plane text-sm translate-y-[1px] -translate-x-[1px]"></i>
+              <i className="fas fa-paper-plane text-sm translate-y-px -translate-x-1px"></i>
             </button>
           </form>
         </div>

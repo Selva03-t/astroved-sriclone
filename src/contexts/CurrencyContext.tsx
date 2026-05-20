@@ -26,41 +26,74 @@ const getSymbol = (curr: CurrencyType) => {
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrency] = useState<CurrencyType>("INR");
+  const [currencySymbol, setCurrencySymbol] = useState<string>("₹");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCurrency = async () => {
       try {
-        // 1. Check cookies first
+        let customSymbols: Record<CurrencyType, string> = {
+          INR: "₹",
+          USD: "$",
+          MYR: "RM",
+        };
+
+        // 1. Fetch customized symbols from backend settings
+        try {
+          const res = await fetch("/api/admin/content?type=currency");
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              const settings = data[0];
+              customSymbols = {
+                INR: settings.inrSymbol || "₹",
+                USD: settings.usdSymbol || "$",
+                MYR: settings.myrSymbol || "RM",
+              };
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching custom currency symbols:", err);
+        }
+
+        // 2. Check cookies first
+        let detectedCurrency: CurrencyType = "INR";
+        let foundCookie = false;
         const match = document.cookie.match(new RegExp('(^| )userCurrency=([^;]+)'));
         if (match && match[2]) {
           const savedCurr = match[2] as CurrencyType;
           if (["INR", "USD", "MYR"].includes(savedCurr)) {
-            setCurrency(savedCurr);
-            setLoading(false);
-            return;
+            detectedCurrency = savedCurr;
+            foundCookie = true;
           }
         }
 
-        // 2. Fetch IP Geolocation
-        const res = await fetch("https://ipapi.co/json/");
-        if (!res.ok) throw new Error("Failed to fetch IP data");
-        const data = await res.json();
-        
-        let detectedCurrency: CurrencyType = "USD"; // Default fallback
-        
-        if (data.country_code === "IN") {
-          detectedCurrency = "INR";
-        } else if (data.country_code === "MY") {
-          detectedCurrency = "MYR";
+        // 3. Fetch IP Geolocation if cookie not found
+        if (!foundCookie) {
+          try {
+            const res = await fetch("https://ipapi.co/json/");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.country_code === "IN") {
+                detectedCurrency = "INR";
+              } else if (data.country_code === "MY") {
+                detectedCurrency = "MYR";
+              } else {
+                detectedCurrency = "USD";
+              }
+            }
+          } catch (geoError) {
+            console.error("Error with IP Geolocation detection:", geoError);
+          }
         }
 
         setCurrency(detectedCurrency);
+        setCurrencySymbol(customSymbols[detectedCurrency] || getSymbol(detectedCurrency));
+        
         // Save to cookie for 30 days
         document.cookie = `userCurrency=${detectedCurrency}; path=/; max-age=${30 * 24 * 60 * 60}`;
       } catch (error) {
         console.error("Error detecting currency:", error);
-        // Fallback to INR on error or keep default
       } finally {
         setLoading(false);
       }
@@ -70,8 +103,9 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   return (
-    <CurrencyContext.Provider value={{ currency, currencySymbol: getSymbol(currency), loading }}>
+    <CurrencyContext.Provider value={{ currency, currencySymbol, loading }}>
       {children}
     </CurrencyContext.Provider>
   );
 };
+
