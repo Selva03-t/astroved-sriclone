@@ -355,21 +355,31 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
   // Token lives only in .env.local — never sent to the browser
   const token = process.env.AstroVed_API_TOKEN || '';
 
+  if (!token) {
+    console.warn('Panchang API: No DIVINEALIGN_API_TOKEN found in .env.local. Using dummy data immediately.');
+    return getDummyPanchangData(date, latitude, longitude);
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout
+
   try {
     const res = await fetch(url, {
       method,
       headers: {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        Authorization: `Bearer ${token}`,
       },
       body,
       next: { revalidate: 3600 },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
       if (res.status === 401) {
         console.warn('Panchang API: 401 Unauthorized — check AstroVed_API_TOKEN in .env.local');
-        return getDummyPanchangData(date);
+        return getDummyPanchangData(date, latitude, longitude);
       }
       throw new Error(`Panchang API error: ${res.status}`);
     }
@@ -378,12 +388,12 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
     return normalizeApiResponse(raw, date);
   } catch (err) {
     console.error('fetchPanchangData error:', err);
-    return getDummyPanchangData(date);
+    return getDummyPanchangData(date, latitude, longitude);
   }
 }
 
 // ─── Fallback dummy data (used when API is unavailable) ───────────────────────
-function getDummyPanchangData(queryDate?: string) {
+function getDummyPanchangData(queryDate?: string, lat?: number, lon?: number) {
   const base = queryDate ? new Date(queryDate + 'T12:00:00') : new Date();
   const d    = base.getDate();
   const tithis     = ['Pratipada','Dwitiya','Tritiyaa','Chaturthi','Panchami'];
@@ -394,26 +404,48 @@ function getDummyPanchangData(queryDate?: string) {
   const { amanta, purnimanta } = getLunarMonths(base, 'Krishna');
   const { vikram, shaka }      = getSamvat(base);
 
+  // Adjust dummy time slightly based on longitude to reflect location changes in UI
+  const actualLon = lon || 82.9739; 
+  const shiftMins = Math.round((82.5 - actualLon) * 4);
+  const shift = (timeStr: string) => {
+    try {
+      const match = timeStr.match(/(\d+):(\d+)\s+(AM|PM)/);
+      if (!match) return timeStr;
+      let h = parseInt(match[1]), m = parseInt(match[2]);
+      const ampm = match[3];
+      if (ampm === 'PM' && h < 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      let total = h * 60 + m - shiftMins;
+      if (total < 0) total += 24 * 60;
+      let newH = Math.floor(total / 60) % 24;
+      const newM = total % 60;
+      const newAmpm = newH >= 12 ? 'PM' : 'AM';
+      if (newH > 12) newH -= 12;
+      if (newH === 0) newH = 12;
+      return `${newH}:${newM.toString().padStart(2, '0')} ${newAmpm}`;
+    } catch { return timeStr; }
+  };
+
 
   return {
     queryDate:  base.toISOString(),
-    tithi:      { name: `Krishna-Paksha ${tithis[d % tithis.length]}`, endTime: '5:25 AM' },
-    nakshatra:  { name: nak.name, endTime: '9:58 AM' },
-    yoga:       { name: 'Parigh', endTime: '11:19 PM' },
-    karana:     { name: 'Vanija', endTime: '4:13 PM' },
+    tithi:      { name: `Krishna-Paksha ${tithis[d % tithis.length]}`, endTime: shift('5:25 AM') },
+    nakshatra:  { name: nak.name, endTime: shift('9:58 AM') },
+    yoga:       { name: 'Parigh', endTime: shift('11:19 PM') },
+    karana:     { name: 'Vanija', endTime: shift('4:13 PM') },
     month:      { amanta, purnimanta },
     samvat:     { vikram, shaka },
-    sun:        { sign: getSunSign(base), rise: '5:21 AM', set: '6:31 PM' },
-    moon:       { sign: getMoonSign(nak.num), rise: '9:05 PM', set: '6:42 AM', placement: getMoonPlacement(nak.num) },
+    sun:        { sign: getSunSign(base), rise: shift('5:21 AM'), set: shift('6:31 PM') },
+    moon:       { sign: getMoonSign(nak.num), rise: shift('9:05 PM'), set: shift('6:42 AM'), placement: getMoonPlacement(nak.num) },
     dishashool: DISHASHOOL_MAP[base.toLocaleDateString('en-US', { weekday: 'long' })] ?? 'East',
     season:     getSeason(base),
     ayana:      getAyana(base),
     festival:   'Ekadanta Sankashti Chaturthi',
-    auspiciousTimings:   { abhijit: { start: '11:30 AM', end: '12:22 PM' } },
+    auspiciousTimings:   { abhijit: { start: shift('11:30 AM'), end: shift('12:22 PM') } },
     inauspiciousTimings: {
-      rahu:     { start: '6:59 AM',  end: '8:38 AM' },
-      gulik:    { start: '1:34 PM',  end: '3:13 PM' },
-      yamghant: { start: '10:17 AM', end: '11:56 AM' },
+      rahu:     { start: shift('6:59 AM'),  end: shift('8:38 AM') },
+      gulik:    { start: shift('1:34 PM'),  end: shift('3:13 PM') },
+      yamghant: { start: shift('10:17 AM'), end: shift('11:56 AM') },
     },
     upcomingFestivals: getUpcomingFestivals(queryDate),
   };
