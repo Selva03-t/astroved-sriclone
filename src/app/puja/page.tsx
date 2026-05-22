@@ -738,20 +738,20 @@ export default function PujaPage() {
             <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-2xl bg-linear-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
-                <h3 className="text-2xl font-black text-[#000000]">10,00,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]">{t.puja.pujasDone}</p>
+                <h3 className="text-2xl font-black text-[#2563eb]">10,00,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#3b82f6]">{t.puja.pujasDone}</p>
               </div>
               <div className="rounded-2xl bg-linear-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
-                <h3 className="text-2xl font-black text-[#1f1f1f]">300,000 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.happyDevotees}</p>
+                <h3 className="text-2xl font-black text-[#7c3aed]">300,000 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#8b5cf6]">{t.puja.happyDevotees}</p>
               </div>
               <div className="rounded-2xl bg-linear-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
-                <h3 className="text-2xl font-black text-[#d95f13]">100 +</h3>
-                <p className="mt-1 text-sm font-semibold text-[#6869F9]">{t.puja.famousTemples}</p>
+                <h3 className="text-2xl font-black text-[#db2777]">100 +</h3>
+                <p className="mt-1 text-sm font-semibold text-[#ec4899]">{t.puja.famousTemples}</p>
               </div>
               <div className="rounded-2xl bg-linear-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#1f1f1f]">{t.puja.sankalp}</h3>
-                <p className="mt-1 text-sm font-semibold text-[#1f1f1f]/80">{t.puja.sankalpDesc}</p>
+                <h3 className="text-2xl font-black text-[#d97706]">{t.puja.sankalp}</h3>
+                <p className="mt-1 text-sm font-semibold text-[#f59e0b]">{t.puja.sankalpDesc}</p>
               </div>
             </div>
           </section>
