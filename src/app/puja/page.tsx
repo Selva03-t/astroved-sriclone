@@ -436,13 +436,65 @@ export default function PujaPage() {
                     style={{ transform: `translateX(-${activeIndex * 100}%)` }}
                   >
                     {carouselPujas.map((puja) => (
-                      <div key={puja._id} className="relative h-72 w-full shrink-0 md:h-96">
-                        <img src={puja.imageUrl} alt={puja.title} className="h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent" />
-                        <div className="absolute inset-0 flex flex-col items-start justify-end gap-4 p-6 md:p-10">
-                          <h2 className="max-w-2xl text-2xl font-bold leading-tight text-white drop-shadow-lg md:text-4xl">
-                            {puja.title}
-                          </h2>
+                      <div
+                        key={puja._id}
+                        className="relative h-72 w-full shrink-0 md:h-[400px] flex flex-col md:flex-row bg-linear-to-br from-[#2e1065] via-[#3b0764] to-[#1e1b4b] overflow-hidden"
+                      >
+                        {/* Content Area - overlaid on mobile, split on desktop */}
+                        <div className="absolute inset-0 md:relative z-10 flex flex-col justify-end md:justify-center md:w-[60%] p-6 md:p-10 text-white md:bg-none bg-linear-to-t from-black/80 via-black/40 to-transparent">
+                          {/* Middle/Bottom Area: Title, Location & CTA */}
+                          <div className="space-y-4 md:space-y-6">
+                            <h2 className="max-w-xl text-xl font-extrabold leading-tight md:text-3xl lg:text-4xl text-white md:text-transparent md:bg-clip-text md:bg-linear-to-r md:from-white md:via-slate-100 md:to-amber-100 drop-shadow-md">
+                              {puja.title}
+                            </h2>
+
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                              {/* Location */}
+                              {puja.location && (
+                                <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-200 md:text-purple-200">
+                                  <svg className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                  </svg>
+                                  <span className="line-clamp-1">{puja.location}</span>
+                                </div>
+                              )}
+
+                              {/* Desktop CTA Button */}
+                              <Link
+                                href={`/puja/${puja.slug || slugify(puja.title)}`}
+                                className="hidden md:inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 text-sm font-black text-[#3b0764] hover:bg-amber-400 transition-all hover:scale-105 shadow-lg shadow-amber-500/20 shrink-0"
+                              >
+                                {puja.buttonText || t.puja.bookNow}
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Image Area - background behind overlay on mobile, beautiful framed slot on desktop */}
+                        <div className="absolute inset-0 md:relative md:w-[40%] h-full overflow-hidden flex items-center justify-center bg-black/10 select-none">
+                          {/* Ambient background glow of the image (desktop only) */}
+                          <div
+                            className="absolute inset-0 opacity-20 blur-xl scale-125 hidden md:block"
+                            style={{
+                              backgroundImage: `url(${puja.imageUrl})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                            }}
+                          />
+                          
+                          {/* Main Image - object-top ensures deity features like Ganesha's head are beautifully visible */}
+                          <img
+                            src={puja.imageUrl}
+                            alt={puja.title}
+                            className="w-full h-full object-cover object-top transition-all duration-700 hover:scale-105"
+                          />
+                          
+                          {/* Premium Vignette Fade transition on desktop */}
+                          <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#3b0764] to-transparent hidden md:block z-20" />
                         </div>
                       </div>
                     ))}
