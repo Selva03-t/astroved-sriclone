@@ -15,7 +15,7 @@ export async function generateMetadata(
   
   if (!slug) {
     return {
-      title: 'DivineAlign Puja Seva',
+      title: 'AstroVed Puja Seva',
       description: 'Book sacred pujas and ritual offerings online.',
     };
   }
@@ -24,12 +24,12 @@ export async function generateMetadata(
 
   if (!puja) {
     return {
-      title: 'Puja Not Found | DivineAlign Puja Seva',
+      title: 'Puja Not Found | AstroVed Puja Seva',
       description: 'The requested puja could not be found.',
     };
   }
 
-  const title = puja.metaTitle || `${puja.title} | DivineAlign Puja Seva`;
+  const title = puja.metaTitle || `${puja.title} | AstroVed Puja Seva`;
   const description =
     puja.metaDescription ||
     puja.description ||
@@ -37,7 +37,7 @@ export async function generateMetadata(
     'Join us for this sacred ritual to seek divine blessings.';
   const keywords = puja.metaKeywords
     ? puja.metaKeywords.split(',').map((k: string) => k.trim())
-    : ['puja', 'seva', puja.title, 'DivineAlign', 'rituals'];
+    : ['puja', 'seva', puja.title, 'AstroVed', 'rituals'];
 
   return {
     title,

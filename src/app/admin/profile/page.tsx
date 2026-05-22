@@ -257,7 +257,7 @@ export default function AdminProfilePage() {
                       value={formData.email}
                       onChange={handleChange}
                       className="block flex-1 border-0 bg-transparent py-2.5 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:outline-none focus:border-transparent outline-none sm:text-sm sm:leading-6"
-                      placeholder="admin@divinealign.com"
+                      placeholder="admin@AstroVed.com"
                     />
                   </div>
                 </div>

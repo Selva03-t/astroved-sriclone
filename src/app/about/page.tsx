@@ -27,13 +27,13 @@ export default function AboutPage() {
                 <i className="fa-solid fa-hands-praying" aria-hidden="true"></i>
               </div>
               <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.18em] text-[#6869F9]">
-                About DivineAlign
+                About AstroVed
               </p>
               <h1 className="text-4xl font-black leading-tight text-[#16111f] md:text-6xl">
                 One spiritual companion for astrology, remedies, and devotion.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-700">
-                DivineAlign helps people connect with Vedic wisdom in a simple digital experience. From astrology tools and Panchang to pujas, devotional content, temple offerings, and remedies, the platform brings trusted spiritual services closer to every home.
+                AstroVed helps people connect with Vedic wisdom in a simple digital experience. From astrology tools and Panchang to pujas, devotional content, temple offerings, and remedies, the platform brings trusted spiritual services closer to every home.
               </p>
               <a
                 href="#download-app"

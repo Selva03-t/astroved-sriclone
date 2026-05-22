@@ -346,16 +346,19 @@ export default function PujaPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Limit carousel to first 5 pujas
+  const carouselPujas = allPujas.slice(0, 5);
+
   // Banner auto-rotate
   useEffect(() => {
-    if (allPujas.length <= 1) return;
+    if (carouselPujas.length <= 1) return;
     const id = setInterval(() => {
-      setCurrentIndex((prev) => (prev === allPujas.length - 1 ? 0 : prev + 1));
+      setCurrentIndex((prev) => (prev === carouselPujas.length - 1 ? 0 : prev + 1));
     }, 4000);
     return () => clearInterval(id);
-  }, [allPujas.length]);
+  }, [carouselPujas.length]);
 
-  const activeIndex = allPujas.length === 0 ? 0 : Math.min(currentIndex, allPujas.length - 1);
+  const activeIndex = carouselPujas.length === 0 ? 0 : Math.min(currentIndex, carouselPujas.length - 1);
 
   const clearFilters = () => setFilters(defaultFilters);
   const applyFilters = useCallback((nextFilters: FilterState) => {
@@ -418,7 +421,7 @@ export default function PujaPage() {
             <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
               <p className="text-base text-[#1f1f1f]">{t.puja.loading}</p>
             </div>
-          ) : allPujas.length > 0 ? (
+          ) : carouselPujas.length > 0 ? (
             <>
               <div className="relative overflow-hidden rounded-2xl border border-[#e3d9f8] shadow-[0_18px_48px_rgba(80,44,150,0.12)]">
                 <div className="overflow-hidden">
@@ -426,7 +429,7 @@ export default function PujaPage() {
                     className="flex transition-transform duration-500 ease-in-out"
                     style={{ transform: `translateX(-${activeIndex * 100}%)` }}
                   >
-                    {allPujas.map((puja) => (
+                    {carouselPujas.map((puja) => (
                       <div key={puja._id} className="relative h-72 w-full shrink-0 md:h-96">
                         <img src={puja.imageUrl} alt={puja.title} className="h-full w-full object-cover" />
                         <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent" />
@@ -442,7 +445,7 @@ export default function PujaPage() {
 
                 <button
                   type="button"
-                  onClick={() => setCurrentIndex((p) => (p === 0 ? allPujas.length - 1 : p - 1))}
+                  onClick={() => setCurrentIndex((p) => (p === 0 ? carouselPujas.length - 1 : p - 1))}
                   aria-label="Previous slide"
                   className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
                 >
@@ -452,7 +455,7 @@ export default function PujaPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCurrentIndex((p) => (p === allPujas.length - 1 ? 0 : p + 1))}
+                  onClick={() => setCurrentIndex((p) => (p === carouselPujas.length - 1 ? 0 : p + 1))}
                   aria-label="Next slide"
                   className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
                 >
@@ -464,7 +467,7 @@ export default function PujaPage() {
 
               {/* Dots */}
               <div className="mt-4 flex justify-center gap-2">
-                {allPujas.map((puja, index) => (
+                {carouselPujas.map((puja, index) => (
                   <button
                     key={puja._id}
                     type="button"
@@ -659,8 +662,10 @@ export default function PujaPage() {
 
           {/* -- Reviews -- */}
           <section className="mt-20 border-t border-gray-100 pt-16 pb-16">
-            <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">{t.puja.devoteesTitle}</h2>
-            <p className="mt-2 mb-8 text-sm text-gray-600 md:text-base">{t.puja.devoteesSubtitle}</p>
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-bold text-[#1f1f1f] md:text-3xl">{t.puja.devoteesTitle}</h2>
+              <p className="mt-2 text-sm text-gray-600 md:text-base">{t.puja.devoteesSubtitle}</p>
+            </div>
             <ReviewsSection />
           </section>
 

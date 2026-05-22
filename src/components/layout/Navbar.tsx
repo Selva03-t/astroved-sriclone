@@ -16,7 +16,7 @@ const navKeys = [
   { key: "temples", path: "/temples" },
   { key: "library", path: "/library" },
   { key: "astroTools", path: "/astro-tools" },
-  { key: "store", path: "https://divinealign-tau.vercel.app/", external: true },
+  { key: "store", path: "https://AstroVed-tau.vercel.app/", external: true },
 ];
 
 const languageDisplayNames: Record<string, string> = {
@@ -93,8 +93,8 @@ export default function Navbar() {
         <div className="justify-self-start">
           <Link href="/dashboard" className="flex items-center gap-3 pr-4">
             <img
-              src="/images/logo.png"
-              alt="DivineAlign Logo"
+              src="/images/logo.svg"
+              alt="AstroVed Logo"
               className="h-9 md:h-11 w-auto object-contain"
             />
           </Link>
@@ -295,7 +295,7 @@ export default function Navbar() {
                       <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                     </Link>
 
-                    <a href="https://divinealign-tau.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
+                    <a href="https://AstroVed-tau.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                       <div className="flex items-center gap-4">
                         <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-blue-500 transition-colors"></i>
                         <span className="text-[14px] font-semibold text-gray-700">Store</span>
@@ -321,7 +321,7 @@ export default function Navbar() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
-                    <a href="mailto:support@divinealign.com" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
+                    <a href="mailto:support@AstroVed.com" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
                       <i className="fa-regular fa-envelope text-red-500"></i>
                       <span className="text-xs font-bold text-gray-700">Email us</span>
                     </a>

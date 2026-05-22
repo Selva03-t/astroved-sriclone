@@ -340,12 +340,12 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
     ayanamsa  = 'LAHIRI',
   } = params;
 
-  let url    = 'https://qaengine.divinealign.com/api/v2/today-panchanga';
+  let url    = 'https://qaengine.AstroVed.com/api/v2/today-panchanga';
   let method = 'GET';
   let body: string | undefined;
 
   if (date) {
-    url    = 'https://qaengine.divinealign.com/api/v1/panchanga/comprehensive';
+    url    = 'https://qaengine.AstroVed.com/api/v1/panchanga/comprehensive';
     method = 'POST';
     body   = JSON.stringify({ datetime_local: `${date}T00:00:00`, timezone, latitude, longitude, ayanamsa });
   } else {
@@ -353,7 +353,7 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
   }
 
   // Token lives only in .env.local — never sent to the browser
-  const token = process.env.DIVINEALIGN_API_TOKEN || '';
+  const token = process.env.AstroVed_API_TOKEN || '';
 
   try {
     const res = await fetch(url, {
@@ -368,7 +368,7 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
 
     if (!res.ok) {
       if (res.status === 401) {
-        console.warn('Panchang API: 401 Unauthorized — check DIVINEALIGN_API_TOKEN in .env.local');
+        console.warn('Panchang API: 401 Unauthorized — check AstroVed_API_TOKEN in .env.local');
         return getDummyPanchangData(date);
       }
       throw new Error(`Panchang API error: ${res.status}`);

@@ -70,7 +70,7 @@ export default function CountryPhoneField({
             autoComplete: "tel",
             placeholder: placeholder ?? "Enter number",
           }}
-          className="divinealign-phone"
+          className="AstroVed-phone"
         />
       </div>
     </label>

@@ -76,7 +76,7 @@ function Sidebar({ currentHref }: { currentHref: string }) {
         className="rounded-2xl overflow-hidden p-5 text-white"
         style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}
       >
-        <p className="text-sm font-semibold uppercase tracking-wider text-violet-100 mb-1">DivineAlign App</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-violet-100 mb-1">AstroVed App</p>
         <p className="text-xl font-extrabold leading-snug mb-4">
           One App For all your Devotional Needs
         </p>

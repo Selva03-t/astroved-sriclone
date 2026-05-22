@@ -366,7 +366,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               <div className="mx-auto max-w-[1300px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
                 <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-                <Link href="/puja" className="hover:text-gray-800 transition-colors">DivineAlign Puja Seva</Link>
+                <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
                 <span className="text-[#1f1f1f] truncate max-w-[300px] font-bold">{puja.title}</span>
               </div>
@@ -497,7 +497,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   </div>
                   
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
-                    Till now <span className="font-bold text-[#6869F9]">3,00,000+ Devotees</span> have participated in Pujas conducted by DivineAlign Puja Seva.
+                    Till now <span className="font-bold text-[#6869F9]">3,00,000+ Devotees</span> have participated in Pujas conducted by AstroVed Puja Seva.
                   </p>
 
                   {/* CTA */}
@@ -758,7 +758,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     <section id="reviews" key="reviews" className="border-b border-gray-100 py-10">
                       {/* Header */}
                       <h2 className="text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
-                      <p className="mt-1 text-sm text-gray-500">Read to what our beloved devotees have to say about DivineAlign.</p>
+                      <p className="mt-1 text-sm text-gray-500">Read to what our beloved devotees have to say about AstroVed.</p>
 
                       {dbReviews.length === 0 ? (
                         <p className="mt-8 text-sm text-gray-400 italic">No reviews yet.</p>

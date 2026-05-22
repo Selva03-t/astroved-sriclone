@@ -32,7 +32,7 @@ const banners = [
   },
   {
     id: 2,
-    title: "DivineAlign Special ",
+    title: "AstroVed Special ",
     titleHighlight: "Puja",
     subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples — from the comfort of your home.",
     buttons: [
@@ -43,10 +43,10 @@ const banners = [
   },
   {
     id: 3,
-    title: "DivineAlign",
+    title: "AstroVed",
     titleHighlight: "",
     titleColor: "text-yellow-400",
-    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on DivineAlign.",
+    subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on AstroVed.",
     buttons: [
       { text: "Download App", variant: "solid", action: "scroll-bottom" }
     ],
@@ -55,9 +55,9 @@ const banners = [
   },
   {
     id: 4,
-    title: "DivineAlign Special ",
+    title: "AstroVed Special ",
     titleHighlight: "Chadhava",
-    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on DivineAlign.",
+    subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on AstroVed.",
     buttons: [
       { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
     ],
@@ -236,11 +236,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* DivineAlign Special Pujas Section */}
+      {/* AstroVed Special Pujas Section */}
       <section className="bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
-            <span className="text-[rgb(107,76,154)]">DivineAlign</span> {t.home.specialPujas}
+            <span className="text-[rgb(107,76,154)]">AstroVed</span> {t.home.specialPujas}
           </h2>
           <p className="text-center text-[17px] font-medium text-gray-700 mb-14 max-w-2xl mx-auto leading-relaxed">
             {t.home.specialPujasSubtitle}
@@ -489,30 +489,18 @@ const ReviewCard = ({ review }: { review: Review }) => {
   const isVideo = review.type === 'video';
 
   return (
-    <div className="flex flex-col min-w-[280px] max-w-[340px] shrink-0">
+    <div className="flex flex-col w-[320px] shrink-0">
       {isVideo ? (
         <div className="w-full h-[200px] rounded-2xl overflow-hidden shadow-sm mb-5 bg-black relative border border-gray-100">
-          {review.videoUrl ? (
-            <iframe
-              src={review.videoUrl?.replace('watch?v=', 'embed/')}
-              className="w-full h-full"
-              allowFullScreen
-            />
-          ) : (
-            <div className="relative w-full h-full">
-              <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="Video thumbnail" className="w-full h-full object-cover opacity-80" />
-              <div className="absolute inset-x-4 bottom-4 flex items-center justify-between text-white text-xs font-semibold">
-                 <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <span>0:00 / 1:00</span>
-                 </div>
-                 <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072M17.657 6.343a8 8 0 010 11.314M12 2v20M2 12h20"/></svg>
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
-                 </div>
-              </div>
-            </div>
-          )}
+          <iframe
+            src={review.videoUrl 
+              ? review.videoUrl.replace('watch?v=', 'embed/') 
+              : "https://player.vimeo.com/video/414764881?autoplay=0&title=0&byline=0&portrait=0"}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Video Review"
+          />
         </div>
       ) : (
         <div className="w-full h-[200px] bg-white border border-gray-200 rounded-2xl p-8 shadow-md mb-5 flex items-center justify-center text-left overflow-hidden hover:shadow-lg transition-shadow">
@@ -524,18 +512,8 @@ const ReviewCard = ({ review }: { review: Review }) => {
         </div>
       )}
 
-      <div className="flex items-center gap-3 w-full px-2">
-        <div className="h-12 w-12 rounded-full overflow-hidden shadow-md shrink-0 border-2 border-white">
-          <img
-            src={review.avatarUrl || `https://ui-avatars.com/api/?name=${review.name}&background=random`}
-            alt={review.name}
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="text-left">
-          <h4 className="font-extrabold text-black text-base leading-none">{review.name}</h4>
-          <p className="text-gray-600 text-[13px] font-bold mt-1.5">{review.location}</p>
-        </div>
+      <div className="px-2">
+        <h4 className="font-extrabold text-black text-base leading-none">{review.name}</h4>
       </div>
     </div>
   );
@@ -612,7 +590,7 @@ export function ReviewsSection() {
     <div className="relative group">
       <div
         ref={scrollRef}
-        className="flex gap-8 overflow-x-auto pb-10 snap-x snap-mandatory scrollbar-hide no-scrollbar"
+        className="flex gap-8 overflow-x-auto pb-10 snap-x snap-mandatory scrollbar-hide no-scrollbar items-start"
         onScroll={(e) => {
           const scrollLeft = e.currentTarget.scrollLeft;
           const cardWidth = getCardWidth();
