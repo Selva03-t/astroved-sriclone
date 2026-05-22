@@ -9,13 +9,13 @@ It covers the full data flow, API security, field-calculation logic, festival li
 
 The `/panchang` page provides users with daily Hindu astrological information:
 
-| Section | Content |
-|---|---|
-| Date & Tithi card | Moon phase, weekday, lunar month, current festival |
-| Auspicious/Inauspicious Timings | Abhijit Muhurta, Rahu Kaal, Gulik Kaal, Yamghant Kaal |
-| Sun & Moon Times | Sunrise, Sunset, Moonrise, Moonset |
-| Panchang grid | 12-field table (Tithi, Nakshatra, Yoga, Karana, Month, Samvat, Sun/Moon Sign, Dishashool, etc.) |
-| Upcoming Festivals | Scrollable chronological list of the next 25 Hindu events |
+|         Section                 |                                        Content                                                  |
+|---------------------------------|-------------------------------------------------------------------------------------------------|
+| Date & Tithi card               | Moon phase, weekday, lunar month, current festival                                              |
+| Auspicious/Inauspicious Timings | Abhijit Muhurta, Rahu Kaal, Gulik Kaal, Yamghant Kaal                                           |
+| Sun & Moon Times                | Sunrise, Sunset, Moonrise, Moonset                                                              |
+| Panchang grid                   | 12-field table (Tithi, Nakshatra, Yoga, Karana, Month, Samvat, Sun/Moon Sign, Dishashool, etc.) |
+| Upcoming Festivals              | Scrollable chronological list of the next 25 Hindu events                                       |
 
 **Key design decision:** All external API calls happen **server-side** inside the Next.js API route (`/api/panchang`). The browser never talks to the AstroVed engine directly, so the secret token is never exposed to the client.
 
@@ -82,19 +82,19 @@ ASTROVED_REFRESH_TOKEN=eyJhbGci...  ← refresh token
 
 ### Why This Is Secure
 
-| Layer | Detail |
-|---|---|
-| `.env.local` | Never committed to Git (listed in `.gitignore`) |
-| `process.env.ASTROVED_API_TOKEN` | Only accessible server-side in Next.js — unavailable in browser bundles |
-| Next.js API Route | Acts as a proxy; the browser calls `/api/panchang`, not the AstroVed engine |
-| No `NEXT_PUBLIC_` prefix | Variables without this prefix are **never** sent to the client |
+|          Layer                   |                                Detail                                       |
+|----------------------------------|-----------------------------------------------------------------------------|
+| `.env.local`                     | Never committed to Git (listed in `.gitignore`)                             |
+| `process.env.ASTROVED_API_TOKEN` | Only accessible server-side in Next.js — unavailable in browser bundles     |
+| Next.js API Route                | Acts as a proxy; the browser calls `/api/panchang`, not the AstroVed engine |
+| No `NEXT_PUBLIC_` prefix         | Variables without this prefix are **never** sent to the client              |
 
 ### Endpoints Used
 
-| Scenario | Method | URL |
-|---|---|---|
-| Today's data (no date param) | `GET` | `https://qaengine.astroved.com/api/v2/today-panchanga?latitude=...` |
-| Specific date | `POST` | `https://qaengine.astroved.com/api/v1/panchanga/comprehensive` |
+|        Scenario              | Method  |                                URL                                  |
+|------------------------------|---------|---------------------------------------------------------------------|
+| Today's data (no date param) | `GET`   | `https://qaengine.astroved.com/api/v2/today-panchanga?latitude=...` |
+| Specific date                | `POST`  | `https://qaengine.astroved.com/api/v1/panchanga/comprehensive`      |
 
 Body for POST requests:
 ```json
@@ -115,24 +115,24 @@ The AstroVed API uses different field names than what the UI expects (e.g., `rah
 
 ### Fields Mapped Directly from API
 
-| UI Field | Raw API Field |
-|---|---|
-| `tithi.name` | `raw.tithi.name` |
-| `tithi.endTime` | `toTime(raw.tithi.end_time)` |
-| `nakshatra.name` | `raw.nakshatra.name` |
-| `nakshatra.endTime` | `toTime(raw.nakshatra.end_time)` |
-| `yoga.name` | `raw.yoga.name` |
-| `yoga.endTime` | `toTime(raw.yoga.end_time)` |
-| `karana.name` | `raw.karana.name` |
-| `karana.endTime` | `toTime(raw.karana.end_time)` |
-| `sun.rise` | `toTime(raw.sunrise)` |
-| `sun.set` | `toTime(raw.sunset)` |
-| `moon.rise` | `toTime(raw.moonrise)` |
-| `moon.set` | `toTime(raw.moonset)` |
-| `auspiciousTimings.abhijit.start` | `toTime(raw.abhijit_muhurta.start_time)` |
-| `inauspiciousTimings.rahu.start` | `toTime(raw.rahu_kaal.start_time)` |
-| `inauspiciousTimings.gulik.start` | `toTime(raw.gulika_kaal.start_time)` |
-| `inauspiciousTimings.yamghant.start` | `toTime(raw.yamaganda.start_time)` |
+|              UI Field                |          Raw API Field                   |
+|--------------------------------------|------------------------------------------|
+| `tithi.name`                         | `raw.tithi.name`                         |
+| `tithi.endTime`                      | `toTime(raw.tithi.end_time)`             |
+| `nakshatra.name`                     | `raw.nakshatra.name`                     |
+| `nakshatra.endTime`                  | `toTime(raw.nakshatra.end_time)`         |
+| `yoga.name`                          | `raw.yoga.name`                          |
+| `yoga.endTime`                       | `toTime(raw.yoga.end_time)`              |
+| `karana.name`                        | `raw.karana.name`                        |
+| `karana.endTime`                     | `toTime(raw.karana.end_time)`            |
+| `sun.rise`                           | `toTime(raw.sunrise)`                    |
+| `sun.set`                            | `toTime(raw.sunset)`                     |
+| `moon.rise`                          | `toTime(raw.moonrise)`                   |
+| `moon.set`                           | `toTime(raw.moonset)`                    |
+| `auspiciousTimings.abhijit.start`    | `toTime(raw.abhijit_muhurta.start_time)` |
+| `inauspiciousTimings.rahu.start`     | `toTime(raw.rahu_kaal.start_time)`       |
+| `inauspiciousTimings.gulik.start`    | `toTime(raw.gulika_kaal.start_time)`     |
+| `inauspiciousTimings.yamghant.start` | `toTime(raw.yamaganda.start_time)`       |
 
 > **`toTime(iso)`** converts an ISO-8601 datetime string (e.g., `"2026-05-05T05:19:09+05:30"`) to a human-readable time (`"5:19 am"`) using `Intl.DateTimeFormat` with `timeZone: "Asia/Kolkata"`.
 
@@ -168,26 +168,26 @@ The AstroVed API does **not** return Sun Sign, Moon Sign, Samvat, Dishashool, Se
 #### Dishashool (`DISHASHOOL_MAP[weekday]`)
 - Prohibited travel direction by weekday (from raw API's `weekday` string):
 
-| Weekday | Dishashool |
-|---|---|
-| Sunday | West |
-| Monday | East |
-| Tuesday | North |
-| Wednesday | North |
-| Thursday | South |
-| Friday | West |
-| Saturday | East |
+| Weekday   | Dishashool |
+|-----------|------------|
+| Sunday    | West       |
+| Monday    | East       |
+| Tuesday   | North      |
+| Wednesday | North      |
+| Thursday  | South      |
+| Friday    | West       |
+| Saturday  | East       |
 
 #### Season / Ritu (`getSeason(date)`)
 
-| Season | Approximate Dates |
-|---|---|
-| Vasant (Spring) | Mar 15 – May 14 |
-| Grishma (Summer) | May 15 – Jul 16 |
-| Varsha (Monsoon) | Jul 17 – Sep 16 |
-| Sharad (Autumn) | Sep 17 – Nov 16 |
-| Hemant (Pre-Winter) | Nov 17 – Jan 13 |
-| Shishir (Winter) | Jan 14 – Mar 14 |
+|       Season        | Approximate Dates |
+|---------------------|-------------------|
+| Vasant (Spring)     | Mar 15 – May 14   |
+| Grishma (Summer)    | May 15 – Jul 16   |
+| Varsha (Monsoon)    | Jul 17 – Sep 16   |
+| Sharad (Autumn)     | Sep 17 – Nov 16   |
+| Hemant (Pre-Winter) | Nov 17 – Jan 13   |
+| Shishir (Winter)    | Jan 14 – Mar 14   |
 
 #### Ayana (`getAyana(date)`)
 - **Uttarayana**: Jan 14 – Jul 16 (sun moves northward)
@@ -225,14 +225,14 @@ If the API ever starts returning festivals, they take priority automatically.
 ---
 
 ## 7. Fallback / Error Handling
-
-| Scenario | Behaviour |
-|---|---|
-| API returns `401 Unauthorized` | Logs a warning, falls back to `getDummyPanchangData()` |
-| Network error / timeout | `catch` block falls back to `getDummyPanchangData()` |
-| Token missing from `.env.local` | API call is made without `Authorization` header; likely gets `401` → fallback |
-| API returns `200` but empty festivals | `getUpcomingFestivals()` curated list is used |
-
+------------------------------------------------------------------------------------------------------------------------
+|            Scenario                   |                             Behaviour                                         |
+|---------------------------------------|-------------------------------------------------------------------------------|
+| API returns `401 Unauthorized`        | Logs a warning, falls back to `getDummyPanchangData()`                        |
+| Network error / timeout               | `catch` block falls back to `getDummyPanchangData()`                          |
+| Token missing from `.env.local`       | API call is made without `Authorization` header; likely gets `401` → fallback |
+| API returns `200` but empty festivals | `getUpcomingFestivals()` curated list is used                                 |
+-------------------------------------------------------------------------------------------------------------------------
 `getDummyPanchangData()` returns a fully-shaped object using the same calculation helpers (`getSunSign`, `getMoonSign`, `getSamvat`, etc.) so even the fallback data looks realistic and date-accurate.
 
 ---
@@ -304,20 +304,21 @@ Without the token the page still renders correctly using the calculated fallback
 ---
 
 ## 10. Quick Reference: Key Functions in `panchang.ts`
-
-| Function | Purpose |
-|---|---|
-| `fetchPanchangData(params)` | Main export — fetches from AstroVed API, normalizes, returns |
-| `normalizeApiResponse(raw, date)` | Maps raw API fields → UI-expected shape + computes missing fields |
-| `toTime(isoString)` | ISO datetime → readable IST time string (`"5:19 am"`) |
-| `getMoonSign(nakshatraNum)` | Nakshatra number → Rashi name |
-| `getMoonPlacement(nakshatraNum)` | Returns `"NORTH"` or `"SOUTH"` |
-| `getSunSign(date)` | Date → sidereal Sun sign (Lahiri) |
-| `getLunarMonths(date, paksha)` | Date → `{ amanta, purnimanta }` lunar month names |
-| `getSamvat(date)` | Date → `{ vikram, shaka }` Samvat strings with year name |
-| `getSeason(date)` | Date → Hindu Ritu season name |
-| `getAyana(date)` | Date → `"Uttarayana"` or `"Dakshinayana"` |
-| `getUpcomingFestivals(fromDate)` | Returns next 25 festivals from the given date |
-| `getDummyPanchangData(date)` | Fallback data when API is unavailable |
-| `DISHASHOOL_MAP` | Weekday → inauspicious direction lookup table |
-| `HINDU_FESTIVALS` | Curated array of 95+ festivals (2026–2027) |
+--------------------------------------------------------------------------------------------------------
+|           Function               |                        Purpose                                    |
+|----------------------------------|-------------------------------------------------------------------|
+| `fetchPanchangData(params)`      | Main export — fetches from AstroVed API, normalizes, returns      |
+| `normalizeApiResponse(raw, date)`| Maps raw API fields → UI-expected shape + computes missing fields |
+| `toTime(isoString)`              | ISO datetime → readable IST time string (`"5:19 am"`)             |
+| `getMoonSign(nakshatraNum)`      | Nakshatra number → Rashi name                                     |
+| `getMoonPlacement(nakshatraNum)` | Returns `"NORTH"` or `"SOUTH"`                                    |
+| `getSunSign(date)`               | Date → sidereal Sun sign (Lahiri)                                 |
+| `getLunarMonths(date, paksha)`   | Date → `{ amanta, purnimanta }` lunar month names                 |
+| `getSamvat(date)`                | Date → `{ vikram, shaka }` Samvat strings with year name          |
+| `getSeason(date)`                | Date → Hindu Ritu season name                                     |
+| `getAyana(date)`                 | Date → `"Uttarayana"` or `"Dakshinayana"`                         |
+| `getUpcomingFestivals(fromDate)` | Returns next 25 festivals from the given date                     |
+| `getDummyPanchangData(date)`     | Fallback data when API is unavailable                             |
+| `DISHASHOOL_MAP`                 | Weekday → inauspicious direction lookup table                     |
+| `HINDU_FESTIVALS`                | Curated array of 95+ festivals (2026–2027)                        |
+--------------------------------------------------------------------------------------------------------

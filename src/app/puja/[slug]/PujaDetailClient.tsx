@@ -180,6 +180,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [showGallery, setShowGallery] = useState(false);
   const [userDetails, setUserDetails] = useState({ name: "", whatsapp: "" });
   const [selectedExtraIds, setSelectedExtraIds] = useState<string[]>([]);
+  const [quantity, setQuantity] = useState(1);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const [couponStatus, setCouponStatus] = useState<"idle" | "applied" | "invalid">("idle");
+  const [showCouponInput, setShowCouponInput] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
   const [countdown, setCountdown] = useState<Countdown>(defaultCountdown);
   const [activeTab, setActiveTab] = useState("about");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -249,7 +255,34 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const selectedPackage = puja?.packages?.find((pkg) => pkg.id === selectedPackageId) ?? puja?.packages?.[0] ?? null;
   const pkgPrice = selectedPackage ? getDisplayPrice(selectedPackage) : 0;
   const highPrice = selectedPackage ? Math.round(pkgPrice * 1.2) : null;
-  const totalAmount = pkgPrice + extrasTotal;
+  const totalAmount = Math.max(0, (pkgPrice * quantity) + extrasTotal - couponDiscount);
+
+  const handleApplyCoupon = () => {
+    const trimmed = couponInput.trim().toUpperCase();
+    // Demo coupon logic — replace with real API call
+    if (trimmed === "ASTRO10") {
+      const discount = Math.round((pkgPrice * quantity + extrasTotal) * 0.1);
+      setCouponDiscount(discount);
+      setCouponCode(trimmed);
+      setCouponStatus("applied");
+    } else if (trimmed === "SAVE50") {
+      setCouponDiscount(50);
+      setCouponCode(trimmed);
+      setCouponStatus("applied");
+    } else {
+      setCouponDiscount(0);
+      setCouponCode("");
+      setCouponStatus("invalid");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode("");
+    setCouponInput("");
+    setCouponStatus("idle");
+    setCouponDiscount(0);
+    setShowCouponInput(false);
+  };
 
   const defaultSectionOrder = ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"];
   const currentSectionOrder = puja?.sectionOrder && puja.sectionOrder.length > 0 ? puja.sectionOrder : defaultSectionOrder;
@@ -1192,7 +1225,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     {/* Primary Package */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
                        <div className="flex justify-between items-start mb-4">
-                          <div>
+                          <div className="flex-1 min-w-0 mr-3">
                              <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
                              <div className="flex items-center gap-3">
                                 <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
@@ -1209,7 +1242,25 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                              Primary Package
                           </div>
                        </div>
-                       <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-gray-50">
+
+                       {/* Quantity Controls */}
+                       <div className="flex items-center justify-between py-4 border-t border-b border-gray-50 mb-4">
+                          <span className="text-sm font-bold text-gray-700">Quantity</span>
+                          <div className="flex items-center gap-3">
+                             <button
+                                onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                                disabled={quantity <= 1}
+                                className="h-9 w-9 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg hover:border-[#6869F9] hover:text-[#6869F9] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
+                             >−</button>
+                             <span className="w-8 text-center font-black text-[#1f1f1f] text-lg select-none">{quantity}</span>
+                             <button
+                                onClick={() => setQuantity(q => q + 1)}
+                                className="h-9 w-9 rounded-full border-2 border-[#6869F9] bg-[#6869F9] flex items-center justify-center text-white font-bold text-lg hover:bg-[#5657e8] transition-all active:scale-90"
+                             >+</button>
+                          </div>
+                       </div>
+
+                       <div className="flex flex-wrap items-center gap-6">
                           <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
                              <i className="fa-brands fa-whatsapp text-[#1f1f1f] text-lg"></i>
                              <span>+91 {userDetails.whatsapp}</span>
@@ -1242,20 +1293,86 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                        </div>
                     ))}
                     
-                    <div className="bg-violet-50/50 rounded-2xl p-6 flex justify-between items-center cursor-pointer hover:bg-violet-50 transition-colors border border-violet-100/50">
-                       <div className="flex items-center gap-3">
-                          <TagIcon className="h-6 w-6 text-[#1f1f1f]" />
-                          <span className="font-bold text-sm text-[#1f1f1f]">Apply Coupon Code</span>
-                       </div>
-                       <i className="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
+                    {/* Coupon Code Section */}
+                    <div className="bg-violet-50/50 rounded-2xl border border-violet-100/50 overflow-hidden">
+                       {/* Header row */}
+                       <button
+                          onClick={() => {
+                             if (couponStatus === "applied") { handleRemoveCoupon(); return; }
+                             setShowCouponInput(v => !v);
+                             setCouponStatus("idle");
+                          }}
+                          className="w-full flex justify-between items-center p-5 hover:bg-violet-50 transition-colors"
+                       >
+                          <div className="flex items-center gap-3">
+                             <TagIcon className="h-5 w-5 text-[#6869F9]" />
+                             <div className="text-left">
+                                <span className="font-bold text-sm text-[#1f1f1f] block">Apply Coupon Code</span>
+                                {couponStatus === "applied" && (
+                                   <span className="text-[11px] font-bold text-green-600">✓ "{couponCode}" applied — you save {currencySymbol}{couponDiscount}!</span>
+                                )}
+                             </div>
+                          </div>
+                          {couponStatus === "applied" ? (
+                             <span className="text-[11px] font-bold text-red-500 hover:underline">Remove</span>
+                          ) : (
+                             <i className={`fa-solid fa-chevron-${showCouponInput ? 'up' : 'down'} text-gray-400 text-xs transition-transform`}></i>
+                          )}
+                       </button>
+
+                       {/* Expandable input */}
+                       {showCouponInput && couponStatus !== "applied" && (
+                          <div className="px-5 pb-5 space-y-3 border-t border-violet-100">
+                             <div className="flex gap-2 mt-4">
+                                <div className="relative flex-1">
+                                   <input
+                                      type="text"
+                                      value={couponInput}
+                                      onChange={(e) => {
+                                         setCouponInput(e.target.value.toUpperCase());
+                                         if (couponStatus !== "idle") setCouponStatus("idle");
+                                      }}
+                                      onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
+                                      placeholder="Enter coupon code"
+                                      className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${
+                                         couponStatus === "invalid"
+                                            ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
+                                            : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
+                                      }`}
+                                   />
+                                   {couponInput && (
+                                      <button
+                                         onClick={() => { setCouponInput(""); setCouponStatus("idle"); }}
+                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                      >
+                                         <i className="fa-solid fa-circle-xmark text-sm"></i>
+                                      </button>
+                                   )}
+                                </div>
+                                <button
+                                   onClick={handleApplyCoupon}
+                                   disabled={!couponInput.trim()}
+                                   className="px-5 py-3 bg-[#6869F9] text-white text-sm font-bold rounded-xl hover:bg-[#5657e8] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+                                >
+                                   Apply
+                                </button>
+                             </div>
+                             {couponStatus === "invalid" && (
+                                <p className="text-[11px] font-bold text-red-500 flex items-center gap-1">
+                                   <i className="fa-solid fa-circle-exclamation"></i> Invalid coupon code. Please try again.
+                                </p>
+                             )}
+                             <p className="text-[10px] text-gray-400 font-medium">Try: ASTRO10 (10% off) or SAVE50 (₹50 off)</p>
+                          </div>
+                       )}
                     </div>
 
                     <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                        <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
                        <div className="space-y-4 text-sm font-medium text-gray-500">
                           <div className="flex justify-between">
-                             <span>{selectedPackage?.name}</span>
-                             <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}.0</span>
+                             <span>{selectedPackage?.name}{quantity > 1 ? ` × ${quantity}` : ""}</span>
+                             <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) * quantity : 0}.0</span>
                           </div>
                           {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
                              <div key={extra.id} className="flex justify-between">
@@ -1263,6 +1380,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
                              </div>
                           ))}
+                          {couponStatus === "applied" && couponDiscount > 0 && (
+                             <div className="flex justify-between text-green-600 font-bold">
+                                <span className="flex items-center gap-1"><TagIcon className="h-3.5 w-3.5" /> Coupon ({couponCode})</span>
+                                <span>− {currencySymbol} {couponDiscount}.0</span>
+                             </div>
+                          )}
                           <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
                              <span>Total Amount</span>
                              <span className="text-[#1f1f1f]">{currencySymbol} {totalAmount}.0</span>

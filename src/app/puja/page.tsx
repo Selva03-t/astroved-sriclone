@@ -85,13 +85,13 @@ const filterGroups = [
   {
     label: "Location",
     options: [
-      { value: "All", keywords: [] },
-      { value: "Tamil Nadu", keywords: ["tamil nadu", "tamilnadu"] },
-      { value: "Karnataka", keywords: ["karnataka", "bangalore", "bengaluru", "mysore"] },
-      { value: "Kerala", keywords: ["kerala"] },
-      { value: "Uttar Pradesh", keywords: ["uttar pradesh", "varanasi", "kashi", "mathura", "vrindavan", "ujjain"] },
+      { value: "All",            keywords: [] },
+      { value: "Tamil Nadu",     keywords: ["tamil nadu", "tamilnadu"] },
+      { value: "Karnataka",      keywords: ["karnataka", "bangalore", "bengaluru", "mysore"] },
+      { value: "Kerala",         keywords: ["kerala"] },
+      { value: "Uttar Pradesh",  keywords: ["uttar pradesh", "varanasi", "kashi", "mathura", "vrindavan", "ujjain"] },
       { value: "Andhra Pradesh", keywords: ["andhra", "tirupati", "hyderabad"] },
-      { value: "Rajasthan", keywords: ["rajasthan", "jaipur", "pushkar"] },
+      { value: "Rajasthan",      keywords: ["rajasthan", "jaipur", "pushkar"] },
     ],
   },
 ];
