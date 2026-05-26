@@ -19,20 +19,44 @@ export default function SignupPage() {
   const [country, setCountry] = useState<CountryOption>(DEFAULT_COUNTRY);
 
   const [error, setError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const validatePhone = (phone: string, dialCode: string) => {
+    if (!phone) return "Mobile number is required";
+    const maxLen = dialCode === "91" ? 10 : 15;
+    const minLen = dialCode === "91" ? 10 : 7;
+    if (phone.length < minLen || phone.length > maxLen) {
+      return dialCode === "91"
+        ? "Please enter a valid 10-digit Indian mobile number"
+        : `Please enter a valid mobile number (${minLen}–${maxLen} digits)`;
+    }
+    if (dialCode === "91" && !/^[6-9]/.test(phone)) {
+      return "Indian mobile numbers must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setPhoneTouched(true);
+
+    const pErr = validatePhone(formData.phone, country.dialCode);
+    if (pErr) {
+      setPhoneError(pErr);
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/auth/signup", {
@@ -112,14 +136,34 @@ export default function SignupPage() {
                 />
               </div>
 
-              <CountryPhoneField
-                label="Phone Number"
-                value={formData.phone}
-                onChange={(phone) => setFormData({ ...formData, phone })}
-                country={country}
-                onCountryChange={setCountry}
-                placeholder="Enter mobile number"
-              />
+              <div>
+                <CountryPhoneField
+                  label="Phone Number"
+                  value={formData.phone}
+                  onChange={(phone) => {
+                    setFormData({ ...formData, phone });
+                    if (phoneTouched) {
+                      setPhoneError(validatePhone(phone, country.dialCode));
+                    }
+                  }}
+                  country={country}
+                  onCountryChange={(newCountry) => {
+                    setCountry(newCountry);
+                    if (phoneTouched) {
+                      setPhoneError(validatePhone(formData.phone, newCountry.dialCode));
+                    }
+                  }}
+                  placeholder="Enter mobile number"
+                />
+                {phoneTouched && phoneError && (
+                  <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-red-500">
+                    <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10A8 8 0 1 1 2 10a8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
+                    </svg>
+                    {phoneError}
+                  </p>
+                )}
+              </div>
 
               <label className="flex items-center gap-3 text-sm font-medium text-[#6a4e95]">
                 <input

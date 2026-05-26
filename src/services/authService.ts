@@ -22,7 +22,7 @@ async function requestAuth<T>(path: string, init?: RequestInit): Promise<AuthApi
   try {
     payload = JSON.parse(raw) as AuthApiResponse<T>;
   } catch {
-    throw new Error(
+    throw new Error(    
       response.ok
         ? "Invalid response from server"
         : `Request failed (${response.status}). Confirm MONGODB_URI and redeploy if this is production.`

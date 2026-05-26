@@ -1,21 +1,41 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const paymentId = searchParams?.get("paymentId") || "N/A";
-  const orderId   = searchParams?.get("orderId")   || "N/A";
-  const title     = searchParams?.get("title")     || "Puja Seva";
-  const amount    = searchParams?.get("amount")    || "0";
-  const name      = searchParams?.get("name")      || "";
+  const paymentId       = searchParams?.get("paymentId")       || "N/A";
+  const orderId         = searchParams?.get("orderId")         || "N/A";
+  const title           = searchParams?.get("title")           || "Puja Seva";
+  const amount          = searchParams?.get("amount")          || "0";
+  const name            = searchParams?.get("name")            || "";
+  const shoppingCartId  = searchParams?.get("shoppingCartId")  || orderId;
 
   // Shorten refs for display
   const shortPayId = paymentId.length > 12 ? paymentId.slice(-12).toUpperCase() : paymentId;
-  const shortOrdId  = orderId.length > 8   ? orderId.slice(-8).toUpperCase()    : orderId;
+  const shortOrdId = shoppingCartId.length > 8 ? shoppingCartId.slice(-8).toUpperCase() : shoppingCartId;
+
+  // Save booking to MongoDB exactly once after successful payment
+  const savedRef = useRef(false);
+  useEffect(() => {
+    if (savedRef.current || paymentId === "N/A") return;
+    savedRef.current = true;
+    fetch("/api/bookings/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "puja",
+        title,
+        amount,
+        name,
+        orderId: shoppingCartId,
+        paymentId,
+      }),
+    }).catch(console.error);
+  }, [paymentId, title, amount, name, shoppingCartId]);
 
   const shareText = encodeURIComponent(`I just booked "${title}" on AstroVed! 🙏`);
 
