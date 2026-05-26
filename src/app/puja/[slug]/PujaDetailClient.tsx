@@ -180,7 +180,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [showGallery, setShowGallery] = useState(false);
   const [userDetails, setUserDetails] = useState({ name: "", whatsapp: "" });
   const [selectedExtraIds, setSelectedExtraIds] = useState<string[]>([]);
-  const [quantity, setQuantity] = useState(1);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponInput, setCouponInput] = useState("");
   const [couponStatus, setCouponStatus] = useState<"idle" | "applied" | "invalid">("idle");
@@ -255,13 +255,13 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const selectedPackage = puja?.packages?.find((pkg) => pkg.id === selectedPackageId) ?? puja?.packages?.[0] ?? null;
   const pkgPrice = selectedPackage ? getDisplayPrice(selectedPackage) : 0;
   const highPrice = selectedPackage ? Math.round(pkgPrice * 1.2) : null;
-  const totalAmount = Math.max(0, (pkgPrice * quantity) + extrasTotal - couponDiscount);
+  const totalAmount = Math.max(0, pkgPrice + extrasTotal - couponDiscount);
 
   const handleApplyCoupon = () => {
     const trimmed = couponInput.trim().toUpperCase();
     // Demo coupon logic — replace with real API call
     if (trimmed === "ASTRO10") {
-      const discount = Math.round((pkgPrice * quantity + extrasTotal) * 0.1);
+      const discount = Math.round((pkgPrice + extrasTotal) * 0.1);
       setCouponDiscount(discount);
       setCouponCode(trimmed);
       setCouponStatus("applied");
@@ -378,6 +378,314 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Review booking proceed loading state
+  const [reviewLoading, setReviewLoading] = useState(false);
+
+  // ── Review Booking: render as a REAL FULL PAGE (early return, not a popup) ──
+  if (showReviewModal && puja) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fa]">
+         {/* Hide site footer & AI chat while in review booking mode */}
+         <style>{`footer, [data-global-chrome="assistant"] { display: none !important; }`}</style>
+         <Navbar />
+         {/* Review Breadcrumbs */}
+         <div className="bg-white border-b border-gray-100 py-3 px-4 sticky top-[64px] z-20">
+             <div className="mx-auto max-w-7xl flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f] overflow-x-auto no-scrollbar">
+                   <div className="flex items-center gap-1.5 shrink-0">
+                     <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                       <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                     </div>
+                     Add Details
+                   </div>
+                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                   <div className="flex items-center gap-1.5 shrink-0">
+                     <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                       <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                     </div>
+                     Review Booking
+                   </div>
+                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                   <div className="flex items-center gap-1.5 shrink-0 opacity-40">
+                     <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">3</div>
+                     Fill Name, Gotra &amp; Address
+                   </div>
+                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                   <div className="flex items-center gap-1.5 shrink-0 opacity-40">
+                     <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">4</div>
+                     Make Payment
+                   </div>
+                </div>
+                <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500 shrink-0 ml-3">
+                   <XMarkIcon className="h-6 w-6" />
+                </button>
+             </div>
+         </div>
+
+         <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            {/* Left Column: Selected Items */}
+            <div className="lg:col-span-2 space-y-6">
+               <button
+                 onClick={() => {
+                    setShowReviewModal(false);
+                    setShowDetailsModal(true);
+                 }}
+                 className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#1f1f1f] transition-colors mb-6"
+               >
+                  <ArrowLeftIcon className="h-4 w-4" /> Review Booking
+               </button>
+
+               <div className="space-y-4">
+                  {/* Primary Package */}
+                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
+                     <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1 min-w-0 mr-3">
+                           <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
+                           <div className="flex items-center gap-3">
+                              <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
+                                 <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
+                              </div>
+                              {selectedPackage && (
+                                 <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 flex items-center justify-center">
+                                    <span className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</span>
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                        <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
+                           Primary Package
+                        </div>
+                     </div>
+
+
+                     <div className="flex flex-wrap items-center gap-6">
+                        <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
+                           <i className="fa-brands fa-whatsapp text-[#1f1f1f] text-lg"></i>
+                           <span>+91 {userDetails.whatsapp}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
+                           <i className="fa-solid fa-user text-gray-400"></i>
+                           <span>{userDetails.name}</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Extra Selected Offerings */}
+                  {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
+                     <div key={extra.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex justify-between items-center group">
+                        <div className="flex items-center gap-4">
+                           <div className="h-12 w-12 bg-gray-50 rounded-xl overflow-hidden">
+                              <img src={extra.imageUrl} alt={extra.name} className="w-full h-full object-cover" />
+                           </div>
+                           <div>
+                              <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
+                              <p className="text-[#1f1f1f] font-bold text-sm">{currencySymbol} {getDisplayPrice(extra)}</p>
+                           </div>
+                        </div>
+                        <button
+                          onClick={() => toggleExtra(extra.id)}
+                          className="text-red-500 hover:bg-red-50 h-8 w-8 rounded-full flex items-center justify-center transition-all"
+                        >
+                           <XMarkIcon className="h-5 w-5" />
+                        </button>
+                     </div>
+                  ))}
+
+                  {/* Coupon Code Section */}
+                  <div className="bg-violet-50/50 rounded-2xl border border-violet-100/50 overflow-hidden">
+                     <button
+                        onClick={() => {
+                           if (couponStatus === "applied") { handleRemoveCoupon(); return; }
+                           setShowCouponInput(v => !v);
+                           setCouponStatus("idle");
+                        }}
+                        className="w-full flex justify-between items-center p-5 hover:bg-violet-50 transition-colors"
+                     >
+                        <div className="flex items-center gap-3">
+                           <TagIcon className="h-5 w-5 text-[#6869F9]" />
+                           <div className="text-left">
+                              <span className="font-bold text-sm text-[#1f1f1f] block">Apply Coupon Code</span>
+                              {couponStatus === "applied" && (
+                                 <span className="text-[11px] font-bold text-green-600">✓ &quot;{couponCode}&quot; applied — you save {currencySymbol}{couponDiscount}!</span>
+                              )}
+                           </div>
+                        </div>
+                        {couponStatus === "applied" ? (
+                           <span className="text-[11px] font-bold text-red-500 hover:underline">Remove</span>
+                        ) : (
+                           <i className={`fa-solid fa-chevron-${showCouponInput ? 'up' : 'down'} text-gray-400 text-xs transition-transform`}></i>
+                        )}
+                     </button>
+                     {showCouponInput && couponStatus !== "applied" && (
+                        <div className="px-5 pb-5 space-y-3 border-t border-violet-100">
+                           <div className="flex gap-2 mt-4">
+                              <div className="relative flex-1">
+                                 <input
+                                    type="text"
+                                    value={couponInput}
+                                    onChange={(e) => {
+                                       setCouponInput(e.target.value.toUpperCase());
+                                       if (couponStatus !== "idle") setCouponStatus("idle");
+                                    }}
+                                    onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
+                                    placeholder="Enter coupon code"
+                                    className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${
+                                       couponStatus === "invalid"
+                                          ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
+                                          : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
+                                    }`}
+                                 />
+                                 {couponInput && (
+                                    <button
+                                       onClick={() => { setCouponInput(""); setCouponStatus("idle"); }}
+                                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                       <i className="fa-solid fa-circle-xmark text-sm"></i>
+                                    </button>
+                                 )}
+                              </div>
+                              <button
+                                 onClick={handleApplyCoupon}
+                                 disabled={!couponInput.trim()}
+                                 className="px-5 py-3 bg-[#6869F9] text-white text-sm font-bold rounded-xl hover:bg-[#5657e8] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+                              >
+                                 Apply
+                              </button>
+                           </div>
+                           {couponStatus === "invalid" && (
+                              <p className="text-[11px] font-bold text-red-500 flex items-center gap-1">
+                                 <i className="fa-solid fa-circle-exclamation"></i> Invalid coupon code. Please try again.
+                              </p>
+                           )}
+                           <p className="text-[10px] text-gray-400 font-medium">Try: ASTRO10 (10% off) or SAVE50 (₹50 off)</p>
+                        </div>
+                     )}
+                  </div>
+
+                  <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                     <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
+                     <div className="space-y-4 text-sm font-medium text-gray-500">
+                        <div className="flex justify-between">
+                           <span>{selectedPackage?.name}</span>
+                           <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}.0</span>
+                        </div>
+                        {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
+                           <div key={extra.id} className="flex justify-between">
+                              <span>{extra.name}</span>
+                              <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
+                           </div>
+                        ))}
+                        {couponStatus === "applied" && couponDiscount > 0 && (
+                           <div className="flex justify-between text-green-600 font-bold">
+                              <span className="flex items-center gap-1"><TagIcon className="h-3.5 w-3.5" /> Coupon ({couponCode})</span>
+                              <span>− {currencySymbol} {couponDiscount}.0</span>
+                           </div>
+                        )}
+                        <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
+                           <span>Total Amount</span>
+                           <span className="text-[#1f1f1f]">{currencySymbol} {totalAmount}.0</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            {/* Right Column: Upsell */}
+            <div>
+               <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
+                  <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
+                  Add more Divine offerings
+               </h3>
+               <div className="space-y-4">
+                  {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
+                     <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
+                          {extra.badge && (
+                             <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
+                                <i className="fa-solid fa-box"></i> {extra.badge}
+                             </div>
+                          )}
+                          <div className="flex-1 min-w-0 pt-0.5">
+                             <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
+                             {extra.description && (
+                                <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
+                             )}
+                             <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
+                          </div>
+                          <div className="flex flex-col items-center gap-2.5 shrink-0">
+                             <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
+                                <img src={extra.imageUrl} className="w-full h-full object-cover" />
+                             </div>
+                             <button
+                               onClick={() => toggleExtra(extra.id)}
+                               className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
+                             >
+                                + Add
+                             </button>
+                          </div>
+                       </div>
+                  ))}
+               </div>
+
+               <div 
+                 className={`mt-8 rounded-2xl p-6 border transition-all cursor-pointer ${agreedToTerms ? 'bg-[#f0faf5] border-[#1a7c5c]' : 'bg-white border-gray-200 hover:border-[#1a7c5c]/40'}`}
+                 onClick={() => setAgreedToTerms(!agreedToTerms)}
+               >
+                  <div className="flex items-start gap-4">
+                     <div className="mt-0.5 relative flex items-center justify-center h-5 w-5 shrink-0">
+                       <input 
+                         type="radio" 
+                         checked={agreedToTerms} 
+                         readOnly 
+                         className="peer appearance-none h-5 w-5 rounded-full border-2 border-gray-300 checked:border-[#1a7c5c] cursor-pointer transition-all"
+                       />
+                       {agreedToTerms && <div className="absolute h-2.5 w-2.5 rounded-full bg-[#1a7c5c]"></div>}
+                     </div>
+                     <p className={`text-[12px] font-medium leading-relaxed transition-colors ${agreedToTerms ? 'text-[#1a7c5c]' : 'text-gray-600'}`}>
+                        I agree to the Terms of Service. My Puja will be conducted with full vedic rites as per the selected package and offerings.
+                     </p>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         {/* Floating Bottom Bar */}
+         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
+            <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
+               <div className="flex items-center gap-4 text-sm font-bold pl-4">
+                  <span>{1 + selectedExtraIds.length} Sevas selected</span>
+                  <span className="opacity-50">•</span>
+                  <span className="text-lg">{currencySymbol} {totalAmount}</span>
+                </div>
+                <button
+                  onClick={async () => {
+                     setReviewLoading(true);
+                     try {
+                        const res = await fetch('/api/auth/me');
+                        const authData = await res.json();
+                        const extras = selectedExtraIds.join(',');
+                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}`;
+                        if (!authData.authenticated) {
+                           window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(sankalpUrl)}`;
+                           return;
+                        }
+                        window.location.href = sankalpUrl;
+                     } catch {
+                        alert('Something went wrong. Please try again.');
+                     } finally {
+                        setReviewLoading(false);
+                     }
+                  }}
+                  disabled={reviewLoading || !agreedToTerms}
+                  className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                   {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+         </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -1190,279 +1498,6 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
         </div>
       )}
 
-      {/* Review Modal */}
-      {showReviewModal && puja && (
-        <div className="fixed inset-0 z-120 bg-[#f8f9fa] overflow-y-auto">
-           <Navbar />
-           {/* Review Breadcrumbs */}
-           <div className="bg-white border-b border-gray-100 py-3 px-6 sticky top-0 z-10">
-              <div className="mx-auto max-w-7xl flex items-center justify-between">
-                 <div className="flex items-center gap-6 text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f]">
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">1</div> Add Details</div>
-                    <div className="flex items-center gap-2"><div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px]">2</div> Review Booking</div>
-                    <div className="flex items-center gap-2 opacity-30"><div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px]">3</div> Make Payment</div>
-                 </div>
-                 <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500">
-                    <XMarkIcon className="h-6 w-6" />
-                 </button>
-              </div>
-           </div>
-
-           <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-              {/* Left Column: Selected Items */}
-              <div className="lg:col-span-2 space-y-6">
-                 <button 
-                   onClick={() => {
-                      setShowReviewModal(false);
-                      setShowDetailsModal(true);
-                   }}
-                   className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#1f1f1f] transition-colors mb-6"
-                 >
-                    <ArrowLeftIcon className="h-4 w-4" /> Review Booking
-                 </button>
-
-                 <div className="space-y-4">
-                    {/* Primary Package */}
-                    <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
-                       <div className="flex justify-between items-start mb-4">
-                          <div className="flex-1 min-w-0 mr-3">
-                             <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
-                             <div className="flex items-center gap-3">
-                                <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                                   <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
-                                </div>
-                                {selectedPackage && (
-                                   <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                                      <span className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</span>
-                                   </div>
-                                )}
-                             </div>
-                          </div>
-                          <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
-                             Primary Package
-                          </div>
-                       </div>
-
-                       {/* Quantity Controls */}
-                       <div className="flex items-center justify-between py-4 border-t border-b border-gray-50 mb-4">
-                          <span className="text-sm font-bold text-gray-700">Quantity</span>
-                          <div className="flex items-center gap-3">
-                             <button
-                                onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                                disabled={quantity <= 1}
-                                className="h-9 w-9 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg hover:border-[#6869F9] hover:text-[#6869F9] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90"
-                             >−</button>
-                             <span className="w-8 text-center font-black text-[#1f1f1f] text-lg select-none">{quantity}</span>
-                             <button
-                                onClick={() => setQuantity(q => q + 1)}
-                                className="h-9 w-9 rounded-full border-2 border-[#6869F9] bg-[#6869F9] flex items-center justify-center text-white font-bold text-lg hover:bg-[#5657e8] transition-all active:scale-90"
-                             >+</button>
-                          </div>
-                       </div>
-
-                       <div className="flex flex-wrap items-center gap-6">
-                          <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
-                             <i className="fa-brands fa-whatsapp text-[#1f1f1f] text-lg"></i>
-                             <span>+91 {userDetails.whatsapp}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
-                             <i className="fa-solid fa-user text-gray-400"></i>
-                             <span>{userDetails.name}</span>
-                          </div>
-                       </div>
-                    </div>
-
-                    {/* Extra Selected Offerings */}
-                    {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
-                       <div key={extra.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex justify-between items-center group">
-                          <div className="flex items-center gap-4">
-                             <div className="h-12 w-12 bg-gray-50 rounded-xl overflow-hidden">
-                                <img src={extra.imageUrl} alt={extra.name} className="w-full h-full object-cover" />
-                             </div>
-                             <div>
-                                <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
-                                <p className="text-[#1f1f1f] font-bold text-sm">{currencySymbol} {getDisplayPrice(extra)}</p>
-                             </div>
-                          </div>
-                          <button 
-                            onClick={() => toggleExtra(extra.id)}
-                            className="text-red-500 hover:bg-red-50 h-8 w-8 rounded-full flex items-center justify-center transition-all"
-                          >
-                             <XMarkIcon className="h-5 w-5" />
-                          </button>
-                       </div>
-                    ))}
-                    
-                    {/* Coupon Code Section */}
-                    <div className="bg-violet-50/50 rounded-2xl border border-violet-100/50 overflow-hidden">
-                       {/* Header row */}
-                       <button
-                          onClick={() => {
-                             if (couponStatus === "applied") { handleRemoveCoupon(); return; }
-                             setShowCouponInput(v => !v);
-                             setCouponStatus("idle");
-                          }}
-                          className="w-full flex justify-between items-center p-5 hover:bg-violet-50 transition-colors"
-                       >
-                          <div className="flex items-center gap-3">
-                             <TagIcon className="h-5 w-5 text-[#6869F9]" />
-                             <div className="text-left">
-                                <span className="font-bold text-sm text-[#1f1f1f] block">Apply Coupon Code</span>
-                                {couponStatus === "applied" && (
-                                   <span className="text-[11px] font-bold text-green-600">✓ "{couponCode}" applied — you save {currencySymbol}{couponDiscount}!</span>
-                                )}
-                             </div>
-                          </div>
-                          {couponStatus === "applied" ? (
-                             <span className="text-[11px] font-bold text-red-500 hover:underline">Remove</span>
-                          ) : (
-                             <i className={`fa-solid fa-chevron-${showCouponInput ? 'up' : 'down'} text-gray-400 text-xs transition-transform`}></i>
-                          )}
-                       </button>
-
-                       {/* Expandable input */}
-                       {showCouponInput && couponStatus !== "applied" && (
-                          <div className="px-5 pb-5 space-y-3 border-t border-violet-100">
-                             <div className="flex gap-2 mt-4">
-                                <div className="relative flex-1">
-                                   <input
-                                      type="text"
-                                      value={couponInput}
-                                      onChange={(e) => {
-                                         setCouponInput(e.target.value.toUpperCase());
-                                         if (couponStatus !== "idle") setCouponStatus("idle");
-                                      }}
-                                      onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
-                                      placeholder="Enter coupon code"
-                                      className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${
-                                         couponStatus === "invalid"
-                                            ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
-                                            : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
-                                      }`}
-                                   />
-                                   {couponInput && (
-                                      <button
-                                         onClick={() => { setCouponInput(""); setCouponStatus("idle"); }}
-                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                      >
-                                         <i className="fa-solid fa-circle-xmark text-sm"></i>
-                                      </button>
-                                   )}
-                                </div>
-                                <button
-                                   onClick={handleApplyCoupon}
-                                   disabled={!couponInput.trim()}
-                                   className="px-5 py-3 bg-[#6869F9] text-white text-sm font-bold rounded-xl hover:bg-[#5657e8] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
-                                >
-                                   Apply
-                                </button>
-                             </div>
-                             {couponStatus === "invalid" && (
-                                <p className="text-[11px] font-bold text-red-500 flex items-center gap-1">
-                                   <i className="fa-solid fa-circle-exclamation"></i> Invalid coupon code. Please try again.
-                                </p>
-                             )}
-                             <p className="text-[10px] text-gray-400 font-medium">Try: ASTRO10 (10% off) or SAVE50 (₹50 off)</p>
-                          </div>
-                       )}
-                    </div>
-
-                    <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                       <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
-                       <div className="space-y-4 text-sm font-medium text-gray-500">
-                          <div className="flex justify-between">
-                             <span>{selectedPackage?.name}{quantity > 1 ? ` × ${quantity}` : ""}</span>
-                             <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) * quantity : 0}.0</span>
-                          </div>
-                          {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
-                             <div key={extra.id} className="flex justify-between">
-                                <span>{extra.name}</span>
-                                <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
-                             </div>
-                          ))}
-                          {couponStatus === "applied" && couponDiscount > 0 && (
-                             <div className="flex justify-between text-green-600 font-bold">
-                                <span className="flex items-center gap-1"><TagIcon className="h-3.5 w-3.5" /> Coupon ({couponCode})</span>
-                                <span>− {currencySymbol} {couponDiscount}.0</span>
-                             </div>
-                          )}
-                          <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
-                             <span>Total Amount</span>
-                             <span className="text-[#1f1f1f]">{currencySymbol} {totalAmount}.0</span>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Right Column: Upsell */}
-              <div>
-                 <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
-                    <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
-                    Add more Divine offerings
-                 </h3>
-                 <div className="space-y-4">
-                    {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                       <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
-                            {extra.badge && (
-                               <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
-                                  <i className="fa-solid fa-box"></i> {extra.badge}
-                               </div>
-                            )}
-                            <div className="flex-1 min-w-0 pt-0.5">
-                               <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
-                               {extra.description && (
-                                  <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
-                               )}
-                               <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
-                            </div>
-                            <div className="flex flex-col items-center gap-2.5 shrink-0">
-                               <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
-                                  <img src={extra.imageUrl} className="w-full h-full object-cover" />
-                               </div>
-                               <button 
-                                 onClick={() => toggleExtra(extra.id)}
-                                 className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
-                               >
-                                  + Add
-                               </button>
-                            </div>
-                         </div>
-                    ))}
-                 </div>
-
-                 <div className="mt-8 bg-blue-50 rounded-2xl p-6 border border-blue-100">
-                    <div className="flex items-start gap-4">
-                       <i className="fa-solid fa-circle-info text-blue-500 mt-1"></i>
-                       <p className="text-[11px] font-medium text-blue-700 leading-relaxed">
-                          By proceeding, you agree to our Terms of Service. Your Puja will be conducted with full vedic rites as per the selected package and offerings.
-                       </p>
-                    </div>
-                 </div>
-              </div>
-           </div>
-
-           {/* Floating Bottom Bar */}
-           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-              <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
-                 <div className="flex items-center gap-4 text-sm font-bold pl-4">
-                    <span>{1 + selectedExtraIds.length} Sevas selected</span>
-                    <span className="opacity-50">•</span>
-                    <span className="text-lg">{currencySymbol} {totalAmount}</span>
-                  </div>
-                  <button 
-                    onClick={() => {
-                       const extras = selectedExtraIds.join(',');
-                       window.location.href = `/payment?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}`;
-                    }}
-                    className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm"
-                  >
-                     Proceed to Payment <i className="fa-solid fa-arrow-right"></i>
-                  </button>
-              </div>
-           </div>
-        </div>
-      )}
       {/* Gallery Modal */}
       {showGallery && (
         <div className="fixed inset-0 z-200 flex flex-col bg-black">

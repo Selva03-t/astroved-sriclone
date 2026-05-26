@@ -37,7 +37,7 @@ async function requestAuth<T>(path: string, init?: RequestInit): Promise<AuthApi
 }
 
 export const authService = {
-  loginWithEmail(payload: EmailLoginPayload) {
+  loginWithEmail(payload: EmailLoginPayload) { 
     return requestAuth<AuthUser>("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -53,7 +53,7 @@ export const authService = {
 
   resendOtp(payload: OtpPayload) {
     return requestAuth<{ expiresIn: number }>("/api/auth/otp/resend", {
-      method: "POST",
+      method: "POST", 
       body: JSON.stringify(payload),
     });
   },
@@ -78,4 +78,3 @@ export const authService = {
     });
   },
 };
-

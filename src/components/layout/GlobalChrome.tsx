@@ -11,7 +11,8 @@ export default function GlobalChrome() {
   // so the login/registration screens look clean.
   const shouldHideOnAuth = pathname?.startsWith("/auth") ?? false;
   const shouldHideOnAdminPanel = pathname?.startsWith("/admin") ?? false;
-  const shouldHide = shouldHideOnAuth || shouldHideOnAdminPanel;
+  const shouldHideOnCheckout = pathname?.startsWith("/sankalp") || pathname?.startsWith("/payment") || false;
+  const shouldHide = shouldHideOnAuth || shouldHideOnAdminPanel || shouldHideOnCheckout;
 
   return (
     <>
