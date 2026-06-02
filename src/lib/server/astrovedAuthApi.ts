@@ -1,6 +1,6 @@
 import type { AuthUser, CountryOption, LoginMethod } from "@/types/auth";
 
-export type AstrovedLoginType = 1 | 2 | 3;
+export type AstrovedLoginType = 1 | 2 | 3 | 4;
 
 interface AstrovedLoginInfo {
   UserLogin?: string;
@@ -120,6 +120,7 @@ async function postToAstroved(path: string, body: Record<string, unknown>) {
 export function getAstrovedLoginType(method: LoginMethod): AstrovedLoginType {
   if (method === "phone") return 2;
   if (method === "whatsapp") return 3;
+  if (method === "email") return 4;
   return 1;
 }
 
@@ -172,29 +173,56 @@ export async function authenticatePasswordLogin(payload: {
 }
 
 export async function requestOtp(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp">;
-  country: CountryOption;
-  number: string;
+  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
+  country?: CountryOption;
+  number?: string;
+  email?: string;
 }) {
+  if (payload.method === "email") {
+    const data = await postToAstroved("AuthenticateLogin", {
+      UserName: payload.email,
+      Password: "",
+      Type: 4,
+    });
+    return { message: data.Message || "OTP sent successfully" };
+  }
+
   const data = await postToAstroved("AuthenticateLogin", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country),
-    MobileNo: payload.number,
+    CountryCode: normalizeCountryCode(payload.country!),
+    MobileNo: payload.number!,
   });
 
   return { message: data.Message || "OTP sent successfully" };
 }
 
 export async function verifyOtpWithAstroved(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp">;
-  country: CountryOption;
-  number: string;
+  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
+  country?: CountryOption;
+  number?: string;
+  email?: string;
   otp: string;
 }) {
+  if (payload.method === "email") {
+    const data = await postToAstroved("VerifyOtp", {
+      Type: 4,
+      CountryCode: "",
+      MobileNo: "",
+      OTP: payload.otp,
+      UserName: payload.email,
+    });
+
+    if (!data.loginInfo) {
+      throw new AstrovedAuthError(data.Message || "Invalid OTP. Please try again.", 401, data.Status);
+    }
+
+    return data.loginInfo;
+  }
+
   const data = await postToAstroved("VerifyOtp", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country),
-    MobileNo: payload.number,
+    CountryCode: normalizeCountryCode(payload.country!),
+    MobileNo: payload.number!,
     OTP: payload.otp,
   });
 
@@ -206,14 +234,24 @@ export async function verifyOtpWithAstroved(payload: {
 }
 
 export async function resendOtpWithAstroved(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp">;
-  country: CountryOption;
-  number: string;
+  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
+  country?: CountryOption;
+  number?: string;
+  email?: string;
 }) {
+  if (payload.method === "email") {
+    const data = await postToAstroved("AuthenticateLogin", {
+      UserName: payload.email,
+      Password: "",
+      Type: 4,
+    });
+    return { message: data.Message || "OTP resent successfully" };
+  }
+
   const data = await postToAstroved("ResendOtp", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country),
-    MobileNo: payload.number,
+    CountryCode: normalizeCountryCode(payload.country!),
+    MobileNo: payload.number!,
   });
 
   return { message: data.Message || "OTP resent successfully" };

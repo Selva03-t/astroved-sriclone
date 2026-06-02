@@ -13,6 +13,15 @@ function parseOtpContext(params: URLSearchParams): OtpPayload | null {
   const method = params.get("method") as LoginMethod | null;
   const isoCode = params.get("country") ?? "";
   const number = (params.get("number") ?? "").replace(/[^0-9]/g, "");
+  const email = params.get("email") ?? "";
+
+  if (method === "email") {
+    if (!email) return null;
+    return {
+      method,
+      email,
+    };
+  }
 
   if (method !== "phone" && method !== "whatsapp") return null;
   if (!isoCode || !number) return null;
@@ -119,7 +128,9 @@ export default function OtpClient() {
   };
 
   const summary = otpPayload
-    ? `OTP sent to +${otpPayload.country.dialCode} ${otpPayload.number}`
+    ? otpPayload.method === "email"
+      ? `OTP sent to ${otpPayload.email}`
+      : `OTP sent to +${otpPayload.country?.dialCode} ${otpPayload.number}`
     : "We couldn’t load your OTP session. Please go back and request a new OTP.";
 
   return (
@@ -172,7 +183,7 @@ export default function OtpClient() {
                 onClick={handleChangeNumber}
                 className="font-semibold text-[#6869F9] transition-colors hover:text-[#5657e8]"
               >
-                Change number
+                {otpPayload?.method === "email" ? "Change email" : "Change number"}
               </button>
               <button
                 type="button"
@@ -186,7 +197,7 @@ export default function OtpClient() {
           </form>
 
           <p className="mt-6 text-center text-sm text-[#6f53a3]">
-            Want to use email instead?{" "}
+            {otpPayload?.method === "email" ? "Want to use a different method?" : "Want to use email instead?"}{" "}
             <Link
               href="/auth/login"
               className="font-semibold text-[#6869F9] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#5657e8]"

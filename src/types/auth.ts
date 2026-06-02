@@ -33,9 +33,10 @@ export interface EmailLoginPayload {
 }
 
 export interface OtpPayload {
-  method: Extract<LoginMethod, "phone" | "whatsapp">;
-  country: CountryOption;
-  number: string;
+  method: LoginMethod;
+  country?: CountryOption;
+  number?: string;
+  email?: string;
 }
 
 export interface VerifyOtpPayload extends OtpPayload {

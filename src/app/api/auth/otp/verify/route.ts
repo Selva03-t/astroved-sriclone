@@ -11,14 +11,31 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const { method, country, number, otp } = (await request.json()) as VerifyOtpPayload;
+    const body = await request.json();
+    const { method, otp } = body;
 
-    if (!method || !country || !number || !/^[0-9]{6}$/.test(otp)) {
+    if (!method || !otp || !/^[0-9]{6}$/.test(otp)) {
       return NextResponse.json({ success: false, error: "Enter the 6-digit OTP" }, { status: 400 });
     }
 
-    const loginInfo = await verifyOtpWithAstroved({ method, country, number, otp });
-    const authUser = mapLoginInfoToUser(loginInfo, { country, loginProvider: method });
+    let authUser;
+    if (method === "email") {
+      const email = String(body.email ?? "").toLowerCase().trim();
+      if (!email) {
+        return NextResponse.json({ success: false, error: "Email is required" }, { status: 400 });
+      }
+
+      const loginInfo = await verifyOtpWithAstroved({ method, email, otp });
+      authUser = mapLoginInfoToUser(loginInfo, { loginProvider: "email" });
+    } else {
+      const { country, number } = body;
+      if (!country || !number) {
+        return NextResponse.json({ success: false, error: "Country and number are required" }, { status: 400 });
+      }
+
+      const loginInfo = await verifyOtpWithAstroved({ method, country, number, otp });
+      authUser = mapLoginInfoToUser(loginInfo, { country, loginProvider: method });
+    }
 
     const response = NextResponse.json({
       success: true,

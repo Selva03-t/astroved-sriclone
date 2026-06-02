@@ -16,8 +16,11 @@ store.AstroVedOtpStore = otpStore;
 export const OTP_RESEND_SECONDS = 30;
 const OTP_PROVIDER_TIMEOUT_MS = Number(process.env.AUTH_OTP_PROVIDER_TIMEOUT_MS ?? 5000);
 
-export function getOtpKey(payload: Pick<OtpPayload, "method" | "country" | "number">) {
-  return `${payload.method}:${payload.country.dialCode}:${payload.number}`;
+export function getOtpKey(payload: Pick<OtpPayload, "method" | "country" | "number" | "email">) {
+  if (payload.method === "email") {
+    return `email:${payload.email}`;
+  }
+  return `${payload.method}:${payload.country?.dialCode}:${payload.number}`;
 }
 
 async function sendOtpWithProvider(payload: OtpPayload, code: string) {
@@ -45,8 +48,8 @@ async function sendOtpWithProvider(payload: OtpPayload, code: string) {
       },
       body: JSON.stringify({
         channel: payload.method,
-        countryCode: payload.country.dialCode,
-        phoneNumber: payload.number,
+        countryCode: payload.country?.dialCode || "",
+        phoneNumber: payload.number || "",
         otp: code,
         ttlSeconds: OTP_TTL_MS / 1000,
       }),

@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     if (country.isoCode.toUpperCase() === 'IN') {
       const indianPhoneRegex = /^[6-9]\d{9}$/;
       if (!indianPhoneRegex.test(phone)) {
-        return NextResponse.json({ success: false, error: "Enter a valid 10-digit Indian mobile number starting with 6-9" }, { status: 400 });
+        return NextResponse.json({ success: false, error: "Enter a valid Phone Number" }, { status: 400 });
       }
     } else {
       if (!phoneRegex.test(phone)) {
