@@ -100,14 +100,14 @@ export default function LoginMethods() {
           if (data.country === "US") {
             setMethod("email");
           } else {
-            setMethod("phone");
+            setMethod("whatsapp");
           }
         } else {
-          setMethod("phone");
+          setMethod("whatsapp");
         }
       } catch (err) {
         console.error("GeoIP detection failed:", err);
-        setMethod("phone"); // Default fallback to phone
+        setMethod("whatsapp"); // Default fallback to whatsapp
       } finally {
         setDetecting(false);
       }
@@ -189,7 +189,7 @@ export default function LoginMethods() {
       }
 
       // Mobile OTP flow
-      const number = method === "phone" ? phone : whatsapp;
+      const number = method === "whatsapp" ? whatsapp : phone;
       await authService.sendOtp({
         method,
         country: DEFAULT_COUNTRY,
@@ -225,52 +225,19 @@ export default function LoginMethods() {
   return (
     <div className="w-full max-w-xl rounded-3xl border border-[#ddcff9] bg-white/95 p-10 shadow-[0_30px_90px_rgba(91,33,182,0.22)] backdrop-blur sm:p-12">
       <h1 className="text-center text-4xl font-semibold tracking-tight text-[#2e1b53]">
-        {isAdmin ? "Admin Login" : "Welcome back"}
+        {isAdmin ? "Admin Login" : "Welcome"}
       </h1>
       <p className="mt-3 text-center text-base text-[#6a4e95]">
-        {isAdmin ? "Access the administrative control center." : "Choose one method to sign in securely."}
+        {isAdmin ? "Access the administrative control center." : "Sign in securely."}
       </p>
-
-      {/* Tabs list (hidden for admin and US users who must use Email OTP) */}
-      {!isAdmin && detectedCountry !== "US" && (
-        <div className="mt-8 grid grid-cols-2 gap-3 rounded-2xl bg-[#f3ecff] p-3">
-          <button
-            type="button"
-            onClick={() => setMethod("phone")}
-            className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              method === "phone"
-                ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
-                : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
-            }`}
-          >
-            <PhoneIcon />
-            <span>Phone</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMethod("whatsapp")}
-            className={`transform-gpu will-change-transform flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              method === "whatsapp"
-                ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] text-white shadow-[0_8px_20px_rgba(104,105,249,0.35)]"
-                : "text-[#6e52a0] hover:-translate-y-0.5 hover:bg-[#e8ddff] hover:text-[#4e2b86] hover:shadow-[0_6px_16px_rgba(124,58,237,0.14)]"
-            }`}
-          >
-            <WhatsappIcon />
-            <span>WhatsApp</span>
-          </button>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <label className="block text-sm font-medium text-[#5a3b8a]">
           {method === "email"
             ? "Email Address"
-            : method === "phone"
-              ? "Phone Number"
-              : "WhatsApp Number"}
+            : "WhatsApp Number"}
           <div className="mt-2 flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
-            {(method === "phone" || method === "whatsapp") && (
+            {method !== "email" && (
               <span className="mr-2 text-base text-[#7b5db5]">+{DEFAULT_COUNTRY.dialCode}</span>
             )}
             <input
@@ -352,11 +319,10 @@ export default function LoginMethods() {
         <button
           type="submit"
           disabled={!isValid || loading}
-          className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            isValid && !loading
-              ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
-              : "cursor-not-allowed bg-[#d2c2ef]"
-          }`}
+          className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isValid && !loading
+            ? "bg-linear-to-r from-[#6869F9] to-[#5657e8] shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
+            : "cursor-not-allowed bg-[#d2c2ef]"
+            }`}
         >
           {loading ? "Processing..." : "Continue"}
         </button>
@@ -370,19 +336,8 @@ export default function LoginMethods() {
           : "We will send a one-time verification code to your selected number."}
       </p>
 
-      {!isAdmin && (
-        <p className="mt-5 text-center text-sm text-[#6f53a3]">
-          New to AstroVed?{" "}
-          <Link
-            href="/auth/signup"
-            className="font-semibold text-[#6869F9] underline decoration-[#9898ff] underline-offset-4 transition-colors duration-300 hover:text-[#5657e8]"
-          >
-            Register now
-          </Link>
-        </p>
-      )}
     </div>
   );
 }
-        
+
 
