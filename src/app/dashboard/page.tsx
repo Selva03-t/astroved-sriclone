@@ -238,7 +238,7 @@ export default function DashboardPage() {
 
       {/* AstroVed Special Pujas Section */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mx-auto max-w-[1440px] px-4 md:px-8">
           <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
             <span className="text-[rgb(107,76,154)]">AstroVed</span> {t.home.specialPujas}
           </h2>
@@ -251,7 +251,7 @@ export default function DashboardPage() {
 
       {/* Reviews & Ratings Section */}
       <section className="bg-[#fafafa] py-20">
-        <div className="mx-auto max-w-7xl px-6 text-center">
+        <div className="mx-auto max-w-[1440px] px-6 text-center">
           <h2 className="text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">{t.home.reviewsTitle}</h2>
           <p className="text-[17px] font-medium text-gray-700 mb-14">{t.home.reviewsSubtitle}</p>
 
@@ -261,7 +261,7 @@ export default function DashboardPage() {
 
       {/* Trust & Impact Section */}
       <section className="bg-[#0f1c3d] py-16 md:py-20 text-white overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
@@ -311,7 +311,7 @@ export default function DashboardPage() {
 
       {/* Features Section */}
       <section className="bg-white py-16 md:py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-[1440px] px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-[40px] font-bold text-[#1f1f1f] mb-4">{t.home.oneApp}</h2>
             <p className="text-lg text-gray-600 max-w-5xl mx-auto leading-relaxed">
@@ -379,7 +379,7 @@ export default function DashboardPage() {
 
       {/* Articles Section (Exactly as in Image) */}
       <section className="bg-white py-24">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-[1440px] px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-[#1f1f1f] mb-4">
               {t.home.articlesTitle}
@@ -663,20 +663,20 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         className="w-full h-full object-cover"
       />
       {/* Top Left Badge */}
-      <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
-        {puja.badge || "Special"}
-      </div>
-      {/* Bottom Left Badge */}
-      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
-        BOOK PUJA
-      </div>
+      {puja.badge && (
+        <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+          {puja.badge}
+        </div>
+      )}
     </div>
     
     {/* Content Section */}
     <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
-      <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
-        {puja.subtitle || "SPECIAL PUJA & YAGYA"}
-      </p>
+      {puja.subtitle && (
+        <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
+          {puja.subtitle}
+        </p>
+      )}
       <h3 className="text-[18px] font-bold text-[#1f1f1f] mb-3 leading-snug">
         {puja.title}
       </h3>

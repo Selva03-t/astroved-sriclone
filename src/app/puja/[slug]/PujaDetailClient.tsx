@@ -193,6 +193,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [reviewsShown, setReviewsShown] = useState(3);
   const [activeCarouselDot, setActiveCarouselDot] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const isManualScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<any>(null);
 
   const hasGallery = puja?.gallery && puja.gallery.length > 0;
   const images = hasGallery ? [puja!.imageUrl, ...puja!.gallery!] : [puja?.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"];
@@ -363,8 +365,23 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
   useEffect(() => {
     const handleScroll = () => {
-      const sectionIds = ["about", "benefits", "process", "temple", "packages", "reviews", "faqs"];
-      const scrollPosition = window.scrollY + 150; // offset for sticky headers
+      if (isManualScrollingRef.current) return;
+
+      const sectionIds = currentSectionOrder;
+
+      // Check if we are at the bottom of the page
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
+      if (isAtBottom) {
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const section = document.getElementById(sectionIds[i]);
+          if (section) {
+            setActiveTab(sectionIds[i]);
+            return;
+          }
+        }
+      }
+
+      const scrollPosition = window.scrollY + 200; // offset for sticky headers (must be greater than target scroll offset of 180px)
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const section = document.getElementById(sectionIds[i]);
@@ -377,7 +394,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [currentSectionOrder]);
 
   // Review booking proceed loading state
   const [reviewLoading, setReviewLoading] = useState(false);
@@ -692,9 +709,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
       <Navbar />
       <main className="min-h-screen bg-white pb-24">
         {loading ? (
-          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
+          <div className="mx-auto max-w-[1440px] px-6 py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
         ) : !puja ? (
-          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center">
+          <div className="mx-auto max-w-[1440px] px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
             <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-semibold text-white">
               Back to Pujas
@@ -704,7 +721,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
           <>
             {/* -- Breadcrumb (sticky below navbar) -- */}
             <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-              <div className="mx-auto max-w-[1300px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+              <div className="mx-auto max-w-[1440px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
                 <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
                 <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
@@ -714,17 +731,17 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             </nav>
 
             {/* -- Hero -- */}
-            <div className="mx-auto max-w-[1300px] px-4 py-6 md:px-6">
+            <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-6">
               <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image Carousel */}
                 <div className="relative overflow-hidden rounded-2xl group cursor-pointer" onClick={() => setShowGallery(true)}>
                   <img src={images[currentImageIndex]} alt={puja.title} className="w-full object-contain bg-[#f8f7ff] h-[350px] md:h-[450px] transition-opacity duration-300" />
                   
                   {/* Top Left Badge */}
-                  {(puja.badge || puja.shortTitle) && (
+                  {puja.badge && (
                     <div className="absolute left-4 top-4">
                       <span className="inline-flex items-center rounded-lg bg-[#ffc107] px-4 py-1.5 text-[13px] font-bold text-[#1f1f1f] shadow-sm">
-                        {puja.badge || puja.shortTitle || "Special"}
+                        {puja.badge}
                       </span>
                     </div>
                   )}
@@ -864,13 +881,19 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             {/* -- Flat Content Sections -- */}
             {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
             <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
-              <div className="mx-auto max-w-[1300px] px-4 md:px-6">
+              <div className="mx-auto max-w-[1440px] px-4 md:px-6">
                 <div className="flex items-center justify-between overflow-x-auto no-scrollbar w-full gap-4">
                   {sectionTabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => {
+                        isManualScrollingRef.current = true;
                         setActiveTab(tab.id);
+                        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+                        scrollTimeoutRef.current = setTimeout(() => {
+                          isManualScrollingRef.current = false;
+                        }, 800);
+
                         const el = document.getElementById(tab.id);
                         if (el) {
                           const offset = 180;
@@ -894,7 +917,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               </div>
             </div>
 
-            <div className="mx-auto max-w-6xl px-4 md:px-6 pt-10">
+            <div className="mx-auto max-w-[1440px] px-4 md:px-6 pt-10">
               {currentSectionOrder.map((sectionId) => {
                 if (sectionId === "about") {
                   return (
@@ -1242,7 +1265,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
         {/* -- Sticky bottom booking bar -- */}
         {puja && !countdown.expired && (
           <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
-            <div className="mx-auto flex max-w-[1300px] items-center justify-between gap-4">
+            <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="truncate text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{selectedPackage?.name ?? "Select a package"}</p>
                 <div className="flex items-center gap-3">

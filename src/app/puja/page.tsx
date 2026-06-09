@@ -415,7 +415,7 @@ export default function PujaPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-[#f9f9ff] py-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="mx-auto max-w-[1440px] px-4 md:px-8">
 
           {/* Page Heading */}
           <h1 className="mb-8 text-center text-3xl font-bold leading-tight text-[#3b0764] md:text-4xl">
@@ -679,13 +679,11 @@ export default function PujaPage() {
                         className="w-full h-full object-cover"
                       />
                       {/* Top Left Badge */}
-                      <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
-                        {puja.badge || "Special"}
-                      </div>
-                      {/* Bottom Left Badge */}
-                      <div className="absolute bottom-3 left-3 bg-[#6869F9] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">
-                        BOOK PUJA
-                      </div>
+                      {puja.badge && (
+                        <div className="absolute top-3 left-3 bg-[#ffc107] text-[#1f1f1f] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+                          {puja.badge}
+                        </div>
+                      )}
                     </div>
                     
                     {/* Content Section */}

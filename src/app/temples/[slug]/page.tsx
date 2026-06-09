@@ -10,6 +10,8 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [openTravel, setOpenTravel] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const isManualScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<any>(null);
   const [showGallery, setShowGallery] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
@@ -31,7 +33,18 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
 
   useEffect(() => {
     const handler = () => {
-      const offset = window.scrollY + 80;
+      if (isManualScrollingRef.current) return;
+
+      // Check if we are at the bottom of the page
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
+      if (isAtBottom) {
+        if (locationRef.current) {
+          setActiveTab("location");
+          return;
+        }
+      }
+
+      const offset = window.scrollY + 140; // offset (must be greater than scroll-mt-32 / 128px)
       if (locationRef.current && offset >= locationRef.current.offsetTop) setActiveTab("location");
       else if (timingsRef.current && offset >= timingsRef.current.offsetTop) setActiveTab("timings");
       else setActiveTab("overview");
@@ -41,7 +54,12 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
   }, []);
 
   const scrollTo = (ref: React.RefObject<HTMLDivElement | null>, tab: string) => {
+    isManualScrollingRef.current = true;
     setActiveTab(tab);
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
+      isManualScrollingRef.current = false;
+    }, 800);
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
