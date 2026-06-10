@@ -63,6 +63,36 @@ export default function AdminPujasPage() {
     { name: "location", label: "Temple/Location", type: "text" },
     { name: "templeVenue", label: "Temple Venue Name", type: "text", placeholder: "Shri Gajalakshmi Temple" },
     { name: "templeNote", label: "Temple Venue Note", type: "textarea", placeholder: "Short temple significance or venue note." },
+    {
+      name: "deity",
+      label: "Deity (Filter)",
+      type: "select",
+      options: ["Ganapathi", "Lakshmi", "Shiva", "Vishnu", "Hanuman", "Durga", "Saraswati"]
+    },
+    {
+      name: "tithis",
+      label: "Tithis (Filter)",
+      type: "select",
+      options: ["Ekadashi", "Purnima", "Amavasya", "Pradosh", "Navami"]
+    },
+    {
+      name: "dosha",
+      label: "Dosha (Filter)",
+      type: "select",
+      options: ["Mangal Dosha", "Kala Sarpa", "Pitru Dosha", "Shani Dosha"]
+    },
+    {
+      name: "benefit",
+      label: "Benefit (Filter)",
+      type: "select",
+      options: ["Prosperity", "Protection", "Peace", "Health", "Career", "Marriage"]
+    },
+    {
+      name: "filterLocation",
+      label: "Location State (Filter)",
+      type: "select",
+      options: ["Tamil Nadu", "Karnataka", "Kerala", "Uttar Pradesh", "Andhra Pradesh", "Rajasthan"]
+    },
     { name: "date", label: "Date (DD-MM-YYYY)", type: "date-ddmmyyyy" },
     { name: "eventDateTime", label: "Countdown Date & Time", type: "datetime-local", placeholder: "2026-04-19T18:30" },
     { name: "buttonText", label: "Button Text", type: "text" },

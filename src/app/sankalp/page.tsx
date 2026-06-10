@@ -40,17 +40,15 @@ function StepBreadcrumb({ currentStep }: { currentStep: number }) {
                   </span>
                 ) : (
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black shrink-0 ${
-                      active ? "bg-[#1a7c5c] text-white" : "bg-gray-200 text-gray-500"
-                    }`}
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black shrink-0 ${active ? "bg-[#1a7c5c] text-white" : "bg-gray-200 text-gray-500"
+                      }`}
                   >
                     {step.num}
                   </span>
                 )}
                 <span
-                  className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${
-                    done ? "text-[#1a7c5c]" : active ? "text-gray-800" : "text-gray-400"
-                  }`}
+                  className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${done ? "text-[#1a7c5c]" : active ? "text-gray-800" : "text-gray-400"
+                    }`}
                 >
                   {step.label}
                 </span>
@@ -614,7 +612,7 @@ function SankalpContent() {
                       value={address.road}
                       onChange={(v) => updateAddress("road", v)}
                       required
-                    />
+                    />w
                     <FloatingInput
                       id="landmark"
                       label="Landmark (Compulsory)"
@@ -660,12 +658,12 @@ function SankalpContent() {
               {!whatsappValid
                 ? "Please enter a valid 10-digit WhatsApp number"
                 : !membersValid
-                ? "Please enter at least one member name"
-                : !gotraValid
-                ? "Please select a gotra or check 'I do not know gotra'"
-                : wantsAashirwad === null
-                ? "Please select Yes or No for Aashirwad box"
-                : "Please fill all required address fields"}
+                  ? "Please enter at least one member name"
+                  : !gotraValid
+                    ? "Please select a gotra or check 'I do not know gotra'"
+                    : wantsAashirwad === null
+                      ? "Please select Yes or No for Aashirwad box"
+                      : "Please fill all required address fields"}
             </p>
           )}
         </div>

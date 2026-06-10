@@ -41,7 +41,8 @@ interface Field {
     | "array-string"
     | "array-object"
     | "reference-array"
-    | "section-order";
+    | "section-order"
+    | "select";
   required?: boolean;
   placeholder?: string;
   options?: string[];
@@ -206,7 +207,7 @@ export default function ContentManager({
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev: any) => {
       const next = { ...prev, [name]: value };
@@ -432,18 +433,34 @@ export default function ContentManager({
         const option = group.options.find((opt) => opt.value === selected);
         if (!option) continue;
 
-        const textToMatch = [
-          ...searchFields.map((field) => String(item[field] ?? "")),
-          JSON.stringify(item),
-        ]
-          .join(" ")
-          .toLowerCase();
+        const fieldMapping: Record<string, string> = {
+          Deity: "deity",
+          Tithis: "tithis",
+          Dosha: "dosha",
+          Benefits: "benefit",
+          Location: "filterLocation",
+        };
+        const fieldName = fieldMapping[group.label];
+        const savedValue = fieldName ? item[fieldName] : undefined;
 
-        const keywords =
-          "keywords" in option && Array.isArray(option.keywords) && option.keywords.length > 0
-            ? option.keywords
-            : [option.value.toLowerCase()];
-        const matches = keywords.some((kw) => textToMatch.includes(kw.toLowerCase()));
+        let matches = false;
+        if (typeof savedValue === "string" && savedValue.trim()) {
+          matches = savedValue.trim().toLowerCase() === selected.toLowerCase();
+        } else {
+          const textToMatch = [
+            ...searchFields.map((field) => String(item[field] ?? "")),
+            JSON.stringify(item),
+          ]
+            .join(" ")
+            .toLowerCase();
+
+          const keywords =
+            "keywords" in option && Array.isArray(option.keywords) && option.keywords.length > 0
+              ? option.keywords
+              : [option.value.toLowerCase()];
+          matches = keywords.some((kw) => textToMatch.includes(kw.toLowerCase()));
+        }
+
         if (!matches) return false;
       }
 
@@ -710,6 +727,22 @@ export default function ContentManager({
                       rows={field.type === "json" ? 8 : 3}
                       className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
                     />
+                  ) : field.type === "select" ? (
+                    <select
+                      id={field.name}
+                      name={field.name}
+                      required={field.required}
+                      value={formData[field.name] || ""}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#6869F9] focus:outline-none focus:ring-[#1f1f1f] sm:text-sm"
+                    >
+                      <option value="">-- Select {field.label} --</option>
+                      {field.options?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
                   ) : (
                     <>
                       <input

@@ -23,7 +23,13 @@ interface Puja {
     benefits?: { title: string; description: string }[];
     templeLocation?: string;
   };
+  deity?: string;
+  tithis?: string;
+  dosha?: string;
+  benefit?: string;
+  filterLocation?: string;
 }
+
 
 const slugify = (value: string) =>
   value
@@ -139,6 +145,14 @@ const filterOptionImages: Record<string, string> = {
 
 /** Returns true if the puja matches ALL active filters */
 function pujaMatchesFilters(puja: Puja, filters: FilterState): boolean {
+  const fieldMapping: Record<string, keyof Puja> = {
+    Deity: "deity",
+    Tithis: "tithis",
+    Dosha: "dosha",
+    Benefits: "benefit",
+    Location: "filterLocation",
+  };
+
   const searchText = [
     puja.title,
     puja.subtitle,
@@ -157,6 +171,13 @@ function pujaMatchesFilters(puja: Puja, filters: FilterState): boolean {
     if (!selectedValues || selectedValues.length === 0) continue;
 
     const groupMatches = selectedValues.some((selectedValue) => {
+      const fieldName = fieldMapping[group.label];
+      const savedValue = fieldName ? puja[fieldName] : undefined;
+
+      if (typeof savedValue === "string" && savedValue.trim()) {
+        return savedValue.trim().toLowerCase() === selectedValue.toLowerCase();
+      }
+
       const optionConfig = group.options.find((o) => o.value === selectedValue);
       if (!optionConfig || optionConfig.keywords.length === 0) return false;
       return optionConfig.keywords.some((kw) => searchText.includes(kw));
@@ -166,6 +187,7 @@ function pujaMatchesFilters(puja: Puja, filters: FilterState): boolean {
   }
   return true;
 }
+
 
 function PujaFilterModal({
   filters,
