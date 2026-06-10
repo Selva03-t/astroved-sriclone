@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Check against master admin credentials from .env.local BEFORE hitting
     // the backend API. This keeps admin login fully independent from user auth.
     const adminEmail = (process.env.ADMIN_EMAIL || "").toLowerCase().trim();
-    const adminPassword = process.env.ADMIN_PASSWORD || "";
+    const adminPassword = (process.env.ADMIN_PASSWORD || "").trim();
 
     if (adminEmail && normalizedEmail === adminEmail && password === adminPassword) {
       const adminToken = await new SignJWT({ role: "admin", email: normalizedEmail })

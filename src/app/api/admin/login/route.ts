@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const admin = await db.collection("admins").findOne({});
     
     const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
-    const adminPassword = process.env.ADMIN_PASSWORD || '';
+    const adminPassword = (process.env.ADMIN_PASSWORD || '').trim();
 
     let isValid = false;
 
