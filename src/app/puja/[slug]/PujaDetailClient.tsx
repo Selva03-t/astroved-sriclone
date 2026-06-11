@@ -58,6 +58,7 @@ type PujaOffering = {
   description: string;
   badge?: string;
   imageUrl?: string;
+  productId?: number;
 };
 
 type PujaStat = {
@@ -109,6 +110,7 @@ type Puja = {
   offerings: PujaOffering[];
   gallery?: string[];
   sectionOrder?: string[];
+  productId?: number;
 };
 
 type Countdown = {
@@ -181,6 +183,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [userDetails, setUserDetails] = useState({ name: "", whatsapp: "" });
   const [selectedExtraIds, setSelectedExtraIds] = useState<string[]>([]);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [cartError, setCartError] = useState("");
+  const [reviewCartError, setReviewCartError] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [couponInput, setCouponInput] = useState("");
   const [couponStatus, setCouponStatus] = useState<"idle" | "applied" | "invalid">("idle");
@@ -208,6 +213,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   };
 
   const toggleExtra = (id: string) => {
+    setReviewCartError("");
     setSelectedExtraIds(prev => 
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
@@ -402,7 +408,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   // ── Review Booking: render as a REAL FULL PAGE (early return, not a popup) ──
   if (showReviewModal && puja) {
     return (
-      <div className="min-h-screen bg-[#f8f9fa]">
+      <div className="min-h-screen bg-[#f8f9fa] pb-32">
          {/* Hide site footer & AI chat while in review booking mode */}
          <style>{`footer, [data-global-chrome="assistant"] { display: none !important; }`}</style>
          <Navbar />
@@ -668,6 +674,11 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
          {/* Floating Bottom Bar */}
          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
+            {reviewCartError && (
+               <div className="mx-auto max-w-7xl mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
+                  {reviewCartError}
+               </div>
+            )}
             <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
                <div className="flex items-center gap-4 text-sm font-bold pl-4">
                   <span>{1 + selectedExtraIds.length} Sevas selected</span>
@@ -677,9 +688,46 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 <button
                   onClick={async () => {
                      setReviewLoading(true);
+                     setReviewCartError("");
                      try {
                         const res = await fetch('/api/auth/me');
                         const authData = await res.json();
+                        
+                        let customerId = 1145090; // Default fallback
+                        if (authData.authenticated && authData.user?.customerId) {
+                           customerId = Number(authData.user.customerId) || 1145090;
+                        }
+
+                        // Add selected offerings to cart
+                        const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
+                        if (selectedOfferings.length > 0) {
+                           const cartPromises = selectedOfferings.map(async (offering) => {
+                              const offProductId = offering.productId || 36;
+                              const cartRes = await fetch('/api/cart/add', {
+                                 method: 'POST',
+                                 headers: { 'Content-Type': 'application/json' },
+                                 body: JSON.stringify({
+                                    customerId,
+                                    productId: offProductId,
+                                    quantity: 1,
+                                    shopName: "AstroVed",
+                                    variationId: 0,
+                                    currencyCode: "INR",
+                                    localeCode: "en-US",
+                                    freeProductContributionAmount: 0,
+                                    productSubVariationExternalId: ""
+                                 })
+                              });
+                              
+                              const cartData = await cartRes.json();
+                              if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
+                                 throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
+                              }
+                           });
+                           
+                           await Promise.all(cartPromises);
+                        }
+
                         const extras = selectedExtraIds.join(',');
                         const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}`;
                         if (!authData.authenticated) {
@@ -687,8 +735,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                            return;
                         }
                         window.location.href = sankalpUrl;
-                     } catch {
-                        alert('Something went wrong. Please try again.');
+                     } catch (err: any) {
+                        setReviewCartError(err.message || "Connection error. Please try again.");
                      } finally {
                         setReviewLoading(false);
                      }
@@ -1504,17 +1552,65 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     </div>
                  </div>
 
+                 {cartError && (
+                    <p className="rounded-lg bg-red-50 px-3 py-2 text-center text-xs font-semibold text-red-500 mt-2">
+                       {cartError}
+                    </p>
+                 )}
+
                  {/* Next Button */}
                  <button 
-                   disabled={!userDetails.name || userDetails.whatsapp.length < 10}
-                   onClick={() => {
-                      setShowDetailsModal(false);
-                      setShowReviewModal(true);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                   disabled={!userDetails.name || userDetails.whatsapp.length < 10 || addingToCart}
+                   onClick={async () => {
+                      setAddingToCart(true);
+                      setCartError("");
+                      try {
+                         const meRes = await fetch('/api/auth/me');
+                         let customerId = 1145090; // Default fallback
+                         if (meRes.ok) {
+                            const meData = await meRes.json();
+                            if (meData.authenticated && meData.user?.customerId) {
+                               customerId = Number(meData.user.customerId) || 1145090;
+                            }
+                         }
+
+                         // Product ID from puja, fallback to 10
+                         const productId = puja.productId || 10;
+
+                         const cartRes = await fetch('/api/cart/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                               customerId,
+                               productId,
+                               quantity: 1,
+                               shopName: "AstroVed",
+                               variationId: 0,
+                               currencyCode: "INR",
+                               localeCode: "en-US",
+                               freeProductContributionAmount: 0,
+                               productSubVariationExternalId: ""
+                            })
+                         });
+
+                         const cartData = await cartRes.json();
+
+                         if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
+                            setShowDetailsModal(false);
+                            setShowReviewModal(true);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                         } else {
+                            setCartError(cartData.Message || "Failed to add item to cart. Please check your product ID configuration.");
+                         }
+                      } catch (err: any) {
+                         setCartError("Connection error. Please try again.");
+                      } finally {
+                         setAddingToCart(false);
+                      }
                    }}
                    className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6869F9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
                  >
-                    Next
+                    {addingToCart ? "Adding..." : "Next"}
                  </button>
               </div>
            </div>

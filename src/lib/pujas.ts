@@ -51,6 +51,7 @@ export type PujaOffering = {
   priceMYR?: number;
   description: string;
   imageUrl?: string;
+  productId?: number;
 };
 
 export type PujaRecord = {
@@ -81,14 +82,14 @@ export type PujaRecord = {
 const normalizeOfferings = (items: unknown) => {
   if (!Array.isArray(items) || items.length === 0) {
     return [
-      { id: "e1", name: "Vastra Daan", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Offer sacred clothes to the deity", imageUrl: "https://cdn.AstroVed.com/images/puja/vastra-daan.jpg" },
-      { id: "e2", name: "Anna Daan", price: 1101, priceINR: 1101, priceUSD: 14, priceMYR: 57, description: "Feed the needy in your name", imageUrl: "https://cdn.AstroVed.com/images/puja/anna-daan.jpg" },
-      { id: "e3", name: "Deep Daan", price: 251, priceINR: 251, priceUSD: 3, priceMYR: 13, description: "Lighting lamps for prosperity", imageUrl: "https://cdn.AstroVed.com/images/puja/deep-daan.jpg" },
-      { id: "e4", name: "Gau Seva", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Feeding sacred cows", imageUrl: "https://cdn.AstroVed.com/images/puja/gau-seva.jpg" },
+      { id: "e1", name: "Vastra Daan", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Offer sacred clothes to the deity", imageUrl: "https://cdn.AstroVed.com/images/puja/vastra-daan.jpg", productId: 36 },
+      { id: "e2", name: "Anna Daan", price: 1101, priceINR: 1101, priceUSD: 14, priceMYR: 57, description: "Feed the needy in your name", imageUrl: "https://cdn.AstroVed.com/images/puja/anna-daan.jpg", productId: 36 },
+      { id: "e3", name: "Deep Daan", price: 251, priceINR: 251, priceUSD: 3, priceMYR: 13, description: "Lighting lamps for prosperity", imageUrl: "https://cdn.AstroVed.com/images/puja/deep-daan.jpg", productId: 36 },
+      { id: "e4", name: "Gau Seva", price: 501, priceINR: 501, priceUSD: 6, priceMYR: 26, description: "Feeding sacred cows", imageUrl: "https://cdn.AstroVed.com/images/puja/gau-seva.jpg", productId: 36 },
     ];
   }
   return items.map((item, index) => {
-    const off = item as Partial<PujaOffering>;
+    const off = item as Partial<PujaOffering> & { productId?: number };
     const priceSource = off.priceINR ?? off.price ?? 0;
     const numericPrice = typeof priceSource === 'number' ? priceSource : Number(priceSource);
     return {
@@ -99,7 +100,8 @@ const normalizeOfferings = (items: unknown) => {
       priceUSD: typeof off.priceUSD === 'number' ? off.priceUSD : Number(off.priceUSD || 0),
       priceMYR: typeof off.priceMYR === 'number' ? off.priceMYR : Number(off.priceMYR || 0),
       description: off.description || "Divine offering for the deity",
-      imageUrl: off.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=200&q=80"
+      imageUrl: off.imageUrl || "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=200&q=80",
+      productId: off.productId !== undefined ? off.productId : 36
     };
   });
 };
@@ -516,10 +518,14 @@ export const normalizePuja = (puja: any, offeringsMap: Record<string, any> = {})
       ? record.offeringIds.map((id: string) => offeringsMap[id]).filter(Boolean).map((o: any) => ({
           id: String(o._id),
           name: o.name,
-          price: o.price,
+          price: o.priceINR || o.price || 0,
+          priceINR: o.priceINR,
+          priceUSD: o.priceUSD,
+          priceMYR: o.priceMYR,
           badge: o.badge,
           description: o.description,
-          imageUrl: o.imageUrl
+          imageUrl: o.imageUrl,
+          productId: o.productId !== undefined ? Number(o.productId) : 36
         }))
       : normalizeOfferings(Array.isArray(record.offerings) && record.offerings.length > 0 ? record.offerings : buildOfferingsFromFlatFields(record)),
   };

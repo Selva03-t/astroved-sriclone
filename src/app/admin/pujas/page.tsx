@@ -53,6 +53,7 @@ const PUJA_ADMIN_FILTER_GROUPS = [
 export default function AdminPujasPage() {
   const fields = [
     { name: "title", label: "Main Title", type: "text", required: true },
+    { name: "productId", label: "AstroVed Product ID", type: "number", placeholder: "e.g. 10, 24, 27" },
     { name: "status", label: "Status", type: "text", options: ["active", "inactive"], placeholder: "active" },
     { name: "slug", label: "Slug (optional)", type: "text", placeholder: "1100000-lakshmi-beej-mantra-jaap-19th-april-26" },
     { name: "shortTitle", label: "Short Title (on image)", type: "text" },

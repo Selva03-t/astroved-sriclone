@@ -28,6 +28,7 @@ interface Puja {
   dosha?: string;
   benefit?: string;
   filterLocation?: string;
+  productId?: number;
 }
 
 

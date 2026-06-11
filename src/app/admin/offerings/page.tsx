@@ -3,6 +3,7 @@ import ContentManager from "@/components/admin/ContentManager";
 export default function AdminOfferingsPage() {
   const fields = [
     { name: "name", label: "Offering Name", type: "text", required: true },
+    { name: "productId", label: "AstroVed Product ID", type: "number", placeholder: "e.g. 36" },
     { name: "priceINR", label: "Price (INR)", type: "number", required: true },
     { name: "priceUSD", label: "Price (USD)", type: "number" },
     { name: "priceMYR", label: "Price (MYR)", type: "number" },
