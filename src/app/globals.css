@@ -169,7 +169,7 @@ input[type="password"]:-webkit-autofill:active {
   box-shadow: 0 0 0px 1000px #faf8ff inset !important;
   -webkit-box-shadow: 0 0 0px 1000px #faf8ff inset !important;
 }
-/* Sleek modern custom scrollbar */
+/* Sleek modern custom scrollbar - visible only on hover */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -179,16 +179,30 @@ input[type="password"]:-webkit-autofill:active {
   background: transparent;
 }
 
+/* Hide thumb by default */
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #ddd6fe; /* violet-200 to match theme */
+  background: transparent;
   border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
+/* Show thumb on hover */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #ddd6fe; /* violet-200 to match theme */
+}
+
+/* Hover style for thumb itself */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #b9abff; /* violet-300 on hover */
 }
 
+/* Firefox compatibility */
 .custom-scrollbar {
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.2s ease;
+}
+
+.custom-scrollbar:hover {
   scrollbar-color: #ddd6fe transparent;
 }
