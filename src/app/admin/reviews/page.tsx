@@ -6,7 +6,7 @@ export default function AdminReviewsPage() {
     { name: "service", label: "Service", type: "text" },
     { name: "content", label: "Review Text", type: "textarea", required: true },
     { name: "type", label: "Type (text/video)", type: "text" },
-    { name: "videoUrl", label: "Video URL (if type is video)", type: "url" },
+    { name: "videoUrl", label: "Video URL (if type is video)", type: "text" },
     { name: "rating", label: "Rating (1-5)", type: "number" },
   ];
 

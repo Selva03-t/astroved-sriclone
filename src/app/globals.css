@@ -169,6 +169,26 @@ input[type="password"]:-webkit-autofill:active {
   box-shadow: 0 0 0px 1000px #faf8ff inset !important;
   -webkit-box-shadow: 0 0 0px 1000px #faf8ff inset !important;
 }
+/* Sleek modern custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
 
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ddd6fe; /* violet-200 to match theme */
+  border-radius: 10px;
+}
 
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b9abff; /* violet-300 on hover */
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ddd6fe transparent;
+}

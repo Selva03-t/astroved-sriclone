@@ -487,24 +487,39 @@ type Review = {
 
 const ReviewCard = ({ review }: { review: Review }) => {
   const isVideo = review.type === 'video';
+  const isDirectVideo = review.videoUrl && (
+    review.videoUrl.includes('.mp4') || 
+    review.videoUrl.includes('.webm') || 
+    review.videoUrl.includes('.ogg') ||
+    review.videoUrl.startsWith('/videos/') ||
+    review.videoUrl.startsWith('/')
+  );
 
   return (
     <div className="flex flex-col w-[320px] shrink-0">
       {isVideo ? (
         <div className="w-full h-[200px] rounded-2xl overflow-hidden shadow-sm mb-5 bg-black relative border border-gray-100">
-          <iframe
-            src={review.videoUrl 
-              ? review.videoUrl.replace('watch?v=', 'embed/') 
-              : "https://player.vimeo.com/video/414764881?autoplay=0&title=0&byline=0&portrait=0"}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Video Review"
-          />
+          {isDirectVideo ? (
+            <video
+              src={review.videoUrl}
+              controls
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <iframe
+              src={review.videoUrl 
+                ? review.videoUrl.replace('watch?v=', 'embed/') 
+                : "https://player.vimeo.com/video/414764881?autoplay=0&title=0&byline=0&portrait=0"}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Video Review"
+            />
+          )}
         </div>
       ) : (
         <div className="w-full h-[200px] bg-white border border-gray-200 rounded-2xl p-8 shadow-md mb-5 flex items-center justify-center text-left overflow-hidden hover:shadow-lg transition-shadow">
-          <div className="overflow-y-auto w-full no-scrollbar">
+          <div className="overflow-y-auto max-h-[136px] w-full custom-scrollbar">
             <p className="text-gray-900 italic text-[16px] font-semibold leading-[1.7]">
               {review.content}
             </p>

@@ -4,16 +4,18 @@ export async function POST(request: Request) {
   try {
     const { amount, customerId } = await request.json();
     const baseUrl = process.env.ASTROVED_PAYMENT_API_URL || 'https://qawebservice.astroved.com/api/UserAccount/ProceedviaRazorPay';
-    const url = `${baseUrl}?totalAmount=${amount}&customerId=${customerId}`;
-    
     const token = process.env.ASTROVED_AUTH_API_TOKEN?.trim() || process.env.ASTROVED_API_TOKEN?.trim();
 
-    const response = await fetch(url, {
-      method: "GET",
+    const response = await fetch(baseUrl, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
-      }
+      },
+      body: JSON.stringify({
+        totalAmount: amount,
+        customerId: customerId
+      })
     });
 
     const text = await response.text();

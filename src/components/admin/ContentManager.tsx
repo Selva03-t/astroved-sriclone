@@ -490,7 +490,7 @@ export default function ContentManager({
               {submitting ? "Saving..." : editingId ? "Update Item" : "Save Item"}
             </button>
           )}
-          {!reviewMode && (!hideAddButton || isAdding) && (
+          {(!hideAddButton || isAdding) && (
             <button
               onClick={handleOpenAdd}
               className={`flex items-center rounded-md px-4 py-2 text-sm font-medium text-white ${
@@ -865,7 +865,10 @@ export default function ContentManager({
                             >
                               {item.approved ? "Unapprove" : "Approve"}
                             </button>
-                            <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900" aria-label="Delete">
+                            <button onClick={() => handleEdit(item)} className="text-[#000000] hover:text-[#4647c4]" aria-label="Edit review" title="Edit review">
+                              <PencilSquareIcon className="h-5 w-5" />
+                            </button>
+                            <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900" aria-label="Delete" title="Delete review">
                               <TrashIcon className="h-5 w-5" />
                             </button>
                           </>
