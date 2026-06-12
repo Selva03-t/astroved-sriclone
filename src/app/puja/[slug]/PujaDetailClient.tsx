@@ -9,7 +9,7 @@ import {
   ArrowLeftIcon,
   BuildingLibraryIcon,
   CheckBadgeIcon,
-  CheckIcon,  
+  CheckIcon,
   FireIcon,
   GiftIcon,
   HeartIcon,
@@ -132,7 +132,7 @@ const defaultCountdown: Countdown = {
 
 const parseEventDate = (value?: string) => {
   if (!value) return null;
-  
+
   // Try DD-MM-YYYY format
   const ddmmyyyy = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(value.trim());
   if (ddmmyyyy) {
@@ -168,7 +168,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const slugParam = params?.slug;
   const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam;
   const { currency, currencySymbol } = useCurrency();
-  
+
   const getDisplayPrice = (item: any) => {
     return item[`price${currency}`] ?? item.price ?? 0;
   };
@@ -215,7 +215,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
   const toggleExtra = (id: string) => {
     setReviewCartError("");
-    setSelectedExtraIds(prev => 
+    setSelectedExtraIds(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
@@ -367,7 +367,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
     fetch("/api/reviews")
       .then(res => res.json())
       .then(data => { if (Array.isArray(data)) setDbReviews(data); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -410,352 +410,351 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   if (showReviewModal && puja) {
     return (
       <div className="min-h-screen bg-[#f8f9fa] pb-32">
-         {/* Hide site footer & AI chat while in review booking mode */}
-         <style>{`footer, [data-global-chrome="assistant"] { display: none !important; }`}</style>
-         <Navbar />
-         {/* Review Breadcrumbs */}
-         <div className="bg-white border-b border-gray-100 py-3 px-4 sticky top-[64px] z-20">
-             <div className="mx-auto max-w-7xl flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f] overflow-x-auto no-scrollbar">
-                   <div className="flex items-center gap-1.5 shrink-0">
-                     <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
-                       <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                     </div>
-                     Add Details
-                   </div>
-                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                   <div className="flex items-center gap-1.5 shrink-0">
-                     <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
-                       <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                     </div>
-                     Review Booking
-                   </div>
-                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                   <div className="flex items-center gap-1.5 shrink-0 opacity-40">
-                     <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">3</div>
-                     Fill Name, Gotra &amp; Address
-                   </div>
-                   <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                   <div className="flex items-center gap-1.5 shrink-0 opacity-40">
-                     <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">4</div>
-                     Make Payment
-                   </div>
+        {/* Hide site footer & AI chat while in review booking mode */}
+        <style>{`footer, [data-global-chrome="assistant"] { display: none !important; }`}</style>
+        <Navbar />
+        {/* Review Breadcrumbs */}
+        <div className="bg-white border-b border-gray-100 py-3 px-4 sticky top-[64px] z-20">
+          <div className="mx-auto max-w-7xl flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f] overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                  <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500 shrink-0 ml-3">
-                   <XMarkIcon className="h-6 w-6" />
-                </button>
-             </div>
-         </div>
-
-         <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Left Column: Selected Items */}
-            <div className="lg:col-span-2 space-y-6">
-               <button
-                 onClick={() => {
-                    setShowReviewModal(false);
-                    setShowDetailsModal(true);
-                 }}
-                 className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#1f1f1f] transition-colors mb-6"
-               >
-                  <ArrowLeftIcon className="h-4 w-4" /> Review Booking
-               </button>
-
-               <div className="space-y-4">
-                  {/* Primary Package */}
-                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
-                     <div className="flex justify-between items-start mb-4">
-                        <div className="flex-1 min-w-0 mr-3">
-                           <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
-                           <div className="flex items-center gap-3">
-                              <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                                 <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
-                              </div>
-                              {selectedPackage && (
-                                 <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                                    <span className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</span>
-                                 </div>
-                              )}
-                           </div>
-                        </div>
-                        <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
-                           Primary Package
-                        </div>
-                     </div>
-
-
-                     <div className="flex flex-wrap items-center gap-6">
-                        <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
-                           <i className="fa-brands fa-whatsapp text-[#1f1f1f] text-lg"></i>
-                           <span>+91 {userDetails.whatsapp}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
-                           <i className="fa-solid fa-user text-gray-400"></i>
-                           <span>{userDetails.name}</span>
-                        </div>
-                     </div>
-                  </div>
-
-                  {/* Extra Selected Offerings */}
-                  {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
-                     <div key={extra.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex justify-between items-center group">
-                        <div className="flex items-center gap-4">
-                           <div className="h-12 w-12 bg-gray-50 rounded-xl overflow-hidden">
-                              <img src={extra.imageUrl} alt={extra.name} className="w-full h-full object-cover" />
-                           </div>
-                           <div>
-                              <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
-                              <p className="text-[#1f1f1f] font-bold text-sm">{currencySymbol} {getDisplayPrice(extra)}</p>
-                           </div>
-                        </div>
-                        <button
-                          onClick={() => toggleExtra(extra.id)}
-                          className="text-red-500 hover:bg-red-50 h-8 w-8 rounded-full flex items-center justify-center transition-all"
-                        >
-                           <XMarkIcon className="h-5 w-5" />
-                        </button>
-                     </div>
-                  ))}
-
-                  {/* Coupon Code Section */}
-                  <div className="bg-violet-50/50 rounded-2xl border border-violet-100/50 overflow-hidden">
-                     <button
-                        onClick={() => {
-                           if (couponStatus === "applied") { handleRemoveCoupon(); return; }
-                           setShowCouponInput(v => !v);
-                           setCouponStatus("idle");
-                        }}
-                        className="w-full flex justify-between items-center p-5 hover:bg-violet-50 transition-colors"
-                     >
-                        <div className="flex items-center gap-3">
-                           <TagIcon className="h-5 w-5 text-[#6869F9]" />
-                           <div className="text-left">
-                              <span className="font-bold text-sm text-[#1f1f1f] block">Apply Coupon Code</span>
-                              {couponStatus === "applied" && (
-                                 <span className="text-[11px] font-bold text-green-600">✓ &quot;{couponCode}&quot; applied — you save {currencySymbol}{couponDiscount}!</span>
-                              )}
-                           </div>
-                        </div>
-                        {couponStatus === "applied" ? (
-                           <span className="text-[11px] font-bold text-red-500 hover:underline">Remove</span>
-                        ) : (
-                           <i className={`fa-solid fa-chevron-${showCouponInput ? 'up' : 'down'} text-gray-400 text-xs transition-transform`}></i>
-                        )}
-                     </button>
-                     {showCouponInput && couponStatus !== "applied" && (
-                        <div className="px-5 pb-5 space-y-3 border-t border-violet-100">
-                           <div className="flex gap-2 mt-4">
-                              <div className="relative flex-1">
-                                 <input
-                                    type="text"
-                                    value={couponInput}
-                                    onChange={(e) => {
-                                       setCouponInput(e.target.value.toUpperCase());
-                                       if (couponStatus !== "idle") setCouponStatus("idle");
-                                    }}
-                                    onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
-                                    placeholder="Enter coupon code"
-                                    className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${
-                                       couponStatus === "invalid"
-                                          ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
-                                          : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
-                                    }`}
-                                 />
-                                 {couponInput && (
-                                    <button
-                                       onClick={() => { setCouponInput(""); setCouponStatus("idle"); }}
-                                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                    >
-                                       <i className="fa-solid fa-circle-xmark text-sm"></i>
-                                    </button>
-                                 )}
-                              </div>
-                              <button
-                                 onClick={handleApplyCoupon}
-                                 disabled={!couponInput.trim()}
-                                 className="px-5 py-3 bg-[#6869F9] text-white text-sm font-bold rounded-xl hover:bg-[#5657e8] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
-                              >
-                                 Apply
-                              </button>
-                           </div>
-                           {couponStatus === "invalid" && (
-                              <p className="text-[11px] font-bold text-red-500 flex items-center gap-1">
-                                 <i className="fa-solid fa-circle-exclamation"></i> Invalid coupon code. Please try again.
-                              </p>
-                           )}
-                           <p className="text-[10px] text-gray-400 font-medium">Try: ASTRO10 (10% off) or SAVE50 (₹50 off)</p>
-                        </div>
-                     )}
-                  </div>
-
-                  <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                     <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
-                     <div className="space-y-4 text-sm font-medium text-gray-500">
-                        <div className="flex justify-between">
-                           <span>{selectedPackage?.name}</span>
-                           <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}.0</span>
-                        </div>
-                        {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
-                           <div key={extra.id} className="flex justify-between">
-                              <span>{extra.name}</span>
-                              <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
-                           </div>
-                        ))}
-                        {couponStatus === "applied" && couponDiscount > 0 && (
-                           <div className="flex justify-between text-green-600 font-bold">
-                              <span className="flex items-center gap-1"><TagIcon className="h-3.5 w-3.5" /> Coupon ({couponCode})</span>
-                              <span>− {currencySymbol} {couponDiscount}.0</span>
-                           </div>
-                        )}
-                        <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
-                           <span>Total Amount</span>
-                           <span className="text-[#1f1f1f]">{currencySymbol} {totalAmount}.0</span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            {/* Right Column: Upsell */}
-            <div>
-               <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
-                  <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
-                  Add more Divine offerings
-               </h3>
-               <div className="space-y-4">
-                  {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                     <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
-                          {extra.badge && (
-                             <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
-                                <i className="fa-solid fa-box"></i> {extra.badge}
-                             </div>
-                          )}
-                          <div className="flex-1 min-w-0 pt-0.5">
-                             <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
-                             {extra.description && (
-                                <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
-                             )}
-                             <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
-                          </div>
-                          <div className="flex flex-col items-center gap-2.5 shrink-0">
-                             <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
-                                <img src={extra.imageUrl} className="w-full h-full object-cover" />
-                             </div>
-                             <button
-                               onClick={() => toggleExtra(extra.id)}
-                               className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
-                             >
-                                + Add
-                             </button>
-                          </div>
-                       </div>
-                  ))}
-               </div>
-
-               <div 
-                 className={`mt-8 rounded-2xl p-6 border transition-all cursor-pointer ${agreedToTerms ? 'bg-[#f0faf5] border-[#1a7c5c]' : 'bg-white border-gray-200 hover:border-[#1a7c5c]/40'}`}
-                 onClick={() => setAgreedToTerms(!agreedToTerms)}
-               >
-                  <div className="flex items-start gap-4">
-                     <div className="mt-0.5 relative flex items-center justify-center h-5 w-5 shrink-0">
-                       <input 
-                         type="radio" 
-                         checked={agreedToTerms} 
-                         readOnly 
-                         className="peer appearance-none h-5 w-5 rounded-full border-2 border-gray-300 checked:border-[#1a7c5c] cursor-pointer transition-all"
-                       />
-                       {agreedToTerms && <div className="absolute h-2.5 w-2.5 rounded-full bg-[#1a7c5c]"></div>}
-                     </div>
-                     <p className={`text-[12px] font-medium leading-relaxed transition-colors ${agreedToTerms ? 'text-[#1a7c5c]' : 'text-gray-600'}`}>
-                        I agree to the Terms of Service. My Puja will be conducted with full vedic rites as per the selected package and offerings.
-                     </p>
-                  </div>
-               </div>
-            </div>
-         </div>
-
-         {/* Floating Bottom Bar */}
-         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-            {reviewCartError && (
-               <div className="mx-auto max-w-7xl mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
-                  {reviewCartError}
-               </div>
-            )}
-            <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
-               <div className="flex items-center gap-4 text-sm font-bold pl-4">
-                  <span>{1 + selectedExtraIds.length} Sevas selected</span>
-                  <span className="opacity-50">•</span>
-                  <span className="text-lg">{currencySymbol} {totalAmount}</span>
+                Add Details
+              </div>
+              <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                  <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
+                Review Booking
+              </div>
+              <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <div className="flex items-center gap-1.5 shrink-0 opacity-40">
+                <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">3</div>
+                Fill Name, Gotra &amp; Address
+              </div>
+              <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <div className="flex items-center gap-1.5 shrink-0 opacity-40">
+                <div className="h-5 w-5 rounded-full bg-gray-300 text-white flex items-center justify-center text-[8px] shrink-0">4</div>
+                Make Payment
+              </div>
+            </div>
+            <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500 shrink-0 ml-3">
+              <XMarkIcon className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Left Column: Selected Items */}
+          <div className="lg:col-span-2 space-y-6">
+            <button
+              onClick={() => {
+                setShowReviewModal(false);
+                setShowDetailsModal(true);
+              }}
+              className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#1f1f1f] transition-colors mb-6"
+            >
+              <ArrowLeftIcon className="h-4 w-4" /> Review Booking
+            </button>
+
+            <div className="space-y-4">
+              {/* Primary Package */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1 min-w-0 mr-3">
+                    <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
+                    <div className="flex items-center gap-3">
+                      <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
+                        <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
+                      </div>
+                      {selectedPackage && (
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 flex items-center justify-center">
+                          <span className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
+                    Primary Package
+                  </div>
+                </div>
+
+
+                <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
+                    <i className="fa-brands fa-whatsapp text-[#1f1f1f] text-lg"></i>
+                    <span>+91 {userDetails.whatsapp}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-500 text-[11px] font-bold">
+                    <i className="fa-solid fa-user text-gray-400"></i>
+                    <span>{userDetails.name}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Extra Selected Offerings */}
+              {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
+                <div key={extra.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex justify-between items-center group">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 bg-gray-50 rounded-xl overflow-hidden">
+                      <img src={extra.imageUrl} alt={extra.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#1f1f1f]">{extra.name}</h4>
+                      <p className="text-[#1f1f1f] font-bold text-sm">{currencySymbol} {getDisplayPrice(extra)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => toggleExtra(extra.id)}
+                    className="text-red-500 hover:bg-red-50 h-8 w-8 rounded-full flex items-center justify-center transition-all"
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
+
+              {/* Coupon Code Section */}
+              <div className="bg-violet-50/50 rounded-2xl border border-violet-100/50 overflow-hidden">
                 <button
-                  onClick={async () => {
-                     setReviewLoading(true);
-                     setReviewCartError("");
-                     try {
-                        const res = await fetch('/api/auth/me');
-                        const authData = await res.json();
-                        
-                        let customerId = 1145090; // Default fallback
-                        if (authData.authenticated && authData.user?.customerId) {
-                           customerId = Number(authData.user.customerId) || 1145090;
-                        }
-
-                        let localCartId = shoppingCartId || "";
-
-                        // Add selected offerings to cart
-                        const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
-                        if (selectedOfferings.length > 0) {
-                           for (const offering of selectedOfferings) {
-                              const offProductId = offering.productId || 36;
-                              const cartRes = await fetch('/api/cart/add', {
-                                 method: 'POST',
-                                 headers: { 'Content-Type': 'application/json' },
-                                 body: JSON.stringify({
-                                    customerId,
-                                    productId: offProductId,
-                                    quantity: 1,
-                                    shopName: "AstroVed",
-                                    variationId: 0,
-                                    currencyCode: "INR",
-                                    localeCode: "en-US",
-                                    freeProductContributionAmount: 0,
-                                    productSubVariationExternalId: ""
-                                 })
-                              });
-                              
-                              const cartData = await cartRes.json();
-                              if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
-                                 throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
-                              }
-                              if (cartData.SelectedListId) {
-                                 localCartId = String(cartData.SelectedListId);
-                              }
-                           }
-                        }
-
-                        if (localCartId) {
-                           setShoppingCartId(localCartId);
-                        }
-
-                        const extras = selectedExtraIds.join(',');
-                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
-                        if (!authData.authenticated) {
-                           window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(sankalpUrl)}`;
-                           return;
-                        }
-                        window.location.href = sankalpUrl;
-                     } catch (err: any) {
-                        setReviewCartError(err.message || "Connection error. Please try again.");
-                     } finally {
-                        setReviewLoading(false);
-                     }
+                  onClick={() => {
+                    if (couponStatus === "applied") { handleRemoveCoupon(); return; }
+                    setShowCouponInput(v => !v);
+                    setCouponStatus("idle");
                   }}
-                  disabled={reviewLoading || !agreedToTerms}
-                  className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex justify-between items-center p-5 hover:bg-violet-50 transition-colors"
                 >
-                   {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
+                  <div className="flex items-center gap-3">
+                    <TagIcon className="h-5 w-5 text-[#6869F9]" />
+                    <div className="text-left">
+                      <span className="font-bold text-sm text-[#1f1f1f] block">Apply Coupon Code</span>
+                      {couponStatus === "applied" && (
+                        <span className="text-[11px] font-bold text-green-600">✓ &quot;{couponCode}&quot; applied — you save {currencySymbol}{couponDiscount}!</span>
+                      )}
+                    </div>
+                  </div>
+                  {couponStatus === "applied" ? (
+                    <span className="text-[11px] font-bold text-red-500 hover:underline">Remove</span>
+                  ) : (
+                    <i className={`fa-solid fa-chevron-${showCouponInput ? 'up' : 'down'} text-gray-400 text-xs transition-transform`}></i>
+                  )}
                 </button>
+                {showCouponInput && couponStatus !== "applied" && (
+                  <div className="px-5 pb-5 space-y-3 border-t border-violet-100">
+                    <div className="flex gap-2 mt-4">
+                      <div className="relative flex-1">
+                        <input
+                          type="text"
+                          value={couponInput}
+                          onChange={(e) => {
+                            setCouponInput(e.target.value.toUpperCase());
+                            if (couponStatus !== "idle") setCouponStatus("idle");
+                          }}
+                          onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
+                          placeholder="Enter coupon code"
+                          className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${couponStatus === "invalid"
+                              ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
+                              : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
+                            }`}
+                        />
+                        {couponInput && (
+                          <button
+                            onClick={() => { setCouponInput(""); setCouponStatus("idle"); }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            <i className="fa-solid fa-circle-xmark text-sm"></i>
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={handleApplyCoupon}
+                        disabled={!couponInput.trim()}
+                        className="px-5 py-3 bg-[#6869F9] text-white text-sm font-bold rounded-xl hover:bg-[#5657e8] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    {couponStatus === "invalid" && (
+                      <p className="text-[11px] font-bold text-red-500 flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation"></i> Invalid coupon code. Please try again.
+                      </p>
+                    )}
+                    <p className="text-[10px] text-gray-400 font-medium">Try: ASTRO10 (10% off) or SAVE50 (₹50 off)</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
+                <div className="space-y-4 text-sm font-medium text-gray-500">
+                  <div className="flex justify-between">
+                    <span>{selectedPackage?.name}</span>
+                    <span className="text-gray-900">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}.0</span>
+                  </div>
+                  {(puja?.offerings || []).filter(o => selectedExtraIds.includes(o.id)).map(extra => (
+                    <div key={extra.id} className="flex justify-between">
+                      <span>{extra.name}</span>
+                      <span className="text-gray-900">{currencySymbol} {getDisplayPrice(extra)}.0</span>
+                    </div>
+                  ))}
+                  {couponStatus === "applied" && couponDiscount > 0 && (
+                    <div className="flex justify-between text-green-600 font-bold">
+                      <span className="flex items-center gap-1"><TagIcon className="h-3.5 w-3.5" /> Coupon ({couponCode})</span>
+                      <span>− {currencySymbol} {couponDiscount}.0</span>
+                    </div>
+                  )}
+                  <div className="pt-6 mt-2 border-t border-gray-100 flex justify-between text-xl font-black text-[#1f1f1f]">
+                    <span>Total Amount</span>
+                    <span className="text-[#1f1f1f]">{currencySymbol} {totalAmount}.0</span>
+                  </div>
+                </div>
+              </div>
             </div>
-         </div>
+          </div>
+
+          {/* Right Column: Upsell */}
+          <div>
+            <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
+              <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
+              Add more Divine offerings
+            </h3>
+            <div className="space-y-4">
+              {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
+                <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
+                  {extra.badge && (
+                    <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
+                      <i className="fa-solid fa-box"></i> {extra.badge}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
+                    {extra.description && (
+                      <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
+                    )}
+                    <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
+                  </div>
+                  <div className="flex flex-col items-center gap-2.5 shrink-0">
+                    <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
+                      <img src={extra.imageUrl} className="w-full h-full object-cover" />
+                    </div>
+                    <button
+                      onClick={() => toggleExtra(extra.id)}
+                      className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
+                    >
+                      + Add
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div
+              className={`mt-8 rounded-2xl p-6 border transition-all cursor-pointer ${agreedToTerms ? 'bg-[#f0faf5] border-[#1a7c5c]' : 'bg-white border-gray-200 hover:border-[#1a7c5c]/40'}`}
+              onClick={() => setAgreedToTerms(!agreedToTerms)}
+            >
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5 relative flex items-center justify-center h-5 w-5 shrink-0">
+                  <input
+                    type="radio"
+                    checked={agreedToTerms}
+                    readOnly
+                    className="peer appearance-none h-5 w-5 rounded-full border-2 border-gray-300 checked:border-[#1a7c5c] cursor-pointer transition-all"
+                  />
+                  {agreedToTerms && <div className="absolute h-2.5 w-2.5 rounded-full bg-[#1a7c5c]"></div>}
+                </div>
+                <p className={`text-[12px] font-medium leading-relaxed transition-colors ${agreedToTerms ? 'text-[#1a7c5c]' : 'text-gray-600'}`}>
+                  I agree to the Terms of Service. My Puja will be conducted with full vedic rites as per the selected package and offerings.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Bottom Bar */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
+          {reviewCartError && (
+            <div className="mx-auto max-w-7xl mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
+              {reviewCartError}
+            </div>
+          )}
+          <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
+            <div className="flex items-center gap-4 text-sm font-bold pl-4">
+              <span>{1 + selectedExtraIds.length} Sevas selected</span>
+              <span className="opacity-50">•</span>
+              <span className="text-lg">{currencySymbol} {totalAmount}</span>
+            </div>
+            <button
+              onClick={async () => {
+                setReviewLoading(true);
+                setReviewCartError("");
+                try {
+                  const res = await fetch('/api/auth/me');
+                  const authData = await res.json();
+
+                  let customerId = 1145090; // Default fallback
+                  if (authData.authenticated && authData.user?.customerId) {
+                    customerId = Number(authData.user.customerId) || 1145090;
+                  }
+
+                  let localCartId = shoppingCartId || "";
+
+                  // Add selected offerings to cart
+                  const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
+                  if (selectedOfferings.length > 0) {
+                    for (const offering of selectedOfferings) {
+                      const offProductId = offering.productId || 36;
+                      const cartRes = await fetch('/api/cart/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          customerId,
+                          productId: offProductId,
+                          quantity: 1,
+                          shopName: "AstroVed",
+                          variationId: 0,
+                          currencyCode: "INR",
+                          localeCode: "en-US",
+                          freeProductContributionAmount: 0,
+                          productSubVariationExternalId: ""
+                        })
+                      });
+
+                      const cartData = await cartRes.json();
+                      if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
+                        throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
+                      }
+                      if (cartData.SelectedListId) {
+                        localCartId = String(cartData.SelectedListId);
+                      }
+                    }
+                  }
+
+                  if (localCartId) {
+                    setShoppingCartId(localCartId);
+                  }
+
+                  const extras = selectedExtraIds.join(',');
+                  const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
+                  if (!authData.authenticated) {
+                    window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(sankalpUrl)}`;
+                    return;
+                  }
+                  window.location.href = sankalpUrl;
+                } catch (err: any) {
+                  setReviewCartError(err.message || "Connection error. Please try again.");
+                } finally {
+                  setReviewLoading(false);
+                }
+              }}
+              disabled={reviewLoading || !agreedToTerms}
+              className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -790,9 +789,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-6">
               <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image Carousel */}
-                <div className="relative overflow-hidden rounded-2xl group cursor-pointer" onClick={() => setShowGallery(true)}>
-                  <img src={images[currentImageIndex]} alt={puja.title} className="w-full object-contain bg-[#f8f7ff] h-[350px] md:h-[450px] transition-opacity duration-300" />
-                  
+                <div className="relative overflow-hidden rounded-2xl group cursor-pointer w-fit mx-auto" onClick={() => setShowGallery(true)}>
+                  <img src={images[currentImageIndex]} alt={puja.title} className="h-[350px] md:h-[450px] w-auto object-contain transition-opacity duration-300" />
+
                   {/* Top Left Badge */}
                   {puja.badge && (
                     <div className="absolute left-4 top-4">
@@ -826,7 +825,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       {/* Swipe Button */}
                       <div className="absolute left-4 bottom-4" onClick={(e) => e.stopPropagation()}>
                         <button onClick={handleNextImage} className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-black/60">
-                          SWIPE 
+                          SWIPE
                           <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
                           </svg>
@@ -837,7 +836,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   {images.length <= 1 && (
                     <div className="absolute left-4 bottom-4" onClick={(e) => e.stopPropagation()}>
                       <button className="flex items-center gap-2 rounded-full border border-white/40 bg-black/40 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm">
-                        SWIPE 
+                        SWIPE
                         <svg className="h-4 w-4 rounded-full bg-white text-black p-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
                         </svg>
@@ -851,22 +850,22 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-2">
                     {puja.subtitle || "SPECIAL PUJA & YAGYA"}
                   </p>
-                  
+
                   <h1 className="text-[22px] md:text-[26px] font-bold leading-snug text-[#1f1f1f] mb-3">
                     {puja.title}
                   </h1>
-                  
+
                   <p className="text-[15px] font-medium text-gray-600 mb-5 leading-relaxed">
                     {puja.description || "Join us for this sacred ritual to seek divine blessings."}
                   </p>
 
                   <div className="flex flex-col gap-2.5 mb-5">
                     <div className="flex items-start gap-2.5 text-[13px] text-gray-500 font-medium">
-                      <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                       <span className="leading-tight">{puja.location || puja.details?.templeLocation || "Sacred Temple, India"}</span>
                     </div>
                     <div className="flex items-start gap-2.5 text-[13px] text-gray-500 font-medium">
-                      <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                       <span className="leading-tight">{puja.date || "Upcoming Auspicious Date"}</span>
                     </div>
                   </div>
@@ -878,13 +877,13 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       <div className="flex items-baseline gap-2">
                         <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.days)}</span>
                         <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Day</span>
-                        
+
                         <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.hours)}</span>
                         <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Hours</span>
-                        
+
                         <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.minutes)}</span>
                         <span className="text-[11px] font-medium text-[#6869F9] uppercase mr-2">Mins</span>
-                        
+
                         <span className="text-[22px] font-bold text-[#6869F9]">{String(countdown.seconds)}</span>
                         <span className="text-[11px] font-medium text-[#6869F9] uppercase">Secs</span>
                       </div>
@@ -909,7 +908,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       <StarIcon className="h-4 w-4 text-amber-400" /> 4.9 (7K+ ratings)
                     </div>
                   </div>
-                  
+
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
                     Till now <span className="font-bold text-[#6869F9]">3,00,000+ Devotees</span> have participated in Pujas conducted by AstroVed Puja Seva.
                   </p>
@@ -957,11 +956,10 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           window.scrollTo({ top, behavior: 'smooth' });
                         }
                       }}
-                      className={`relative shrink-0 py-4 text-[15px] font-semibold whitespace-nowrap transition-colors ${
-                        activeTab === tab.id
+                      className={`relative shrink-0 py-4 text-[15px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
                           ? 'text-[#1f1f1f]'
                           : 'text-gray-500 hover:text-[#1f1f1f]'
-                      }`}
+                        }`}
                     >
                       {tab.label}
                       {activeTab === tab.id && (
@@ -984,7 +982,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       </h2>
                       <div className="mt-6 space-y-6 text-[16px] leading-[1.9] text-gray-700">
                         <p>{puja.details.about || "In Sanatan Dharma, this puja is highly powerful for pacifying negative energies."}</p>
-                        
+
                         <div className="space-y-2">
                           <p className="font-bold text-gray-900 text-[17px] flex items-center gap-2"><BuildingLibraryIcon className="h-5 w-5 text-[#a78bfa]" /> Significance of Temple</p>
                           <p>Located in this sacred land, it is considered highly powerful and spiritually significant for worship.</p>
@@ -1093,9 +1091,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 key={`pkg-${pkg.id}-${idx}`}
                                 type="button"
                                 onClick={() => setSelectedPackageId(pkg.id)}
-                                className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${
-                                  isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
-                                }`}
+                                className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
+                                  }`}
                               >
                                 {isRecommended && (
                                   <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white rounded-t-xl">RECOMMENDED</div>
@@ -1109,9 +1106,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                       </svg>
                                       {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
                                     </span>
-                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
-                                      isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
-                                    }`}>
+                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
+                                      }`}>
                                       {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
                                     </div>
                                   </div>
@@ -1257,7 +1253,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                   {/* Stars */}
                                   {review.rating && (
                                     <div className="mt-3 flex items-center gap-0.5">
-                                      {[1,2,3,4,5].map(star => (
+                                      {[1, 2, 3, 4, 5].map(star => (
                                         <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#6869F9]" : "text-gray-200"}`} fill="currentColor">
                                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
@@ -1352,279 +1348,276 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
       {/* Package Selection Modal */}
       {showPackageModal && puja && (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-           <div className="relative flex h-full max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
-              {/* Header */}
-              <div className="flex items-center justify-between border-b border-gray-100 p-6">
-                 <h2 className="text-xl font-bold text-[#1f1f1f]">All Puja Packages includes</h2>
-                 <button onClick={() => setShowPackageModal(false)} className="rounded-full p-2 hover:bg-gray-100">
-                    <XMarkIcon className="h-6 w-6 text-gray-500" />
-                 </button>
+          <div className="relative flex h-full max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-gray-100 p-6">
+              <h2 className="text-xl font-bold text-[#1f1f1f]">All Puja Packages includes</h2>
+              <button onClick={() => setShowPackageModal(false)} className="rounded-full p-2 hover:bg-gray-100">
+                <XMarkIcon className="h-6 w-6 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {/* Inclusions List */}
+              <div className="space-y-4">
+                {[
+                  "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
+                  "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
+                  "A complete video of the puja and offerings will be shared on your WhatsApp.",
+                  "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-[#1f1f1f]" />
+                    <p className="text-[14px] leading-relaxed text-[#4b5563]">{item}</p>
+                  </div>
+                ))}
               </div>
 
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto p-6">
-                 {/* Inclusions List */}
-                 <div className="space-y-4">
-                    {[
-                       "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
-                       "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
-                       "A complete video of the puja and offerings will be shared on your WhatsApp.",
-                       "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
-                    ].map((item, idx) => (
-                       <div key={idx} className="flex items-start gap-4">
-                          <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-[#1f1f1f]" />
-                          <p className="text-[14px] leading-relaxed text-[#4b5563]">{item}</p>
-                       </div>
-                    ))}
-                 </div>
-
-                 {/* Additional Offerings Note */}
-                 <div className="mt-8 flex items-center gap-4 rounded-2xl bg-[#f0f9f4] p-4 text-[#0e8356]">
-                    <div className="h-10 w-10 shrink-0 bg-[#6869F9]/10 rounded-lg flex items-center justify-center">
-                       <i className="fa-solid fa-hand-holding-dollar text-lg"></i>
-                    </div>
-                    <p className="text-[13px] font-medium leading-relaxed">
-                       Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.
-                    </p>
-                 </div>
-
-                 {/* Package Selection Grid */}
-                 <div className="mt-10">
-                    <h3 className="text-lg font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                       {puja.packages.map((pkg, idx) => (
-                          <button
-                            key={pkg.id}
-                            onClick={() => setSelectedPackageId(pkg.id)}
-                            className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all text-left ${
-                              selectedPackageId === pkg.id 
-                                ? "border-[#6869F9] bg-[#6869F9]/5 shadow-lg" 
-                                : "border-gray-100 hover:border-gray-200"
-                            }`}
-                          >
-                             {idx === 2 && (
-                                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#516300] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                    Recommended
-                                 </div>
-                             )}
-                             
-                             <div className="mb-4 flex items-center justify-between">
-                                 <div className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold uppercase ${
-                                    idx === 0 ? "bg-violet-50 text-violet-600" : 
-                                    idx === 1 ? "bg-pink-50 text-pink-600" :
-                                    idx === 2 ? "bg-violet-50 text-violet-600" : "bg-yellow-50 text-yellow-600"
-                                 }`}>
-                                    <i className="fa-solid fa-user text-[10px]"></i>
-                                    {idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person"}
-                                 </div>
-                                 <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                    selectedPackageId === pkg.id ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"
-                                 }`}>
-                                    {selectedPackageId === pkg.id && <CheckIcon className="h-4 w-4 text-white" />}
-                                 </div>
-                             </div>
-
-                             <h4 className="text-base font-bold text-[#1f1f1f] mb-2">{pkg.name}</h4>
-                             <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">{pkg.description}</p>
-                             
-                             <div className="mt-auto pt-3 border-t border-gray-50 flex flex-wrap items-center gap-2">
-                                <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-1 flex items-center justify-center">
-                                   <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
-                                </div>
-                                <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-1 flex items-center justify-center">
-                                   <span className="text-xs font-bold text-gray-400 line-through">{currencySymbol} {Math.round(getDisplayPrice(pkg) * 1.2)}</span>
-                                </div>
-                             </div>
-                          </button>
-                       ))}
-                    </div>
-                 </div>
-
-                 {/* Trust Bar */}
-                 <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-t border-gray-50 pt-8 pb-4">
-                    {[
-                       { icon: "fa-shield-halved", label: "Hidden Cost" },
-                       { icon: "fa-certificate", label: "ISO 27001 Certified Company" },
-                       { icon: "fa-place-of-worship", label: "Official Temple Partner" },
-                       { icon: "fa-headset", label: "Customer Support" }
-                    ].map((trust) => (
-                       <div key={trust.label} className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
-                          <i className={`fa-solid ${trust.icon} text-gray-600 text-sm`}></i>
-                          <span className="text-[11px] font-bold text-gray-500 uppercase tracking-tighter whitespace-nowrap">{trust.label}</span>
-                       </div>
-                    ))}
-                 </div>
+              {/* Additional Offerings Note */}
+              <div className="mt-8 flex items-center gap-4 rounded-2xl bg-[#f0f9f4] p-4 text-[#0e8356]">
+                <div className="h-10 w-10 shrink-0 bg-[#6869F9]/10 rounded-lg flex items-center justify-center">
+                  <i className="fa-solid fa-hand-holding-dollar text-lg"></i>
+                </div>
+                <p className="text-[13px] font-medium leading-relaxed">
+                  Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.
+                </p>
               </div>
 
-              <div className="border-t border-gray-100 p-6 bg-white">
-                 <button 
-                   onClick={() => {
-                      if (selectedPackageId) {
-                         setShowPackageModal(false);
-                         setShowDetailsModal(true);
-                      }
-                   }}
-                   className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
-                 >
-                    <div className="text-left">
-                       <div className="flex items-center gap-3">
-                           <p className="text-lg font-black">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</p>
-                           {selectedPackage && (
-                              <div className="border-l border-white/20 pl-3">
-                                 <p className="text-sm font-bold line-through opacity-60">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</p>
-                              </div>
-                           )}
+              {/* Package Selection Grid */}
+              <div className="mt-10">
+                <h3 className="text-lg font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {puja.packages.map((pkg, idx) => (
+                    <button
+                      key={pkg.id}
+                      onClick={() => setSelectedPackageId(pkg.id)}
+                      className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all text-left ${selectedPackageId === pkg.id
+                          ? "border-[#6869F9] bg-[#6869F9]/5 shadow-lg"
+                          : "border-gray-100 hover:border-gray-200"
+                        }`}
+                    >
+                      {idx === 2 && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#516300] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                          Recommended
                         </div>
-                       <p className="text-[10px] font-medium uppercase opacity-80">{selectedPackage?.name}</p>
-                    </div>
-                    <div className="flex items-center gap-4 font-bold uppercase tracking-widest text-sm">
-                       Proceed <i className="fa-solid fa-arrow-right"></i>
-                    </div>
-                 </button>
+                      )}
+
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold uppercase ${idx === 0 ? "bg-violet-50 text-violet-600" :
+                            idx === 1 ? "bg-pink-50 text-pink-600" :
+                              idx === 2 ? "bg-violet-50 text-violet-600" : "bg-yellow-50 text-yellow-600"
+                          }`}>
+                          <i className="fa-solid fa-user text-[10px]"></i>
+                          {idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person"}
+                        </div>
+                        <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPackageId === pkg.id ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"
+                          }`}>
+                          {selectedPackageId === pkg.id && <CheckIcon className="h-4 w-4 text-white" />}
+                        </div>
+                      </div>
+
+                      <h4 className="text-base font-bold text-[#1f1f1f] mb-2">{pkg.name}</h4>
+                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">{pkg.description}</p>
+
+                      <div className="mt-auto pt-3 border-t border-gray-50 flex flex-wrap items-center gap-2">
+                        <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-1 flex items-center justify-center">
+                          <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-1 flex items-center justify-center">
+                          <span className="text-xs font-bold text-gray-400 line-through">{currencySymbol} {Math.round(getDisplayPrice(pkg) * 1.2)}</span>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-           </div>
+
+              {/* Trust Bar */}
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-t border-gray-50 pt-8 pb-4">
+                {[
+                  { icon: "fa-shield-halved", label: "Hidden Cost" },
+                  { icon: "fa-certificate", label: "ISO 27001 Certified Company" },
+                  { icon: "fa-place-of-worship", label: "Official Temple Partner" },
+                  { icon: "fa-headset", label: "Customer Support" }
+                ].map((trust) => (
+                  <div key={trust.label} className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
+                    <i className={`fa-solid ${trust.icon} text-gray-600 text-sm`}></i>
+                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-tighter whitespace-nowrap">{trust.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100 p-6 bg-white">
+              <button
+                onClick={() => {
+                  if (selectedPackageId) {
+                    setShowPackageModal(false);
+                    setShowDetailsModal(true);
+                  }
+                }}
+                className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
+              >
+                <div className="text-left">
+                  <div className="flex items-center gap-3">
+                    <p className="text-lg font-black">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</p>
+                    {selectedPackage && (
+                      <div className="border-l border-white/20 pl-3">
+                        <p className="text-sm font-bold line-through opacity-60">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</p>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] font-medium uppercase opacity-80">{selectedPackage?.name}</p>
+                </div>
+                <div className="flex items-center gap-4 font-bold uppercase tracking-widest text-sm">
+                  Proceed <i className="fa-solid fa-arrow-right"></i>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Details Collection Modal */}
       {showDetailsModal && puja && (
         <div className="fixed inset-0 z-110 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-           <div className="relative w-full max-w-md rounded-[32px] bg-white p-8 shadow-2xl">
-              {/* Header */}
-              <div className="flex items-center gap-4 mb-8">
-                 <button 
-                   onClick={() => {
-                      setShowDetailsModal(false);
-                      setShowPackageModal(true);
-                   }}
-                   className="h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
-                 >
-                    <ArrowLeftIcon className="h-5 w-5 text-gray-900" />
-                 </button>
-                 <h3 className="text-xl font-bold text-gray-900">Fill your details for Puja</h3>
+          <div className="relative w-full max-w-md rounded-[32px] bg-white p-8 shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-8">
+              <button
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setShowPackageModal(true);
+                }}
+                className="h-10 w-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <ArrowLeftIcon className="h-5 w-5 text-gray-900" />
+              </button>
+              <h3 className="text-xl font-bold text-gray-900">Fill your details for Puja</h3>
+            </div>
+
+            <div className="space-y-8">
+              {/* WhatsApp Number Field */}
+              <div>
+                <label className="block text-gray-900 font-bold text-sm mb-2">Enter Your Whatsapp Mobile Number</label>
+                <p className="text-[11px] text-gray-400 mb-4 leading-relaxed font-medium">Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.</p>
+                <div className="relative group">
+                  <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#1f1f1f] font-bold">
+                    <i className="fa-brands fa-whatsapp text-lg"></i>
+                    <span className="text-sm">+91</span>
+                  </div>
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    value={userDetails.whatsapp}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setUserDetails(prev => ({ ...prev, whatsapp: val }));
+                    }}
+                    className="w-full bg-white border-2 border-blue-500 rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 outline-none shadow-[0_0_0_1px_rgba(59,130,246,0.1)]"
+                    placeholder="8192812323"
+                  />
+                  {userDetails.whatsapp && (
+                    <button
+                      onClick={() => setUserDetails(prev => ({ ...prev, whatsapp: "" }))}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
+                    >
+                      <i className="fa-solid fa-circle-xmark opacity-50"></i>
+                    </button>
+                  )}
+                  <div className="absolute -top-2.5 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your mobile Number</div>
+                </div>
               </div>
-              
-              <div className="space-y-8">
-                 {/* WhatsApp Number Field */}
-                 <div>
-                    <label className="block text-gray-900 font-bold text-sm mb-2">Enter Your Whatsapp Mobile Number</label>
-                    <p className="text-[11px] text-gray-400 mb-4 leading-relaxed font-medium">Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.</p>
-                    <div className="relative group">
-                       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#1f1f1f] font-bold">
-                          <i className="fa-brands fa-whatsapp text-lg"></i>
-                          <span className="text-sm">+91</span>
-                       </div>
-                       <input 
-                         type="tel" 
-                         maxLength={10}
-                         value={userDetails.whatsapp}
-                         onChange={(e) => {
-                            const val = e.target.value.replace(/\D/g, '').slice(0, 10);
-                            setUserDetails(prev => ({ ...prev, whatsapp: val }));
-                         }}
-                         className="w-full bg-white border-2 border-blue-500 rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 outline-none shadow-[0_0_0_1px_rgba(59,130,246,0.1)]"
-                         placeholder="8192812323"
-                       />
-                       {userDetails.whatsapp && (
-                          <button 
-                            onClick={() => setUserDetails(prev => ({ ...prev, whatsapp: "" }))}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
-                          >
-                             <i className="fa-solid fa-circle-xmark opacity-50"></i>
-                          </button>
-                       )}
-                       <div className="absolute -top-2.5 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your mobile Number</div>
-                    </div>
-                 </div>
 
-                 {/* Name Field */}
-                 <div>
-                    <label className="block text-gray-900 font-bold text-sm mb-4">Enter Your Name</label>
-                    <div className="relative group">
-                       <input 
-                         type="text" 
-                         value={userDetails.name}
-                         onChange={(e) => setUserDetails(prev => ({ ...prev, name: e.target.value }))}
-                         className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 font-bold text-gray-900 outline-none shadow-sm focus:border-blue-500 transition-all"
-                         placeholder="enter your name"
-                       />
-                       {userDetails.name && (
-                          <button 
-                            onClick={() => setUserDetails(prev => ({ ...prev, name: "" }))}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
-                          >
-                             <i className="fa-solid fa-circle-xmark opacity-50"></i>
-                          </button>
-                       )}
-                       <div className="absolute -top-2 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your full Name</div>
-                    </div>
-                 </div>
+              {/* Name Field */}
+              <div>
+                <label className="block text-gray-900 font-bold text-sm mb-4">Enter Your Name</label>
+                <div className="relative group">
+                  <input
+                    type="text"
+                    value={userDetails.name}
+                    onChange={(e) => setUserDetails(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 font-bold text-gray-900 outline-none shadow-sm focus:border-blue-500 transition-all"
+                    placeholder="enter your name"
+                  />
+                  {userDetails.name && (
+                    <button
+                      onClick={() => setUserDetails(prev => ({ ...prev, name: "" }))}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
+                    >
+                      <i className="fa-solid fa-circle-xmark opacity-50"></i>
+                    </button>
+                  )}
+                  <div className="absolute -top-2 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your full Name</div>
+                </div>
+              </div>
 
-                 {cartError && (
-                    <p className="rounded-lg bg-red-50 px-3 py-2 text-center text-xs font-semibold text-red-500 mt-2">
-                       {cartError}
-                    </p>
-                 )}
+              {cartError && (
+                <p className="rounded-lg bg-red-50 px-3 py-2 text-center text-xs font-semibold text-red-500 mt-2">
+                  {cartError}
+                </p>
+              )}
 
-                 {/* Next Button */}
-                 <button 
-                   disabled={!userDetails.name || userDetails.whatsapp.length < 10 || addingToCart}
-                   onClick={async () => {
-                      setAddingToCart(true);
-                      setCartError("");
-                      try {
-                         const meRes = await fetch('/api/auth/me');
-                         let customerId = 1145090; // Default fallback
-                         if (meRes.ok) {
-                            const meData = await meRes.json();
-                            if (meData.authenticated && meData.user?.customerId) {
-                               customerId = Number(meData.user.customerId) || 1145090;
-                            }
-                         }
-
-                         // Product ID from puja, fallback to 10
-                         const productId = puja.productId || 10;
-
-                         const cartRes = await fetch('/api/cart/add', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                               customerId,
-                               productId,
-                               quantity: 1,
-                               shopName: "AstroVed",
-                               variationId: 0,
-                               currencyCode: "INR",
-                               localeCode: "en-US",
-                               freeProductContributionAmount: 0,
-                               productSubVariationExternalId: ""
-                            })
-                         });
-
-                         const cartData = await cartRes.json();
-
-                         if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
-                            if (cartData.SelectedListId) {
-                               setShoppingCartId(String(cartData.SelectedListId));
-                            }
-                            setShowDetailsModal(false);
-                            setShowReviewModal(true);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                         } else {
-                            setCartError(cartData.Message || "Failed to add item to cart. Please check your product ID configuration.");
-                         }
-                      } catch (err: any) {
-                         setCartError("Connection error. Please try again.");
-                      } finally {
-                         setAddingToCart(false);
+              {/* Next Button */}
+              <button
+                disabled={!userDetails.name || userDetails.whatsapp.length < 10 || addingToCart}
+                onClick={async () => {
+                  setAddingToCart(true);
+                  setCartError("");
+                  try {
+                    const meRes = await fetch('/api/auth/me');
+                    let customerId = 1145090; // Default fallback
+                    if (meRes.ok) {
+                      const meData = await meRes.json();
+                      if (meData.authenticated && meData.user?.customerId) {
+                        customerId = Number(meData.user.customerId) || 1145090;
                       }
-                   }}
-                   className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6869F9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
-                 >
-                    {addingToCart ? "Adding..." : "Next"}
-                 </button>
-              </div>
-           </div>
+                    }
+
+                    // Product ID from puja, fallback to 10
+                    const productId = puja.productId || 10;
+
+                    const cartRes = await fetch('/api/cart/add', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        customerId,
+                        productId,
+                        quantity: 1,
+                        shopName: "AstroVed",
+                        variationId: 0,
+                        currencyCode: "INR",
+                        localeCode: "en-US",
+                        freeProductContributionAmount: 0,
+                        productSubVariationExternalId: ""
+                      })
+                    });
+
+                    const cartData = await cartRes.json();
+
+                    if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
+                      if (cartData.SelectedListId) {
+                        setShoppingCartId(String(cartData.SelectedListId));
+                      }
+                      setShowDetailsModal(false);
+                      setShowReviewModal(true);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                      setCartError(cartData.Message || "Failed to add item to cart. Please check your product ID configuration.");
+                    }
+                  } catch (err: any) {
+                    setCartError("Connection error. Please try again.");
+                  } finally {
+                    setAddingToCart(false);
+                  }
+                }}
+                className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6869F9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
+              >
+                {addingToCart ? "Adding..." : "Next"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1652,7 +1645,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             {images.length > 1 && (
               <div className="flex items-center gap-3 mb-6">
                 <button onClick={handlePrevImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 text-xs transition-colors">
-                   <i className="fa-solid fa-chevron-left"></i>
+                  <i className="fa-solid fa-chevron-left"></i>
                 </button>
                 {images.map((_, idx) => (
                   <button
@@ -1662,15 +1655,15 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   />
                 ))}
                 <button onClick={handleNextImage} className="h-7 w-7 flex items-center justify-center rounded-full bg-[#6869F9] text-white hover:bg-[#e06b1a] text-xs transition-colors">
-                   <i className="fa-solid fa-chevron-right"></i>
+                  <i className="fa-solid fa-chevron-right"></i>
                 </button>
               </div>
             )}
-            
+
             <div className="flex overflow-x-auto gap-3 px-4 max-w-full no-scrollbar pb-4 justify-center">
               {images.map((img, idx) => (
-                <button 
-                  key={idx} 
+                <button
+                  key={idx}
                   onClick={() => setCurrentImageIndex(idx)}
                   className={`h-[72px] w-[108px] shrink-0 rounded-md overflow-hidden border-[3px] transition-colors ${idx === currentImageIndex ? "border-[#2563eb]" : "border-transparent opacity-50 hover:opacity-100"}`}
                 >
@@ -1678,9 +1671,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 </button>
               ))}
             </div>
-            
+
             <div className="w-full max-w-xl px-4 mt-2">
-              <button 
+              <button
                 onClick={() => {
                   setShowGallery(false);
                   setShowPackageModal(true);
