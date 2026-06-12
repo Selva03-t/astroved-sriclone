@@ -741,7 +741,7 @@ export default function ContentManager({
                   ) : (
                     <>
                       <input
-                        type={field.type}
+                        type={field.type === "url" ? "text" : field.type}
                         id={field.name}
                         name={field.name}
                         required={field.required}
