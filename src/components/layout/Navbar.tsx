@@ -109,7 +109,7 @@ export default function Navbar() {
       />
 
       <section className="sticky top-0 z-50 overflow-visible border-b border-gray-100 bg-white shadow-sm">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto] items-center gap-6 px-8 py-3.5 md:grid-cols-[1fr_auto_1fr]">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-[1fr_auto] items-center gap-6 px-8 py-3.5 md:grid-cols-[1fr_auto_1fr]">
           <div className="justify-self-start">
             <Link href="/dashboard" className="flex items-center gap-3 pr-4">
               <img
