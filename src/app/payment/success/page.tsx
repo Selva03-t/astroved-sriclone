@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -36,6 +36,11 @@ function SuccessContent() {
       }),
     }).catch(console.error);
   }, [paymentId, title, amount, name, shoppingCartId]);
+
+  const [shareUrl, setShareUrl] = useState("");
+  useEffect(() => {
+    setShareUrl(window.location.href);
+  }, []);
 
   const shareText = encodeURIComponent(`I just booked "${title}" on AstroVed! 🙏`);
 
@@ -136,7 +141,7 @@ function SuccessContent() {
               <div className="flex items-center gap-3 flex-wrap pt-2">
                 <span className="text-[13px] font-bold text-gray-400">Share this</span>
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}&quote=${shareText}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${shareText}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 bg-[#d97736] text-white text-[10px] font-bold px-3 py-1.5 rounded-sm hover:bg-[#c66629] transition-colors"

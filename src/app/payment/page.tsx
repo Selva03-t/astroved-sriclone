@@ -11,6 +11,7 @@ function PaymentContent() {
   const title = searchParams?.get("title") || "AstroVed Puja";
   const name = searchParams?.get("name") || "";
   const wa = searchParams?.get("wa") || "";
+  const shoppingCartIdParam = searchParams?.get("shoppingCartId") || "";
 
   const [loadingMsg, setLoadingMsg] = useState("Initializing secure payment gateway...");
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ function PaymentContent() {
         const orderRes = await fetch("/api/payment/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, customerId })
+          body: JSON.stringify({ amount, customerId, shoppingCartId: shoppingCartIdParam })
         });
         
         const orderData = await orderRes.json();
@@ -79,7 +80,7 @@ function PaymentContent() {
               name,
               shoppingCartId
             });
-            router.push(`/payment/success?${params.toString()}`);
+            window.location.href = `/payment/success?${params.toString()}`;
           },
           modal: {
             ondismiss: function () {

@@ -276,6 +276,7 @@ function SankalpContent() {
   const extras = searchParams?.get("extras") || "";
   const title = searchParams?.get("title") || "";
   const returnSlug = searchParams?.get("slug") || "";
+  const shoppingCartId = searchParams?.get("shoppingCartId") || "";
 
   // ── Form State ────────────────────────────────────────────────────────────
   const [whatsapp, setWhatsapp] = useState(waParam);
@@ -347,6 +348,7 @@ function SankalpContent() {
       title,
       gotra: finalGotra,
       members: memberStr,
+      shoppingCartId,
       aashirwad: wantsAashirwad ? "yes" : "no",
       ...(wantsAashirwad && {
         pinCode: address.pinCode,

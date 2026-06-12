@@ -187,6 +187,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [cartError, setCartError] = useState("");
   const [reviewCartError, setReviewCartError] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [shoppingCartId, setShoppingCartId] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState("");
   const [couponStatus, setCouponStatus] = useState<"idle" | "applied" | "invalid">("idle");
   const [showCouponInput, setShowCouponInput] = useState(false);
@@ -698,10 +699,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                            customerId = Number(authData.user.customerId) || 1145090;
                         }
 
+                        let localCartId = shoppingCartId || "";
+
                         // Add selected offerings to cart
                         const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
                         if (selectedOfferings.length > 0) {
-                           const cartPromises = selectedOfferings.map(async (offering) => {
+                           for (const offering of selectedOfferings) {
                               const offProductId = offering.productId || 36;
                               const cartRes = await fetch('/api/cart/add', {
                                  method: 'POST',
@@ -723,13 +726,18 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                               if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
                                  throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
                               }
-                           });
-                           
-                           await Promise.all(cartPromises);
+                              if (cartData.SelectedListId) {
+                                 localCartId = String(cartData.SelectedListId);
+                              }
+                           }
+                        }
+
+                        if (localCartId) {
+                           setShoppingCartId(localCartId);
                         }
 
                         const extras = selectedExtraIds.join(',');
-                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}`;
+                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
                         if (!authData.authenticated) {
                            window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(sankalpUrl)}`;
                            return;
@@ -1596,6 +1604,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                          const cartData = await cartRes.json();
 
                          if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
+                            if (cartData.SelectedListId) {
+                               setShoppingCartId(String(cartData.SelectedListId));
+                            }
                             setShowDetailsModal(false);
                             setShowReviewModal(true);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
