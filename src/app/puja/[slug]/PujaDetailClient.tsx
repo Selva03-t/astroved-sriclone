@@ -764,9 +764,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
       <Navbar />
       <main className="min-h-screen bg-white pb-24">
         {loading ? (
-          <div className="mx-auto max-w-[1200px] px-6 py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
+          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
         ) : !puja ? (
-          <div className="mx-auto max-w-[1200px] px-6 py-20 text-center">
+          <div className="mx-auto max-w-[1300px] px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
             <Link href="/puja" className="mt-6 inline-block rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-semibold text-white">
               Back to Pujas
@@ -776,7 +776,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
           <>
             {/* -- Breadcrumb (sticky below navbar) -- */}
             <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-              <div className="mx-auto max-w-[1200px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
+              <div className="mx-auto max-w-[1300px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
                 <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
                 <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
                 <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
@@ -786,7 +786,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             </nav>
 
             {/* -- Hero -- */}
-            <div className="mx-auto max-w-[1200px] px-4 py-6 md:px-6">
+            <div className="mx-auto max-w-[1300px] px-4 py-6 md:px-6">
               <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image Carousel */}
                 <div className="relative overflow-hidden rounded-2xl group cursor-pointer w-fit mx-auto" onClick={() => setShowGallery(true)}>
@@ -916,7 +916,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             {/* -- Flat Content Sections -- */}
             {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
             <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
-              <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+              <div className="mx-auto max-w-[1300px] px-4 md:px-6">
                 <div className="flex items-center justify-between overflow-x-auto no-scrollbar w-full gap-4">
                   {sectionTabs.map((tab) => (
                     <button
@@ -951,7 +951,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               </div>
             </div>
 
-            <div className="mx-auto max-w-[1200px] px-4 md:px-6 pt-10">
+            <div className="mx-auto max-w-[1300px] px-4 md:px-6 pt-10">
               {currentSectionOrder.map((sectionId) => {
                 if (sectionId === "about") {
                   return (
@@ -1297,7 +1297,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
         {/* -- Sticky bottom booking bar -- */}
         {puja && !countdown.expired && (
           <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
-            <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4">
+            <div className="mx-auto flex max-w-[1300px] items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="truncate text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{selectedPackage?.name ?? "Select a package"}</p>
                 <div className="flex items-center gap-3">
