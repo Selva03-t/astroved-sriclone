@@ -438,7 +438,7 @@ export default function PujaPage() {
         <div className="mx-auto max-w-[1200px] px-4 md:px-8">
 
           {/* Page Heading */}
-          <h1 className="mb-8 text-[18px] md:text-[36px] font-bold leading-tight text-[#3b0764]">
+          <h1 className="mb-8 text-center text-[18px] font-bold leading-tight text-[#3b0764] md:text-[36px]">
             {t.puja.heading}
           </h1>
 
