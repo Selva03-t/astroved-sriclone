@@ -92,13 +92,13 @@ const filterGroups = [
   {
     label: "Location",
     options: [
-      { value: "All",            keywords: [] },
-      { value: "Tamil Nadu",     keywords: ["tamil nadu", "tamilnadu"] },
-      { value: "Karnataka",      keywords: ["karnataka", "bangalore", "bengaluru", "mysore"] },
-      { value: "Kerala",         keywords: ["kerala"] },
-      { value: "Uttar Pradesh",  keywords: ["uttar pradesh", "varanasi", "kashi", "mathura", "vrindavan", "ujjain"] },
+      { value: "All", keywords: [] },
+      { value: "Tamil Nadu", keywords: ["tamil nadu", "tamilnadu"] },
+      { value: "Karnataka", keywords: ["karnataka", "bangalore", "bengaluru", "mysore"] },
+      { value: "Kerala", keywords: ["kerala"] },
+      { value: "Uttar Pradesh", keywords: ["uttar pradesh", "varanasi", "kashi", "mathura", "vrindavan", "ujjain"] },
       { value: "Andhra Pradesh", keywords: ["andhra", "tirupati", "hyderabad"] },
-      { value: "Rajasthan",      keywords: ["rajasthan", "jaipur", "pushkar"] },
+      { value: "Rajasthan", keywords: ["rajasthan", "jaipur", "pushkar"] },
     ],
   },
 ];
@@ -225,9 +225,8 @@ function PujaFilterModal({
         className="flex w-full items-start gap-3 text-left"
         aria-pressed={selected}
       >
-        <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition ${
-          selected ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-gray-200 bg-white text-transparent"
-        }`}>
+        <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition ${selected ? "border-[#2563eb] bg-[#2563eb] text-white" : "border-gray-200 bg-white text-transparent"
+          }`}>
           <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
             <path d="M2.2 6.2 4.8 8.7 9.8 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -277,9 +276,8 @@ function PujaFilterModal({
                           className="text-center"
                           aria-pressed={selected}
                         >
-                          <span className={`relative mx-auto block h-24 w-24 overflow-hidden rounded-lg border-2 transition ${
-                            selected ? "border-[#5B5BF6] shadow-[0_0_0_3px_rgba(91,91,246,0.2)]" : "border-transparent hover:border-gray-200"
-                          }`}>
+                          <span className={`relative mx-auto block h-24 w-24 overflow-hidden rounded-lg border-2 transition ${selected ? "border-[#5B5BF6] shadow-[0_0_0_3px_rgba(91,91,246,0.2)]" : "border-transparent hover:border-gray-200"
+                            }`}>
                             <img
                               src={filterOptionImages[option.value] || "/images/Lakshmi-Homam.jpg"}
                               alt={option.value}
@@ -295,9 +293,8 @@ function PujaFilterModal({
                               </span>
                             )}
                           </span>
-                          <span className={`mt-2 block text-sm font-bold leading-5 ${
-                            selected ? "text-[#5B5BF6]" : "text-[#1f2937]"
-                          }`}>
+                          <span className={`mt-2 block text-sm font-bold leading-5 ${selected ? "text-[#5B5BF6]" : "text-[#1f2937]"
+                            }`}>
                             {option.value}
                           </span>
                         </button>
@@ -476,8 +473,8 @@ export default function PujaPage() {
                               {puja.location && (
                                 <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-200 md:text-purple-200">
                                   <svg className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                   </svg>
                                   <span className="line-clamp-1">{puja.location}</span>
                                 </div>
@@ -490,7 +487,7 @@ export default function PujaPage() {
                               >
                                 {puja.buttonText || t.puja.bookNow}
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                               </Link>
                             </div>
@@ -508,14 +505,14 @@ export default function PujaPage() {
                               backgroundPosition: 'center',
                             }}
                           />
-                          
+
                           {/* Main Image - object-top ensures deity features like Ganesha's head are beautifully visible */}
                           <img
                             src={puja.imageUrl}
                             alt={puja.title}
                             className="w-full h-full object-cover object-top transition-all duration-700 hover:scale-105"
                           />
-                          
+
                           {/* Premium Vignette Fade transition on desktop */}
                           <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#3b0764] to-transparent hidden md:block z-20" />
                         </div>
@@ -591,26 +588,26 @@ export default function PujaPage() {
                   const activeCount = filters[group.label]?.length || 0;
                   const isActive = activeCount > 0;
                   return (
-                  <button
-                    key={group.label}
-                    type="button"
-                    onClick={() => setIsFilterModalOpen(true)}
-                    className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${
-                      isActive
-                        ? "bg-[#6869F9] text-white shadow-sm"
-                        : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span>{isActive ? (activeCount === 1 ? filters[group.label][0] : `${group.label} (${activeCount})`) : group.label}</span>
-                    <svg
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      className="h-3.5 w-3.5"
+                    <button
+                      key={group.label}
+                      type="button"
+                      onClick={() => setIsFilterModalOpen(true)}
+                      className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-3 text-sm font-semibold transition ${isActive
+                          ? "bg-[#6869F9] text-white shadow-sm"
+                          : "bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50"
+                        }`}
                     >
-                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                )})}
+                      <span>{isActive ? (activeCount === 1 ? filters[group.label][0] : `${group.label} (${activeCount})`) : group.label}</span>
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        className="h-3.5 w-3.5"
+                      >
+                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+                  )
+                })}
 
                 {/* Clear all */}
                 {hasActiveFilters && (
@@ -708,7 +705,7 @@ export default function PujaPage() {
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Content Section */}
                     <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
                       <p className="text-[#6869F9] text-[11px] font-bold uppercase tracking-widest mb-3 text-center w-full">
@@ -720,20 +717,20 @@ export default function PujaPage() {
                       <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-2 mb-6 flex-1">
                         {puja.description || "Join us for this sacred ritual to seek divine blessings."}
                       </p>
-                      
+
                       {/* Location & Date */}
                       <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
-                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <span className="line-clamp-2 leading-tight">{puja.location || "Sacred Temple, India"}</span>
                       </div>
                       <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
-                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         <span className="leading-tight">{puja.date || t.puja.announcedSoon}</span>
                       </div>
 
                       <Link href={`/puja/${puja.slug || slugify(puja.title)}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5">
                         {puja.buttonText || t.puja.bookNow}
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                       </Link>
                     </div>
                   </div>
