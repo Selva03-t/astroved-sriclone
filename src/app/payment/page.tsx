@@ -12,6 +12,13 @@ function PaymentContent() {
   const name = searchParams?.get("name") || "";
   const wa = searchParams?.get("wa") || "";
   const shoppingCartIdParam = searchParams?.get("shoppingCartId") || "";
+  const aashirwad = searchParams?.get("aashirwad") || "no";
+  const pinCode = searchParams?.get("pinCode") || "";
+  const city = searchParams?.get("city") || "";
+  const state = searchParams?.get("state") || "";
+  const house = searchParams?.get("house") || "";
+  const road = searchParams?.get("road") || "";
+  const landmark = searchParams?.get("landmark") || "";
 
   const [loadingMsg, setLoadingMsg] = useState("Initializing secure payment gateway...");
   const [error, setError] = useState<string | null>(null);
@@ -23,13 +30,28 @@ function PaymentContent() {
         const authRes = await fetch("/api/auth/me");
         const authData = await authRes.json();
         const customerId = authData?.user?.customerId || "0";
+        const userName = name || authData?.user?.name || "";
+        const userPhone = wa || authData?.user?.whatsapp || authData?.user?.phone || "";
 
         // 2. Call Astroved's ProceedviaRazorPay API via our proxy
         setLoadingMsg("Creating order securely...");
         const orderRes = await fetch("/api/payment/create-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, customerId, shoppingCartId: shoppingCartIdParam })
+          body: JSON.stringify({
+            amount,
+            customerId,
+            shoppingCartId: shoppingCartIdParam,
+            name: userName,
+            phone: userPhone,
+            aashirwad,
+            pinCode,
+            city,
+            state,
+            house,
+            road,
+            landmark
+          })
         });
         
         const orderData = await orderRes.json();
