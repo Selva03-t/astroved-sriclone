@@ -38,12 +38,16 @@ export async function POST(request: Request) {
           const generatedPassword = Math.random().toString(36).slice(-10) + "A1@";
           
           if (payload.method === "email") {
+            // AstroVed requires a phone number even for email signups. 
+            // Generate a random 10-digit dummy number to avoid "Phone number already exists" errors.
+            const dummyPhone = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+            
             await registerWithAstroved({
               firstName: "AstroVed",
               lastName: "Guest",
               email: payload.email,
               password: generatedPassword,
-              phone: "9999999999", // Fallback for email-only signups
+              phone: dummyPhone, 
               country: { code: "IN", dialCode: "+91", name: "India" } as any,
               isWhatsappNumber: false,
               currency: "INR"
