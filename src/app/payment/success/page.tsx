@@ -5,23 +5,84 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
+// ── Verification status type ──────────────────────────────────────────────────
+type VerifyStatus = "pending" | "verified" | "not_found" | "error";
+
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const paymentId       = searchParams?.get("paymentId")       || "N/A";
-  const orderId         = searchParams?.get("orderId")         || "N/A";
-  const title           = searchParams?.get("title")           || "Puja Seva";
-  const amount          = searchParams?.get("amount")          || "0";
-  const name            = searchParams?.get("name")            || "";
-  const shoppingCartId  = searchParams?.get("shoppingCartId")  || orderId;
+  const paymentId      = searchParams?.get("paymentId")      || "N/A";
+  const orderId        = searchParams?.get("orderId")        || "N/A";
+  const title          = searchParams?.get("title")          || "Puja Seva";
+  const amount         = searchParams?.get("amount")         || "0";
+  const name           = searchParams?.get("name")           || "";
+  const shoppingCartId = searchParams?.get("shoppingCartId") || orderId;
 
   // Shorten refs for display
   const shortPayId = paymentId.length > 12 ? paymentId.slice(-12).toUpperCase() : paymentId;
   const shortOrdId = shoppingCartId.length > 8 ? shoppingCartId.slice(-8).toUpperCase() : shoppingCartId;
 
-  // Save booking to MongoDB exactly once after successful payment
+  // ── AstroVed backend verification state ──────────────────────────────────
+  const [verifyStatus, setVerifyStatus]     = useState<VerifyStatus>("pending");
+  const [transactionId, setTransactionId]   = useState<string>("");
+  const [verifyAttempt, setVerifyAttempt]   = useState(0);
+
+  // ── Save booking to MongoDB exactly once after successful payment ─────────
   const savedRef = useRef(false);
+
+  // ── Step 1: Call GetTransactionCode with retry logic ─────────────────────
+  // AstroVed's backend may take a few seconds to register the payment,
+  // so we retry up to 3 times with a 3-second delay between each attempt.
   useEffect(() => {
-    if (savedRef.current || paymentId === "N/A") return;
+    if (paymentId === "N/A" || !shoppingCartId || shoppingCartId === "N/A") {
+      setVerifyStatus("error");
+      return;
+    }
+
+    let cancelled = false;
+    const MAX_ATTEMPTS = 3;
+    const RETRY_DELAY_MS = 3000;
+
+    async function verifyWithAstroved(attempt: number) {
+      try {
+        const res = await fetch(
+          `/api/payment/get-transaction-code?orderId=${encodeURIComponent(shoppingCartId)}`
+        );
+        const data = await res.json();
+
+        if (cancelled) return;
+
+        if (data.StatusCode === 200 && data.TransactionId) {
+          // ✅ Verified — AstroVed confirmed the payment
+          setTransactionId(data.TransactionId);
+          setVerifyStatus("verified");
+          setVerifyAttempt(attempt);
+        } else if (data.StatusCode === 404 && attempt < MAX_ATTEMPTS) {
+          // Payment not registered yet — retry after delay
+          setVerifyAttempt(attempt);
+          setTimeout(() => {
+            if (!cancelled) verifyWithAstroved(attempt + 1);
+          }, RETRY_DELAY_MS);
+        } else {
+          // Either max retries hit or unexpected error
+          setVerifyStatus(data.StatusCode === 404 ? "not_found" : "error");
+          setVerifyAttempt(attempt);
+        }
+      } catch {
+        if (!cancelled) setVerifyStatus("error");
+      }
+    }
+
+    verifyWithAstroved(1);
+    return () => { cancelled = true; };
+  }, [paymentId, shoppingCartId]);
+
+  // ── Step 2: Save booking to MongoDB once verification resolves ────────────
+  useEffect(() => {
+    if (savedRef.current) return;
+    if (paymentId === "N/A") return;
+    // Save as soon as we have the result (verified or not)
+    if (verifyStatus === "pending") return;
+
     savedRef.current = true;
     fetch("/api/bookings/create", {
       method: "POST",
@@ -33,16 +94,64 @@ function SuccessContent() {
         name,
         orderId: shoppingCartId,
         paymentId,
+        // Include AstroVed's confirmed transaction ID if available
+        transactionId: transactionId || null,
+        verificationStatus: verifyStatus,
       }),
     }).catch(console.error);
-  }, [paymentId, title, amount, name, shoppingCartId]);
+  }, [verifyStatus, paymentId, transactionId, title, amount, name, shoppingCartId]);
 
   const [shareUrl, setShareUrl] = useState("");
-  useEffect(() => {
-    setShareUrl(window.location.href);
-  }, []);
+  useEffect(() => { setShareUrl(window.location.href); }, []);
 
   const shareText = encodeURIComponent(`I just booked "${title}" on AstroVed! 🙏`);
+
+  // ── Verification badge renderer ───────────────────────────────────────────
+  function VerificationBadge() {
+    if (verifyStatus === "pending") {
+      return (
+        <div className="flex items-center gap-2 text-[12px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
+          <div className="h-3 w-3 rounded-full border-2 border-blue-500 border-t-transparent animate-spin shrink-0" />
+          Verifying with AstroVed{verifyAttempt > 1 ? ` (attempt ${verifyAttempt}/3)` : ""}…
+        </div>
+      );
+    }
+    if (verifyStatus === "verified") {
+      return (
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 text-[12px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+            <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Payment verified by AstroVed
+          </div>
+          <p className="text-[12px] text-gray-600 font-medium px-1">
+            Transaction ID:{" "}
+            <span className="font-bold text-[#e66a1f] font-mono">{transactionId}</span>
+          </p>
+        </div>
+      );
+    }
+    if (verifyStatus === "not_found") {
+      return (
+        <div className="flex items-start gap-2 text-[12px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          <svg className="h-3.5 w-3.5 mt-0.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+          Payment received. AstroVed confirmation pending — please contact support if this persists.
+        </div>
+      );
+    }
+    // error
+    return (
+      <div className="flex items-center gap-2 text-[12px] font-semibold text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+        <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+        </svg>
+        Could not verify with AstroVed. Your payment was received by Razorpay.
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
@@ -52,7 +161,7 @@ function SuccessContent() {
 
       <div className="mx-auto max-w-4xl px-4 py-12 space-y-8">
 
-        {/* ── Main Congratulations Card ────────────────────────────────────── */}
+        {/* ── Main Congratulations Card ─────────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           {/* Top green banner */}
           <div className="bg-gradient-to-r from-[#59a031] to-[#71bf44] px-6 py-5 text-center">
@@ -75,7 +184,7 @@ function SuccessContent() {
           </div>
 
           {/* Body */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 border-b border-gray-100 border-dashed border-b-2">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 border-b border-gray-100 border-dashed border-b-2">
             {/* Left: Thank you message */}
             <div className="px-8 py-8 space-y-4">
               <p className="text-[13px] text-gray-700 leading-relaxed font-medium">
@@ -90,19 +199,32 @@ function SuccessContent() {
               <p className="text-[13px] text-gray-700 leading-relaxed mt-4">
                 <span className="font-bold text-gray-800">Note:</span> We request you to contact us with the Transaction Number and Order ID for further clarifications.
               </p>
+
+              {/* ── AstroVed Verification Status ─────────────────────────── */}
+              <div className="pt-2">
+                <VerificationBadge />
+              </div>
             </div>
 
             {/* Right: Order details + buttons */}
             <div className="px-8 py-8 space-y-5 bg-gray-50/30">
               <div className="space-y-2">
                 <p className="text-[13px] text-gray-700 font-medium">
-                  Your Order Reference No :{" "}
-                  <span className="font-bold text-[#e66a1f]">{shortPayId}</span>
+                  Razorpay Payment ID :{" "}
+                  <span className="font-bold text-[#e66a1f] font-mono">{shortPayId}</span>
                 </p>
                 <p className="text-[13px] text-gray-700 font-medium">
                   Order Number :{" "}
                   <span className="font-bold text-[#e66a1f]">{shortOrdId}</span>
                 </p>
+                {verifyStatus === "verified" && transactionId && (
+                  <p className="text-[13px] text-gray-700 font-medium">
+                    AstroVed Transaction ID :{" "}
+                    <span className="font-bold text-green-700 font-mono text-[11px]">
+                      {transactionId}
+                    </span>
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2.5 mt-6">
@@ -123,7 +245,7 @@ function SuccessContent() {
           </div>
         </div>
 
-        {/* ── Puja Share Card ──────────────────────────────────────────────── */}
+        {/* ── Puja Share Card ───────────────────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-200 border-dashed border-t-0 border-x-0 pb-8 shadow-sm p-8 mt-4">
           <p className="text-sm text-gray-500 mb-4">
             I just bought <span className="font-bold text-[#3b82f6]">{title}</span>
@@ -133,10 +255,10 @@ function SuccessContent() {
             <div className="w-[180px] h-[180px] rounded overflow-hidden bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shrink-0 shadow-sm border border-gray-200">
               <i className="fa-solid fa-om text-white text-6xl"></i>
             </div>
-            
+
             <div className="flex-1 space-y-5">
               <p className="text-[13px] text-gray-800 leading-relaxed font-bold">
-                You may think, dream, imagine, and hope to be a thousand things, but the Sun is what you are! To be your best self in terms of your Sun, cause your energies to work along the path in which they will have maximum help from the planetary vibrations.
+                You may think, dream,  im agine, and hope to be a thousand things, but the Sun is what you are! To be your best self in terms of your Sun, cause your energies to work along the path in which they will have maximum help from the planetary vibrations.
               </p>
               <div className="flex items-center gap-3 flex-wrap pt-2">
                 <span className="text-[13px] font-bold text-gray-400">Share this</span>
@@ -167,7 +289,7 @@ function SuccessContent() {
           </div>
         </div>
 
-        {/* ── Top Sellers CTA ─────────────────────────────────────────────── */}
+        {/* ── Top Sellers CTA ───────────────────────────────────────────────── */}
         <div className="text-center pt-4">
           <Link
             href="/puja"
