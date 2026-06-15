@@ -133,12 +133,21 @@ export default function LoginMethods() {
       return;
     }
 
-    const digitsOnly = nextValue.replace(/[^0-9]/g, "");
+    let digitsOnly = nextValue.replace(/[^0-9]/g, "");
+    
+    // Auto-strip leading "91" if the user entered it (since +91 is already pre-selected)
+    if (digitsOnly.startsWith("91") && digitsOnly.length > 10) {
+      digitsOnly = digitsOnly.slice(2);
+    }
+    
+    // Limit to 10 digits for Indian mobile numbers
+    const finalValue = digitsOnly.slice(0, 10);
+
     if (method === "phone") {
-      setPhone(digitsOnly);
+      setPhone(finalValue);
       return;
     }
-    setWhatsapp(digitsOnly);
+    setWhatsapp(finalValue);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -332,7 +341,7 @@ export default function LoginMethods() {
                   +{DEFAULT_COUNTRY.dialCode}
                 </span>
               )}
-              <input
+               <input
                 id="login-input"
                 type={method === "email" ? "email" : "tel"}
                 inputMode={method === "email" ? "email" : "numeric"}
@@ -340,6 +349,7 @@ export default function LoginMethods() {
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
                 placeholder={placeholder}
+                maxLength={method === "email" ? undefined : 10}
                 className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
               />
               {value && (
