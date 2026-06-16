@@ -9,6 +9,7 @@ import { HighlightOffering } from "@/components/chadhava/HighlightOffering";
 import { FAQAccordion } from "@/components/chadhava/FAQAccordion";
 import { PencilSquareIcon, SparklesIcon, TagIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import LoginModal from "@/components/auth/LoginModal";
 
 interface Offering {
   id: string;
@@ -60,6 +61,8 @@ export default function ChadhavaDetailPage() {
   // UI State
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -244,6 +247,42 @@ export default function ChadhavaDetailPage() {
                        </div>
                     </div>
                  </div>
+
+                 <div className="mt-6">
+                   <div className="flex items-center justify-between bg-[#6869F9] text-white p-4 rounded-2xl shadow-xl shadow-[#6869F9]/20">
+                      <div className="flex items-center gap-4 text-sm font-bold">
+                         <span>{selectedCount} Offerings</span>
+                         <span className="opacity-50">•</span>
+                         <span>{currencySymbol} {selectedTotal}</span>
+                      </div>
+                      <button 
+                        onClick={async () => {
+                           setLoading(true);
+                           try {
+                              const res = await fetch("/api/auth/me");
+                              const authData = await res.json();
+
+                              if (!authData.authenticated) {
+                                 setPendingUrl(`/sankalp?amount=${selectedTotal}&type=chadhava&title=${encodeURIComponent(data.title)}&wa=${userInfo.whatsapp}&name=${encodeURIComponent(userInfo.name)}`);
+                                 setShowLoginModal(true);
+                                 return;
+                              }
+
+                              // Proceed to payment
+                              window.location.href = `/sankalp?amount=${selectedTotal}&type=chadhava&title=${encodeURIComponent(data.title)}&wa=${userInfo.whatsapp}&name=${encodeURIComponent(userInfo.name)}`;
+                           } catch (err) {
+                              console.error(err);
+                              alert("Authentication error. Please try again.");
+                           } finally {
+                              setLoading(false);
+                           }
+                        }}
+                        className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm"
+                      >
+                         {loading ? "Checking Session..." : "Proceed to Payment"} <i className="fa-solid fa-arrow-right"></i>
+                      </button>
+                   </div>
+                 </div>
               </div>
            </div>
 
@@ -273,42 +312,15 @@ export default function ChadhavaDetailPage() {
            </div>
         </div>
 
-        {/* Floating Cart Bar (Review Page) */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 rounded-2xl shadow-xl shadow-[#6869F9]/20">
-              <div className="flex items-center gap-4 text-sm font-bold">
-                 <span>{selectedCount} Offerings</span>
-                 <span className="opacity-50">•</span>
-                 <span>{currencySymbol} {selectedTotal}</span>
-              </div>
-              <button 
-                onClick={async () => {
-                   setLoading(true);
-                   try {
-                      const res = await fetch("/api/auth/me");
-                      const authData = await res.json();
-
-                      if (!authData.authenticated) {
-                         const currentUrl = encodeURIComponent(window.location.href);
-                         window.location.href = `/auth/login?callbackUrl=${currentUrl}`;
-                         return;
-                      }
-
-                      // Proceed to payment
-                      window.location.href = `/sankalp?amount=${selectedTotal}&type=chadhava&title=${encodeURIComponent(data.title)}&wa=${userInfo.whatsapp}&name=${encodeURIComponent(userInfo.name)}`;
-                   } catch (err) {
-                      console.error(err);
-                      alert("Authentication error. Please try again.");
-                   } finally {
-                      setLoading(false);
-                   }
-                }}
-                className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm"
-              >
-                 {loading ? "Checking Session..." : "Proceed to Payment"} <i className="fa-solid fa-arrow-right"></i>
-              </button>
-           </div>
-        </div>
+        {/* Login Modal for booking flow */}
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={() => {
+            setShowLoginModal(false);
+            if (pendingUrl) window.location.href = pendingUrl;
+          }}
+        />
       </div>
     );
   }

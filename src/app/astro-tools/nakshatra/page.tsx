@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import AstroPageLayout from "@/components/astro-tools/AstroPageLayout";
+import PlaceAutocomplete from "@/components/astro-tools/PlaceAutocomplete";
 
 // --- Types --------------------------------------------------------------------
 interface NakshatraResponse {
@@ -235,9 +236,10 @@ export default function NakshatraFinderPage() {
 
             {/* Place */}
             <Field label="Place of Birth" icon={<IconPin />}>
-              <input
-                type="text" value={place} onChange={(e) => setPlace(e.target.value)}
-                placeholder="Place of Birth" className={inputCls}
+              <PlaceAutocomplete
+                value={place}
+                onChange={(val) => setPlace(val)}
+                className={inputCls}
               />
             </Field>
 

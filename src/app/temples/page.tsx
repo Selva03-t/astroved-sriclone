@@ -14,6 +14,7 @@ interface Temple {
   description: string;
   slug: string;
   imageUrl: string;
+  gallery?: string[];
 }
 
 const locations = [
@@ -197,49 +198,7 @@ export default function TemplesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items.map((item, index) => (
-              <Link href={`/temples/${item.slug || item._id}`} key={item._id}>
-                <motion.div 
-                  className="flex flex-col gap-4 group"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative cursor-pointer border border-gray-100 bg-white">
-                  {/* Left / Right arrows mock */}
-                  <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                     <div className="h-7 w-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-lg"><span className="text-gray-800 text-xs">❮</span></div>
-                  </div>
-                  <div className="absolute inset-y-0 right-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                     <div className="h-7 w-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-lg"><span className="text-gray-800 text-xs">❯</span></div>
-                  </div>
-
-                  <img 
-                    src={item.imageUrl || "https://images.unsplash.com/photo-1519280459341-33758079543e?auto=format&fit=crop&w=400&q=80"} 
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Mock Carousel Dots */}
-                  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                     <div className="h-1.5 w-1.5 rounded-full bg-white shadow-sm"></div>
-                     <div className="h-1.5 w-1.5 rounded-full bg-white/40 shadow-sm"></div>
-                     <div className="h-1.5 w-1.5 rounded-full bg-white/40 shadow-sm"></div>
-                     <div className="h-1.5 w-1.5 rounded-full bg-white/40 shadow-sm"></div>
-                     <div className="h-1.5 w-1.5 rounded-full bg-white/40 shadow-sm"></div>
-                  </div>
-                </div>
-                
-                <div className="px-1">
-                  <h3 className="text-lg font-bold text-[#1f1f1f] mb-1">{item.name}</h3>
-                  <p className="text-[#1f1f1f] font-semibold text-sm mb-2">
-                    {item.city}, {item.state}
-                  </p>
-                  <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-              </Link>
+              <TempleCard key={item._id} item={item} index={index} />
             ))}
           </div>
         )}
@@ -248,4 +207,109 @@ export default function TemplesPage() {
   );
 }
 
+function TempleCard({ item, index }: { item: Temple; index: number }) {
+  const fallbacks = [
+    "https://images.unsplash.com/photo-1519280459341-33758079543e?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1620766165457-a80fe560c888?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1599839619722-39751411ea63?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f7415e?auto=format&fit=crop&w=400&q=80",
+  ];
+  const gallery = (
+    item.gallery?.filter(Boolean).length
+      ? item.gallery!.filter(Boolean)
+      : [item.imageUrl || fallbacks[0], ...fallbacks.slice(1, 5)]
+  ) as string[];
 
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIdx((prev) => (prev + 1) % gallery.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIdx((prev) => (prev === 0 ? gallery.length - 1 : prev - 1));
+  };
+
+  const goToDot = (e: React.MouseEvent, idx: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIdx(idx);
+  };
+
+  return (
+    <Link href={`/temples/${item.slug || item._id}`}>
+      <motion.div
+        className="flex flex-col gap-4 group cursor-pointer"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+      >
+        <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] relative border border-gray-100 bg-white">
+          {/* Left Arrow */}
+          {gallery.length > 1 && (
+            <button
+              type="button"
+              className="absolute inset-y-0 left-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+              onClick={prevImage}
+            >
+              <div className="h-7 w-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-lg transition-colors">
+                <span className="text-gray-800 text-xs">❮</span>
+              </div>
+            </button>
+          )}
+
+          {/* Right Arrow */}
+          {gallery.length > 1 && (
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 w-12 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+              onClick={nextImage}
+            >
+              <div className="h-7 w-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-lg transition-colors">
+                <span className="text-gray-800 text-xs">❯</span>
+              </div>
+            </button>
+          )}
+
+          <img
+            src={gallery[currentIdx]}
+            alt={item.name}
+            className="w-full h-full object-cover transition-opacity duration-300"
+          />
+
+          {/* Dots */}
+          {gallery.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+              {gallery.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={(e) => goToDot(e, dotIdx)}
+                  className={`h-1.5 w-1.5 rounded-full shadow-sm transition-all ${
+                    currentIdx === dotIdx ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="px-1">
+          <h3 className="text-lg font-bold text-[#1f1f1f] mb-1">{item.name}</h3>
+          <p className="text-[#1f1f1f] font-semibold text-sm mb-2">
+            {item.city}, {item.state}
+          </p>
+          <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
+            {item.description}
+          </p>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}

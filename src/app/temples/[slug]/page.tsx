@@ -22,14 +22,23 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/admin/content?type=temples`);
+        const res = await fetch(`/api/temple/detail?slug=${encodeURIComponent(slug)}`);
+        if (!res.ok) {
+          setTemple(null);
+          return;
+        }
         const data = await res.json();
-        setTemple(data.find((t: Record<string, any>) => t.slug === slug || t._id === slug) ?? null);
+        if (data?.error) {
+          setTemple(null);
+        } else {
+          setTemple(data);
+        }
       } catch (e) { console.error(e); }
       finally { setLoading(false); }
     }
     load();
   }, [slug]);
+
 
   useEffect(() => {
     const handler = () => {

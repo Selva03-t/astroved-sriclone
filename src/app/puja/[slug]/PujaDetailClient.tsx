@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import LoginModal from "@/components/auth/LoginModal";
 import {
   ArrowLeftIcon,
   BuildingLibraryIcon,
@@ -198,6 +199,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [dbReviews, setDbReviews] = useState<any[]>([]);
   const [reviewsShown, setReviewsShown] = useState(3);
   const [activeCarouselDot, setActiveCarouselDot] = useState(0);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingSankalpUrl, setPendingSankalpUrl] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const isManualScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<any>(null);
@@ -611,6 +614,110 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   </div>
                 </div>
               </div>
+
+              <div
+                className={`mt-4 rounded-2xl p-6 border transition-all cursor-pointer ${agreedToTerms ? 'bg-[#f0faf5] border-[#1a7c5c]' : 'bg-white border-gray-200 hover:border-[#1a7c5c]/40'}`}
+                onClick={() => setAgreedToTerms(!agreedToTerms)}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="mt-0.5 relative flex items-center justify-center h-5 w-5 shrink-0">
+                    <input
+                      type="radio"
+                      checked={agreedToTerms}
+                      readOnly
+                      className="peer appearance-none h-5 w-5 rounded-full border-2 border-gray-300 checked:border-[#1a7c5c] cursor-pointer transition-all"
+                    />
+                    {agreedToTerms && <div className="absolute h-2.5 w-2.5 rounded-full bg-[#1a7c5c]"></div>}
+                  </div>
+                  <p className={`text-[12px] font-medium leading-relaxed transition-colors ${agreedToTerms ? 'text-[#1a7c5c]' : 'text-gray-600'}`}>
+                    I agree to the Terms of Service. My Puja will be conducted with full vedic rites as per the selected package and offerings.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                {reviewCartError && (
+                  <div className="mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
+                    {reviewCartError}
+                  </div>
+                )}
+                <div className="flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
+                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
+                    <span>{1 + selectedExtraIds.length} Sevas selected</span>
+                    <span className="opacity-50">•</span>
+                    <span className="text-lg">{currencySymbol} {totalAmount}</span>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      setReviewLoading(true);
+                      setReviewCartError("");
+                      try {
+                        const res = await fetch('/api/auth/me');
+                        const authData = await res.json();
+
+                        let customerId = 1145090; // Default fallback
+                        if (authData.authenticated && authData.user?.customerId) {
+                          customerId = Number(authData.user.customerId) || 1145090;
+                        }
+
+                        let localCartId = shoppingCartId || "";
+
+                        // Add selected offerings to cart
+                        const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
+                        if (selectedOfferings.length > 0) {
+                          for (const offering of selectedOfferings) {
+                            const offProductId = offering.productId || 36;
+                            const cartRes = await fetch('/api/cart/add', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                customerId,
+                                productId: offProductId,
+                                quantity: 1,
+                                shopName: "AstroVed",
+                                variationId: 0,
+                                currencyCode: "INR",
+                                localeCode: "en-US",
+                                freeProductContributionAmount: 0,
+                                productSubVariationExternalId: ""
+                              })
+                            });
+
+                            const cartData = await cartRes.json();
+                            if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
+                              throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
+                            }
+                            if (cartData.SelectedListId) {
+                              localCartId = String(cartData.SelectedListId);
+                            }
+                          }
+                        }
+
+                        if (localCartId) {
+                          setShoppingCartId(localCartId);
+                        }
+
+                        const extras = selectedExtraIds.join(',');
+                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
+                        if (!authData.authenticated) {
+                          setPendingSankalpUrl(sankalpUrl);
+                          setShowLoginModal(true);
+                          return;
+                        }
+                        window.location.href = sankalpUrl;
+                      } catch (err: any) {
+                        setReviewCartError(err.message || "Connection error. Please try again.");
+                      } finally {
+                        setReviewLoading(false);
+                      }
+                    }}
+                    disabled={reviewLoading || !agreedToTerms}
+                    className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -650,111 +757,20 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               ))}
             </div>
 
-            <div
-              className={`mt-8 rounded-2xl p-6 border transition-all cursor-pointer ${agreedToTerms ? 'bg-[#f0faf5] border-[#1a7c5c]' : 'bg-white border-gray-200 hover:border-[#1a7c5c]/40'}`}
-              onClick={() => setAgreedToTerms(!agreedToTerms)}
-            >
-              <div className="flex items-start gap-4">
-                <div className="mt-0.5 relative flex items-center justify-center h-5 w-5 shrink-0">
-                  <input
-                    type="radio"
-                    checked={agreedToTerms}
-                    readOnly
-                    className="peer appearance-none h-5 w-5 rounded-full border-2 border-gray-300 checked:border-[#1a7c5c] cursor-pointer transition-all"
-                  />
-                  {agreedToTerms && <div className="absolute h-2.5 w-2.5 rounded-full bg-[#1a7c5c]"></div>}
-                </div>
-                <p className={`text-[12px] font-medium leading-relaxed transition-colors ${agreedToTerms ? 'text-[#1a7c5c]' : 'text-gray-600'}`}>
-                  I agree to the Terms of Service. My Puja will be conducted with full vedic rites as per the selected package and offerings.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Floating Bottom Bar */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 lg:p-6 z-50">
-          {reviewCartError && (
-            <div className="mx-auto max-w-7xl mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
-              {reviewCartError}
-            </div>
-          )}
-          <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
-            <div className="flex items-center gap-4 text-sm font-bold pl-4">
-              <span>{1 + selectedExtraIds.length} Sevas selected</span>
-              <span className="opacity-50">•</span>
-              <span className="text-lg">{currencySymbol} {totalAmount}</span>
-            </div>
-            <button
-              onClick={async () => {
-                setReviewLoading(true);
-                setReviewCartError("");
-                try {
-                  const res = await fetch('/api/auth/me');
-                  const authData = await res.json();
-
-                  let customerId = 1145090; // Default fallback
-                  if (authData.authenticated && authData.user?.customerId) {
-                    customerId = Number(authData.user.customerId) || 1145090;
-                  }
-
-                  let localCartId = shoppingCartId || "";
-
-                  // Add selected offerings to cart
-                  const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
-                  if (selectedOfferings.length > 0) {
-                    for (const offering of selectedOfferings) {
-                      const offProductId = offering.productId || 36;
-                      const cartRes = await fetch('/api/cart/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          customerId,
-                          productId: offProductId,
-                          quantity: 1,
-                          shopName: "AstroVed",
-                          variationId: 0,
-                          currencyCode: "INR",
-                          localeCode: "en-US",
-                          freeProductContributionAmount: 0,
-                          productSubVariationExternalId: ""
-                        })
-                      });
-
-                      const cartData = await cartRes.json();
-                      if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
-                        throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
-                      }
-                      if (cartData.SelectedListId) {
-                        localCartId = String(cartData.SelectedListId);
-                      }
-                    }
-                  }
-
-                  if (localCartId) {
-                    setShoppingCartId(localCartId);
-                  }
-
-                  const extras = selectedExtraIds.join(',');
-                  const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
-                  if (!authData.authenticated) {
-                    window.location.href = `/auth/login?callbackUrl=${encodeURIComponent(sankalpUrl)}`;
-                    return;
-                  }
-                  window.location.href = sankalpUrl;
-                } catch (err: any) {
-                  setReviewCartError(err.message || "Connection error. Please try again.");
-                } finally {
-                  setReviewLoading(false);
-                }
-              }}
-              disabled={reviewLoading || !agreedToTerms}
-              className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
+        {/* Login Modal for booking flow */}
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={() => {
+            setShowLoginModal(false);
+            if (pendingSankalpUrl) {
+              window.location.href = pendingSankalpUrl;
+            }
+          }}
+        />
       </div>
     );
   }

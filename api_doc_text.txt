@@ -1,0 +1,886 @@
+API Documentation
+-V4
+1.
+Authenticate Login API Documentation
+Endpoint
+POST 
+---- 
+https://qawebservice.astroved.com/api/
+User
+Account/AuthenticateLogin
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+Request Body
+Case:Type:1(Password)
+{
+    
+"UserName"
+:
+ 
+"moovendhan@astroved.com"
+,
+    
+"Password"
+:
+ 
+"Test@12345"
+,
+    
+"Type"
+:
+ 
+1
+,
+}
+Case:Type:2(SMS)
+{
+    
+"Type"
+:
+ 
+2
+,
+    
+"CountryCode"
+:
+ 
+"+91"
+,
+    
+"MobileNo"
+:
+ 
+"7358671437"
+}
+Case:Type:3 (Whatsapp)
+{
+    
+"Type"
+:
+ 
+3
+,
+    
+"CountryCode"
+:
+ 
+"+91"
+,
+    
+"MobileNo"
+:
+ 
+"7358671437"
+}
+Case:Type:4 (Email with OTP)
+{
+    
+"UserName"
+:
+ 
+"moovendhan@astroved.com"
+,
+    
+"Password"
+:
+ 
+""
+,
+    
+"Type"
+:
+ 
+4
+,
+}
+Request Parameters
+Parameter
+Data Type
+Required
+Description
+UserName
+string
+Yes
+User email or username
+Password
+string
+Yes
+User account password
+Type
+int
+Yes
+Login type identifier
+CountryCode
+string
+No
+Country dialing code
+MobileNo
+string
+No
+User mobile number
+Sample Success Response
+{
+    
+"StatusCode"
+: 
+200
+,
+    
+"Status"
+: 
+"OK"
+,
+    
+"Message"
+: 
+"login sucessfully done"
+,
+    
+"loginInfo"
+: {
+        
+"UserLogin"
+: 
+"moovendhanastroved@gmail.com"
+,
+        
+"CustomerId"
+: 
+1147346
+,
+        
+"CustomerName"
+: 
+"$@$Tr0VeD$TeSt$ US"
+,
+        
+"IsMobileVerified"
+: 
+false
+,
+        
+"IsEmailVerified"
+: 
+true
+,
+        
+"MobileNo"
+: 
+""
+,
+        
+"CustomerCurrency"
+: 
+"USD"
+    }
+}
+{
+    
+"StatusCode"
+: 
+200
+,
+    
+"Status"
+: 
+"OK"
+,
+    
+"Message"
+: 
+"OTP should be sent successfully to the entered mobile number"
+,
+    
+"loginInfo"
+: 
+null
+}
+Sample Failure Response
+{
+    
+"StatusCode"
+: 
+429
+,
+    
+"Status"
+: 
+"TooManyAttempts"
+,
+    
+"Message"
+: 
+"You have sent multiple requests. Please try again later!"
+,
+    
+"loginInfo"
+: 
+null
+}
+2.Verify OTP
+ API 
+Endpoint
+POST 
+---- 
+https://qawebservice.astroved.com/api/
+User
+Account/
+VerifyOtp
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+Request Body
+{
+"Type": 3,
+"CountryCode": "+91",
+"MobileNo": "7358671437",
+"OTP": 454324
+}
+{
+    
+"Type"
+ :
+4
+,
+    
+"CountryCode"
+:
+""
+,
+    
+"MobileNo"
+:
+""
+,
+    
+"OTP"
+:
+"905745"
+,
+    
+"UserName"
+:
+"moovendhanastroved@gmail.com"
+}
+Request Parameters
+Parameter
+Data Type
+Required
+Description
+Type
+int
+Yes
+Login or verification type
+CountryCode
+string
+Yes
+Country dialing code
+MobileNo
+string
+Yes
+User mobile number
+OTP
+string
+Yes
+One Time Password sent to mobile
+UserName
+string
+Yes
+UserLogin
+Sample Success Response
+{
+    
+"StatusCode"
+: 
+200
+,
+    
+"Status"
+: 
+"OK"
+,
+    
+"Message"
+: 
+"OTP should be verified successfully"
+,
+    
+"loginInfo"
+: {
+        
+"UserLogin"
+: 
+"moovendhan@astroved.com"
+,
+        
+"CustomerId"
+: 
+1163092
+,
+        
+"CustomerName"
+: 
+"TestS"
+,
+        
+"IsMobileVerified"
+: 
+true
+,
+        
+"IsEmailVerified"
+: 
+true
+,
+        
+"MobileNo"
+: 
+"7358671437"
+,
+        
+"CustomerCurrency"
+: 
+"INR"
+    }
+}
+Sample Failure Response
+{
+    
+"StatusCode"
+: 404,
+    
+"Status"
+: 
+"Not Found"
+,
+    
+"Message"
+: 
+"Invalid OTP. Please try again."
+,
+    
+"loginInfo"
+: 
+null
+}
+3.Resend Otp
+ API 
+Endpoint
+POST 
+---- 
+https://qawebservice.astroved.com/api/
+User
+Account/
+ResendOtp
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+Request Body
+Case:Type:2(SMS)
+{
+    
+"Type"
+:
+ 
+2
+,
+    
+"CountryCode"
+:
+ 
+"+91"
+,
+    
+"MobileNo"
+:
+ 
+"7358671437"
+}
+Case:Type:3 (Whatsapp)
+{
+    
+"Type"
+:
+ 
+3
+,
+    
+"CountryCode"
+:
+ 
+"+91"
+,
+    
+"MobileNo"
+:
+ 
+"7358671437"
+}
+Request Parameters
+Parameter
+Data Type
+Required
+Description
+Type
+int
+Yes
+Login type identifier
+CountryCode
+string
+No
+Country dialing code
+MobileNo
+string
+No
+User mobile number
+Sample Success Response
+{
+    
+"StatusCode"
+: 
+200
+,
+    
+"Status"
+: 
+"OK"
+,
+    
+"Message"
+: 
+"OTP should be sent successfully to the entered mobile number"
+,
+    
+"loginInfo"
+: 
+null
+}
+Sample Failure Response
+{
+    
+"StatusCode"
+: 
+429
+,
+    
+"Status"
+: 
+"TooManyAttempts"
+,
+    
+"Message"
+: 
+"You have sent multiple requests. Please try again later!"
+,
+    
+"loginInfo"
+: 
+null
+}
+{
+    
+"StatusCode"
+: 
+429
+,
+    
+"Status"
+: 
+"
+RateLimitExceeded
+"
+,
+    
+"Message"
+: 
+"
+Your Whatsapp send limit has been exceeded. Please try again after 24 hours!
+"
+,
+    
+"loginInfo"
+: 
+null
+}
+4.ProceedviaRazorPay
+ API 
+Endpoint
+POST ---- 
+https://qawebservice.astroved.com/api/UserAccount/ProceedviaRazorPay
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+Request Body
+{
+  
+"customerId"
+: 
+1145090
+,
+  
+"currencyCode"
+: 
+"INR"
+,
+  
+"ipAddress"
+: 
+"192.168.20.96"
+,
+  
+"shoppingCartId"
+: 
+2000237
+,
+  
+"totalamount"
+: 
+500.00
+,
+  
+"contactId"
+: 
+1367254
+,
+  
+"localeId"
+: 
+1
+,
+  
+"trackingCode1"
+: 
+"GOOGLE_CAMPAIGN"
+,   //Optional
+  
+"trackingCode2"
+: 
+"SUMMER_SALE"
+, 
+ //Optional
+  
+"shippingpreferred"
+: 
+false 
+ //Optional
+}
+Sample Success Response
+{
+    
+"Status"
+: 
+"123456"
+,
+    
+"Msg"
+: “123_rt5fytr6rf”
+}
+5.RazorPay
+ API
+- Sample Script
+<form action="thankyourp.aspx" method="post" name="razorpayForm">
+    <input id="razorpay_payment_id" type="hidden" name="razorpay_payment_id" />
+    <input id="razorpay_order_id" type="hidden" name="razorpay_order_id" />
+    <input id="razorpay_signature" type="hidden" name="razorpay_signature" />
+    <input id="razorpay_notes" type="hidden" name="razorpay_notes" />
+</form>
+<button type="button" id="btnProceedviaRazorpay">
+    Proceed via Razorpay
+</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('btnProceedviaRazorpay').onclick = function (e) {
+        $.ajax({
+            type: "Post",
+            url: "https://qawebservice.astroved.com/api/UserAccount/ProceedviaRazorPay",
+            contentType: "application/json; charset=utf-8",
+            headers: {
+                "Authorization": "Bearer <JWT Token>"
+            },
+            dataType: "json",
+d
+ata: 
+“place json body”      
+      
+Success: function (r) {
+                var orderId = r.Msg;
+                var shoppingCartId = r.Status;
+                var options = {
+                    "key": "place test key",
+                    "name": "AstroVed",
+                    "order_id": orderId,
+                    "image": "https://www.astroved.com/Images/astroved-logo.jpg",
+                    "prefill": {
+                        "contact": "place mobile number",
+                        "email": "place emailId",
+                    },
+                    "theme": {
+                        "color": "#4e89df"
+                    },
+                    // "method": {
+                    //     "card": false,
+                    //     "netbanking": false,
+                    //     "wallet": false,
+                    // },
+                    "readonly":{
+                        "name":true,
+                        "contact":true,
+                        "email": true,
+                    }
+                }
+                options.theme.image_padding = false;
+                options.handler = function (response) {
+                    $("#btnProceedviaRazorpay").css("display", "none");
+                    document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                    document.getElementById('razorpay_order_id').value = orderId;
+                    document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                    var notes = {
+                        OrderId: shoppingCartId
+                    };
+                    document.getElementById('razorpay_notes').value = JSON.stringify(notes);
+                    document.razorpayForm.action = 'place URL after complete payment';
+                    document.razorpayForm.submit();
+                };
+                options.modal = {
+                    ondismiss: function () {
+                        console.log("This code runs when the popup is closed");
+                    },
+                    escape: true,
+                    backdropclose: false
+                };
+                var rzp = new Razorpay(options);
+                rzp.open();
+                e.preventDefault();
+            },
+            failure: function (r) {
+                $('#RazorpayPolicy').show();
+                $('#RazorpayPolicy').empty();
+                $('#RazorpayPolicy').append(r.d);
+            }
+        });
+    }
+</script>   
+ 
+6
+.Registration
+ API 
+Endpoint
+POST 
+---- 
+https://qawebservice.astroved.com/api/
+User
+Account/
+RegistrationBasedOnShop
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+ 
+Request Body
+{
+    
+"FirstName"
+:
+"Test"
+,
+    
+"LastName"
+:
+"Test"
+,
+    
+"UserName"
+:
+"rojipob573@gzeos.com"
+,
+    
+"Password"
+:
+"astroved@108"
+,
+    
+"PhoneNumber"
+: 
+"+91|8667848859"
+,
+    
+"ShopName"
+:
+"AstroVed"
+,
+    
+"Currency"
+: 
+"INR"
+,
+    
+"IsWhatsappNumber"
+ : 
+false
+}
+Sample Success Response
+{
+    
+"FirstName"
+: 
+"Test"
+,
+    
+"CustomerId"
+: 
+1413823
+,
+    
+"IsRegistered"
+: 
+true
+,
+    
+"Email"
+: 
+"kiniv61574@acanok.com"
+,
+    
+"Password"
+: 
+"astroved@108"
+,
+    
+"PhoneNumber"
+: 
+"91|8667848859"
+,
+    
+"Currency"
+: 
+"INR"
+,
+    
+"ErrorMessage"
+: 
+null
+}
+AddToCart API
+Endpoint
+POST 
+---- 
+https://qawebservice.astroved.com/api/UserAccount/AddedItemsToCart
+Headers
+Key
+Value
+Content-Type
+application/json
+Authorization
+Bearer <JWT_Token>
+Request Body
+{
+  
+"customerId"
+: 
+1145090
+,
+  
+"productId"
+: 
+17
+,
+  
+"quantity"
+: 
+1
+,
+  
+"shopName"
+: 
+"AstroVed"
+,
+  
+"variationId"
+: 
+0
+,
+  
+"currencyCode"
+: 
+"INR"
+,
+  
+"localeCode"
+: 
+"en-US"
+,
+  
+"freeProductContributionAmount"
+: 
+0
+, //optional
+  
+"productSubVariationExternalId"
+: 
+"" 
+//optional
+}
+Sample Success Response
+{
+    
+"StatusCode"
+: 
+200
+,
+    
+"Status"
+: 
+"OK"
+,
+    
+"Message"
+: 
+"Your items have been added to your cart"
+,
+    
+"SelectedListId"
+: 
+1869856
+}
+Sample Failure Response
+{
+    
+"StatusCode"
+: 
+400
+,
+    
+"Status"
+: 
+"BadRequest"
+,
+    
+"Message"
+: 
+"Request payload is required."
+,
+    
+"SelectedListId"
+: 
+0
+}
