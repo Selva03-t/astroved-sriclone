@@ -246,8 +246,57 @@ function getAyana(date: Date): string {
   return afterMakarSankranti && beforeKarkSankranti ? 'Uttarayana' : 'Dakshinayana';
 }
 
+// ─── Exact Calculation Helper ────────────────────────────────────────────────
+function calculateExactTimings(dateObj: Date, longitude: number) {
+  const day = dateObj.getDay(); // 0-6 (0 = Sunday)
+
+  const rahuStarts = [16.5, 7.5, 15.0, 12.0, 13.5, 10.5, 9.0];
+  const yamaStarts = [12.0, 10.5, 9.0, 7.5, 6.0, 15.0, 13.5];
+  const guliStarts = [15.0, 13.5, 12.0, 10.5, 9.0, 7.5, 6.0];
+
+  // Offset in minutes to adjust Local Mean Time (LMT) to IST (82.5° E)
+  const offsetMins = Math.round((82.5 - longitude) * 4);
+
+  const formatTime = (hours: number) => {
+    let totalMins = Math.round(hours * 60) + offsetMins;
+    if (totalMins < 0) totalMins += 24 * 60;
+    
+    let h = Math.floor(totalMins / 60) % 24;
+    const m = totalMins % 60;
+    
+    const ampm = h >= 12 ? 'pm' : 'am';
+    if (h > 12) h -= 12;
+    if (h === 0) h = 12;
+    
+    return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
+  };
+
+  return {
+    auspiciousTimings: {
+      abhijit: {
+        start: formatTime(11.6), // 11:36 AM
+        end: formatTime(12.4),   // 12:24 PM
+      }
+    },
+    inauspiciousTimings: {
+      rahu: {
+        start: formatTime(rahuStarts[day]),
+        end: formatTime(rahuStarts[day] + 1.5),
+      },
+      yamghant: {
+        start: formatTime(yamaStarts[day]),
+        end: formatTime(yamaStarts[day] + 1.5),
+      },
+      gulik: {
+        start: formatTime(guliStarts[day]),
+        end: formatTime(guliStarts[day] + 1.5),
+      }
+    }
+  };
+}
+
 // ─── Main normalizer ──────────────────────────────────────────────────────────
-function normalizeApiResponse(raw: any, queryDate?: string): any {
+function normalizeApiResponse(raw: any, queryDate?: string, reqLongitude?: number): any {
   const tithi    = raw.tithi    ?? {};
   const nakshatra = raw.nakshatra ?? {};
   const yoga     = raw.yoga     ?? {};
@@ -262,6 +311,8 @@ function normalizeApiResponse(raw: any, queryDate?: string): any {
 
   const { amanta, purnimanta } = getLunarMonths(date, paksha);
   const { vikram, shaka }      = getSamvat(date);
+
+  const exactTimings = calculateExactTimings(date, reqLongitude || raw.location?.longitude || 82.9739);
 
   return {
     queryDate: queryDate || new Date().toISOString(),
@@ -303,31 +354,75 @@ function normalizeApiResponse(raw: any, queryDate?: string): any {
     ayana:      getAyana(date),
     festival:   raw.festival ?? '',
 
-    auspiciousTimings: {
-      abhijit: {
-        start: raw.abhijit_muhurta?.start_time ? toTime(raw.abhijit_muhurta.start_time) : '',
-        end:   raw.abhijit_muhurta?.end_time   ? toTime(raw.abhijit_muhurta.end_time)   : '',
-      },
-    },
-    inauspiciousTimings: {
-      rahu: {
-        start: raw.rahu_kaal?.start_time   ? toTime(raw.rahu_kaal.start_time)   : '',
-        end:   raw.rahu_kaal?.end_time     ? toTime(raw.rahu_kaal.end_time)     : '',
-      },
-      gulik: {
-        start: raw.gulika_kaal?.start_time ? toTime(raw.gulika_kaal.start_time) : '',
-        end:   raw.gulika_kaal?.end_time   ? toTime(raw.gulika_kaal.end_time)   : '',
-      },
-      yamghant: {
-        start: raw.yamaganda?.start_time   ? toTime(raw.yamaganda.start_time)   : '',
-        end:   raw.yamaganda?.end_time     ? toTime(raw.yamaganda.end_time)     : '',
-      },
-    },
+    auspiciousTimings: exactTimings.auspiciousTimings,
+    inauspiciousTimings: exactTimings.inauspiciousTimings,
 
     upcomingFestivals: (raw.upcomingFestivals?.length || raw.upcoming_festivals?.length)
       ? (raw.upcomingFestivals ?? raw.upcoming_festivals)
       : getUpcomingFestivals(queryDate),
   };
+}
+
+let cachedToken: string | null = null;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function getAccessToken(): Promise<string> {
+  if (cachedToken) return cachedToken;
+  
+  // Initialize from env if first time
+  const envToken = process.env.ASTROVED_API_TOKEN || process.env.AstroVed_API_TOKEN;
+  if (envToken) {
+    cachedToken = envToken;
+    return cachedToken;
+  }
+  return '';
+}
+
+async function refreshAccessToken(): Promise<string | null> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const refreshToken = process.env.ASTROVED_REFRESH_TOKEN || '';
+      if (!refreshToken) {
+        console.warn('Panchang API: No refresh token available in env.');
+        return null;
+      }
+
+      // Use the provided refresh API URL
+      const refreshUrl = process.env.ASTROVED_REFRESH_API_URL || 'https://qaengine.astroved.com/api/v1/auth/refresh';
+      console.log('Panchang API: Attempting to refresh token via', refreshUrl);
+
+      const res = await fetch(refreshUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (!res.ok) {
+        console.error('Panchang API: Failed to refresh token. Status:', res.status);
+        return null;
+      }
+
+      const data = await res.json();
+      // Adjust this depending on actual API response format (e.g., data.access_token)
+      const newToken = data.access_token || data.token || data.jwt || data.JWT_Token || data.Token;
+      
+      if (newToken) {
+        cachedToken = newToken;
+        console.log('Panchang API: Successfully refreshed access token.');
+        return newToken;
+      }
+      return null;
+    } catch (error) {
+      console.error('Panchang API: Error during token refresh:', error);
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
 }
 
 // ─── Fetch & return normalized panchang data ──────────────────────────────────
@@ -353,39 +448,62 @@ export async function fetchPanchangData(params: PanchangParams = {}) {
   }
 
   // Token lives only in .env.local — never sent to the browser
-  const token = process.env.AstroVed_API_TOKEN || '';
+  let token = await getAccessToken();
 
   if (!token) {
-    console.warn('Panchang API: No DIVINEALIGN_API_TOKEN found in .env.local. Using dummy data immediately.');
+    console.warn('Panchang API: No API Token found in .env.local. Using dummy data immediately.');
     return getDummyPanchangData(date, latitude, longitude);
   }
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout
+  // Helper to make the API request with a specific token
+  const makeRequest = async (currentToken: string) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${currentToken}`,
+        },
+        body,
+        next: { revalidate: 3600 },
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      return res;
+    } catch (err) {
+      clearTimeout(timeoutId);
+      throw err;
+    }
+  };
 
   try {
-    const res = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body,
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
+    let res = await makeRequest(token);
 
     if (!res.ok) {
       if (res.status === 401) {
-        console.warn('Panchang API: 401 Unauthorized — check AstroVed_API_TOKEN in .env.local');
-        return getDummyPanchangData(date, latitude, longitude);
+        console.warn('Panchang API: 401 Unauthorized — Attempting token refresh...');
+        const newToken = await refreshAccessToken();
+        
+        if (newToken) {
+          // Retry the request with the new token
+          res = await makeRequest(newToken);
+          if (!res.ok) {
+            console.warn(`Panchang API: Retried request failed with status: ${res.status}. Falling back to dummy data.`);
+            return getDummyPanchangData(date, latitude, longitude);
+          }
+        } else {
+          console.warn('Panchang API: Token refresh failed or returned no token. Falling back to dummy data.');
+          return getDummyPanchangData(date, latitude, longitude);
+        }
+      } else {
+        throw new Error(`Panchang API error: ${res.status}`);
       }
-      throw new Error(`Panchang API error: ${res.status}`);
     }
 
     const raw = await res.json();
-    return normalizeApiResponse(raw, date);
+    return normalizeApiResponse(raw, date, longitude);
   } catch (err) {
     console.error('fetchPanchangData error:', err);
     return getDummyPanchangData(date, latitude, longitude);

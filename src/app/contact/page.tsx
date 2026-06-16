@@ -42,12 +42,11 @@ const contactCards: ContactCard[] = [
       {
         label: "US Helpline",
         value: "+1 412-927 3625",
-        href: "tel:+14129273625"
+        href: "tel:+14129273625",
       },
     ],
   },
 ];
-
 
 export default function ContactPage() {
   return (
