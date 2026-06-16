@@ -11,9 +11,9 @@ export default function Footer() {
           {/* Logo and Description */}
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3">
-              <img 
-                src="/images/logo.svg" 
-                alt="AstroVed Logo" 
+              <img
+                src="/images/logo.svg"
+                alt="AstroVed Logo"
                 className="brightness-0 invert h-10 w-auto object-contain"
               />
             </div>
@@ -46,7 +46,11 @@ export default function Footer() {
           <div>
             <h4 className="mb-6 text-xl font-bold">Our Address</h4>
             <p className="text-sm leading-relaxed mb-6">
-              Firstprinciple AppsForBharat Pvt. Ltd. 2nd Floor, Urban Vault, No. 29/1, 27th Main Road, Somasundarapalya, HSR Post, Bangalore, Karnataka - 560102
+              AstroVed.Com Pvt. Ltd.,
+              Prince Info Park, Plot No: 81-B,
+              A-Block, 4th Floor, 2nd Main Road,
+              Ambattur Industrial Estate,
+              Chennai 600 058
             </p>
             <div className="flex flex-wrap gap-3">
               <SocialIcon platform="youtube" href="https://www.youtube.com/AstroVed" />
@@ -63,46 +67,66 @@ export default function Footer() {
         <div className="mt-16 border-t border-white/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Download Badges */}
           <div id="download-app" className="flex scroll-mt-28 flex-wrap justify-center gap-4 md:justify-start">
-             <a href="https://play.google.com/store/apps/details?id=com.AstroVed.birthchartnew" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
-                <i className="fa-brands fa-google-play text-xl"></i>
-                <div className="leading-tight">
-                   <p className="font-medium text-[9px] opacity-80 uppercase">GET IT ON</p>
-                   <p className="font-bold text-[15px]">Google Play</p>
-                </div>
-             </a>
-             <a href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on the App Store" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
-                <i className="fa-brands fa-apple text-2xl"></i>
-                <div className="leading-tight">
-                   <p className="font-medium text-[9px] opacity-80">Download on the</p>
-                   <p className="font-bold text-[15px]">App Store</p>
-                </div>
-             </a>
+            <a href="https://play.google.com/store/apps/details?id=com.AstroVed.birthchartnew" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+              <i className="fa-brands fa-google-play text-xl"></i>
+              <div className="leading-tight">
+                <p className="font-bold text-[15px]">Google Play</p>
+              </div>
+            </a>
+            <a href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on the App Store" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+              <i className="fa-brands fa-apple text-2xl"></i>
+              <div className="leading-tight">
+
+                <p className="font-bold text-[15px]">App Store</p>
+              </div>
+            </a>
           </div>
 
           {/* Compliance Logos */}
           <div className="flex items-center gap-6 opacity-90">
-             <div className="flex flex-col items-center gap-1">
-                <div className="h-8 w-12 bg-white/20 rounded flex items-center justify-center text-xs font-bold italic">DI</div>
-                <span className="text-[8px] font-bold">Digital India</span>
-             </div>
-             <div className="flex flex-col items-center gap-1">
-                <div className="h-8 w-12 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">ISO</div>
-                <span className="text-[8px] font-bold">27001</span>
-             </div>
-             <div className="flex flex-col items-center gap-1">
-                <div className="h-8 w-12 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">Razorpay</div>
-                <span className="text-[8px] font-bold">Trusted Business</span>
-             </div>
+            <div className="flex flex-col items-center gap-1">
+
+              <img
+                src="https://cdn.astroved.com/images/images-av/years-of-services.png"
+                alt="25 YEARS OF ASTROVED"
+                className="brightness-100  h-10 w-auto object-contain"
+              />
+
+            </div>
+            <div className="flex flex-col items-center gap-1">
+
+
+              <img
+                src="https://cdn.astroved.com/images/images-av/podbean-logo.png"
+                alt="PODBEAN"
+                className="brightness-100 h-10 w-auto object-contain"
+              />
+
+            </div>
+            <div>
+              <img
+                src="https://cdn.astroved.com/images/images-av/iso.png"
+                alt="ISO"
+                className="brightness-100 h-10 w-auto object-contain"
+              />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <img
+                src="https://cdn.astroved.com/images/images-av/sectigo_trust_seal.jpg"
+                alt="trust seal"
+                className="brightness-100 h-10 w-auto object-contain"
+              />
+            </div>
           </div>
 
           {/* Legal and Copyright */}
           <div className="text-center md:text-right">
-             <div className="flex gap-4 text-xs font-semibold justify-center md:justify-end mb-1">
-                <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
-                <span>•</span>
-                <Link href="/terms" className="hover:underline">Terms and Conditions</Link>
-             </div>
-             <p className="text-[10px] opacity-70">© 2026 AstroVed, Inc. All rights reserved.</p>
+            <div className="flex gap-4 text-xs font-semibold justify-center md:justify-end mb-1">
+              <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
+              <span>•</span>
+              <Link href="/terms" className="hover:underline">Terms and Conditions</Link>
+            </div>
+            <p className="text-[10px] opacity-70">© 2001 - 2026 AstroVed - All rights reserved.</p>
           </div>
         </div>
       </div>
