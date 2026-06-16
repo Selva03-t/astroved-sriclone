@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 
 interface Booking {
   _id: string;
@@ -111,8 +110,6 @@ export default function MyChadhavaBookings() {
             </div>
          )}
       </div>
-
-      <Footer />
     </main>
   );
 }
