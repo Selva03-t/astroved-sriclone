@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { method, otp } = body;
 
-    if (!method || !otp || !/^[0-9]{6}$/.test(otp)) {
-      return NextResponse.json({ success: false, error: "Enter the 6-digit OTP" }, { status: 400 });
+    if (!method || !otp || !/^[0-9]{4,8}$/.test(String(otp).trim())) {
+      return NextResponse.json({ success: false, error: "Enter the OTP sent to your number" }, { status: 400 });
     }
 
     let authUser;
@@ -49,6 +49,7 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     if (error instanceof AstrovedAuthError) {
+      console.error("[otp-verify] AstrovedAuthError:", error.message, "status:", error.statusCode, "vendorStatus:", error.vendorStatus);
       return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode });
     }
 
@@ -56,6 +57,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: false, error: "Unable to verify OTP" }, { status: 500 });
+    console.error("[otp-verify] Unexpected error:", error);
+    return NextResponse.json({ success: false, error: "Unable to verify OTP. Please try again." }, { status: 500 });
   }
 }

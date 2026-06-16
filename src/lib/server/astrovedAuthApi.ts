@@ -65,8 +65,40 @@ function getStatusCode(statusCode?: number) {
 }
 
 function ensureSuccessfulResponse(data: AstrovedAuthResponse) {
+  // If loginInfo is present, it's a successful OTP verification response — always pass through
+  if (data.loginInfo) return data;
+
+  // ErrorMessage is the clearest failure indicator
+  if (data.ErrorMessage) {
+    throw new AstrovedAuthError(
+      data.ErrorMessage,
+      getStatusCode(data.StatusCode),
+      data.Status
+    );
+  }
+
+  // Check for explicit failure Status
+  if (
+    data.Status === "Error" ||
+    data.Status === "Failed" ||
+    data.Status === "BadRequest" ||
+    data.Status === "NotFound"
+  ) {
+    throw new AstrovedAuthError(
+      data.Message || "AstroVed authentication failed",
+      getStatusCode(data.StatusCode),
+      data.Status
+    );
+  }
+
+  // Standard success check
   if (data.StatusCode === 200 && data.Status === "OK") return data;
 
+  // Some AstroVed endpoints return status 0 or omit StatusCode on success
+  // Accept when there's no explicit failure indicator (which we checked above)
+  if (!data.StatusCode || data.StatusCode === 0) return data;
+
+  // Anything that isn't a 200 and has no loginInfo is a failure
   throw new AstrovedAuthError(
     data.Message || "AstroVed authentication failed",
     getStatusCode(data.StatusCode),
@@ -104,6 +136,8 @@ async function postToAstroved(path: string, body: Record<string, unknown>) {
     if (!data) {
       throw new AstrovedAuthError("Invalid response from AstroVed auth service", 502);
     }
+
+    console.log(`[astroved] ${path} response:`, JSON.stringify({ StatusCode: data.StatusCode, Status: data.Status, Message: data.Message, hasLoginInfo: !!data.loginInfo, ErrorMessage: data.ErrorMessage }));
 
     return ensureSuccessfulResponse(data);
   } catch (error) {

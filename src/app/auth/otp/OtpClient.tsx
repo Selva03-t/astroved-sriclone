@@ -54,14 +54,14 @@ export default function OtpClient() {
     return parseOtpContext(new URLSearchParams(searchParams.toString()));
   }, [searchParams]);
 
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendSeconds, setResendSeconds] = useState(RESEND_SECONDS);
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const otpInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    otpRefs.current[0]?.focus();
+    otpInputRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -75,21 +75,6 @@ export default function OtpClient() {
     window.location.href = callbackUrl;
   };
 
-  const handleOtpChange = (index: number, nextValue: string) => {
-    const digit = nextValue.replace(/[^0-9]/g, "").slice(-1);
-    const nextOtp = [...otp];
-    nextOtp[index] = digit;
-    setOtp(nextOtp);
-
-    if (digit && index < 5) otpRefs.current[index + 1]?.focus();
-  };
-
-  const handleOtpKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
   const handleVerifyOtp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
@@ -99,9 +84,9 @@ export default function OtpClient() {
       return;
     }
 
-    const otpValue = otp.join("");
-    if (!/^[0-9]{6}$/.test(otpValue)) {
-      setError("Enter the 6-digit OTP");
+    const otpValue = otp.trim();
+    if (!/^[0-9]{4,8}$/.test(otpValue)) {
+      setError("Enter the OTP sent to your number");
       return;
     }
 
@@ -122,9 +107,9 @@ export default function OtpClient() {
     setLoading(true);
     try {
       await authService.resendOtp(otpPayload);
-      setOtp(Array(6).fill(""));
+      setOtp("");
       setResendSeconds(RESEND_SECONDS);
-      otpRefs.current[0]?.focus();
+      otpInputRef.current?.focus();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to resend OTP");
     } finally {
@@ -194,7 +179,7 @@ export default function OtpClient() {
             </div>
 
             <h1 className="text-center text-xl font-bold text-[#1a1a2e]">
-              Enter the 6-digit OTP
+              Enter the OTP
             </h1>
             <p className="mt-1 text-center text-sm text-[#6a4e95]">
               {isEmail ? "OTP sent to your email" : "OTP sent to your WhatsApp"}
@@ -225,25 +210,20 @@ export default function OtpClient() {
             )}
 
             <form onSubmit={handleVerifyOtp} className="mt-6 space-y-5 flex-1 flex flex-col">
-              {/* 6-digit OTP boxes */}
-              <div className="grid grid-cols-6 gap-2 sm:gap-3">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(element) => {
-                      otpRefs.current[index] = element;
-                    }}
-                    id={`otp-digit-${index}`}
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(event) => handleOtpChange(index, event.target.value)}
-                    onKeyDown={(event) => handleOtpKeyDown(index, event)}
-                    className="aspect-square w-full rounded-xl border border-[#d8c9fb] bg-[#fcfaff] text-center text-xl font-bold text-[#342151] outline-none transition-all focus:border-[#6869F9] focus:ring-2 focus:ring-[#ddd1ff]"
-                  />
-                ))}
+              {/* Single flexible OTP input */}
+              <div className="flex justify-center">
+                <input
+                  ref={otpInputRef}
+                  id="otp-input"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={8}
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                  placeholder="Enter OTP"
+                  className="w-full max-w-[260px] h-14 rounded-xl border-2 border-[#6869F9] bg-[#f0efff] text-center text-2xl font-bold text-[#342151] outline-none tracking-widest transition-all focus:ring-2 focus:ring-[#ddd1ff]"
+                />
               </div>
 
               {/* Resend timer */}
@@ -278,10 +258,10 @@ export default function OtpClient() {
               <button
                 id="otp-submit-btn"
                 type="submit"
-                disabled={loading || otp.join("").length !== 6 || !otpPayload}
+                disabled={loading || otp.trim().length < 4 || !otpPayload}
                 className="w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
                 style={
-                  !loading && otp.join("").length === 6 && otpPayload
+                  !loading && otp.trim().length >= 4 && otpPayload
                     ? { background: "linear-gradient(135deg, #6869F9 0%, #4546d4 100%)", boxShadow: "0 10px 24px rgba(104,105,249,0.35)" }
                     : { background: "#c4b8f0" }
                 }

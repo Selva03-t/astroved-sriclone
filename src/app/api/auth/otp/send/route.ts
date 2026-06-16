@@ -53,7 +53,7 @@ export async function POST(request: Request) {
               email: payload.email,
               password: generatedPassword,
               phone: dummyPhone, 
-              country: { code: "IN", dialCode: "+91", name: "India" } as any,
+              country: { isoCode: "IN", dialCode: "91", name: "India" } as any,
               isWhatsappNumber: false,
               currency: "INR"
             });
@@ -76,8 +76,26 @@ export async function POST(request: Request) {
           
         } catch (regError) {
           console.error("[otp-send] Silent registration failed:", regError);
-          // Throw the ORIGINAL error so the UI shows "Unauthorized" or whatever the original issue was
-          throw error; 
+          
+          // If registration failed because user ALREADY EXISTS → they're registered, just retry OTP
+          const regMsg = regError instanceof Error ? regError.message.toLowerCase() : "";
+          if (
+            regMsg.includes("already exists") ||
+            regMsg.includes("mobile no already") ||
+            regMsg.includes("email already") ||
+            regMsg.includes("duplicate")
+          ) {
+            console.log("[otp-send] User already exists in AstroVed DB. Retrying OTP directly...");
+            try {
+              responseData = await requestOtp(payload);
+            } catch (retryErr) {
+              console.error("[otp-send] OTP retry after exists-check also failed:", retryErr);
+              throw retryErr;
+            }
+          } else {
+            // Truly unregistered or other error — surface original "not found" message
+            throw error; 
+          }
         }
       } else {
         throw error;

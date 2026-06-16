@@ -162,8 +162,8 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   /* ─── Step 2: verify OTP ─── */
   async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
-    const code = otp;
-    if (code.length < 5) { setOtpError("Enter the full OTP"); return; }
+    const code = otp.trim();
+    if (code.length < 4) { setOtpError("Enter the OTP sent to your number"); return; }
     setOtpError("");
     setOtpLoading(true);
     try {
@@ -194,9 +194,9 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     setOtpLoading(true);
     try {
       if (method === "email") {
-        await authService.sendOtp({ method: "email", email: inputValue } as any);
+        await authService.resendOtp({ method: "email", email: inputValue } as any);
       } else {
-        await authService.sendOtp({
+        await authService.resendOtp({
           method: "whatsapp",
           country: DEFAULT_COUNTRY,
           number: inputValue.replace(/\D/g, ""),
@@ -458,7 +458,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   textAlign: "center",
                 }}
               >
-                Enter the 6-digit OTP
+                Enter the OTP
               </h1>
               <p style={{ fontSize: 13, color: "#666", textAlign: "center", margin: "0 0 4px" }}>
                 {isIndian
@@ -482,9 +482,9 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                     type="text"
                     inputMode="numeric"
                     autoComplete="one-time-code"
-                    maxLength={6}
+                    maxLength={8}
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter OTP"
                     style={{
                       width: "100%",
@@ -535,20 +535,20 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 <button
                   id="otp-modal-submit"
                   type="submit"
-                  disabled={otp.length < 5 || otpLoading}
+                  disabled={otp.length < 4 || otpLoading}
                   style={{
                     width: "100%",
                     padding: "13px",
                     borderRadius: 8,
                     border: "none",
                     background:
-                      otp.length >= 5 && !otpLoading
+                      otp.length >= 4 && !otpLoading
                         ? `linear-gradient(135deg,${BLUE},${BLUE_DARK})`
                         : "#c4c3f8",
                     color: "#fff",
                     fontWeight: 700,
                     fontSize: 16,
-                    cursor: otp.length >= 5 && !otpLoading ? "pointer" : "not-allowed",
+                    cursor: otp.length >= 4 && !otpLoading ? "pointer" : "not-allowed",
                     fontFamily: "inherit",
                     transition: "background 0.2s",
                   }}
