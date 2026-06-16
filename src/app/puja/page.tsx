@@ -400,7 +400,7 @@ export default function PujaPage() {
     {
       title: t.puja.step1Title,
       description: t.puja.step1Desc,
-      imageSrc: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+      imageSrc: "/images/app-banner1.jpg",
       imageAlt: "Choose a puja from the list",
       tag: "Book Puja",
       cta: t.puja.bookNow,
@@ -408,7 +408,7 @@ export default function PujaPage() {
     {
       title: t.puja.step2Title,
       description: t.puja.step2Desc,
-      imageSrc: "/images/Lakshmi-Homam.jpg",
+      imageSrc: "/images/app-banner2.jpg",
       imageAlt: "Fill devotee information for the puja",
       tag: "Sankalp Details",
       cta: t.puja.bookNow,
@@ -416,7 +416,7 @@ export default function PujaPage() {
     {
       title: t.puja.step3Title,
       description: t.puja.step3Desc,
-      imageSrc: "/images/Navagraha-Shanti-Puja.jpg",
+      imageSrc: "/images/app-banner3.jpg",
       imageAlt: "Receive puja video on WhatsApp",
       tag: "Puja Video",
       cta: t.puja.bookNow,
@@ -424,7 +424,7 @@ export default function PujaPage() {
     {
       title: t.puja.step4Title,
       description: t.puja.step4Desc,
-      imageSrc: "/images/Maa-saraswathi.jpg",
+      imageSrc: "/images/app-banner1.jpg",
       imageAlt: "Receive aashirwad box at the registered address",
       tag: "Aashirwad Box",
       cta: t.puja.bookNow,

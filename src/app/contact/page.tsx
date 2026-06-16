@@ -104,7 +104,7 @@ export default function ContactPage() {
           <div className="mt-10 flex justify-center">
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href="https://play.google.com/store/apps/details?id=com.AstroVed.birthchartnew"
+                href="https://play.google.com/store/search?q=astroved&c=apps"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-indigo-100 transition-all hover:bg-[#8283fa] active:scale-95"
