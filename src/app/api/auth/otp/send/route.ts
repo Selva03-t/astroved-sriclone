@@ -32,7 +32,12 @@ export async function POST(request: Request) {
     } catch (error) {
       // 3. If user is rejected (not found/unauthorized), attempt Silent Auto-Registration
       if (error instanceof AstrovedAuthError) {
-        console.log("[otp-send] User likely not registered. Attempting silent registration...");
+        console.log("[otp-send] User likely not registered. Original error:", {
+          message: error.message,
+          statusCode: error.statusCode,
+          vendorStatus: error.vendorStatus
+        });
+        console.log("[otp-send] Attempting silent registration...");
         
         try {
           const generatedPassword = Math.random().toString(36).slice(-10) + "A1@";

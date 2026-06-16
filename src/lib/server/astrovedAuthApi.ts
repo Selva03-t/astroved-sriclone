@@ -124,9 +124,30 @@ export function getAstrovedLoginType(method: LoginMethod): AstrovedLoginType {
   return 1;
 }
 
+// AstroVed's database has inconsistent country code formatting (some users have +91, some just 91)
+// This helper tries the primary format, and if it fails with NotFound/401, tries the alternate format.
+async function postWithAlternateCountryCode(endpoint: string, basePayload: any, countryCode: string) {
+  try {
+    return await postToAstroved(endpoint, { ...basePayload, CountryCode: countryCode });
+  } catch (err) {
+    if (err instanceof AstrovedAuthError && (err.vendorStatus === "NotFound" || err.statusCode === 401)) {
+      const altCountry = countryCode.startsWith("+") 
+        ? countryCode.substring(1) 
+        : `+${countryCode}`;
+      try {
+        return await postToAstroved(endpoint, { ...basePayload, CountryCode: altCountry });
+      } catch (err2) {
+        throw err; // If alternate also fails, throw the original error
+      }
+    }
+    throw err;
+  }
+}
+
 export function normalizeCountryCode(country: CountryOption | string) {
   const value = typeof country === "string" ? country : country.dialCode;
-  return String(value ?? "").replace(/[^0-9]/g, "");
+  const numeric = String(value ?? "").replace(/[^0-9]/g, "");
+  return numeric ? `+${numeric}` : "";
 }
 
 export function normalizeCurrency(currency?: string) {
@@ -187,11 +208,10 @@ export async function requestOtp(payload: {
     return { message: data.Message || "OTP sent successfully" };
   }
 
-  const data = await postToAstroved("AuthenticateLogin", {
+  const data = await postWithAlternateCountryCode("AuthenticateLogin", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country!),
     MobileNo: payload.number!,
-  });
+  }, normalizeCountryCode(payload.country!));
 
   return { message: data.Message || "OTP sent successfully" };
 }
@@ -219,12 +239,11 @@ export async function verifyOtpWithAstroved(payload: {
     return data.loginInfo;
   }
 
-  const data = await postToAstroved("VerifyOtp", {
+  const data = await postWithAlternateCountryCode("VerifyOtp", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country!),
     MobileNo: payload.number!,
     OTP: payload.otp,
-  });
+  }, normalizeCountryCode(payload.country!));
 
   if (!data.loginInfo) {
     throw new AstrovedAuthError(data.Message || "Invalid OTP. Please try again.", 401, data.Status);
@@ -248,11 +267,10 @@ export async function resendOtpWithAstroved(payload: {
     return { message: data.Message || "OTP resent successfully" };
   }
 
-  const data = await postToAstroved("ResendOtp", {
+  const data = await postWithAlternateCountryCode("ResendOtp", {
     Type: getAstrovedLoginType(payload.method),
-    CountryCode: normalizeCountryCode(payload.country!),
     MobileNo: payload.number!,
-  });
+  }, normalizeCountryCode(payload.country!));
 
   return { message: data.Message || "OTP resent successfully" };
 }

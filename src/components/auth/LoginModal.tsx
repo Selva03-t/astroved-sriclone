@@ -55,12 +55,12 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
 
   /* ── OTP step ── */
   const [step, setStep]               = useState<Step>("input");
-  const [otp, setOtp]                 = useState(Array(6).fill(""));
+  const [otp, setOtp]                 = useState("");
   const [otpError, setOtpError]       = useState("");
   const [otpLoading, setOtpLoading]   = useState(false);
   const [resendSecs, setResendSecs]   = useState(RESEND_SECS);
 
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const otpInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   /* ── GeoIP detect on mount ── */
@@ -93,7 +93,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   /* ── Focus first OTP box when step changes ── */
   useEffect(() => {
     if (step === "otp") {
-      setTimeout(() => otpRefs.current[0]?.focus(), 80);
+      setTimeout(() => otpInputRef.current?.focus(), 80);
     }
   }, [step]);
 
@@ -119,7 +119,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     setStep("input");
     setInputValue("");
     setInputError("");
-    setOtp(Array(6).fill(""));
+    setOtp("");
     setOtpError("");
     setResendSecs(RESEND_SECS);
     onClose();
@@ -146,7 +146,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
           number: digits,
         });
       }
-      setOtp(Array(6).fill(""));
+      setOtp("");
       setOtpError("");
       setResendSecs(RESEND_SECS);
       setStep("otp");
@@ -157,26 +157,13 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     }
   }
 
-  /* ─── OTP box change ─── */
-  function handleOtpChange(idx: number, val: string) {
-    const digit = val.replace(/\D/g, "").slice(-1);
-    const next  = [...otp];
-    next[idx]   = digit;
-    setOtp(next);
-    if (digit && idx < 5) otpRefs.current[idx + 1]?.focus();
-  }
-
-  function handleOtpKey(idx: number, e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Backspace" && !otp[idx] && idx > 0) {
-      otpRefs.current[idx - 1]?.focus();
-    }
-  }
+  /* ─── OTP state uses single string, no change handlers needed here ─── */
 
   /* ─── Step 2: verify OTP ─── */
   async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
-    const code = otp.join("");
-    if (code.length !== 6) { setOtpError("Enter all 6 digits"); return; }
+    const code = otp;
+    if (code.length < 5) { setOtpError("Enter the full OTP"); return; }
     setOtpError("");
     setOtpLoading(true);
     try {
@@ -215,9 +202,9 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
           number: inputValue.replace(/\D/g, ""),
         });
       }
-      setOtp(Array(6).fill(""));
+      setOtp("");
       setResendSecs(RESEND_SECS);
-      setTimeout(() => otpRefs.current[0]?.focus(), 80);
+      setTimeout(() => otpInputRef.current?.focus(), 80);
     } catch (err) {
       setOtpError(err instanceof Error ? err.message : "Could not resend OTP");
     } finally {
@@ -487,38 +474,36 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
               </button>
 
               <form onSubmit={handleVerifyOtp} style={{ width: "100%" }}>
-                {/* OTP boxes — fixed 44px square so they stay compact */}
-                <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 10 }}>
-                  {otp.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => { otpRefs.current[idx] = el; }}
-                      id={`otp-box-${idx}`}
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleOtpKey(idx, e)}
-                      style={{
-                        width: 44,
-                        height: 44,
-                        flexShrink: 0,
-                        textAlign: "center",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        border: `1.5px solid ${digit ? BLUE : "#ddd"}`,
-                        borderRadius: 8,
-                        outline: "none",
-                        color: "#1a1a2e",
-                        background: digit ? "#f0efff" : "#fff",
-                        fontFamily: "inherit",
-                        transition: "border-color 0.15s, background 0.15s",
-                        padding: 0,
-                      }}
-                    />
-                  ))}
+                {/* Single OTP box */}
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                  <input
+                    ref={otpInputRef}
+                    id="otp-box-single"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="Enter OTP"
+                    style={{
+                      width: "100%",
+                      maxWidth: 240,
+                      height: 48,
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: 700,
+                      border: `1.5px solid ${BLUE}`,
+                      borderRadius: 8,
+                      outline: "none",
+                      color: "#1a1a2e",
+                      background: "#f0efff",
+                      fontFamily: "inherit",
+                      transition: "border-color 0.15s, background 0.15s",
+                      padding: "0 16px",
+                      letterSpacing: "4px",
+                    }}
+                  />
                 </div>
 
                 {/* Resend */}
@@ -550,20 +535,20 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 <button
                   id="otp-modal-submit"
                   type="submit"
-                  disabled={otp.join("").length !== 6 || otpLoading}
+                  disabled={otp.length < 5 || otpLoading}
                   style={{
                     width: "100%",
                     padding: "13px",
                     borderRadius: 8,
                     border: "none",
                     background:
-                      otp.join("").length === 6 && !otpLoading
+                      otp.length >= 5 && !otpLoading
                         ? `linear-gradient(135deg,${BLUE},${BLUE_DARK})`
                         : "#c4c3f8",
                     color: "#fff",
                     fontWeight: 700,
                     fontSize: 16,
-                    cursor: otp.join("").length === 6 && !otpLoading ? "pointer" : "not-allowed",
+                    cursor: otp.length >= 5 && !otpLoading ? "pointer" : "not-allowed",
                     fontFamily: "inherit",
                     transition: "background 0.2s",
                   }}
