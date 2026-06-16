@@ -28,9 +28,9 @@ export interface AstroPageLayoutProps {
 
 // --- Sidebar data -------------------------------------------------------------
 const ARTICLES = [
-  { title: "Hanuman Chalisa", updated: "November 17, 2025", img: "Om" },
-  { title: "Sharad Purnima Quotes & Wishes", updated: "May 19, 2025", img: "Moon" },
-  { title: "Chaitra Amavasya Fast Story", updated: "April 29, 2025", img: "Pray" },
+  { title: "Hanuman Chalisa", updated: "November 17, 2025", img: "Om", href: "/library" },
+  { title: "Sharad Purnima Quotes & Wishes", updated: "May 19, 2025", img: "Moon", href: "/library" },
+  { title: "Chaitra Amavasya Fast Story", updated: "April 29, 2025", img: "Pray", href: "/library" },
 ];
 
 const POPULAR_CALCS = [
@@ -95,12 +95,13 @@ function Sidebar({ currentHref }: { currentHref: string }) {
       <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold text-gray-900">Popular articles for you</h3>
-          <button className="text-sm text-violet-500 font-semibold hover:underline">Read more &gt;</button>
+          <Link href="/library" className="text-sm text-violet-500 font-semibold hover:underline">Read more &gt;</Link>
         </div>
         <div className="flex flex-col gap-3">
           {ARTICLES.map((a) => (
-            <div
+            <Link
               key={a.title}
+              href={a.href}
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors group"
             >
               <div className="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center text-xs font-bold text-violet-700 flex-shrink-0">
@@ -113,7 +114,7 @@ function Sidebar({ currentHref }: { currentHref: string }) {
               <svg className="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
