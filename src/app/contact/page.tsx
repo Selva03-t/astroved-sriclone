@@ -4,15 +4,15 @@ const contactCards = [
   {
     icon: "fa-regular fa-envelope",
     title: "Email Us",
-    value: "pujaseva@appsforbharat.com",
-    href: "mailto:pujaseva@appsforbharat.com",
+    value: "support@astroved.com",
+    href: "mailto:support@astroved.com",
   },
   {
     icon: "fa-solid fa-phone",
     title: "Call Us",
-    value: "080-711-74417",
+    value: "+91 9677391108",
     meta: "10:30 AM - 7:30 PM (IST)",
-    href: "tel:08071174417",
+    href: "tel:+919677391108",
   },
 ];
 
@@ -28,10 +28,14 @@ export default function ContactPage() {
               AstroVed Office Address
             </h1>
             <p className="mt-6 text-xl font-semibold text-[#6f1d1b]">
-              FirstPrinciple AppsForBharat Private Limited
+              AstroVed.Com Pvt. Ltd
             </p>
             <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-gray-700">
-              2nd Floor, Urban Vault, No. 29/1, 27th Main Road, Somasundarapalya, HSR Post, Bangalore, Karnataka - 560102, India
+              
+Prince Info Park, Plot No: 81-B,
+A-Block, 4th Floor, 2nd Main Road,
+Ambattur Industrial Estate,
+Chennai 600 058
             </p>
           </div>
 
