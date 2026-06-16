@@ -1,6 +1,6 @@
 export const te = {
   nav: { home: "హోమ్", puja: "పూజ", chadhava: "చఢావా", panchang: "పంచాంగం", temples: "ఆలయాలు", library: "లైబ్రరీ", astroTools: "ఆస్ట్రో టూల్స్", store: "స్టోర్" },
-  account: { login: "లాగిన్ / ఖాతా సృష్టించండి", profile: "నా ప్రొఫైల్", pujaBookings: "నా పూజ బుకింగ్‌లు", chadhavaBookings: "నా చఢావా బుకింగ్‌లు", bookPuja: "పూజను బుక్ చేయండి", bookChadhava: "చఢావా బుక్ చేయండి", helpSupport: "సహాయం & మద్దతు", logout: "లాగ్అవుట్ చేయండి" },
+  account: { login: "లాగిన్ / ఖాతా సృష్టించండి", profile: "నా ప్రొఫైల్", pujaBookings: "నా బుకింగ్‌లు", chadhavaBookings: "నా చఢావా బుకింగ్‌లు", bookPuja: "పూజను బుక్ చేయండి", bookChadhava: "చఢావా బుక్ చేయండి", helpSupport: "సహాయం & మద్దతు", logout: "లాగ్అవుట్ చేయండి" },
   panchang: {
     today: "నేడు", tomorrow: "రేపు", title: "పంచాంగం", tithi: "తిథి", nakshatra: "నక్షత్రం", yog: "యోగం", karan: "కరణం", paksha: "పక్షం",
     auspiciousTimings: "శుభ ముహూర్తాలు", inauspiciousTimings: "అశుభ ముహూర్తాలు", abhijitMuhurat: "అభిజిత్ ముహూర్తం", amritKaal: "అమృత కాలం", brahmaMuhurat: "బ్రహ్మ ముహూర్తం",

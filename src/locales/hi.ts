@@ -1,6 +1,6 @@
 export const hi = {
   nav: { home: "होम", puja: "पूजा", chadhava: "चढ़ावा", panchang: "पंचांग", temples: "मंदिर", library: "पुस्तकालय", astroTools: "एस्ट्रो टूल्स", store: "स्टोर" },
-  account: { login: "लॉगिन / अकाउंट बनाएं", profile: "मेरी प्रोफ़ाइल", pujaBookings: "मेरी पूजा बुकिंग", chadhavaBookings: "मेरी चढ़ावा बुकिंग", bookPuja: "पूजा बुक करें", bookChadhava: "चढ़ावा बुक करें", helpSupport: "सहायता और समर्थन", logout: "लॉग आउट करें" },
+  account: { login: "लॉगिन / अकाउंट बनाएं", profile: "मेरी प्रोफ़ाइल", pujaBookings: "मेरी बुकिंग", chadhavaBookings: "मेरी चढ़ावा बुकिंग", bookPuja: "पूजा बुक करें", bookChadhava: "चढ़ावा बुक करें", helpSupport: "सहायता और समर्थन", logout: "लॉग आउट करें" },
   panchang: {
     today: "आज",
     tomorrow: "कल",

@@ -89,7 +89,7 @@ export default function Navbar() {
       .then((data) => {
         if (data.authenticated) setUser(data.user);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   // Pages that show all 5 languages
@@ -198,11 +198,10 @@ export default function Navbar() {
                         <button
                           key={lang.code}
                           onClick={() => { setLanguage(lang.code as SupportedLanguage); setLangOpen(false); }}
-                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                            language === lang.code
-                              ? "text-[#1f1f1f] bg-blue-50 font-bold"
-                              : "text-gray-700 hover:bg-blue-50 hover:text-[#1f1f1f] font-medium"
-                          }`}
+                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${language === lang.code
+                            ? "text-[#1f1f1f] bg-blue-50 font-bold"
+                            : "text-gray-700 hover:bg-blue-50 hover:text-[#1f1f1f] font-medium"
+                            }`}
                         >
                           {lang.label}
                         </button>
@@ -278,13 +277,7 @@ export default function Navbar() {
                         <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                       </Link>
 
-                      <Link href={user ? "/bookings/chadhava" : "#"} onClick={!user ? () => setLoginModalOpen(true) : undefined} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-box-open text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">{t("account.chadhavaBookings")}</span>
-                        </div>
-                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                      </Link>
+
 
                       <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
                         <div className="flex items-center gap-4">
@@ -336,7 +329,7 @@ export default function Navbar() {
                         <i className="fa-solid fa-phone"></i>
                       </div>
                       <div>
-                        <p className="text-[13px] font-bold text-gray-900">080-711-74417</p>
+                        <p className="text-[13px] font-bold text-gray-900">1800 102 9098</p>
                         <p className="text-[10px] text-gray-400 font-medium tracking-tight">Available from 10:30 AM - 7:30 PM</p>
                       </div>
                     </div>
@@ -386,9 +379,8 @@ export default function Navbar() {
                     ) : (
                       <Link
                         href={item.path}
-                        className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                          isActivePath(item.path) ? "bg-[#5B5BF6]/10 text-[#5B5BF6] font-bold" : "text-gray-700 hover:bg-gray-50 hover:text-[#5B5BF6]"
-                        }`}
+                        className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${isActivePath(item.path) ? "bg-[#5B5BF6]/10 text-[#5B5BF6] font-bold" : "text-gray-700 hover:bg-gray-50 hover:text-[#5B5BF6]"
+                          }`}
                       >
                         {t(`nav.${item.key}`)}
                       </Link>
@@ -420,7 +412,7 @@ export default function Navbar() {
                   <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">Namaste, {user.name}</p>
                   <div className="mt-2 space-y-1">
                     <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Profile</Link>
-                    <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Puja Bookings</Link>
+                    <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">{t("account.pujaBookings")}</Link>
                     <Link href="/bookings/chadhava" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Chadhava Bookings</Link>
                     <button
                       type="button"

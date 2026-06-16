@@ -1,6 +1,6 @@
 export const kn = {
   nav: { home: "ಮುಖಪುಟ", puja: "ಪೂಜೆ", chadhava: "ಚಡಾವಾ", panchang: "ಪಂಚಾಂಗ", temples: "ದೇವಾಲಯಗಳು", library: "ಗ್ರಂಥಾಲಯ", astroTools: "ಜ್ಯೋತಿಷ್ಯ ಸಾಧನಗಳು", store: "ಅಂಗಡಿ" },
-  account: { login: "ಲಾಗಿನ್ / ಖಾತೆ ರಚಿಸಿ", profile: "ನನ್ನ ಪ್ರೊಫೈಲ್", pujaBookings: "ನನ್ನ ಪೂಜಾ ಬುಕಿಂಗ್‌ಗಳು", chadhavaBookings: "ನನ್ನ ಚಡಾವಾ ಬುಕಿಂಗ್‌ಗಳು", bookPuja: "ಪೂಜೆಯನ್ನು ಬುಕ್ ಮಾಡಿ", bookChadhava: "ಚಡಾವಾ ಬುಕ್ ಮಾಡಿ", helpSupport: "ಸಹಾಯ ಮತ್ತು ಬೆಂಬಲ", logout: "ಲಾಗ್ ಔಟ್" },
+  account: { login: "ಲಾಗಿನ್ / ಖಾತೆ ರಚಿಸಿ", profile: "ನನ್ನ ಪ್ರೊಫೈಲ್", pujaBookings: "ನನ್ನ ಬುಕಿಂಗ್‌ಗಳು", chadhavaBookings: "ನನ್ನ ಚಡಾವಾ ಬುಕಿಂಗ್‌ಗಳು", bookPuja: "ಪೂಜೆಯನ್ನು ಬುಕ್ ಮಾಡಿ", bookChadhava: "ಚಡಾವಾ ಬುಕ್ ಮಾಡಿ", helpSupport: "ಸಹಾಯ ಮತ್ತು ಬೆಂಬಲ", logout: "ಲಾಗ್ ಔಟ್" },
   panchang: {
     today: "ಇಂದು", tomorrow: "ನಾಳೆ", title: "ಪಂಚಾಂಗ", tithi: "ತಿಥಿ", nakshatra: "ನಕ್ಷತ್ರ", yog: "ಯೋಗ", karan: "ಕರಣ", paksha: "ಪಕ್ಷ",
     auspiciousTimings: "ಶುಭ ಸಮಯ", inauspiciousTimings: "ಅಶುಭ ಸಮಯ", abhijitMuhurat: "ಅಭಿಜಿತ್ ಮುಹೂರ್ತ", amritKaal: "ಅಮೃತ ಕಾಲ", brahmaMuhurat: "ಬ್ರಹ್ಮ ಮುಹೂರ್ತ",

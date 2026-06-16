@@ -1,8 +1,11 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 
 const features = [
   "Offer puja, deepam, flowers, and sacred prayers from your phone.",
-  "Listen to devotional songs, bhajans, mantras, and aartis.",
+  "Listen to mantras and aartis.",
   "Read Hanuman Chalisa, spiritual stories, and Hindu literature.",
   "Share auspicious wishes and daily blessings with loved ones.",
   "Check Panchang, muhurat, and astrology insights in one place.",
@@ -10,10 +13,67 @@ const features = [
 ];
 
 const stats = [
-  { value: "25+", label: "Years of Vedic expertise" },
-  { value: "100+", label: "Sacred temple connections" },
-  { value: "60M+", label: "Lives touched through remedies" },
+  { target: 25, suffix: "+", label: "Years of Vedic expertise" },
+  { target: 10, suffix: "M+", label: "Homas, Poojas & Remedies Performed" },
+  { target: 60, suffix: "M+", label: "Lives touched through remedies" },
 ];
+
+function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const elementRef = React.useRef<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isIntersecting) return;
+
+    let startTime: number | null = null;
+    // Adapt duration to target size: smaller numbers run faster so they don't look laggy
+    const duration = target < 50 ? 1000 : 1500;
+
+    let animationFrameId: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const rate = Math.min(progress / duration, 1);
+
+      // easeOutCubic for a snappy start and soft, smooth slowdown
+      const easeOut = 1 - Math.pow(1 - rate, 3);
+
+      setCount(Math.floor(easeOut * target));
+
+      if (progress < duration) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setCount(target);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [target, isIntersecting]);
+
+  return <span ref={elementRef}>{count}{suffix}</span>;
+}
+
+
 
 export default function AboutPage() {
   return (
@@ -26,22 +86,32 @@ export default function AboutPage() {
               <div className="mb-7 flex h-20 w-20 items-center justify-center rounded-full bg-[#fff3eb] text-3xl text-[#6869F9] shadow-sm">
                 <i className="fa-solid fa-hands-praying" aria-hidden="true"></i>
               </div>
-              <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.18em] text-[#6869F9]">
-                About AstroVed
-              </p>
               <h1 className="text-4xl font-black leading-tight text-[#16111f] md:text-6xl">
                 One spiritual companion for astrology, remedies, and devotion.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-700">
                 AstroVed helps people connect with Vedic wisdom in a simple digital experience. From astrology tools and Panchang to pujas, devotional content, temple offerings, and remedies, the platform brings trusted spiritual services closer to every home.
               </p>
-              <a
-                href="#download-app"
-                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d95f13] active:scale-95"
-              >
-                <i className="fa-solid fa-download" aria-hidden="true"></i>
-                Download App
-              </a>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.AstroVed.birthchartnew"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-indigo-100 transition-all hover:bg-[#8283fa] active:scale-95"
+                >
+                  <i className="fa-brands fa-google-play text-base" aria-hidden="true"></i>
+                  Android App
+                </a>
+                <a
+                  href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 rounded-xl bg-[#6869F9] px-7 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-indigo-100 transition-all hover:bg-[#8283fa] active:scale-95"
+                >
+                  <i className="fa-brands fa-apple text-base" aria-hidden="true"></i>
+                  iOS App
+                </a>
+              </div>
             </div>
 
             <div className="w-full max-w-sm rounded-2xl border border-[#ffe3cf] bg-[#fff8f0] p-6 shadow-[0_18px_50px_rgba(244,120,32,0.12)]">
@@ -64,7 +134,9 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
             {stats.map((item) => (
               <div key={item.label} className="rounded-2xl border border-gray-100 bg-white p-7 text-center shadow-sm">
-                <p className="text-4xl font-black text-[#1f1f1f]">{item.value}</p>
+                <p className="text-4xl font-black text-[#1f1f1f]">
+                  <AnimatedCounter target={item.target} suffix={item.suffix} />
+                </p>
                 <p className="mt-2 text-sm font-semibold text-gray-600">{item.label}</p>
               </div>
             ))}
@@ -83,4 +155,3 @@ export default function AboutPage() {
     </>
   );
 }
-

@@ -1,6 +1,6 @@
 export const ta = {
   nav: { home: "முகப்பு", puja: "பூஜை", chadhava: "சடாவா", panchang: "பஞ்சாங்கம்", temples: "கோயில்கள்", library: "நூலகம்", astroTools: "ஜோதிட கருவிகள்", store: "கடை" },
-  account: { login: "உள்நுழைக / கணக்கை உருவாக்கவும்", profile: "என் சுயவிவரம்", pujaBookings: "என் பூஜை முன்பதிவுகள்", chadhavaBookings: "என் சடாவா முன்பதிவுகள்", bookPuja: "பூஜை முன்பதிவு செய்", bookChadhava: "சடாவா முன்பதிவு செய்", helpSupport: "உதவி & ஆதரவு", logout: "வெளியேறு" },
+  account: { login: "உள்நுழைக / கணக்கை உருவாக்கவும்", profile: "என் சுயவிவரம்", pujaBookings: "என் முன்பதிவுகள்", chadhavaBookings: "என் சடாவா முன்பதிவுகள்", bookPuja: "பூஜை முன்பதிவு செய்", bookChadhava: "சடாவா முன்பதிவு செய்", helpSupport: "உதவி & ஆதரவு", logout: "வெளியேறு" },
   panchang: {
     today: "இன்று", tomorrow: "நாளை", title: "பஞ்சாங்கம்", tithi: "திதி", nakshatra: "நட்சத்திரம்", yog: "யோகம்", karan: "கரணம்", paksha: "பட்சம்",
     auspiciousTimings: "சுப முகூர்த்தம்", inauspiciousTimings: "அசுப முகூர்த்தம்", abhijitMuhurat: "அபிஜித் முகூர்த்தம்", amritKaal: "அமிர்த காலம்", brahmaMuhurat: "பிரம்மா முகூர்த்தம்",

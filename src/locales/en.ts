@@ -1,6 +1,6 @@
 export const en = {
   nav: { home: "Home", puja: "Puja", chadhava: "Chadhava", panchang: "Panchang", temples: "Temples", library: "Library", astroTools: "Astro Tools", store: "Store" },
-  account: { login: "Login / Create an account", profile: "My profile", pujaBookings: "My Puja Bookings", chadhavaBookings: "My Chadhava Bookings", bookPuja: "Book a Puja", bookChadhava: "Book a Chadhava", helpSupport: "Help & Support", logout: "Log out from AstroVed" },
+  account: { login: "Login / Create an account", profile: "My profile", pujaBookings: "My Bookings", chadhavaBookings: "My Chadhava Bookings", bookPuja: "Book a Puja", bookChadhava: "Book a Chadhava", helpSupport: "Help & Support", logout: "Log out from AstroVed" },
   panchang: {
     today: "Today",
     tomorrow: "Tomorrow",
