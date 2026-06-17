@@ -1,6 +1,18 @@
+/**
+ * AstroVed Auth API - Clean implementation based on API Documentation V4
+ *
+ * API Endpoints (base: https://qawebservice.astroved.com/api/UserAccount)
+ *   POST AuthenticateLogin  — Send OTP (Type 2=SMS, Type 3=WhatsApp, Type 4=Email)
+ *   POST VerifyOtp          — Verify OTP
+ *   POST ResendOtp          — Resend OTP
+ *   POST RegistrationBasedOnShop — Register new user
+ */
+
 import type { AuthUser, CountryOption, LoginMethod } from "@/types/auth";
 
-export type AstrovedLoginType = 1 | 2 | 3 | 4;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 interface AstrovedLoginInfo {
   UserLogin?: string;
@@ -12,7 +24,7 @@ interface AstrovedLoginInfo {
   CustomerCurrency?: string;
 }
 
-interface AstrovedAuthResponse {
+interface AstrovedResponse {
   StatusCode?: number;
   Status?: string;
   Message?: string;
@@ -39,80 +51,34 @@ export class AstrovedAuthError extends Error {
   }
 }
 
-const ASTROVED_AUTH_TIMEOUT_MS = Number(process.env.ASTROVED_AUTH_TIMEOUT_MS ?? 10000);
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
 
-function getAuthConfig() {
-  const baseUrl =
-    process.env.ASTROVED_AUTH_API_BASE_URL ??
-    "https://qawebservice.astroved.com/api/UserAccount";
-  const token = process.env.ASTROVED_AUTH_API_TOKEN?.trim() || process.env.ASTROVED_API_TOKEN?.trim();
+const TIMEOUT_MS = Number(process.env.ASTROVED_AUTH_TIMEOUT_MS ?? 10000);
 
-  if (!token) {
-    throw new AstrovedAuthError("AstroVed auth token is not configured", 500);
-  }
-
-  return {
-    baseUrl: baseUrl.replace(/\/$/, ""),
-    token,
-  };
+function getConfig() {
+  const baseUrl = (
+    process.env.ASTROVED_AUTH_API_BASE_URL ?? "https://qawebservice.astroved.com/api/UserAccount"
+  ).replace(/\/$/, "");
+  const token =
+    process.env.ASTROVED_AUTH_API_TOKEN?.trim() ||
+    process.env.ASTROVED_API_TOKEN?.trim();
+  if (!token) throw new AstrovedAuthError("AstroVed auth token is not configured", 500);
+  return { baseUrl, token };
 }
 
-function getStatusCode(statusCode?: number) {
-  if (statusCode === 400 || statusCode === 404) return 401;
-  if (statusCode === 429) return 429;
-  if (statusCode && statusCode >= 500) return 502;
-  return 400;
-}
+// ---------------------------------------------------------------------------
+// Core HTTP helper
+// ---------------------------------------------------------------------------
 
-function ensureSuccessfulResponse(data: AstrovedAuthResponse) {
-  // If loginInfo is present, it's a successful OTP verification response — always pass through
-  if (data.loginInfo) return data;
-
-  // ErrorMessage is the clearest failure indicator
-  if (data.ErrorMessage) {
-    throw new AstrovedAuthError(
-      data.ErrorMessage,
-      getStatusCode(data.StatusCode),
-      data.Status
-    );
-  }
-
-  // Check for explicit failure Status
-  if (
-    data.Status === "Error" ||
-    data.Status === "Failed" ||
-    data.Status === "BadRequest" ||
-    data.Status === "NotFound"
-  ) {
-    throw new AstrovedAuthError(
-      data.Message || "AstroVed authentication failed",
-      getStatusCode(data.StatusCode),
-      data.Status
-    );
-  }
-
-  // Standard success check
-  if (data.StatusCode === 200 && data.Status === "OK") return data;
-
-  // Some AstroVed endpoints return status 0 or omit StatusCode on success
-  // Accept when there's no explicit failure indicator (which we checked above)
-  if (!data.StatusCode || data.StatusCode === 0) return data;
-
-  // Anything that isn't a 200 and has no loginInfo is a failure
-  throw new AstrovedAuthError(
-    data.Message || "AstroVed authentication failed",
-    getStatusCode(data.StatusCode),
-    data.Status
-  );
-}
-
-async function postToAstroved(path: string, body: Record<string, unknown>) {
-  const { baseUrl, token } = getAuthConfig();
+async function callApi(path: string, body: Record<string, unknown>): Promise<AstrovedResponse> {
+  const { baseUrl, token } = getConfig();
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), ASTROVED_AUTH_TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${baseUrl}/${path}`, {
+    const res = await fetch(`${baseUrl}/${path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,191 +89,103 @@ async function postToAstroved(path: string, body: Record<string, unknown>) {
       cache: "no-store",
     });
 
-    const data = (await response.json().catch(() => null)) as AstrovedAuthResponse | null;
+    const data = (await res.json().catch(() => null)) as AstrovedResponse | null;
 
-    if (!response.ok) {
+    // Log for debugging
+    console.log(`[astroved] ${path}:`, JSON.stringify({
+      StatusCode: data?.StatusCode,
+      Status: data?.Status,
+      Message: data?.Message,
+      hasLoginInfo: !!data?.loginInfo,
+    }));
+
+    if (!res.ok) {
       throw new AstrovedAuthError(
-        data?.Message || `AstroVed auth request failed with ${response.status}`,
-        response.status,
-        data?.Status
+        data?.Message || data?.ErrorMessage || `Request failed with HTTP ${res.status}`,
+        res.status,
+        data?.Status ?? undefined
       );
     }
 
-    if (!data) {
-      throw new AstrovedAuthError("Invalid response from AstroVed auth service", 502);
-    }
+    if (!data) throw new AstrovedAuthError("Empty response from AstroVed", 502);
 
-    console.log(`[astroved] ${path} response:`, JSON.stringify({ StatusCode: data.StatusCode, Status: data.Status, Message: data.Message, hasLoginInfo: !!data.loginInfo, ErrorMessage: data.ErrorMessage }));
-
-    return ensureSuccessfulResponse(data);
-  } catch (error) {
-    if (error instanceof AstrovedAuthError) throw error;
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new AstrovedAuthError("AstroVed auth service timed out", 504);
-    }
-    throw new AstrovedAuthError("Unable to reach AstroVed auth service", 502);
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-export function getAstrovedLoginType(method: LoginMethod): AstrovedLoginType {
-  if (method === "phone") return 2;
-  if (method === "whatsapp") return 3;
-  if (method === "email") return 4;
-  return 1;
-}
-
-// AstroVed's database has inconsistent country code formatting (some users have +91, some just 91)
-// This helper tries the primary format, and if it fails with NotFound/401, tries the alternate format.
-async function postWithAlternateCountryCode(endpoint: string, basePayload: any, countryCode: string) {
-  try {
-    return await postToAstroved(endpoint, { ...basePayload, CountryCode: countryCode });
+    return data;
   } catch (err) {
-    if (err instanceof AstrovedAuthError && (err.vendorStatus === "NotFound" || err.statusCode === 401)) {
-      const altCountry = countryCode.startsWith("+") 
-        ? countryCode.substring(1) 
-        : `+${countryCode}`;
-      try {
-        return await postToAstroved(endpoint, { ...basePayload, CountryCode: altCountry });
-      } catch (err2) {
-        throw err; // If alternate also fails, throw the original error
-      }
-    }
-    throw err;
+    if (err instanceof AstrovedAuthError) throw err;
+    if (err instanceof Error && err.name === "AbortError")
+      throw new AstrovedAuthError("AstroVed request timed out", 504);
+    throw new AstrovedAuthError("Unable to reach AstroVed service", 502);
+  } finally {
+    clearTimeout(timer);
   }
 }
 
-export function normalizeCountryCode(country: CountryOption | string) {
-  const value = typeof country === "string" ? country : country.dialCode;
-  const numeric = String(value ?? "").replace(/[^0-9]/g, "");
-  return numeric ? `+${numeric}` : "";
+// ---------------------------------------------------------------------------
+// Response validators
+// ---------------------------------------------------------------------------
+
+/** Returns true if the API accepted the OTP-send request */
+function isOtpSendSuccess(data: AstrovedResponse): boolean {
+  return data.StatusCode === 200 && data.Status === "OK";
 }
 
-export function normalizeCurrency(currency?: string) {
-  const value = String(currency ?? "").toUpperCase();
-  if (value === "USD" || value === "MYR" || value === "INR") return value;
+/** Returns true if this is a "number not found" error */
+function isNotFound(data: AstrovedResponse): boolean {
+  return (
+    data.StatusCode === 404 ||
+    data.Status === "NotFound" ||
+    (data.Message ?? "").toLowerCase().includes("not linked to any account")
+  );
+}
+
+/** Returns true if rate-limited */
+function isRateLimited(data: AstrovedResponse): boolean {
+  return data.StatusCode === 429;
+}
+
+function throwForStatus(data: AstrovedResponse, fallbackMsg: string) {
+  const msg = data.Message || data.ErrorMessage || fallbackMsg;
+  if (isRateLimited(data)) throw new AstrovedAuthError(msg, 429, data.Status ?? undefined);
+  throw new AstrovedAuthError(msg, 400, data.Status ?? undefined);
+}
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
+export function normalizeCountryCode(country: CountryOption | string): string {
+  const value = typeof country === "string" ? country : country.dialCode;
+  const digits = String(value ?? "").replace(/[^0-9]/g, "");
+  return digits ? `+${digits}` : "+91";
+}
+
+export function normalizeCurrency(currency?: string): "INR" | "USD" | "MYR" {
+  const v = String(currency ?? "").toUpperCase();
+  if (v === "USD" || v === "MYR") return v;
   return "INR";
 }
 
 export function mapLoginInfoToUser(
   loginInfo: AstrovedLoginInfo,
-  options: { country?: CountryOption; loginProvider: LoginMethod }
+  opts: { country?: CountryOption; loginProvider: LoginMethod }
 ): AuthUser {
   const customerId = loginInfo.CustomerId ? String(loginInfo.CustomerId) : undefined;
-  const currency = normalizeCurrency(loginInfo.CustomerCurrency);
   const id = customerId || loginInfo.UserLogin || loginInfo.MobileNo || "astroved-user";
-
   return {
     id,
     customerId,
     name: loginInfo.CustomerName || loginInfo.UserLogin || "AstroVed User",
     email: loginInfo.UserLogin || undefined,
     phone: loginInfo.MobileNo || undefined,
-    country: options.country,
-    currency,
-    loginProvider: options.loginProvider,
+    country: opts.country,
+    currency: normalizeCurrency(loginInfo.CustomerCurrency),
+    loginProvider: opts.loginProvider,
   };
 }
 
-export async function authenticatePasswordLogin(payload: {
-  email: string;
-  password: string;
-}) {
-  const data = await postToAstroved("AuthenticateLogin", {
-    UserName: payload.email,
-    Password: payload.password,
-    Type: 1,
-  });
-
-  if (!data.loginInfo) {
-    throw new AstrovedAuthError(data.Message || "Invalid email or password", 401, data.Status);
-  }
-
-  return data.loginInfo;
-}
-
-export async function requestOtp(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
-  country?: CountryOption;
-  number?: string;
-  email?: string;
-}) {
-  if (payload.method === "email") {
-    const data = await postToAstroved("AuthenticateLogin", {
-      UserName: payload.email,
-      Password: "",
-      Type: 4,
-    });
-    return { message: data.Message || "OTP sent successfully" };
-  }
-
-  const data = await postWithAlternateCountryCode("AuthenticateLogin", {
-    Type: getAstrovedLoginType(payload.method),
-    MobileNo: payload.number!,
-  }, normalizeCountryCode(payload.country!));
-
-  return { message: data.Message || "OTP sent successfully" };
-}
-
-export async function verifyOtpWithAstroved(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
-  country?: CountryOption;
-  number?: string;
-  email?: string;
-  otp: string;
-}) {
-  if (payload.method === "email") {
-    const data = await postToAstroved("VerifyOtp", {
-      Type: 4,
-      CountryCode: "",
-      MobileNo: "",
-      OTP: payload.otp,
-      UserName: payload.email,
-    });
-
-    if (!data.loginInfo) {
-      throw new AstrovedAuthError(data.Message || "Invalid OTP. Please try again.", 401, data.Status);
-    }
-
-    return data.loginInfo;
-  }
-
-  const data = await postWithAlternateCountryCode("VerifyOtp", {
-    Type: getAstrovedLoginType(payload.method),
-    MobileNo: payload.number!,
-    OTP: payload.otp,
-  }, normalizeCountryCode(payload.country!));
-
-  if (!data.loginInfo) {
-    throw new AstrovedAuthError(data.Message || "Invalid OTP. Please try again.", 401, data.Status);
-  }
-
-  return data.loginInfo;
-}
-
-export async function resendOtpWithAstroved(payload: {
-  method: Extract<LoginMethod, "phone" | "whatsapp" | "email">;
-  country?: CountryOption;
-  number?: string;
-  email?: string;
-}) {
-  if (payload.method === "email") {
-    const data = await postToAstroved("AuthenticateLogin", {
-      UserName: payload.email,
-      Password: "",
-      Type: 4,
-    });
-    return { message: data.Message || "OTP resent successfully" };
-  }
-
-  const data = await postWithAlternateCountryCode("ResendOtp", {
-    Type: getAstrovedLoginType(payload.method),
-    MobileNo: payload.number!,
-  }, normalizeCountryCode(payload.country!));
-
-  return { message: data.Message || "OTP resent successfully" };
-}
+// ---------------------------------------------------------------------------
+// Registration (silent, for new users)
+// ---------------------------------------------------------------------------
 
 export async function registerWithAstroved(payload: {
   firstName: string;
@@ -318,21 +196,21 @@ export async function registerWithAstroved(payload: {
   country: CountryOption;
   isWhatsappNumber: boolean;
   currency: "INR" | "USD" | "MYR";
-}) {
+}): Promise<AstrovedResponse> {
   const apiUrl =
     process.env.REGISTRATION_API_URL?.trim() ||
-    `${process.env.ASTROVED_AUTH_API_BASE_URL ?? "https://qawebservice.astroved.com/api/UserAccount"}/RegistrationBasedOnShop`;
-  const token = process.env.ASTROVED_AUTH_API_TOKEN?.trim() || process.env.ASTROVED_API_TOKEN?.trim();
+    `${(process.env.ASTROVED_AUTH_API_BASE_URL ?? "https://qawebservice.astroved.com/api/UserAccount").replace(/\/$/, "")}/RegistrationBasedOnShop`;
+  const token =
+    process.env.ASTROVED_AUTH_API_TOKEN?.trim() ||
+    process.env.ASTROVED_API_TOKEN?.trim();
+  if (!token) throw new AstrovedAuthError("AstroVed registration token is not configured", 500);
 
-  if (!token) {
-    throw new AstrovedAuthError("AstroVed registration token is not configured", 500);
-  }
-
+  const countryCode = normalizeCountryCode(payload.country); // "+91"
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), ASTROVED_AUTH_TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    const response = await fetch(apiUrl, {
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -343,7 +221,7 @@ export async function registerWithAstroved(payload: {
         LastName: payload.lastName,
         UserName: payload.email,
         Password: payload.password,
-        PhoneNumber: `${normalizeCountryCode(payload.country)}|${payload.phone}`,
+        PhoneNumber: `${countryCode}|${payload.phone}`, // "+91|9876543210" per API docs
         ShopName: "AstroVed",
         Currency: payload.currency,
         IsWhatsappNumber: payload.isWhatsappNumber,
@@ -352,38 +230,332 @@ export async function registerWithAstroved(payload: {
       cache: "no-store",
     });
 
-    const data = (await response.json().catch(() => null)) as AstrovedAuthResponse | null;
+    const data = (await res.json().catch(() => null)) as AstrovedResponse | null;
+    console.log("[astroved] Registration:", JSON.stringify({ IsRegistered: data?.IsRegistered, ErrorMessage: data?.ErrorMessage }));
 
-    if (!response.ok) {
+    if (!res.ok) {
       throw new AstrovedAuthError(
-        data?.ErrorMessage ||
-          data?.Message ||
-          `AstroVed registration failed with ${response.status}. Check REGISTRATION_API_URL and request payload.`,
-        response.status,
-        data?.Status
+        data?.ErrorMessage || data?.Message || `Registration failed with HTTP ${res.status}`,
+        res.status,
+        data?.Status ?? undefined
       );
     }
 
     if (data?.ErrorMessage) {
-      throw new AstrovedAuthError(data.ErrorMessage, getStatusCode(data.StatusCode), data.Status);
+      throw new AstrovedAuthError(data.ErrorMessage, 400, data.Status ?? undefined);
     }
 
-    if (data?.StatusCode && data.StatusCode !== 200) {
-      throw new AstrovedAuthError(
-        data.Message || "AstroVed registration failed",
-        getStatusCode(data.StatusCode),
-        data.Status
-      );
-    }
-
-    return data;
-  } catch (error) {
-    if (error instanceof AstrovedAuthError) throw error;
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new AstrovedAuthError("AstroVed registration service timed out", 504);
-    }
-    throw new AstrovedAuthError("Unable to reach AstroVed registration service", 502);
+    return data ?? {};
+  } catch (err) {
+    if (err instanceof AstrovedAuthError) throw err;
+    if (err instanceof Error && err.name === "AbortError")
+      throw new AstrovedAuthError("Registration request timed out", 504);
+    throw new AstrovedAuthError("Unable to reach registration service", 502);
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(timer);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Send OTP  (AuthenticateLogin)
+//
+// Per API docs:
+//   WhatsApp: { Type: 3, CountryCode: "+91", MobileNo: "number" }
+//   SMS:      { Type: 2, CountryCode: "+91", MobileNo: "number" }
+//   Email:    { UserName: "email", Password: "", Type: 4 }
+//
+// This function tries BOTH "+91" and "91" country code formats because some
+// user accounts in AstroVed's DB were stored without the "+" prefix.
+// ---------------------------------------------------------------------------
+
+export async function sendOtp(payload: {
+  method: "phone" | "whatsapp" | "email";
+  country?: CountryOption;
+  number?: string;
+  email?: string;
+}): Promise<{ message: string }> {
+  // --- Email OTP ---
+  if (payload.method === "email") {
+    const data = await callApi("AuthenticateLogin", {
+      UserName: payload.email,
+      Password: "",
+      Type: 4,
+    });
+    if (isOtpSendSuccess(data)) return { message: data.Message || "OTP sent to your email" };
+    if (isRateLimited(data)) throw new AstrovedAuthError(data.Message || "Too many requests", 429, data.Status ?? undefined);
+    throwForStatus(data, "Failed to send email OTP");
+  }
+
+  // --- WhatsApp / SMS OTP ---
+  // API Type: 3 = WhatsApp, 2 = SMS
+  const type = payload.method === "whatsapp" ? 3 : 2;
+  const countryCodePlus = normalizeCountryCode(payload.country!); // "+91"
+  const countryCodeNoPlus = countryCodePlus.replace("+", "");     // "91"
+  const mobileNo = payload.number!;
+
+  // Try "+91" first (as specified in API docs)
+  const attempt1 = await callApi("AuthenticateLogin", {
+    Type: type,
+    CountryCode: countryCodePlus,
+    MobileNo: mobileNo,
+  });
+
+  if (isOtpSendSuccess(attempt1)) {
+    return { message: attempt1.Message || "OTP sent successfully" };
+  }
+
+  if (isRateLimited(attempt1)) {
+    throw new AstrovedAuthError(attempt1.Message || "Too many requests. Please try again later.", 429, attempt1.Status ?? undefined);
+  }
+
+  if (!isNotFound(attempt1)) {
+    // If WhatsApp failed with something unexpected, we can try SMS if it's a WhatsApp request, else throw
+    if (payload.method === "phone") {
+      throwForStatus(attempt1, "Failed to send OTP");
+    }
+  }
+
+  // "+91" returned NotFound (or failed for WhatsApp) — try "91" (without plus) for legacy accounts
+  const attempt2 = await callApi("AuthenticateLogin", {
+    Type: type,
+    CountryCode: countryCodeNoPlus,
+    MobileNo: mobileNo,
+  });
+
+  if (isOtpSendSuccess(attempt2)) {
+    return { message: attempt2.Message || "OTP sent successfully" };
+  }
+
+  if (isRateLimited(attempt2)) {
+    throw new AstrovedAuthError(attempt2.Message || "Too many requests. Please try again later.", 429, attempt2.Status ?? undefined);
+  }
+
+  // If WhatsApp fails on the legacy format (e.g., StatusCode 0), Astroved's WhatsApp sender is broken for this number.
+  // Fall back to SMS (Type 2) on the legacy format to ensure the user actually gets an OTP.
+  if (payload.method === "whatsapp") {
+    console.log(`[astroved] WhatsApp OTP delivery failed for ${mobileNo}. Falling back to SMS (Type 2)...`);
+    const smsFallback = await callApi("AuthenticateLogin", {
+      Type: 2,
+      CountryCode: countryCodeNoPlus,
+      MobileNo: mobileNo,
+    });
+    
+    if (isOtpSendSuccess(smsFallback)) {
+      return { message: "WhatsApp delivery unavailable. OTP sent via SMS instead." };
+    }
+    
+    if (isRateLimited(smsFallback)) {
+      throw new AstrovedAuthError(smsFallback.Message || "Too many requests.", 429, smsFallback.Status ?? undefined);
+    }
+  }
+
+  // Both formats returned NotFound — signal caller that number is not registered
+  throw new AstrovedAuthError(
+    attempt1.Message || "This number is not registered. Creating your account...",
+    404,
+    "NotFound"
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Verify OTP  (VerifyOtp)
+//
+// Per API docs:
+//   { Type: 3, CountryCode: "+91", MobileNo: "number", OTP: "code" }
+//
+// We try "+91" then "91" in case the account was stored with the legacy format.
+// ---------------------------------------------------------------------------
+
+export async function verifyOtp(payload: {
+  method: "phone" | "whatsapp" | "email";
+  country?: CountryOption;
+  number?: string;
+  email?: string;
+  otp: string;
+}): Promise<AstrovedLoginInfo> {
+  // --- Email OTP Verify ---
+  if (payload.method === "email") {
+    const data = await callApi("VerifyOtp", {
+      Type: 4,
+      CountryCode: "",
+      MobileNo: "",
+      OTP: payload.otp,
+      UserName: payload.email,
+    });
+    if (data.loginInfo) return data.loginInfo;
+    throw new AstrovedAuthError(data.Message || "Invalid OTP. Please try again.", 401, data.Status ?? undefined);
+  }
+
+  // --- WhatsApp / SMS OTP Verify ---
+  const type = payload.method === "whatsapp" ? 3 : 2;
+  const countryCodePlus = normalizeCountryCode(payload.country!);
+  const countryCodeNoPlus = countryCodePlus.replace("+", "");
+  const mobileNo = payload.number!;
+
+  // Try "+91" first (API docs spec)
+  const attempt1 = await callApi("VerifyOtp", {
+    Type: type,
+    CountryCode: countryCodePlus,
+    MobileNo: mobileNo,
+    OTP: payload.otp,
+  });
+
+  if (attempt1.loginInfo) return attempt1.loginInfo;
+
+  // If "+91" didn't give loginInfo but also isn't ExpectationFailed, it's a real error
+  if (attempt1.Status !== "ExpectationFailed" && attempt1.StatusCode !== 417) {
+    throw new AstrovedAuthError(
+      attempt1.Message || "Invalid OTP. Please try again.",
+      401,
+      attempt1.Status ?? undefined
+    );
+  }
+
+  // "+91" returned ExpectationFailed — try "91" (legacy accounts)
+  console.log("[astroved] VerifyOtp with +91 returned ExpectationFailed — retrying with 91 (legacy format)...");
+  const attempt2 = await callApi("VerifyOtp", {
+    Type: type,
+    CountryCode: countryCodeNoPlus,
+    MobileNo: mobileNo,
+    OTP: payload.otp,
+  });
+
+  if (attempt2.loginInfo) return attempt2.loginInfo;
+
+  // If WhatsApp fails with ExpectationFailed on legacy format, it means the OTP was likely sent via SMS fallback.
+  // We must verify using SMS (Type 2).
+  if (payload.method === "whatsapp" && attempt2.StatusCode === 417) {
+    console.log("[astroved] WhatsApp VerifyOtp failed. Falling back to SMS VerifyOtp (Type 2)...");
+    const smsFallback = await callApi("VerifyOtp", {
+      Type: 2,
+      CountryCode: countryCodeNoPlus,
+      MobileNo: mobileNo,
+      OTP: payload.otp,
+    });
+    
+    if (smsFallback.loginInfo) return smsFallback.loginInfo;
+    
+    // If SMS fallback failed with 417, it's a real account error
+    if (smsFallback.StatusCode === 417) {
+      throw new AstrovedAuthError("Something went wrong with your account. Please contact support.", 400, smsFallback.Status ?? undefined);
+    }
+    
+    throw new AstrovedAuthError(smsFallback.Message || "Invalid OTP. Please try again.", 401, smsFallback.Status ?? undefined);
+  }
+
+  // Both failed — report the clearest error
+  const msg = attempt2.Message || attempt1.Message || "Invalid OTP. Please try again.";
+  if (attempt2.StatusCode === 417) {
+    throw new AstrovedAuthError("Something went wrong with your account. Please contact support.", 400, attempt2.Status ?? undefined);
+  }
+  throw new AstrovedAuthError(msg, 401, attempt2.Status ?? undefined);
+}
+
+// ---------------------------------------------------------------------------
+// Resend OTP  (ResendOtp)
+//
+// Per API docs:
+//   { Type: 3, CountryCode: "+91", MobileNo: "number" }
+// ---------------------------------------------------------------------------
+
+export async function resendOtp(payload: {
+  method: "phone" | "whatsapp" | "email";
+  country?: CountryOption;
+  number?: string;
+  email?: string;
+}): Promise<{ message: string }> {
+  if (payload.method === "email") {
+    // Resend for email = re-call AuthenticateLogin with Type 4
+    const data = await callApi("AuthenticateLogin", {
+      UserName: payload.email,
+      Password: "",
+      Type: 4,
+    });
+    if (isOtpSendSuccess(data)) return { message: data.Message || "OTP resent to your email" };
+    throwForStatus(data, "Failed to resend email OTP");
+  }
+
+  const type = payload.method === "whatsapp" ? 3 : 2;
+  const countryCodePlus = normalizeCountryCode(payload.country!);
+  const countryCodeNoPlus = countryCodePlus.replace("+", "");
+  const mobileNo = payload.number!;
+
+  // Try "+91" first
+  const attempt1 = await callApi("ResendOtp", {
+    Type: type,
+    CountryCode: countryCodePlus,
+    MobileNo: mobileNo,
+  });
+
+  if (isOtpSendSuccess(attempt1)) return { message: attempt1.Message || "OTP resent successfully" };
+  if (isRateLimited(attempt1)) {
+    throw new AstrovedAuthError(attempt1.Message || "Too many requests. Please try again later.", 429, attempt1.Status ?? undefined);
+  }
+
+  if (!isNotFound(attempt1)) throwForStatus(attempt1, "Failed to resend OTP");
+
+  // Try "91" for legacy accounts
+  const attempt2 = await callApi("ResendOtp", {
+    Type: type,
+    CountryCode: countryCodeNoPlus,
+    MobileNo: mobileNo,
+  });
+
+  if (isOtpSendSuccess(attempt2)) return { message: attempt2.Message || "OTP resent successfully" };
+  if (isRateLimited(attempt2)) {
+    throw new AstrovedAuthError(attempt2.Message || "Too many requests. Please try again later.", 429, attempt2.Status ?? undefined);
+  }
+
+  // If WhatsApp fails on the legacy format, fall back to SMS
+  if (payload.method === "whatsapp") {
+    console.log(`[astroved] WhatsApp OTP resend failed for ${mobileNo}. Falling back to SMS (Type 2)...`);
+    const smsFallback = await callApi("ResendOtp", {
+      Type: 2,
+      CountryCode: countryCodeNoPlus,
+      MobileNo: mobileNo,
+    });
+    
+    if (isOtpSendSuccess(smsFallback)) {
+      return { message: "WhatsApp delivery unavailable. OTP resent via SMS instead." };
+    }
+    
+    if (isRateLimited(smsFallback)) {
+      throw new AstrovedAuthError(smsFallback.Message || "Too many requests.", 429, smsFallback.Status ?? undefined);
+    }
+  }
+
+  throwForStatus(attempt2, "Failed to resend OTP");
+  throw new AstrovedAuthError("Failed to resend OTP", 500); // unreachable, satisfies TS
+}
+
+// ---------------------------------------------------------------------------
+// Password login (kept for admin login)
+// ---------------------------------------------------------------------------
+
+export async function authenticatePasswordLogin(payload: {
+  email: string;
+  password: string;
+}): Promise<AstrovedLoginInfo> {
+  const data = await callApi("AuthenticateLogin", {
+    UserName: payload.email,
+    Password: payload.password,
+    Type: 1,
+  });
+  if (data.loginInfo) return data.loginInfo;
+  throw new AstrovedAuthError(data.Message || "Invalid email or password", 401, data.Status ?? undefined);
+}
+
+// ---------------------------------------------------------------------------
+// Legacy exports — kept so other parts of the codebase don't break
+// ---------------------------------------------------------------------------
+export { sendOtp as requestOtp };
+export { verifyOtp as verifyOtpWithAstroved };
+export { resendOtp as resendOtpWithAstroved };
+
+export type AstrovedLoginType = 1 | 2 | 3 | 4;
+export function getAstrovedLoginType(method: LoginMethod): AstrovedLoginType {
+  if (method === "phone") return 2;
+  if (method === "whatsapp") return 3;
+  if (method === "email") return 4;
+  return 1;
 }

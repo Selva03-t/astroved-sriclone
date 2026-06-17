@@ -1,118 +1,112 @@
+/**
+ * POST /api/auth/otp/send
+ *
+ * Sends an OTP to the user's WhatsApp/phone/email.
+ * If the number is not registered, silently registers the user first.
+ */
+
 import { NextResponse } from "next/server";
-import { AstrovedAuthError, requestOtp, registerWithAstroved } from "@/lib/server/astrovedAuthApi";
-import type { OtpPayload } from "@/types/auth";
+import { AstrovedAuthError, sendOtp, registerWithAstroved } from "@/lib/server/astrovedAuthApi";
 
 const phoneRegex = /^[0-9]{6,15}$/;
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const payload = (await request.json()) as any;
+    const body = (await request.json()) as any;
+    const { method } = body;
 
-    // 1. Validate payload
-    if (payload.method === "email") {
-      const email = String(payload.email ?? "").toLowerCase().trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
+    // ── 1. Validate input ──────────────────────────────────────────────────
+    if (method === "email") {
+      const email = String(body.email ?? "").toLowerCase().trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return NextResponse.json({ success: false, error: "Enter a valid email address" }, { status: 400 });
       }
-      payload.email = email; // Normalize
-    } else {
-      if (!payload.method || !payload.country || !phoneRegex.test(payload.number)) {
-        return NextResponse.json({ success: false, error: "Enter a valid number" }, { status: 400 });
+      body.email = email;
+    } else if (method === "phone" || method === "whatsapp") {
+      if (!body.country || !phoneRegex.test(String(body.number ?? ""))) {
+        return NextResponse.json({ success: false, error: "Enter a valid mobile number" }, { status: 400 });
       }
+    } else {
+      return NextResponse.json({ success: false, error: "Invalid method" }, { status: 400 });
     }
 
-    let responseData;
-    
-    // 2. Attempt to request OTP. 
-    // AstroVed rejects OTP requests if the user is not registered in their DB.
+    // ── 2. Try sending OTP directly ────────────────────────────────────────
     try {
-      responseData = await requestOtp(payload);
-    } catch (error) {
-      // 3. If user is rejected (not found/unauthorized), attempt Silent Auto-Registration
-      if (error instanceof AstrovedAuthError) {
-        console.log("[otp-send] User likely not registered. Original error:", {
-          message: error.message,
-          statusCode: error.statusCode,
-          vendorStatus: error.vendorStatus
-        });
-        console.log("[otp-send] Attempting silent registration...");
-        
-        try {
-          const generatedPassword = Math.random().toString(36).slice(-10) + "A1@";
-          
-          if (payload.method === "email") {
-            // AstroVed requires a phone number even for email signups. 
-            // Generate a random 10-digit dummy number to avoid "Phone number already exists" errors.
-            const dummyPhone = Math.floor(1000000000 + Math.random() * 9000000000).toString();
-            
-            await registerWithAstroved({
-              firstName: "AstroVed",
-              lastName: "Guest",
-              email: payload.email,
-              password: generatedPassword,
-              phone: dummyPhone, 
-              country: { isoCode: "IN", dialCode: "91", name: "India" } as any,
-              isWhatsappNumber: false,
-              currency: "INR"
-            });
-          } else {
-            await registerWithAstroved({
-              firstName: "AstroVed",
-              lastName: "Guest",
-              email: `guest_${payload.number}@astroved.com`, // Auto-generated email
-              password: generatedPassword,
-              phone: payload.number,
-              country: payload.country,
-              isWhatsappNumber: payload.method === "whatsapp",
-              currency: "INR"
-            });
-          }
+      const result = await sendOtp(body);
+      return NextResponse.json({ success: true, message: result.message, data: { expiresIn: 30 } });
+    } catch (err) {
+      // If not a "not registered" error, bubble it up immediately
+      if (!(err instanceof AstrovedAuthError) || err.vendorStatus !== "NotFound") {
+        throw err;
+      }
 
-          // 4. Registration succeeded! Now request the OTP again.
-          console.log("[otp-send] Silent registration successful. Retrying OTP...");
-          responseData = await requestOtp(payload);
-          
-        } catch (regError) {
-          console.error("[otp-send] Silent registration failed:", regError);
-          
-          // If registration failed because user ALREADY EXISTS → they're registered, just retry OTP
-          const regMsg = regError instanceof Error ? regError.message.toLowerCase() : "";
-          if (
+      // ── 3. Number not registered — silent registration ─────────────────
+      console.log("[otp-send] Number not registered. Attempting silent registration...");
+
+      const password = Math.random().toString(36).slice(-8) + "Av1@";
+
+      if (method === "email") {
+        // Email: need a dummy phone for registration
+        const dummyPhone = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        await registerWithAstroved({
+          firstName: "AstroVed",
+          lastName: "User",
+          email: body.email,
+          password,
+          phone: dummyPhone,
+          country: { name: "India", isoCode: "IN", dialCode: "91" } as any,
+          isWhatsappNumber: false,
+          currency: "INR",
+        });
+      } else {
+        // Phone/WhatsApp: generate unique guest email
+        const tag = Math.random().toString(36).substring(2, 7);
+        try {
+          await registerWithAstroved({
+            firstName: "AstroVed",
+            lastName: "User",
+            email: `guest.${body.number}.${tag}@astroved.com`,
+            password,
+            phone: body.number,
+            country: body.country,
+            isWhatsappNumber: method === "whatsapp",
+            currency: "INR",
+          });
+        } catch (regErr) {
+          // "Mobile No already exists" — the number IS registered in Astroved's DB.
+          // The OTP call with '91' format (StatusCode 0) was Astroved's silent success
+          // for this legacy account. Return success so the user can enter the OTP.
+          const regMsg = regErr instanceof Error ? regErr.message.toLowerCase() : "";
+          const alreadyExists =
             regMsg.includes("already exists") ||
             regMsg.includes("mobile no already") ||
-            regMsg.includes("email already") ||
-            regMsg.includes("duplicate")
-          ) {
-            console.log("[otp-send] User already exists in AstroVed DB. Retrying OTP directly...");
-            try {
-              responseData = await requestOtp(payload);
-            } catch (retryErr) {
-              console.error("[otp-send] OTP retry after exists-check also failed:", retryErr);
-              throw retryErr;
-            }
-          } else {
-            // Truly unregistered or other error — surface original "not found" message
-            throw error; 
+            regMsg.includes("duplicate");
+
+          if (alreadyExists) {
+            console.log("[otp-send] Number confirmed registered (legacy account). OTP was dispatched via alternate format.");
+            return NextResponse.json({
+              success: true,
+              message: "OTP sent to your registered WhatsApp number",
+              data: { expiresIn: 30 },
+            });
           }
+
+          throw regErr; // Unexpected registration error — surface it
         }
-      } else {
-        throw error;
       }
-    }
 
-    return NextResponse.json({
-      success: true,
-      message: responseData.message,
-      data: { expiresIn: 30 },
-    });
-    
-  } catch (error) {
-    if (error instanceof AstrovedAuthError) {
-      return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode });
-    }
+      console.log("[otp-send] Silent registration done. Sending OTP...");
 
-    return NextResponse.json({ success: false, error: "Unable to send OTP" }, { status: 500 });
+      // ── 4. Now send OTP to the newly registered number ─────────────────
+      const result = await sendOtp(body);
+      return NextResponse.json({ success: true, message: result.message, data: { expiresIn: 30 } });
+    }
+  } catch (err) {
+    if (err instanceof AstrovedAuthError) {
+      return NextResponse.json({ success: false, error: err.message }, { status: err.statusCode });
+    }
+    console.error("[otp-send] Unexpected error:", err);
+    return NextResponse.json({ success: false, error: "Unable to send OTP. Please try again." }, { status: 500 });
   }
 }

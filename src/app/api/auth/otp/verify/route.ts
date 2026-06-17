@@ -1,63 +1,60 @@
+/**
+ * POST /api/auth/otp/verify
+ *
+ * Verifies the OTP and creates a user session.
+ */
+
 import { NextResponse } from "next/server";
-import type { VerifyOtpPayload } from "@/types/auth";
-import {
-  AstrovedAuthError,
-  mapLoginInfoToUser,
-  verifyOtpWithAstroved,
-} from "@/lib/server/astrovedAuthApi";
+import { AstrovedAuthError, verifyOtp, mapLoginInfoToUser } from "@/lib/server/astrovedAuthApi";
 import { attachUserSession } from "@/lib/server/authSession";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as any;
     const { method, otp } = body;
 
     if (!method || !otp || !/^[0-9]{4,8}$/.test(String(otp).trim())) {
-      return NextResponse.json({ success: false, error: "Enter the OTP sent to your number" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Enter a valid OTP" }, { status: 400 });
     }
 
-    let authUser;
+    let loginInfo;
+
     if (method === "email") {
       const email = String(body.email ?? "").toLowerCase().trim();
       if (!email) {
         return NextResponse.json({ success: false, error: "Email is required" }, { status: 400 });
       }
-
-      const loginInfo = await verifyOtpWithAstroved({ method, email, otp });
-      authUser = mapLoginInfoToUser(loginInfo, { loginProvider: "email" });
+      loginInfo = await verifyOtp({ method, email, otp });
     } else {
       const { country, number } = body;
       if (!country || !number) {
         return NextResponse.json({ success: false, error: "Country and number are required" }, { status: 400 });
       }
-
-      const loginInfo = await verifyOtpWithAstroved({ method, country, number, otp });
-      authUser = mapLoginInfoToUser(loginInfo, { country, loginProvider: method });
+      loginInfo = await verifyOtp({ method, country, number, otp });
     }
+
+    const authUser = mapLoginInfoToUser(loginInfo, {
+      country: body.country,
+      loginProvider: method,
+    });
 
     const response = NextResponse.json({
       success: true,
-      message: "OTP verified",
+      message: "OTP verified successfully",
       user: authUser,
       data: authUser,
     });
 
     await attachUserSession(response, authUser);
-
     return response;
-  } catch (error) {
-    if (error instanceof AstrovedAuthError) {
-      console.error("[otp-verify] AstrovedAuthError:", error.message, "status:", error.statusCode, "vendorStatus:", error.vendorStatus);
-      return NextResponse.json({ success: false, error: error.message }, { status: error.statusCode });
+  } catch (err) {
+    if (err instanceof AstrovedAuthError) {
+      console.error("[otp-verify]", err.message, "status:", err.statusCode);
+      return NextResponse.json({ success: false, error: err.message }, { status: err.statusCode });
     }
-
-    if (error instanceof Error && error.message.includes("JWT_SECRET")) {
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
-
-    console.error("[otp-verify] Unexpected error:", error);
+    console.error("[otp-verify] Unexpected error:", err);
     return NextResponse.json({ success: false, error: "Unable to verify OTP. Please try again." }, { status: 500 });
   }
 }
