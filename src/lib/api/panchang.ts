@@ -363,17 +363,58 @@ function normalizeApiResponse(raw: any, queryDate?: string, reqLongitude?: numbe
   };
 }
 
-let cachedToken: string | null = null;
+import clientPromise from '../mongodb';
+
+let memoryAccessToken: string | null = null;
 let refreshPromise: Promise<string | null> | null = null;
 
+async function getTokensFromDb() {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const config = await db.collection('config').findOne({ _id: 'astroved_tokens' as any });
+    return config || null;
+  } catch (error) {
+    console.error('Error fetching tokens from DB:', error);
+    return null;
+  }
+}
+
+async function saveTokensToDb(accessToken: string, refreshToken: string) {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    await db.collection('config').updateOne(
+      { _id: 'astroved_tokens' as any },
+      { 
+        $set: { 
+          accessToken, 
+          refreshToken, 
+          updatedAt: new Date() 
+        } 
+      },
+      { upsert: true }
+    );
+  } catch (error) {
+    console.error('Error saving tokens to DB:', error);
+  }
+}
+
 async function getAccessToken(): Promise<string> {
-  if (cachedToken) return cachedToken;
+  if (memoryAccessToken) return memoryAccessToken;
   
-  // Initialize from env if first time
+  // 1. Try DB first
+  const dbTokens = await getTokensFromDb();
+  if (dbTokens?.accessToken) {
+    memoryAccessToken = dbTokens.accessToken;
+    return memoryAccessToken!;
+  }
+
+  // 2. Fall back to env (initial seed)
   const envToken = process.env.ASTROVED_API_TOKEN || process.env.AstroVed_API_TOKEN;
   if (envToken) {
-    cachedToken = envToken;
-    return cachedToken;
+    memoryAccessToken = envToken;
+    return memoryAccessToken!;
   }
   return '';
 }
@@ -383,13 +424,15 @@ async function refreshAccessToken(): Promise<string | null> {
 
   refreshPromise = (async () => {
     try {
-      const refreshToken = process.env.ASTROVED_REFRESH_TOKEN || '';
+      // Get latest refresh token (DB first, then env)
+      const dbTokens = await getTokensFromDb();
+      const refreshToken = dbTokens?.refreshToken || process.env.ASTROVED_REFRESH_TOKEN || '';
+      
       if (!refreshToken) {
-        console.warn('Panchang API: No refresh token available in env.');
+        console.warn('Panchang API: No refresh token available in DB or env.');
         return null;
       }
 
-      // Use the provided refresh API URL
       const refreshUrl = process.env.ASTROVED_REFRESH_API_URL || 'https://qaengine.astroved.com/api/v1/auth/refresh';
       console.log('Panchang API: Attempting to refresh token via', refreshUrl);
 
@@ -405,12 +448,15 @@ async function refreshAccessToken(): Promise<string | null> {
       }
 
       const data = await res.json();
-      // Adjust this depending on actual API response format (e.g., data.access_token)
+      
       const newToken = data.access_token || data.token || data.jwt || data.JWT_Token || data.Token;
+      const newRefreshToken = data.refresh_token || refreshToken; // fallback to old if API doesn't rotate it
       
       if (newToken) {
-        cachedToken = newToken;
-        console.log('Panchang API: Successfully refreshed access token.');
+        memoryAccessToken = newToken;
+        // Persist the new tokens to MongoDB so they survive serverless cold starts
+        await saveTokensToDb(newToken, newRefreshToken);
+        console.log('Panchang API: Successfully refreshed and saved access token to DB.');
         return newToken;
       }
       return null;

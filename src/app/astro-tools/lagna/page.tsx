@@ -7,7 +7,7 @@ import { ClockIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 interface LagnaResult {
   lagnaSign: string;
-  lagnaSignSanskrit: string;
+  lagnaSignSanskrit: string; 
   lagnaLord: string;
   element: string;
   qualities: string[];
