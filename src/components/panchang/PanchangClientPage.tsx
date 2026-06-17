@@ -244,28 +244,28 @@ export default function PanchangClientPage() {
                   <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#f2f9f2" }}>
                     <p className="text-[15px] font-bold mb-1" style={{ color: "#2e7d32" }}>Auspicious<br />Timings</p>
                     <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
-                      {auspicious.abhijit?.start} से {auspicious.abhijit?.end}
+                      {auspicious.abhijit?.start} to {auspicious.abhijit?.end}
                     </p>
                   </div>
                   {/* Gulik Kaal */}
                   <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fffbf0" }}>
                     <p className="text-[15px] font-bold mb-1" style={{ color: "#b8860b" }}>Gulik Kaal</p>
                     <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
-                      {inauspicious.gulik?.start} से {inauspicious.gulik?.end}
+                      {inauspicious.gulik?.start} to {inauspicious.gulik?.end}
                     </p>
                   </div>
                   {/* Rahu Kaal */}
                   <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fdf2f4" }}>
                     <p className="text-[15px] font-bold mb-1" style={{ color: "#c62828" }}>Rahu Kaal</p>
                     <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
-                      {inauspicious.rahu?.start} से {inauspicious.rahu?.end}
+                      {inauspicious.rahu?.start} to {inauspicious.rahu?.end}
                     </p>
                   </div>
                   {/* Yamghant Kaal */}
                   <div className="rounded-2xl px-5 py-4" style={{ backgroundColor: "#fdf0f4" }}>
                     <p className="text-[15px] font-bold mb-1" style={{ color: "#ad1457" }}>Yamghant Kaal</p>
                     <p className="text-[14px] font-bold text-gray-800 leading-snug mt-2">
-                      {inauspicious.yamghant?.start} से {inauspicious.yamghant?.end}
+                      {inauspicious.yamghant?.start} to {inauspicious.yamghant?.end}
                     </p>
                   </div>
                 </div>

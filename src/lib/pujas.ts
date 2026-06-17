@@ -8,6 +8,7 @@ export type PujaPackage = {
   priceUSD?: number;
   priceMYR?: number;
   description: string;
+  imageUrl?: string;
 };
 
 export type PujaStat = {
@@ -194,6 +195,9 @@ const normalizePackages = (items: unknown, fallback: PujaPackage[]) => {
           typeof pkg.description === 'string' && pkg.description.trim().length > 0
             ? pkg.description.trim()
             : `Recommended for ${name.toLowerCase()} devotees.`,
+        imageUrl: typeof pkg.imageUrl === 'string' && pkg.imageUrl.trim().length > 0 
+          ? pkg.imageUrl.trim() 
+          : fallback[index]?.imageUrl,
       } as PujaPackage;
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
@@ -225,6 +229,7 @@ const buildFlatPackages = (puja: PujaRecord): PujaPackage[] | undefined => {
     const price = getNumberField(puja, `package${i}Price`);
     const description =
       getStringField(puja, `package${i}Description`) || `Recommended for ${name.toLowerCase()} devotees.`;
+    const imageUrl = getStringField(puja, `package${i}ImageUrl`);
 
     if (price === undefined) continue;
 
@@ -233,6 +238,7 @@ const buildFlatPackages = (puja: PujaRecord): PujaPackage[] | undefined => {
       name,
       price,
       description,
+      ...(imageUrl && { imageUrl }),
     });
   }
 
@@ -336,24 +342,28 @@ export const defaultPackages: PujaPackage[] = [
     name: 'Individual Package',
     price: 51,
     description: 'Best for one devotee with sankalp, mantra jaap and prasadam blessings.',
+    imageUrl: 'https://cdn.create.vista.com/api/media/small/114995436/stock-photo-indian-woman-performing-puja-indian-girl-with-pooja-thali-or-puja-thali-portrait-of-a',
   },
   {
     id: 'partner-package',
     name: 'Partner Package',
     price: 81,
     description: 'For a couple or two devotees joining the puja together.',
+    imageUrl: 'https://tse2.mm.bing.net/th/id/OIP.YT0kNhRDE0kIfg6BYzurBwAAAA?cb=thfc1falcon2&pid=ImgDet&w=419&h=608&rs=1&o=7&rm=3'
   },
   {
     id: 'family-bhog',
     name: 'Family + Bhog',
     price: 151,
     description: 'Family sankalp with bhog offering and temple archana included.',
+    imageUrl: 'https://www.srimandir.com/_next/image?url=https%3A%2F%2Fsrm-cdn.a4b.io%2Fyoda%2F1742742465008.svg&w=640&q=75',
   },
   {
     id: 'joint-family',
     name: 'Joint Family',
     price: 221,
     description: 'Ideal for larger families seeking collective blessings and sankalp.',
+    imageUrl: 'https://www.bing.com/th/id/OIP.qEZjsTuYnfH854fbC8ozVgHaEK?w=180&h=135&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
   },
 ];
 
@@ -516,17 +526,17 @@ export const normalizePuja = (puja: any, offeringsMap: Record<string, any> = {})
     packages: normalizePackages(Array.isArray(record.packages) && record.packages.length > 0 ? record.packages : buildFlatPackages(record), defaultPackages),
     offerings: Array.isArray(record.offeringIds) && record.offeringIds.length > 0
       ? record.offeringIds.map((id: string) => offeringsMap[id]).filter(Boolean).map((o: any) => ({
-          id: String(o._id),
-          name: o.name,
-          price: o.priceINR || o.price || 0,
-          priceINR: o.priceINR,
-          priceUSD: o.priceUSD,
-          priceMYR: o.priceMYR,
-          badge: o.badge,
-          description: o.description,
-          imageUrl: o.imageUrl,
-          productId: o.productId !== undefined ? Number(o.productId) : 36
-        }))
+        id: String(o._id),
+        name: o.name,
+        price: o.priceINR || o.price || 0,
+        priceINR: o.priceINR,
+        priceUSD: o.priceUSD,
+        priceMYR: o.priceMYR,
+        badge: o.badge,
+        description: o.description,
+        imageUrl: o.imageUrl,
+        productId: o.productId !== undefined ? Number(o.productId) : 36
+      }))
       : normalizeOfferings(Array.isArray(record.offerings) && record.offerings.length > 0 ? record.offerings : buildOfferingsFromFlatFields(record)),
   };
 };

@@ -37,7 +37,7 @@ export default function ChadhavaPage() {
     {
       title: t.chadhava.step1Title,
       description: t.chadhava.step1Desc,
-      imageSrc: "https://www.srimandir.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimg_chadhava_web_banner.3fc5e49e.webp&w=1200&q=75",
+      imageSrc: "/images/app-banner1.jpg",
       imageAlt: "Choose a chadhava offering",
       tag: "Chadhava Seva",
       cta: t.chadhava.performSeva,
@@ -45,7 +45,7 @@ export default function ChadhavaPage() {
     {
       title: t.chadhava.step2Title,
       description: t.chadhava.step2Desc,
-      imageSrc: "/images/Lakshmi-Homam.jpg",
+      imageSrc: "/images/app-banner2.jpg",
       imageAlt: "Fill devotee information for chadhava",
       tag: "Devotee Details",
       cta: t.chadhava.performSeva,
@@ -53,7 +53,7 @@ export default function ChadhavaPage() {
     {
       title: t.chadhava.step3Title,
       description: t.chadhava.step3Desc,
-      imageSrc: "/images/Navagraha-Shanti-Puja.jpg",
+      imageSrc: "/images/app-banner3.jpg",
       imageAlt: "Receive chadhava video on WhatsApp",
       tag: "Seva Video",
       cta: t.chadhava.performSeva,
@@ -61,7 +61,7 @@ export default function ChadhavaPage() {
     {
       title: t.chadhava.step4Title,
       description: t.chadhava.step4Desc,
-      imageSrc: "/images/Maa-saraswathi.jpg",
+      imageSrc: "/images/app-banner1.jpg",
       imageAlt: "Receive aashirwad box at the registered address",
       tag: "Aashirwad Box",
       cta: t.chadhava.performSeva,

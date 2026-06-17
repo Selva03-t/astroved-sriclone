@@ -47,6 +47,7 @@ type PujaPackage = {
   priceMYR?: number;
   price?: number; // legacy
   description: string;
+  imageUrl?: string;
 };
 
 type PujaOffering = {
@@ -164,6 +165,7 @@ const buildCountdown = (target: Date): Countdown => {
   return { days, hours, minutes, seconds, expired: false };
 };
 
+const Marquee = 'marquee' as any;
 export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | null }) {
   const params = useParams<{ slug: string }>();
   const slugParam = params?.slug;
@@ -201,6 +203,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [activeCarouselDot, setActiveCarouselDot] = useState(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingSankalpUrl, setPendingSankalpUrl] = useState<string | null>(null);
+  const [isIndian, setIsIndian] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
   const isManualScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<any>(null);
@@ -214,6 +217,58 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleAddPujaToCart = async () => {
+    setAddingToCart(true);
+    setCartError("");
+    try {
+      const meRes = await fetch('/api/auth/me');
+      let customerId = 1145090; // Default fallback
+      if (meRes.ok) {
+        const meData = await meRes.json();
+        if (meData.authenticated && meData.user?.customerId) {
+          customerId = Number(meData.user.customerId) || 1145090;
+        }
+      }
+
+      // Product ID from puja, fallback to 10
+      const productId = puja?.productId || 10;
+
+      const cartRes = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerId,
+          productId,
+          quantity: 1,
+          shopName: "AstroVed",
+          variationId: 0,
+          currencyCode: "INR",
+          localeCode: "en-US",
+          freeProductContributionAmount: 0,
+          productSubVariationExternalId: ""
+        })
+      });
+
+      const cartData = await cartRes.json();
+
+      if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
+        if (cartData.SelectedListId) {
+          setShoppingCartId(String(cartData.SelectedListId));
+        }
+        setShowDetailsModal(false);
+        setShowPackageModal(false);
+        setShowReviewModal(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setCartError(cartData.Message || "Failed to add package to cart");
+      }
+    } catch (error) {
+      setCartError("An error occurred. Please try again.");
+    } finally {
+      setAddingToCart(false);
+    }
   };
 
   const toggleExtra = (id: string) => {
@@ -245,6 +300,21 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   };
 
   // Handle carousel scroll to update active dot
+  useEffect(() => {
+    async function detectCountry() {
+      try {
+        const res = await fetch("/api/auth/geoip");
+        const data = await res.json();
+        if (data && data.country) {
+          setIsIndian(data.country === "IN");
+        }
+      } catch (err) {
+        console.error("GeoIP detection failed:", err);
+      }
+    }
+    detectCountry();
+  }, []);
+
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
@@ -456,7 +526,11 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             <button
               onClick={() => {
                 setShowReviewModal(false);
-                setShowDetailsModal(true);
+                if (isIndian) {
+                  setShowDetailsModal(true);
+                } else {
+                  setShowPackageModal(true);
+                }
               }}
               className="flex items-center gap-2 text-sm font-bold text-[#1f1f1f] hover:text-[#1f1f1f] transition-colors mb-6"
             >
@@ -558,8 +632,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           onKeyDown={(e) => e.key === "Enter" && couponInput.trim() && handleApplyCoupon()}
                           placeholder="Enter coupon code"
                           className={`w-full border-2 rounded-xl py-3 px-4 text-sm font-bold uppercase tracking-widest outline-none transition-all placeholder:normal-case placeholder:font-normal placeholder:tracking-normal ${couponStatus === "invalid"
-                              ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
-                              : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
+                            ? "border-red-400 bg-red-50 text-red-600 focus:border-red-500"
+                            : "border-gray-200 bg-white text-[#1f1f1f] focus:border-[#6869F9]"
                             }`}
                         />
                         {couponInput && (
@@ -929,6 +1003,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               </div>
             </div>
 
+
+
             {/* -- Flat Content Sections -- */}
             {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
             <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
@@ -953,8 +1029,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                         }
                       }}
                       className={`relative shrink-0 py-4 text-[15px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
-                          ? 'text-[#1f1f1f]'
-                          : 'text-gray-500 hover:text-[#1f1f1f]'
+                        ? 'text-[#1f1f1f]'
+                        : 'text-gray-500 hover:text-[#1f1f1f]'
                         }`}
                     >
                       {tab.label}
@@ -1020,18 +1096,43 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 if (sectionId === "process") {
                   return (
-                    <section id="process" key="process" className="border-b border-gray-100 py-10">
-                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
-                      <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                        {puja.details.process.map((step, idx) => (
-                          <div key={`process-${idx}`} className="flex gap-4">
-                            <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded bg-[#6869F9] text-[13px] font-bold text-white shadow-sm">{idx + 1}</div>
-                            <div>
-                              <h3 className="font-bold text-[#1f1f1f] text-[16px]">{step.title}</h3>
-                              <p className="mt-2 text-[15px] leading-[1.8] text-gray-600">{step.description}</p>
+                    <section id="process" key="process" className="border-b border-gray-100 py-10 bg-[#f8f9ff] -mx-4 px-4 md:-mx-6 md:px-6">
+                      <h2 className="text-[28px] font-bold text-[#1f1f1f] mb-10">How does AstroVed Online Puja Work?</h2>
+                      <div className="grid gap-12 md:grid-cols-2 items-center">
+                        {/* Left Side: Steps */}
+                        <div className="flex flex-col gap-8">
+                          {puja.details.process.map((step, idx) => (
+                            <div key={`process-${idx}`} className="flex gap-5 items-start">
+                              <div 
+                                className="flex h-9 w-12 shrink-0 items-center justify-center bg-[#6869F9] text-[15px] font-bold text-white shadow-sm pr-1 mt-1"
+                                style={{ clipPath: 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)' }}
+                              >
+                                {idx + 1}
+                              </div>
+                              <div>
+                                <h3 className="font-bold text-[#1f1f1f] text-[17px] mb-1.5">{step.title}</h3>
+                                <p className="text-[15px] leading-[1.6] text-gray-500">{step.description}</p>
+                              </div>
                             </div>
+                          ))}
+                        </div>
+
+                        {/* Right Side: Carousel */}
+                        <div className="bg-[#6869F9] rounded-[2rem] p-6 relative flex flex-col justify-center overflow-hidden min-h-[400px]">
+                          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar w-full items-center">
+                            {(puja.gallery && puja.gallery.length > 0 ? puja.gallery : [puja.imageUrl, puja.imageUrl, puja.imageUrl]).map((img, i) => (
+                              <div key={i} className="snap-center shrink-0 w-[85%] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl mx-auto border-4 border-white/10">
+                                <img src={img} alt="Gallery" className="w-full h-full object-cover" />
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                          {/* Dots */}
+                          <div className="flex justify-center gap-2 mt-8 absolute bottom-6 w-full left-0">
+                            {(puja.gallery && puja.gallery.length > 0 ? puja.gallery : [1, 2, 3]).map((_, i) => (
+                              <div key={i} className={`h-2 rounded-full transition-all ${i === 0 ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} />
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </section>
                   );
@@ -1124,7 +1225,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                       </div>
                                     </div>
                                     <img
-                                      src={puja.imageUrl}
+                                      src={pkg.imageUrl || puja.imageUrl}
                                       alt={pkg.name}
                                       className="h-20 w-20 shrink-0 rounded-xl object-cover object-top shadow-sm"
                                     />
@@ -1152,6 +1253,42 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 <p className="text-xs leading-5 text-gray-600">With dedicated mantra chanting and sacred offerings, this ritual helps remove life challenges.</p>
                               </div>
                             </div>
+                          </div>
+                        )}
+
+                        {/* Inline Proceed Bar */}
+                        {selectedPackage && (
+                          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 rounded-xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50">
+                            <div className="flex items-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-100">
+                              <Marquee scrollamount="4" className="text-[#64748b] whitespace-nowrap text-[13px] font-bold py-4">
+                                <i className="fa-solid fa-shield-halved mr-1"></i> Guarantee &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i className="fa-solid fa-shield mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i className="fa-solid fa-certificate mr-1"></i> ISO 9001 Certified Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i className="fa-solid fa-place-of-worship mr-1"></i> Official Temple Partner &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i className="fa-solid fa-shield-halved mr-1"></i> Guarantee &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i className="fa-solid fa-shield mr-1"></i> No Hidden Cost
+                              </Marquee>
+                            </div>
+                            <button 
+                              onClick={() => {
+                                if (selectedPackageId) {
+                                  if (isIndian) {
+                                    setShowDetailsModal(true);
+                                  } else {
+                                    handleAddPujaToCart();
+                                  }
+                                }
+                              }}
+                              className="bg-[#6869F9] text-white px-6 py-4 flex items-center justify-between w-full transition-colors hover:bg-[#5657e8] active:bg-[#4b4cdb]"
+                            >
+                              <div className="flex flex-col items-start text-left">
+                                <span className="font-bold text-xl">{currencySymbol} {getDisplayPrice(selectedPackage)}</span>
+                                <span className="text-[11px] font-semibold opacity-90 truncate max-w-[200px]">{selectedPackage.name}</span>
+                              </div>
+                              <div className="flex items-center gap-2 font-bold text-[15px]">
+                                Proceed <i className="fa-solid fa-arrow-right"></i>
+                              </div>
+                            </button>
                           </div>
                         )}
                       </section>
@@ -1223,62 +1360,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                             </div>
                           )}
 
-                          {/* ── User Reviews ── */}
-                          <div className="mt-10">
-                            <h3 className="text-xl font-bold text-gray-900">User Reviews</h3>
-                            <p className="mt-1 text-sm text-gray-500">Reviews from our devotees who booked Puja with us</p>
 
-                            <div className="mt-6 space-y-4">
-                              {userReviewsList.map((review, idx) => (
-                                <div key={review._id || idx} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                                  {/* Name + Date */}
-                                  <div className="flex items-center gap-4">
-                                    <div className="flex-1">
-                                      <p className="text-base font-bold text-gray-900">{review.name}</p>
-                                      {review.createdAt && (
-                                        <p className="text-[12px] text-gray-400 mt-0.5">
-                                          {new Date(review.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
-                                        </p>
-                                      )}
-                                      {review.service && (
-                                        <p className="text-[12px] text-gray-500 mt-0.5 truncate">{review.service}</p>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* Stars */}
-                                  {review.rating && (
-                                    <div className="mt-3 flex items-center gap-0.5">
-                                      {[1, 2, 3, 4, 5].map(star => (
-                                        <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#6869F9]" : "text-gray-200"}`} fill="currentColor">
-                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                  {/* Content */}
-                                  {review.videoUrl ? (
-                                    <video src={review.videoUrl} controls className="mt-4 w-full max-w-sm rounded-xl" />
-                                  ) : (
-                                    <p className="mt-3 text-base leading-7 text-gray-700">{review.content}</p>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* View More */}
-                            {reviewsShown < dbReviews.length && (
-                              <div className="mt-6 flex justify-center">
-                                <button
-                                  onClick={() => setReviewsShown(prev => prev + REVIEWS_PAGE_SIZE)}
-                                  className="border border-gray-300 text-gray-700 px-20 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-colors rounded"
-                                >
-                                  View More
-                                </button>
-                              </div>
-                            )}
-                          </div>
                         </>
                       )}
                     </section>
@@ -1286,21 +1368,82 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 }
 
                 if (sectionId === "faqs") {
+                  const REVIEWS_PAGE_SIZE = 3;
+                  const textReviews = dbReviews.filter(r => !r.videoUrl);
+                  const userReviewsList = textReviews.slice(0, reviewsShown);
+
                   return (
-                    <section id="faqs" key="faqs" className="py-10">
-                      <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
-                      <div className="mt-6 divide-y divide-gray-100">
-                        {puja.details.faq.map((item, idx) => (
-                          <details key={`faq-${idx}`} className="group py-5">
-                            <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
-                              {item.question}
-                              <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#1f1f1f] group-open:border-[#6869F9]/20 transition-colors">+</span>
-                            </summary>
-                            <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
-                          </details>
-                        ))}
-                      </div>
-                    </section>
+                    <React.Fragment key="faqs">
+                      <section id="faqs" className="py-10 border-b border-gray-100">
+                        <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
+                        <div className="mt-6 divide-y divide-gray-100">
+                          {puja.details.faq.map((item, idx) => (
+                            <details key={`faq-${idx}`} className="group py-5">
+                              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-bold text-gray-900">
+                                {item.question}
+                                <span className="ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-500 group-open:bg-[#f8f7ff] group-open:text-[#1f1f1f] group-open:border-[#6869F9]/20 transition-colors">+</span>
+                              </summary>
+                              <p className="mt-3 text-sm leading-7 text-gray-600 pl-2 border-l-2 border-[#6869F9]/20">{item.answer}</p>
+                            </details>
+                          ))}
+                        </div>
+                      </section>
+
+                      {/* ── User Reviews (Text Only) ── */}
+                      {textReviews.length > 0 && (
+                        <section className="py-10">
+                          <h3 className="text-xl font-bold text-gray-900">User Reviews</h3>
+                          <p className="mt-1 text-sm text-gray-500">Reviews from our devotees who booked Puja with us</p>
+
+                          <div className="mt-6 space-y-4">
+                            {userReviewsList.map((review, idx) => (
+                              <div key={review._id || idx} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                {/* Name + Date */}
+                                <div className="flex items-center gap-4">
+                                  <div className="flex-1">
+                                    <p className="text-base font-bold text-gray-900">{review.name}</p>
+                                    {review.createdAt && (
+                                      <p className="text-[12px] text-gray-400 mt-0.5">
+                                        {new Date(review.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                                      </p>
+                                    )}
+                                    {review.service && (
+                                      <p className="text-[12px] text-gray-500 mt-0.5 truncate">{review.service}</p>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* Stars */}
+                                {review.rating && (
+                                  <div className="mt-3 flex items-center gap-0.5">
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                      <svg key={star} viewBox="0 0 20 20" className={`h-5 w-5 ${star <= Number(review.rating) ? "text-[#6869F9]" : "text-gray-200"}`} fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                      </svg>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {/* Content */}
+                                <p className="mt-3 text-base leading-7 text-gray-700">{review.content}</p>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* View More */}
+                          {reviewsShown < textReviews.length && (
+                            <div className="mt-6 flex justify-center">
+                              <button
+                                onClick={() => setReviewsShown(prev => prev + REVIEWS_PAGE_SIZE)}
+                                className="border border-gray-300 text-gray-700 px-20 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-colors rounded"
+                              >
+                                View More
+                              </button>
+                            </div>
+                          )}
+                        </section>
+                      )}
+                    </React.Fragment>
                   );
                 }
 
@@ -1310,164 +1453,160 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
           </>
         )}
 
-        {/* -- Sticky bottom booking bar -- */}
-        {puja && !countdown.expired && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
-            <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4">
-              <div className="min-w-0">
-                <p className="truncate text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{selectedPackage?.name ?? "Select a package"}</p>
-                <div className="flex items-center gap-3">
-                  <div className="flex flex-col justify-center">
-                    <p className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : "—"}</p>
-                  </div>
-                  {selectedPackage && (
-                    <div className="flex flex-col justify-center border-l border-gray-200 pl-3">
-                      <p className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={() => setShowPackageModal(true)}
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#6869F9] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(104,105,249,0.4)] transition-all hover:bg-[#5657e8] active:scale-95"
-              >
-                Book Puja
-                <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-                  <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Global sticky bar removed in favor of inline proceed bar */}
       </main>
 
       {/* Package Selection Modal */}
       {showPackageModal && puja && (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="relative flex h-full max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-100 p-6">
-              <h2 className="text-xl font-bold text-[#1f1f1f]">All Puja Packages includes</h2>
-              <button onClick={() => setShowPackageModal(false)} className="rounded-full p-2 hover:bg-gray-100">
+          <div className="relative flex h-full max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+            {/* Close Button */}
+            <div className="absolute right-4 top-4 z-10">
+              <button onClick={() => setShowPackageModal(false)} className="rounded-full p-2 hover:bg-gray-100 transition-colors">
                 <XMarkIcon className="h-6 w-6 text-gray-500" />
               </button>
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-6">
-              {/* Inclusions List */}
-              <div className="space-y-4">
-                {[
-                  "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
-                  "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
-                  "A complete video of the puja and offerings will be shared on your WhatsApp.",
-                  "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-4">
-                    <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-[#1f1f1f]" />
-                    <p className="text-[14px] leading-relaxed text-[#4b5563]">{item}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="flex-1 overflow-y-auto p-6 pt-12">
 
-              {/* Additional Offerings Note */}
-              <div className="mt-8 flex items-center gap-4 rounded-2xl bg-[#f0f9f4] p-4 text-[#0e8356]">
-                <div className="h-10 w-10 shrink-0 bg-[#6869F9]/10 rounded-lg flex items-center justify-center">
-                  <i className="fa-solid fa-hand-holding-dollar text-lg"></i>
-                </div>
-                <p className="text-[13px] font-medium leading-relaxed">
-                  Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.
-                </p>
-              </div>
+              {/* Top Inclusions & Alert */}
+              <div className="mb-8">
+                <h2 className="text-[20px] font-bold text-[#1f1f1f] mb-4">All Puja Packages includes</h2>
 
-              {/* Package Selection Grid */}
-              <div className="mt-10">
-                <h3 className="text-lg font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {puja.packages.map((pkg, idx) => (
-                    <button
-                      key={pkg.id}
-                      onClick={() => setSelectedPackageId(pkg.id)}
-                      className={`relative flex flex-col p-5 rounded-3xl border-2 transition-all text-left ${selectedPackageId === pkg.id
-                          ? "border-[#6869F9] bg-[#6869F9]/5 shadow-lg"
-                          : "border-gray-100 hover:border-gray-200"
-                        }`}
-                    >
-                      {idx === 2 && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#516300] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                          Recommended
-                        </div>
-                      )}
-
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold uppercase ${idx === 0 ? "bg-violet-50 text-violet-600" :
-                            idx === 1 ? "bg-pink-50 text-pink-600" :
-                              idx === 2 ? "bg-violet-50 text-violet-600" : "bg-yellow-50 text-yellow-600"
-                          }`}>
-                          <i className="fa-solid fa-user text-[10px]"></i>
-                          {idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person"}
-                        </div>
-                        <div className={`h-6 w-6 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPackageId === pkg.id ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"
-                          }`}>
-                          {selectedPackageId === pkg.id && <CheckIcon className="h-4 w-4 text-white" />}
-                        </div>
-                      </div>
-
-                      <h4 className="text-base font-bold text-[#1f1f1f] mb-2">{pkg.name}</h4>
-                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">{pkg.description}</p>
-
-                      <div className="mt-auto pt-3 border-t border-gray-50 flex flex-wrap items-center gap-2">
-                        <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-1 flex items-center justify-center">
-                          <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
-                        </div>
-                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-1 flex items-center justify-center">
-                          <span className="text-xs font-bold text-gray-400 line-through">{currencySymbol} {Math.round(getDisplayPrice(pkg) * 1.2)}</span>
-                        </div>
-                      </div>
-                    </button>
+                <div className="space-y-4 mb-6">
+                  {[
+                    "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
+                    "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
+                    "A complete video of the puja and offerings will be shared on your WhatsApp.",
+                    "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <CheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#6869F9]" />
+                      <p className="text-[14px] leading-relaxed text-[#4b5563] font-medium">{item}</p>
+                    </div>
                   ))}
                 </div>
+
+                <div className="flex items-start gap-3 rounded-2xl bg-[#f5f3ff] p-4 text-[#6869F9]">
+                  <i className="fa-solid fa-hand-holding-dollar text-xl shrink-0 mt-0.5"></i>
+                  <p className="text-[13px] font-semibold leading-relaxed">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
+                </div>
               </div>
 
-              {/* Trust Bar */}
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-6 border-t border-gray-50 pt-8 pb-4">
-                {[
-                  { icon: "fa-shield-halved", label: "Hidden Cost" },
-                  { icon: "fa-certificate", label: "ISO 27001 Certified Company" },
-                  { icon: "fa-place-of-worship", label: "Official Temple Partner" },
-                  { icon: "fa-headset", label: "Customer Support" }
-                ].map((trust) => (
-                  <div key={trust.label} className="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
-                    <i className={`fa-solid ${trust.icon} text-gray-600 text-sm`}></i>
-                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-tighter whitespace-nowrap">{trust.label}</span>
+              <h3 className="text-xl font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
+
+              {/* Package Selection Grid */}
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-4 relative">
+                {(() => {
+                  const displayPackages = [...puja.packages];
+                  if (displayPackages.length === 3) {
+                    displayPackages.push({
+                      id: 'family-bhog',
+                      name: 'Family Puja + Bhog',
+                      price: Math.round((displayPackages[2]?.price || 1000) * 1.5),
+                      description: 'Family sankalp with bhog offering and temple archana included.'
+                    });
+                  }
+                  return displayPackages.map((pkg, idx) => {
+                    const isSelected = selectedPackageId === pkg.id;
+                    const personCount = idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person";
+
+                    // Use pkg.imageUrl if available, otherwise fallback to puja.imageUrl
+                    const imageUrl = pkg.imageUrl || puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=150&q=80";
+
+                    return (
+                      <button
+                        key={pkg.id}
+                        onClick={() => setSelectedPackageId(pkg.id)}
+                        className={`relative flex flex-col p-4 rounded-2xl border-2 transition-all text-left overflow-hidden min-h-[160px] ${isSelected ? "border-[#6869F9] bg-white shadow-md ring-2 ring-[#6869F9]/20" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      >
+                        <div className="flex items-center justify-between mb-4 w-full">
+                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase ${isSelected ? "bg-[#6869F9] text-white" : "bg-indigo-50 text-[#6869F9]"}`}>
+                            <i className="fa-solid fa-user text-[10px]"></i>
+                            {personCount}
+                          </div>
+                          <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"}`}>
+                            {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
+                          </div>
+                        </div>
+
+                        <h4 className="text-sm font-bold text-[#1f1f1f] pr-2 z-10 w-2/3">{pkg.name}</h4>
+
+                        <div className="mt-auto flex items-end justify-between w-full relative z-10">
+                          <span className="text-lg font-black text-[#6869F9]">{currencySymbol} {getDisplayPrice(pkg)}</span>
+                        </div>
+
+                        {/* Bottom Right Image */}
+                        <div className="absolute -bottom-2 -right-2 w-[70px] h-[70px] rounded-tl-[40px] rounded-br-xl overflow-hidden shadow-sm z-0">
+                          <img src={imageUrl} alt="Package Image" className="w-full h-full object-cover opacity-90" />
+                        </div>
+                      </button>
+                    );
+                  });
+                })()}
+              </div>
+
+              {/* Floating Details Box */}
+              {selectedPackage && (
+                <div className="mt-6 relative">
+                  {/* Upward pointing triangle pseudo-element effect */}
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#f5f3ff] border-t-2 border-l-2 border-[#6869F9] rotate-45 z-20"></div>
+
+                  <div className="border-2 border-[#6869F9] rounded-2xl p-5 bg-[#f5f3ff] relative z-10 shadow-sm">
+                    <h4 className="text-[#6869F9] font-bold text-[15px] mb-3">{selectedPackage.name}</h4>
+                    <div className="space-y-2">
+                      {[
+                        selectedPackage.description,
+                        "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
+                        "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
+                        "A complete video of the puja and offerings will be shared on your WhatsApp."
+                      ].map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-2">
+                          <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#6869F9]" />
+                          <p className="text-[13px] leading-relaxed text-gray-700 font-medium">{item}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                </div>
+              )}
+
+              {/* Trust Bar - Marquee */}
+              <div className="mt-8 border-t border-gray-100 pt-5 pb-2 overflow-hidden">
+                <Marquee scrollamount="5" className="text-[#64748b] whitespace-nowrap text-[13px] font-bold">
+                  <i className="fa-solid fa-shield-halved mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i className="fa-solid fa-certificate mr-1"></i> ISO 9001 Certified Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i className="fa-solid fa-place-of-worship mr-1"></i> Official Temple Partner &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i className="fa-solid fa-shield-halved mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i className="fa-solid fa-certificate mr-1"></i> ISO 9001 Certified Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i className="fa-solid fa-place-of-worship mr-1"></i> Official Temple Partner
+                </Marquee>
               </div>
             </div>
 
-            <div className="border-t border-gray-100 p-6 bg-white">
+            {/* Bottom Action Bar */}
+            <div className="border-t border-gray-100 p-4 bg-gray-50 sticky bottom-0 z-20">
               <button
                 onClick={() => {
                   if (selectedPackageId) {
-                    setShowPackageModal(false);
-                    setShowDetailsModal(true);
+                    if (isIndian) {
+                      setShowPackageModal(false);
+                      setShowDetailsModal(true);
+                    } else {
+                      handleAddPujaToCart();
+                    }
                   }
                 }}
-                className="flex w-full items-center justify-between rounded-2xl bg-[#6869F9] p-4 text-white shadow-xl shadow-[#6869F9]/20 hover:scale-[1.01] transition-transform"
+                className="flex w-full items-center justify-between rounded-xl bg-[#6869F9] px-6 py-4 text-white shadow-[0_4px_14px_rgba(104,105,249,0.4)] hover:bg-[#5657e8] transition-colors"
               >
-                <div className="text-left">
-                  <div className="flex items-center gap-3">
-                    <p className="text-lg font-black">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</p>
-                    {selectedPackage && (
-                      <div className="border-l border-white/20 pl-3">
-                        <p className="text-sm font-bold line-through opacity-60">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</p>
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-[10px] font-medium uppercase opacity-80">{selectedPackage?.name}</p>
+                <div className="text-left flex flex-col">
+                  <span className="text-xl font-bold">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</span>
+                  <span className="text-[11px] font-semibold opacity-90">{selectedPackage?.name}</span>
                 </div>
-                <div className="flex items-center gap-4 font-bold uppercase tracking-widest text-sm">
-                  Proceed <i className="fa-solid fa-arrow-right"></i>
+                <div className="flex items-center gap-2">
+                  <span className="text-[15px] font-bold">Proceed</span>
+                  <i className="fa-solid fa-arrow-right text-[14px]"></i>
                 </div>
               </button>
             </div>
@@ -1495,36 +1634,38 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
             <div className="space-y-8">
               {/* WhatsApp Number Field */}
-              <div>
-                <label className="block text-gray-900 font-bold text-sm mb-2">Enter Your Whatsapp Mobile Number</label>
-                <p className="text-[11px] text-gray-400 mb-4 leading-relaxed font-medium">Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.</p>
-                <div className="relative group">
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#1f1f1f] font-bold">
-                    <i className="fa-brands fa-whatsapp text-lg"></i>
-                    <span className="text-sm">+91</span>
+              {isIndian && (
+                <div>
+                  <label className="block text-gray-900 font-bold text-sm mb-2">Enter Your Whatsapp Mobile Number</label>
+                  <p className="text-[11px] text-gray-400 mb-4 leading-relaxed font-medium">Your Puja booking updates like Puja Photos, Videos and other details will be sent on WhatsApp on below number.</p>
+                  <div className="relative group">
+                    <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[#1f1f1f] font-bold">
+                      <i className="fa-brands fa-whatsapp text-lg"></i>
+                      <span className="text-sm">+91</span>
+                    </div>
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      value={userDetails.whatsapp}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        setUserDetails(prev => ({ ...prev, whatsapp: val }));
+                      }}
+                      className="w-full bg-white border-2 border-blue-500 rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 outline-none shadow-[0_0_0_1px_rgba(59,130,246,0.1)]"
+                      placeholder="8192812323"
+                    />
+                    {userDetails.whatsapp && (
+                      <button
+                        onClick={() => setUserDetails(prev => ({ ...prev, whatsapp: "" }))}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
+                      >
+                        <i className="fa-solid fa-circle-xmark opacity-50"></i>
+                      </button>
+                    )}
+                    <div className="absolute -top-2.5 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your mobile Number</div>
                   </div>
-                  <input
-                    type="tel"
-                    maxLength={10}
-                    value={userDetails.whatsapp}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
-                      setUserDetails(prev => ({ ...prev, whatsapp: val }));
-                    }}
-                    className="w-full bg-white border-2 border-blue-500 rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 outline-none shadow-[0_0_0_1px_rgba(59,130,246,0.1)]"
-                    placeholder="8192812323"
-                  />
-                  {userDetails.whatsapp && (
-                    <button
-                      onClick={() => setUserDetails(prev => ({ ...prev, whatsapp: "" }))}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500"
-                    >
-                      <i className="fa-solid fa-circle-xmark opacity-50"></i>
-                    </button>
-                  )}
-                  <div className="absolute -top-2.5 left-6 bg-white px-2 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Your mobile Number</div>
                 </div>
-              </div>
+              )}
 
               {/* Name Field */}
               <div>
@@ -1557,60 +1698,11 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
               {/* Next Button */}
               <button
-                disabled={!userDetails.name || userDetails.whatsapp.length < 10 || addingToCart}
-                onClick={async () => {
-                  setAddingToCart(true);
-                  setCartError("");
-                  try {
-                    const meRes = await fetch('/api/auth/me');
-                    let customerId = 1145090; // Default fallback
-                    if (meRes.ok) {
-                      const meData = await meRes.json();
-                      if (meData.authenticated && meData.user?.customerId) {
-                        customerId = Number(meData.user.customerId) || 1145090;
-                      }
-                    }
-
-                    // Product ID from puja, fallback to 10
-                    const productId = puja.productId || 10;
-
-                    const cartRes = await fetch('/api/cart/add', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        customerId,
-                        productId,
-                        quantity: 1,
-                        shopName: "AstroVed",
-                        variationId: 0,
-                        currencyCode: "INR",
-                        localeCode: "en-US",
-                        freeProductContributionAmount: 0,
-                        productSubVariationExternalId: ""
-                      })
-                    });
-
-                    const cartData = await cartRes.json();
-
-                    if (cartRes.ok && (cartData.StatusCode === 200 || cartData.Status === "OK")) {
-                      if (cartData.SelectedListId) {
-                        setShoppingCartId(String(cartData.SelectedListId));
-                      }
-                      setShowDetailsModal(false);
-                      setShowReviewModal(true);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    } else {
-                      setCartError(cartData.Message || "Failed to add item to cart. Please check your product ID configuration.");
-                    }
-                  } catch (err: any) {
-                    setCartError("Connection error. Please try again.");
-                  } finally {
-                    setAddingToCart(false);
-                  }
-                }}
-                className="w-full bg-[#6869F9] text-white py-5 rounded-2xl font-bold text-lg hover:bg-[#6869F9] transition-all disabled:opacity-50 disabled:grayscale mt-4"
+                disabled={!userDetails.name || (isIndian && userDetails.whatsapp.length < 10) || addingToCart}
+                onClick={handleAddPujaToCart}
+                className="w-full rounded-2xl bg-gray-900 py-4 font-bold text-white transition-all hover:bg-gray-800 disabled:opacity-50"
               >
-                {addingToCart ? "Adding..." : "Next"}
+                {addingToCart ? "Processing..." : "Next"}
               </button>
             </div>
           </div>
