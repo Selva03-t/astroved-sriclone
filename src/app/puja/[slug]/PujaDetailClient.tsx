@@ -1096,43 +1096,23 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 if (sectionId === "process") {
                   return (
-                    <section id="process" key="process" className="border-b border-gray-100 py-10 bg-[#f8f9ff] -mx-4 px-4 md:-mx-6 md:px-6">
-                      <h2 className="text-[28px] font-bold text-[#1f1f1f] mb-10">How does AstroVed Online Puja Work?</h2>
-                      <div className="grid gap-12 md:grid-cols-2 items-center">
-                        {/* Left Side: Steps */}
-                        <div className="flex flex-col gap-8">
-                          {puja.details.process.map((step, idx) => (
-                            <div key={`process-${idx}`} className="flex gap-5 items-start">
-                              <div 
-                                className="flex h-9 w-12 shrink-0 items-center justify-center bg-[#6869F9] text-[15px] font-bold text-white shadow-sm pr-1 mt-1"
-                                style={{ clipPath: 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)' }}
-                              >
-                                {idx + 1}
-                              </div>
-                              <div>
-                                <h3 className="font-bold text-[#1f1f1f] text-[17px] mb-1.5">{step.title}</h3>
-                                <p className="text-[15px] leading-[1.6] text-gray-500">{step.description}</p>
-                              </div>
+                    <section id="process" key="process" className="border-b border-gray-100 py-10">
+                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
+                      <div className="mt-8 grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
+                        {puja.details.process.map((step, idx) => (
+                          <div key={`process-${idx}`} className="flex gap-3 items-start">
+                            <div 
+                              className="flex h-6 w-8 shrink-0 items-center justify-center bg-[#6869F9] text-[13px] font-bold text-white shadow-sm pr-1 mt-0.5"
+                              style={{ clipPath: 'polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)' }}
+                            >
+                              {idx + 1}
                             </div>
-                          ))}
-                        </div>
-
-                        {/* Right Side: Carousel */}
-                        <div className="bg-[#6869F9] rounded-[2rem] p-6 relative flex flex-col justify-center overflow-hidden min-h-[400px]">
-                          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar w-full items-center">
-                            {(puja.gallery && puja.gallery.length > 0 ? puja.gallery : [puja.imageUrl, puja.imageUrl, puja.imageUrl]).map((img, i) => (
-                              <div key={i} className="snap-center shrink-0 w-[85%] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl mx-auto border-4 border-white/10">
-                                <img src={img} alt="Gallery" className="w-full h-full object-cover" />
-                              </div>
-                            ))}
+                            <div>
+                              <h3 className="font-bold text-[#1f1f1f] text-[15px] mb-1.5">{step.title}</h3>
+                              <p className="text-[14px] leading-[1.6] text-gray-500">{step.description}</p>
+                            </div>
                           </div>
-                          {/* Dots */}
-                          <div className="flex justify-center gap-2 mt-8 absolute bottom-6 w-full left-0">
-                            {(puja.gallery && puja.gallery.length > 0 ? puja.gallery : [1, 2, 3]).map((_, i) => (
-                              <div key={i} className={`h-2 rounded-full transition-all ${i === 0 ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} />
-                            ))}
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </section>
                   );
