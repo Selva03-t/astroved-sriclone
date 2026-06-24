@@ -50,8 +50,9 @@ export async function GET(request: Request) {
     }
 
     if (!response.ok) {
+      const responseData = typeof data === 'string' ? {} : data;
       return NextResponse.json(
-        { ...data, error: 'AstroVed API returned an error' },
+        { ...responseData, error: 'AstroVed API returned an error' },
         { status: response.status }
       );
     }

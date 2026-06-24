@@ -29,7 +29,13 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
        console.error("Cart API Error from Astroved:", response.status, data);
-       return NextResponse.json({ StatusCode: response.status, Status: "Error", Message: typeof data === 'string' ? data : (data?.Message || "Failed to add item to Astroved cart") }, { status: response.status });
+       
+       let errorMessage = typeof data === 'string' ? data : (data?.Message || "Failed to add item to Astroved cart");
+       if (typeof errorMessage === 'string' && (errorMessage.toLowerCase().includes('<!doctype html>') || errorMessage.toLowerCase().includes('<html'))) {
+           errorMessage = `AstroVed Service Error (${response.status}: Connection failed)`;
+       }
+
+       return NextResponse.json({ StatusCode: response.status, Status: "Error", Message: errorMessage }, { status: response.status });
     }
 
     return NextResponse.json(data);

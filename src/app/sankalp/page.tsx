@@ -33,21 +33,21 @@ function StepBreadcrumb({ currentStep }: { currentStep: number }) {
             <React.Fragment key={step.num}>
               <div className="flex items-center gap-1.5 shrink-0">
                 {done ? (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1a7c5c] shrink-0">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#6869F9] shrink-0">
                     <svg viewBox="0 0 12 12" fill="none" className="h-3 w-3">
                       <path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 ) : (
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black shrink-0 ${active ? "bg-[#1a7c5c] text-white" : "bg-gray-200 text-gray-500"
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black shrink-0 ${active ? "bg-[#6869F9] text-white" : "bg-gray-200 text-gray-500"
                       }`}
                   >
                     {step.num}
                   </span>
                 )}
                 <span
-                  className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${done ? "text-[#1a7c5c]" : active ? "text-gray-800" : "text-gray-400"
+                  className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wide whitespace-nowrap ${done ? "text-[#6869F9]" : active ? "text-gray-800" : "text-gray-400"
                     }`}
                 >
                   {step.label}
@@ -106,7 +106,7 @@ function FloatingInput({
         maxLength={maxLength}
         inputMode={inputMode}
         className={`peer w-full rounded border px-3 pt-5 pb-2 text-sm font-medium text-gray-900 outline-none transition-all bg-white
-          ${focused ? "border-[#1a7c5c] ring-1 ring-[#1a7c5c]/30" : "border-gray-300"}
+          ${focused ? "border-[#6869F9] ring-1 ring-[#6869F9]/30" : "border-gray-300"}
           placeholder-transparent`}
       />
       <label
@@ -153,8 +153,8 @@ function GotraDropdown({
         disabled={disabled}
         onClick={() => !disabled && setOpen((o) => !o)}
         className={`w-full flex items-center justify-between rounded border px-3 py-3 text-sm font-medium text-left transition-all
-          ${disabled ? "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed" : "bg-white border-gray-300 text-gray-900 hover:border-[#1a7c5c]"}
-          ${open ? "border-[#1a7c5c] ring-1 ring-[#1a7c5c]/30" : ""}
+          ${disabled ? "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed" : "bg-white border-gray-300 text-gray-900 hover:border-[#6869F9]"}
+          ${open ? "border-[#6869F9] ring-1 ring-[#6869F9]/30" : ""}
         `}
       >
         <div>
@@ -165,7 +165,7 @@ function GotraDropdown({
         </div>
         <div className="flex items-center gap-2">
           {/* Info icon */}
-          <span className="h-5 w-5 rounded-full border border-[#1a7c5c] text-[#1a7c5c] flex items-center justify-center text-[10px] font-bold shrink-0">
+          <span className="h-5 w-5 rounded-full border border-[#6869F9] text-[#6869F9] flex items-center justify-center text-[10px] font-bold shrink-0">
             i
           </span>
           <svg
@@ -193,7 +193,7 @@ function GotraDropdown({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search gotra..."
-                className="w-full rounded-lg border border-gray-200 py-2 pl-9 pr-3 text-sm outline-none focus:border-[#1a7c5c]"
+                className="w-full rounded-lg border border-gray-200 py-2 pl-9 pr-3 text-sm outline-none focus:border-[#6869F9]"
               />
             </div>
           </div>
@@ -207,12 +207,12 @@ function GotraDropdown({
                   key={g}
                   type="button"
                   onClick={() => { onChange(g); setOpen(false); setSearch(""); }}
-                  className={`w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-[#f0faf5] transition-colors
-                    ${value === g ? "bg-[#f0faf5] text-[#1a7c5c] font-bold" : "text-gray-800"}`}
+                  className={`w-full text-left px-4 py-2.5 text-sm font-medium hover:bg-[#f5f3ff] transition-colors
+                    ${value === g ? "bg-[#f5f3ff] text-[#6869F9] font-bold" : "text-gray-800"}`}
                 >
                   {g}
                   {value === g && (
-                    <span className="ml-2 text-[#1a7c5c]">✓</span>
+                    <span className="ml-2 text-[#6869F9]">✓</span>
                   )}
                 </button>
               ))
@@ -389,7 +389,7 @@ function SankalpContent() {
                 <h2 className="text-[17px] font-bold text-gray-900 mb-1">Your WhatsApp Number</h2>
                 <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
                   Your Puja booking updates like{" "}
-                  <span className="text-[#1a7c5c] font-semibold">Puja Photos</span>, Videos and other
+                  <span className="text-[#6869F9] font-semibold">Puja Photos</span>, Videos and other
                   details will be sent on WhatsApp on below number.
                 </p>
 
@@ -411,8 +411,8 @@ function SankalpContent() {
                     maxLength={10}
                     placeholder="Enter WhatsApp number"
                     className={`w-full rounded border py-3 pl-24 pr-4 text-sm font-semibold text-gray-900 outline-none transition-all
-                      ${whatsapp && !whatsappValid ? "border-red-400 bg-red-50" : whatsappValid ? "border-[#1a7c5c] bg-white" : "border-gray-300 bg-white"}
-                      focus:border-[#1a7c5c] focus:ring-1 focus:ring-[#1a7c5c]/20`}
+                      ${whatsapp && !whatsappValid ? "border-red-400 bg-red-50" : whatsappValid ? "border-[#6869F9] bg-white" : "border-gray-300 bg-white"}
+                      focus:border-[#6869F9] focus:ring-1 focus:ring-[#6869F9]/20`}
                   />
                 </div>
 
@@ -422,7 +422,7 @@ function SankalpContent() {
                     type="checkbox"
                     checked={differentCalling}
                     onChange={(e) => setDifferentCalling(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 accent-[#1a7c5c] cursor-pointer"
+                    className="h-4 w-4 rounded border-gray-300 accent-[#6869F9] cursor-pointer"
                   />
                   <span className="text-[13px] font-medium text-gray-700 group-hover:text-gray-900">
                     I have a different number for calling
@@ -445,7 +445,7 @@ function SankalpContent() {
                         inputMode="numeric"
                         maxLength={10}
                         placeholder="Enter calling number"
-                        className="w-full rounded border border-gray-300 py-3 pl-16 pr-4 text-sm font-semibold text-gray-900 outline-none focus:border-[#1a7c5c] focus:ring-1 focus:ring-[#1a7c5c]/20 transition-all"
+                        className="w-full rounded border border-gray-300 py-3 pl-16 pr-4 text-sm font-semibold text-gray-900 outline-none focus:border-[#6869F9] focus:ring-1 focus:ring-[#6869F9]/20 transition-all"
                       />
                     </div>
                   </div>
@@ -459,7 +459,7 @@ function SankalpContent() {
                 </h2>
                 <p className="text-[13px] text-gray-500 mb-5">
                   Panditji will take these names along with gotra during the{" "}
-                  <span className="text-[#1a7c5c] font-semibold">puja</span>.
+                  <span className="text-[#6869F9] font-semibold">puja</span>.
                 </p>
 
                 <div className="space-y-3">
@@ -493,7 +493,7 @@ function SankalpContent() {
                   <button
                     type="button"
                     onClick={addMember}
-                    className="mt-3 flex items-center gap-1.5 text-[13px] font-semibold text-[#1a7c5c] hover:text-[#155f46] transition-colors"
+                    className="mt-3 flex items-center gap-1.5 text-[13px] font-semibold text-[#6869F9] hover:text-[#5657e8] transition-colors"
                   >
                     <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                       <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
@@ -509,7 +509,7 @@ function SankalpContent() {
                 <h2 className="text-[17px] font-bold text-gray-900 mb-1">Fill participant&apos;s gotra</h2>
                 <p className="text-[13px] text-gray-500 mb-5">
                   Gotra will be recited during the{" "}
-                  <span className="text-[#1a7c5c] font-semibold">puja</span>.
+                  <span className="text-[#6869F9] font-semibold">puja</span>.
                 </p>
 
                 <GotraDropdown
@@ -526,7 +526,7 @@ function SankalpContent() {
                       setDontKnowGotra(e.target.checked);
                       if (e.target.checked) setGotra(DEFAULT_GOTRA);
                     }}
-                    className="h-4 w-4 rounded border-gray-300 accent-[#1a7c5c] cursor-pointer"
+                    className="h-4 w-4 rounded border-gray-300 accent-[#6869F9] cursor-pointer"
                   />
                   <span className="text-[13px] font-medium text-gray-700 group-hover:text-gray-900">
                     I do not know gotra
@@ -543,9 +543,9 @@ function SankalpContent() {
                     </h2>
                     <p className="text-[13px] text-gray-500 leading-relaxed">
                       The Aashirwad Box will contain{" "}
-                      <span className="text-[#1a7c5c] font-semibold">divine</span> blessing elements
+                      <span className="text-[#6869F9] font-semibold">divine</span> blessing elements
                       such as Ganga Jal, and more, sourced from sacred{" "}
-                      <span className="text-[#1a7c5c] font-semibold">Tirth</span> locations.
+                      <span className="text-[#6869F9] font-semibold">Tirth</span> locations.
                     </p>
                   </div>
 
@@ -556,8 +556,8 @@ function SankalpContent() {
                       onClick={() => setWantsAashirwad(true)}
                       className={`px-5 py-2 rounded text-sm font-bold border transition-all
                         ${wantsAashirwad === true
-                          ? "bg-[#1a7c5c] text-white border-[#1a7c5c]"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-[#1a7c5c]"
+                          ? "bg-[#6869F9] text-white border-[#6869F9]"
+                          : "bg-white text-gray-700 border-gray-300 hover:border-[#6869F9]"
                         }`}
                     >
                       Yes
@@ -614,7 +614,7 @@ function SankalpContent() {
                       value={address.road}
                       onChange={(v) => updateAddress("road", v)}
                       required
-                    />w
+                    />
                     <FloatingInput
                       id="landmark"
                       label="Landmark (Compulsory)"
@@ -631,7 +631,7 @@ function SankalpContent() {
             <div className="hidden lg:block sticky top-20">
               <PriceSidebar title={title} amount={amount} />
 
-              <div className="mt-4 rounded-xl bg-[#f0faf5] border border-[#c6e9d8] p-4 text-[12px] text-[#1a7c5c] font-medium leading-relaxed">
+              <div className="mt-4 rounded-xl bg-[#f5f3ff] border border-[#e3d9f8] p-4 text-[12px] text-[#6869F9] font-medium leading-relaxed">
                 <p className="font-bold mb-1">🙏 Sankalp Details</p>
                 These details help our Panditji perform the puja with your correct sankalp — name, gotra, and intention — as per Vedic tradition.
               </div>
@@ -649,7 +649,7 @@ function SankalpContent() {
             onClick={handleProceed}
             className={`w-full rounded py-4 text-[15px] font-bold text-white tracking-wide transition-all
               ${canProceed
-                ? "bg-[#1a7c5c] hover:bg-[#155f46] active:scale-[0.99] shadow-lg shadow-[#1a7c5c]/20"
+                ? "bg-[#6869F9] hover:bg-[#5657e8] active:scale-[0.99] shadow-lg shadow-[#6869F9]/20"
                 : "bg-gray-300 cursor-not-allowed"
               }`}
           >
@@ -695,7 +695,7 @@ function SankalpContent() {
               {/* Members section */}
               <div className="pb-5 border-b border-gray-100">
                 <h3 className="text-[15px] font-bold text-gray-900 mb-1">Members participating in the puja</h3>
-                <p className="text-[12px] text-[#1a7c5c] mb-3">Panditji will take these names along with gotra during the puja.</p>
+                <p className="text-[12px] text-[#6869F9] mb-3">Panditji will take these names along with gotra during the puja.</p>
                 <ol className="space-y-1">
                   {members.filter(m => m.trim()).map((m, i) => (
                     <li key={i} className="text-[14px] font-semibold text-gray-800">
@@ -741,7 +741,7 @@ function SankalpContent() {
             <div className="px-6 py-4 border-t border-gray-100 flex gap-3">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-[#1a7c5c] text-[#1a7c5c] py-3.5 text-[14px] font-bold hover:bg-[#f0faf5] transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 border-[#6869F9] text-[#6869F9] py-3.5 text-[14px] font-bold hover:bg-[#f5f3ff] transition-colors"
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
                   <path d="M4 6h12M4 10h8M4 14h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -750,7 +750,7 @@ function SankalpContent() {
               </button>
               <button
                 onClick={handleSubmitAndPay}
-                className="flex-1 rounded-xl bg-[#1a7c5c] text-white py-3.5 text-[14px] font-bold hover:bg-[#155f46] active:scale-[0.98] transition-all shadow-md shadow-[#1a7c5c]/20"
+                className="flex-1 rounded-xl bg-[#6869F9] text-white py-3.5 text-[14px] font-bold hover:bg-[#5657e8] active:scale-[0.98] transition-all shadow-md shadow-[#6869F9]/20"
               >
                 Submit &amp; pay
               </button>
@@ -770,7 +770,7 @@ export default function SankalpPage() {
       <Suspense
         fallback={
           <div className="min-h-screen bg-white flex items-center justify-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#1a7c5c]" />
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#6869F9]" />
           </div>
         }
       >

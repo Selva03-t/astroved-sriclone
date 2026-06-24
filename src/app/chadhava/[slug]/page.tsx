@@ -162,14 +162,14 @@ export default function ChadhavaDetailPage() {
            <div className="mx-auto max-w-7xl flex items-center justify-between">
               <div className="flex items-center gap-2 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f] overflow-x-auto no-scrollbar">
                  <div className="flex items-center gap-1.5 shrink-0">
-                   <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                   <div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px] shrink-0">
                      <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                    </div>
                    Add Details
                  </div>
                  <svg viewBox="0 0 16 16" fill="none" className="h-3 w-3 shrink-0 text-gray-300"><path d="M5 3l6 5-6 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                  <div className="flex items-center gap-1.5 shrink-0">
-                   <div className="h-5 w-5 rounded-full bg-[#1a7c5c] text-white flex items-center justify-center text-[8px] shrink-0">
+                   <div className="h-5 w-5 rounded-full bg-[#6869F9] text-white flex items-center justify-center text-[8px] shrink-0">
                      <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5"><path d="M2 6.5 4.8 9 10 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                    </div>
                    Review Booking

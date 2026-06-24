@@ -17,9 +17,9 @@ function SuccessContent() {
   const name           = searchParams?.get("name")           || "";
   const shoppingCartId = searchParams?.get("shoppingCartId") || orderId;
 
-  // Shorten refs for display
-  const shortPayId = paymentId.length > 12 ? paymentId.slice(-12).toUpperCase() : paymentId;
-  const shortOrdId = shoppingCartId.length > 8 ? shoppingCartId.slice(-8).toUpperCase() : shoppingCartId;
+  // Use full original IDs for display
+  const displayPayId = paymentId;
+  const displayOrdId = shoppingCartId;
 
   // ── AstroVed backend verification state ──────────────────────────────────
   const [verifyStatus, setVerifyStatus]     = useState<VerifyStatus>("pending");
@@ -109,12 +109,8 @@ function SuccessContent() {
   // ── Verification badge renderer ───────────────────────────────────────────
   function VerificationBadge() {
     if (verifyStatus === "pending") {
-      return (
-        <div className="flex items-center gap-2 text-[12px] font-semibold text-blue-600 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
-          <div className="h-3 w-3 rounded-full border-2 border-blue-500 border-t-transparent animate-spin shrink-0" />
-          Verifying with AstroVed{verifyAttempt > 1 ? ` (attempt ${verifyAttempt}/3)` : ""}…
-        </div>
-      );
+      // Silently verify in background, don't show the loading spinner to the user
+      return null;
     }
     if (verifyStatus === "verified") {
       return (
@@ -132,25 +128,13 @@ function SuccessContent() {
         </div>
       );
     }
-    if (verifyStatus === "not_found") {
-      return (
-        <div className="flex items-start gap-2 text-[12px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-          <svg className="h-3.5 w-3.5 mt-0.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
-          Payment received. AstroVed confirmation pending — please contact support if this persists.
-        </div>
-      );
+    if (verifyStatus === "not_found" || verifyStatus === "error") {
+      // User requested to remove the warning message, so we don't display the pending/error warning.
+      // Assuming Razorpay success is enough for the user flow.
+      return null;
     }
     // error
-    return (
-      <div className="flex items-center gap-2 text-[12px] font-semibold text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-        <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-        </svg>
-        Could not verify with AstroVed. Your payment was received by Razorpay.
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -211,11 +195,11 @@ function SuccessContent() {
               <div className="space-y-2">
                 <p className="text-[13px] text-gray-700 font-medium">
                   Razorpay Payment ID :{" "}
-                  <span className="font-bold text-[#e66a1f] font-mono">{shortPayId}</span>
+                  <span className="font-bold text-[#e66a1f] font-mono">{displayPayId}</span>
                 </p>
                 <p className="text-[13px] text-gray-700 font-medium">
                   Order Number :{" "}
-                  <span className="font-bold text-[#e66a1f]">{shortOrdId}</span>
+                  <span className="font-bold text-[#e66a1f]">{displayOrdId}</span>
                 </p>
                 {verifyStatus === "verified" && transactionId && (
                   <p className="text-[13px] text-gray-700 font-medium">
