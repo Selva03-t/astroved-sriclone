@@ -106,36 +106,7 @@ function SuccessContent() {
 
   const shareText = encodeURIComponent(`I just booked "${title}" on AstroVed! 🙏`);
 
-  // ── Verification badge renderer ───────────────────────────────────────────
-  function VerificationBadge() {
-    if (verifyStatus === "pending") {
-      // Silently verify in background, don't show the loading spinner to the user
-      return null;
-    }
-    if (verifyStatus === "verified") {
-      return (
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2 text-[12px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-            <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            Payment verified by AstroVed
-          </div>
-          <p className="text-[12px] text-gray-600 font-medium px-1">
-            Transaction ID:{" "}
-            <span className="font-bold text-[#e66a1f] font-mono">{transactionId}</span>
-          </p>
-        </div>
-      );
-    }
-    if (verifyStatus === "not_found" || verifyStatus === "error") {
-      // User requested to remove the warning message, so we don't display the pending/error warning.
-      // Assuming Razorpay success is enough for the user flow.
-      return null;
-    }
-    // error
-    return null;
-  }
+
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
@@ -184,10 +155,7 @@ function SuccessContent() {
                 <span className="font-bold text-gray-800">Note:</span> We request you to contact us with the Transaction Number and Order ID for further clarifications.
               </p>
 
-              {/* ── AstroVed Verification Status ─────────────────────────── */}
-              <div className="pt-2">
-                <VerificationBadge />
-              </div>
+
             </div>
 
             {/* Right: Order details + buttons */}
@@ -201,14 +169,7 @@ function SuccessContent() {
                   Order Number :{" "}
                   <span className="font-bold text-[#e66a1f]">{displayOrdId}</span>
                 </p>
-                {verifyStatus === "verified" && transactionId && (
-                  <p className="text-[13px] text-gray-700 font-medium">
-                    AstroVed Transaction ID :{" "}
-                    <span className="font-bold text-green-700 font-mono text-[11px]">
-                      {transactionId}
-                    </span>
-                  </p>
-                )}
+
               </div>
 
               <div className="space-y-2.5 mt-6">

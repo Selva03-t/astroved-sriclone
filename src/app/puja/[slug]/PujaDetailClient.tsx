@@ -740,7 +740,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                         const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
                         if (selectedOfferings.length > 0) {
                           for (const offering of selectedOfferings) {
-                            const offProductId = offering.productId || 36;
+                            const offProductId = offering.productId || 10;
                             const cartRes = await fetch('/api/cart/add', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
