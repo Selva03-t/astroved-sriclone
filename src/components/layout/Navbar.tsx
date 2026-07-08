@@ -140,12 +140,43 @@ export default function Navbar() {
           )}
 
       {/* Account Details */}
-      <div className="px-3 py-2">
+      <div className="px-3 py-2 border-b border-gray-100">
         <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">Account Details</p>
         {[
           { href: user ? "/profile" : "#", label: "My profile", icon: <PersonIcon /> },
           { href: user ? "/bookings/puja" : "#", label: "My Puja Bookings", icon: <BookingIcon /> },
           { href: user ? "/bookings/chadhava" : "#", label: "My Chadhava Bookings", icon: <BookingIcon /> },
+          { href: user ? "/puja" : "#", label: "Book a Puja", icon: <FlameIcon />, badge: "New" },
+        ].map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            onClick={!user ? (e) => { e.preventDefault(); setAccountOpen(false); setLoginModalOpen(true); } : undefined}
+            className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors group"
+          >
+            <div className="flex items-center gap-4">
+              <span className="text-gray-400 w-5 flex justify-center">{item.icon}</span>
+              <span className="text-[14px] font-semibold text-gray-700">{item.label}</span>
+              {item.badge && <span className="bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">{item.badge}</span>}
+            </div>
+            <ChevronRight />
+          </Link>
+        ))}
+      </div>
+
+      {/* Explore AstroVed Services */}
+      <div className="px-3 py-2 border-b border-gray-100">
+        <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+          Explore AstroVed Services
+        </p>
+        {[
+          { href: "/dashboard", label: "Home", icon: <HomeIcon /> },
+          { href: "/panchang", label: "Panchang", icon: <CalendarIcon /> },
+          { href: "/puja", label: "Puja Seva", icon: <FlameIcon />, badge: "New" },
+          { href: "/chadhava", label: "Chadhava Seva", icon: <BowlIcon />, badge: "New" },
+          { href: "/library", label: "Library", icon: <BookIcon /> },
+          { href: "/temples", label: "Temples of India", icon: <TempleIcon /> },
+          { href: "/astro-tools", label: "Astro Tools", icon: <StarIcon /> },
           { href: "https://AstroVed-tau.vercel.app/", label: "Store", icon: <StoreIcon />, badge: "New", external: true },
         ].map((item) => (
           item.external ? (
@@ -167,36 +198,17 @@ export default function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              onClick={!user ? () => { setAccountOpen(false); setLoginModalOpen(true); } : undefined}
               className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors group"
             >
               <div className="flex items-center gap-4">
                 <span className="text-gray-400 w-5 flex justify-center">{item.icon}</span>
                 <span className="text-[14px] font-semibold text-gray-700">{item.label}</span>
+                {item.badge && <span className="bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">{item.badge}</span>}
               </div>
               <ChevronRight />
             </Link>
           )
         ))}
-      </div>
-
-      {/* Welcome / Puja Seva section */}
-      <div className="px-3 pb-2 border-t border-gray-100 pt-2">
-        <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-          Welcome to AstroVed Puja Seva
-        </p>
-        <Link
-          href="/puja"
-          className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors"
-        >
-          <div className="flex items-center gap-4">
-            <span className="text-gray-400 w-5 flex justify-center">
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.7"/><path d="M12 8v4l3 3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
-            </span>
-            <span className="text-[14px] font-semibold text-gray-700">How Puja Seva works?</span>
-          </div>
-          <ChevronRight />
-        </Link>
       </div>
 
       {/* Help & Support */}
@@ -353,4 +365,25 @@ function BookingIcon() {
 }
 function StoreIcon() {
   return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>;
+}
+function HomeIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function CalendarIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function FlameIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function BowlIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M4 10h16M3 14h18M5 18h14M8 22h8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function BookIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function TempleIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M12 2L2 12h3v8h14v-8h3L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 22V12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function StarIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 }
