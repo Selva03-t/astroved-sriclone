@@ -94,7 +94,7 @@ export default function Navbar() {
     : ["en", "hi"];
 
   // ── Sri Mandir–style account panel content ─────────────────────────────
-  const AccountPanel = () => (
+  const accountPanelContent = (
     <div className="fixed inset-0 z-[100] flex justify-end text-left">
       {/* Dark Overlay */}
       <div 
@@ -340,7 +340,7 @@ export default function Navbar() {
                 )}
               </button>
 
-              {accountOpen && <AccountPanel />}
+              {accountOpen && accountPanelContent}
             </div>
           </div>
         </div>
