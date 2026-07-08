@@ -103,7 +103,7 @@ export default function Navbar() {
       />
       
       {/* Sidebar Drawer */}
-      <div className="relative w-[340px] max-w-[85vw] h-full bg-white shadow-2xl flex flex-col overflow-y-auto animate-[slideInRight_0.3s_ease-out]">
+      <div className="relative w-[340px] max-w-[85vw] h-full bg-white shadow-2xl flex flex-col animate-[slideInRight_0.3s_ease-out]">
         
         {/* Close Button */}
         <button 
@@ -113,7 +113,7 @@ export default function Navbar() {
           <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
         </button>
 
-        <div className="flex-1 pb-10 pt-2">
+        <div className="flex-1 overflow-y-auto pb-10 pt-2 overscroll-contain">
           {/* Login / User header */}
           {!user ? (
             <div className="px-5 py-6 border-b border-gray-100">
