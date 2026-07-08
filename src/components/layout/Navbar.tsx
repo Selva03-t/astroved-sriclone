@@ -254,6 +254,7 @@ export default function Navbar() {
     ? ["en", "hi", "ta", "te", "kn"]
     : ["en", "hi"];
 
+
   return (
     <>
       <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} onSuccess={handleLoginSuccess} />
