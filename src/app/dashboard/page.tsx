@@ -88,6 +88,37 @@ const banners = [
   },
 ];
 
+const MarqueeSection = ({ className = "" }: { className?: string }) => (
+  <div className={`bg-[#6869F9] py-3 md:py-4 overflow-hidden ${className}`}>
+    <div className="animate-marquee whitespace-nowrap flex items-center">
+      {[
+        "#1 Vedic Remedies & Astrological Insights Provider",
+        "25+ Years of Expertise in Vedic Astrology",
+        "10M+ Homas, Poojas & Remedies Performed",
+        "7M Expert Consultations",
+        "60M+ lives touched",
+        "#1 Vedic Remedies & Astrological Insights Provider",
+        "25+ Years of Expertise in Vedic Astrology",
+        "10M+ Homas, Poojas & Remedies Performed",
+        "7M Expert Consultations",
+        "60M+ lives touched",
+        "#1 Vedic Remedies & Astrological Insights Provider",
+        "25+ Years of Expertise in Vedic Astrology",
+        "10M+ Homas, Poojas & Remedies Performed",
+        "7M Expert Consultations",
+        "60M+ lives touched",
+      ].map((item, idx) => (
+        <div key={idx} className="inline-flex items-center mx-8 md:mx-12 shrink-0">
+          <span className="text-yellow-300 text-[15px] md:text-lg mr-2.5 md:mr-3.5 rotate-45 inline-block">✦</span>
+          <span className="text-[13px] md:text-[15px] text-white font-bold uppercase tracking-wide">
+            {item}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export default function DashboardPage() {
   const { t } = useTranslation();
   const [currentBanner, setCurrentBanner] = useState(0);
@@ -105,35 +136,8 @@ export default function DashboardPage() {
       <Navbar />
       <div className="h-px w-full bg-[#d5d8f5]" />
 
-      {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-3 md:py-4 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap flex items-center">
-          {[
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-          ].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center mx-8 md:mx-12 shrink-0">
-              <span className="text-yellow-300 text-[15px] md:text-lg mr-2.5 md:mr-3.5 rotate-45 inline-block">✦</span>
-              <span className="text-[13px] md:text-[15px] text-white font-bold uppercase tracking-wide">
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Marquee Section (Mobile view - above banner) */}
+      <MarqueeSection className="block md:hidden" />
 
       {/* Banner Section */}
       <section className="w-full">
@@ -176,6 +180,55 @@ export default function DashboardPage() {
                   }}
                 />
                 
+                {/* Desktop View (Exact Original Un-animated View) */}
+                <div className="hidden md:flex absolute inset-0 flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
+                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
+                    {banner.title}
+                    {banner.titleHighlight && (
+                      <span className="text-[#ffc107]">{banner.titleHighlight}</span>
+                    )}
+                  </h2>
+                  {banner.subtitle && (
+                    <p className="text-[16px] md:text-[18px] font-medium text-gray-200 mb-10 max-w-2xl leading-relaxed">
+                      {banner.subtitle}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-4">
+                    {banner.buttons.map((btn: any, i) => {
+                      const outlineClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
+                      const solidClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-lg active:scale-95 bg-white text-[#5B5BF6] hover:bg-white/90 hover:shadow-xl`;
+                      const buttonClass = btn.variant === "outline" ? outlineClass : solidClass;
+
+                      if (btn.href) {
+                        return (
+                          <Link key={i} href={btn.href} className={buttonClass}>
+                            {btn.text}
+                          </Link>
+                        );
+                      }
+
+                      if (btn.action === "scroll-bottom") {
+                        return (
+                          <button 
+                            key={i}
+                            className={buttonClass}
+                            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                          >
+                            {btn.text}
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button key={i} className={buttonClass}>
+                          {btn.text}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Mobile View (Animated, matching Sri Mandir app) */}
                 <motion.div 
                   initial="hidden"
                   animate={index === currentBanner ? "visible" : "hidden"}
@@ -183,11 +236,11 @@ export default function DashboardPage() {
                     hidden: { opacity: 0 },
                     visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
                   }}
-                  className="absolute inset-0 flex flex-col justify-end pb-12 pt-20 px-4 md:justify-center md:pb-0 md:pt-0 md:px-24 md:max-w-[60%] text-center md:text-left z-10"
+                  className="absolute inset-0 flex md:hidden flex-col justify-end pb-12 pt-20 px-4 text-center z-10"
                 >
                   <motion.h2 
                     variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-                    className={`text-[28px] md:text-[44px] font-bold leading-[1.15] mb-4 md:mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}
+                    className={`text-[28px] font-bold leading-[1.15] mb-4 tracking-tight ${banner.titleColor || 'text-white'}`}
                   >
                     {banner.title}
                     {banner.titleHighlight && (
@@ -196,11 +249,8 @@ export default function DashboardPage() {
                   </motion.h2>
                   
                   {banner.subtitleLines ? (
-                    <div className="text-[15px] md:text-[18px] font-medium text-gray-100 mb-6 md:mb-10 max-w-2xl leading-[1.6]">
-                      {/* Desktop layout uses normal subtitle string */}
-                      <span className="hidden md:block">{banner.subtitle}</span>
-                      {/* Mobile layout uses line-by-line staggered animation */}
-                      <div className="md:hidden flex flex-col">
+                    <div className="text-[15px] font-medium text-gray-100 mb-6 leading-[1.6]">
+                      <div className="flex flex-col">
                         {banner.subtitleLines.map((line, i) => (
                           <motion.span 
                             key={i} 
@@ -215,7 +265,7 @@ export default function DashboardPage() {
                   ) : banner.subtitle ? (
                     <motion.p 
                       variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-                      className="text-[15px] md:text-[18px] font-medium text-gray-100 mb-6 md:mb-10 max-w-2xl leading-[1.6]"
+                      className="text-[15px] font-medium text-gray-100 mb-6 leading-[1.6]"
                     >
                       {banner.subtitle}
                     </motion.p>
@@ -223,7 +273,7 @@ export default function DashboardPage() {
 
                   <motion.div 
                     variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-                    className="flex flex-wrap gap-3 md:gap-4 justify-center md:justify-start"
+                    className="flex flex-wrap gap-3 justify-center"
                   >
                     {banner.buttons.map((btn: any, i) => {
                       const outlineClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
@@ -294,6 +344,9 @@ export default function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {/* Marquee Section (Desktop view - below banner to maintain exact original layout) */}
+      <MarqueeSection className="hidden md:block" />
 
       {/* AstroVed Special Pujas Section */}
       <section className="bg-white py-20">
