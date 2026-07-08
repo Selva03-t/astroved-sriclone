@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import { useTranslation } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
 
 const navigationItems = [
   { label: "Home", path: "/dashboard" },
@@ -20,9 +21,13 @@ const navigationItems = [
 const banners = [
   {
     id: 1,
-    title: "Offer AstroVed Puja and Chadhava at 100+ sacred temples in your Name and Gotra to your beloved deity.",
+    title: "Offer AstroVed Puja and Chadhava",
     titleHighlight: "",
-    subtitle: "",
+    subtitle: "at 100+ sacred temples in your Name and Gotra to your beloved deity.",
+    subtitleLines: [
+      "at 100+ sacred temples in your Name",
+      "and Gotra to your beloved deity."
+    ],
     buttons: [
       { text: "Explore Pujas", variant: "outline", href: "/puja" },
       { text: "Participate Now", variant: "solid", href: "/puja" }
@@ -35,6 +40,12 @@ const banners = [
     title: "AstroVed Special ",
     titleHighlight: "Puja",
     subtitle: "Invoke peace, prosperity, and happiness for your family through online pujas at India's sacred temples — from the comfort of your home.",
+    subtitleLines: [
+      "Invoke peace, prosperity, and",
+      "happiness for your family through",
+      "online pujas at India's sacred temples",
+      "— from the comfort of your home."
+    ],
     buttons: [
       { text: "Book Puja", variant: "solid", href: "/puja" }
     ],
@@ -47,6 +58,12 @@ const banners = [
     titleHighlight: "",
     titleColor: "text-yellow-400",
     subtitle: "Experience divine blessings from sacred temples of India — enjoy online darshan, horoscope, prasad, stories, mantras, and a lot more. Exclusively on AstroVed.",
+    subtitleLines: [
+      "Experience divine blessings from sacred",
+      "temples of India — enjoy online darshan,",
+      "horoscope, prasad, stories, mantras,",
+      "and a lot more. Exclusively on AstroVed."
+    ],
     buttons: [
       { text: "Download App", variant: "solid", action: "scroll-bottom" }
     ],
@@ -58,6 +75,12 @@ const banners = [
     title: "AstroVed Special ",
     titleHighlight: "Chadhava",
     subtitle: "Now offer your prayers and sacred offerings to your beloved deities at renowned temples across India — from your home. Seek divine blessings on AstroVed.",
+    subtitleLines: [
+      "Now offer your prayers and sacred",
+      "offerings to your beloved deities at",
+      "renowned temples across India — from",
+      "your home. Seek divine blessings on AstroVed."
+    ],
     buttons: [
       { text: "Book Chadhava", variant: "solid", href: "/chadhava" }
     ],
@@ -119,23 +142,59 @@ export default function DashboardPage() {
                 <div 
                   className="absolute inset-0 md:hidden"
                   style={{
-                    background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
+                    background: `linear-gradient(to top, ${banner.baseColor || "#5b172a"} 30%, ${banner.baseColor || "#5b172a"}88 50%, transparent 100%)`
                   }}
                 />
                 
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
-                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
+                <motion.div 
+                  initial="hidden"
+                  animate={index === currentBanner ? "visible" : "hidden"}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
+                  }}
+                  className="absolute inset-0 flex flex-col justify-end pb-12 pt-20 px-4 md:justify-center md:pb-0 md:pt-0 md:px-24 md:max-w-[60%] text-center md:text-left z-10"
+                >
+                  <motion.h2 
+                    variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                    className={`text-[28px] md:text-[44px] font-bold leading-[1.15] mb-4 md:mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}
+                  >
                     {banner.title}
                     {banner.titleHighlight && (
                       <span className="text-[#ffc107]">{banner.titleHighlight}</span>
                     )}
-                  </h2>
-                  {banner.subtitle && (
-                    <p className="text-[16px] md:text-[18px] font-medium text-gray-200 mb-10 max-w-2xl leading-relaxed">
+                  </motion.h2>
+                  
+                  {banner.subtitleLines ? (
+                    <div className="text-[15px] md:text-[18px] font-medium text-gray-100 mb-6 md:mb-10 max-w-2xl leading-[1.6]">
+                      {/* Desktop layout uses normal subtitle string */}
+                      <span className="hidden md:block">{banner.subtitle}</span>
+                      {/* Mobile layout uses line-by-line staggered animation */}
+                      <div className="md:hidden flex flex-col">
+                        {banner.subtitleLines.map((line, i) => (
+                          <motion.span 
+                            key={i} 
+                            variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                            className="inline-block"
+                          >
+                            {line}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : banner.subtitle ? (
+                    <motion.p 
+                      variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                      className="text-[15px] md:text-[18px] font-medium text-gray-100 mb-6 md:mb-10 max-w-2xl leading-[1.6]"
+                    >
                       {banner.subtitle}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-4">
+                    </motion.p>
+                  ) : null}
+
+                  <motion.div 
+                    variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                    className="flex flex-wrap gap-3 md:gap-4 justify-center md:justify-start"
+                  >
                     {banner.buttons.map((btn: any, i) => {
                       const outlineClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
                       const solidClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-lg active:scale-95 bg-white text-[#5B5BF6] hover:bg-white/90 hover:shadow-xl`;
@@ -167,8 +226,8 @@ export default function DashboardPage() {
                         </button>
                       );
                     })}
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
           ))}
