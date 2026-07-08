@@ -105,6 +105,36 @@ export default function DashboardPage() {
       <Navbar />
       <div className="h-px w-full bg-[#d5d8f5]" />
 
+      {/* Marquee Section */}
+      <div className="bg-[#6869F9] py-3 md:py-4 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap flex items-center">
+          {[
+            "#1 Vedic Remedies & Astrological Insights Provider",
+            "25+ Years of Expertise in Vedic Astrology",
+            "10M+ Homas, Poojas & Remedies Performed",
+            "7M Expert Consultations",
+            "60M+ lives touched",
+            "#1 Vedic Remedies & Astrological Insights Provider",
+            "25+ Years of Expertise in Vedic Astrology",
+            "10M+ Homas, Poojas & Remedies Performed",
+            "7M Expert Consultations",
+            "60M+ lives touched",
+            "#1 Vedic Remedies & Astrological Insights Provider",
+            "25+ Years of Expertise in Vedic Astrology",
+            "10M+ Homas, Poojas & Remedies Performed",
+            "7M Expert Consultations",
+            "60M+ lives touched",
+          ].map((item, idx) => (
+            <div key={idx} className="inline-flex items-center mx-8 md:mx-12 shrink-0">
+              <span className="text-yellow-300 text-[15px] md:text-lg mr-2.5 md:mr-3.5 rotate-45 inline-block">✦</span>
+              <span className="text-[13px] md:text-[15px] text-white font-bold uppercase tracking-wide">
+                {item}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Banner Section */}
       <section className="w-full">
         <div className="relative w-full h-[600px] md:h-[500px] lg:h-[550px] overflow-hidden group">
@@ -264,36 +294,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </section>
-
-      {/* Marquee Section */}
-      <div className="bg-[#6869F9] py-4 md:py-5 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap flex items-center">
-          {[
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-            "#1 Vedic Remedies & Astrological Insights Provider",
-            "25+ Years of Expertise in Vedic Astrology",
-            "10M+ Homas, Poojas & Remedies Performed",
-            "7M Expert Consultations",
-            "60M+ lives touched",
-          ].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center mx-12 shrink-0">
-              <span className="text-yellow-300 text-lg md:text-xl mr-3.5 rotate-45 inline-block">✦</span>
-              <span className="text-base md:text-[17px] text-white font-bold uppercase tracking-wide">
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* AstroVed Special Pujas Section */}
       <section className="bg-white py-20">
