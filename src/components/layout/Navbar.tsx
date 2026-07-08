@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "@/contexts/LanguageContext";
 import LoginModal from "@/components/auth/LoginModal";
 
 type SupportedLanguage = "en" | "hi" | "ta" | "te" | "kn";
 
+// All nav items (used in desktop nav only)
 const navKeys = [
   { key: "home", path: "/dashboard" },
   { key: "puja", path: "/puja" },
@@ -20,7 +20,7 @@ const navKeys = [
   { key: "store", path: "https://AstroVed-tau.vercel.app/", external: true },
 ];
 
-const languageDisplayNames: Record<string, string> = {
+const languageFullNames: Record<string, string> = {
   en: "English",
   hi: "हिन्दी",
   ta: "தமிழ்",
@@ -28,53 +28,49 @@ const languageDisplayNames: Record<string, string> = {
   kn: "ಕನ್ನಡ",
 };
 
-const fullLanguageOptions: { code: SupportedLanguage; label: string }[] = [
-  { code: "en", label: "English" },
-  { code: "hi", label: "à¤¹à¤¿à¤¨à¥à¤¦à¥€" },
-  { code: "ta", label: "à®¤à®®à®¿à®´à¯" },
-  { code: "te", label: "à°¤à±†à°²à±à°—à±" },
-  { code: "kn", label: "à²•à²¨à³à²¨à²¡" },
-];
-
-const baseLanguageOptions = fullLanguageOptions.slice(0, 2);
-
-
 export default function Navbar() {
   const pathname = usePathname();
   const { t, language, setLanguage } = useTranslation();
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const langRef = useRef<HTMLDivElement>(null);
 
-  // Close language dropdown when clicking outside
+  const langRef = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) setAccountOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // Close account panel on route change
+  useEffect(() => { setAccountOpen(false); }, [pathname]);
+
+  // Lock body scroll when panel is open
+  useEffect(() => {
+    if (accountOpen || langOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [accountOpen, langOpen]);
+
   useEffect(() => {
     fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.authenticated) {
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      })
+      .then((r) => r.json())
+      .then((d) => { if (d.authenticated) setUser(d.user); else setUser(null); })
       .catch(() => setUser(null));
   }, [pathname]);
 
-  const isActivePath = (path: string) => {
-    return pathname === path || (path !== "/dashboard" && pathname?.startsWith(path + "/"));
-  };
+  const isActivePath = (path: string) =>
+    pathname === path || (path !== "/dashboard" && pathname?.startsWith(path + "/"));
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -82,65 +78,190 @@ export default function Navbar() {
     window.location.href = "/dashboard";
   };
 
-  // After successful modal login — reload user info
   const handleLoginSuccess = () => {
     fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.authenticated) setUser(data.user);
-      })
-      .catch(() => { });
+      .then((r) => r.json())
+      .then((d) => { if (d.authenticated) setUser(d.user); })
+      .catch(() => {});
   };
 
-  // Pages that show all 5 languages
   const isFullLanguagePage =
-    pathname === "/" ||
-    pathname === "/dashboard" ||
-    pathname === "/puja" ||
-    pathname?.startsWith("/puja/");
+    pathname === "/" || pathname === "/dashboard" ||
+    pathname === "/puja" || pathname?.startsWith("/puja/");
+
+  const languageCodes = isFullLanguagePage
+    ? ["en", "hi", "ta", "te", "kn"]
+    : ["en", "hi"];
+
+  // ── Sri Mandir–style account panel content ─────────────────────────────
+  const AccountPanel = () => (
+    <div className="fixed inset-0 z-[100] flex justify-end text-left">
+      {/* Dark Overlay */}
+      <div 
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity" 
+        onClick={() => setAccountOpen(false)} 
+      />
+      
+      {/* Sidebar Drawer */}
+      <div className="relative w-[340px] max-w-[85vw] h-full bg-white shadow-2xl flex flex-col overflow-y-auto animate-[slideInRight_0.3s_ease-out]">
+        
+        {/* Close Button */}
+        <button 
+          onClick={() => setAccountOpen(false)}
+          className="absolute top-4 right-4 h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors z-10"
+        >
+          <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+        </button>
+
+        <div className="flex-1 pb-10 pt-2">
+          {/* Login / User header */}
+          {!user ? (
+            <div className="px-5 py-6 border-b border-gray-100">
+              <p className="text-[13px] text-gray-500 font-medium mb-3 pr-8">
+                To check all available pujas &amp; offers:
+              </p>
+              <button
+                onClick={() => { setAccountOpen(false); setLoginModalOpen(true); }}
+                className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors"
+              >
+                Login / Create an account
+              </button>
+            </div>
+          ) : (
+            <div className="px-5 py-6 border-b border-gray-100 flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-[#6869F9] flex items-center justify-center text-white font-bold text-sm uppercase shrink-0">
+                {user.name.charAt(0)}
+              </div>
+              <div>
+                <p className="text-[13px] text-gray-400">Namaste 🙏</p>
+                <p className="text-[15px] font-bold text-gray-900 pr-8 line-clamp-1">{user.name}</p>
+              </div>
+            </div>
+          )}
+
+      {/* Account Details */}
+      <div className="px-3 py-2">
+        <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">Account Details</p>
+        {[
+          { href: user ? "/profile" : "#", label: "My profile", icon: <PersonIcon /> },
+          { href: user ? "/bookings/puja" : "#", label: "My Puja Bookings", icon: <BookingIcon /> },
+          { href: user ? "/bookings/chadhava" : "#", label: "My Chadhava Bookings", icon: <BookingIcon /> },
+          { href: "https://AstroVed-tau.vercel.app/", label: "Store", icon: <StoreIcon />, badge: "New", external: true },
+        ].map((item) => (
+          item.external ? (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <span className="text-gray-400 w-5 flex justify-center">{item.icon}</span>
+                <span className="text-[14px] font-semibold text-gray-700">{item.label}</span>
+                {item.badge && <span className="bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">{item.badge}</span>}
+              </div>
+              <ChevronRight />
+            </a>
+          ) : (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={!user ? () => { setAccountOpen(false); setLoginModalOpen(true); } : undefined}
+              className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <span className="text-gray-400 w-5 flex justify-center">{item.icon}</span>
+                <span className="text-[14px] font-semibold text-gray-700">{item.label}</span>
+              </div>
+              <ChevronRight />
+            </Link>
+          )
+        ))}
+      </div>
+
+      {/* Welcome / Puja Seva section */}
+      <div className="px-3 pb-2 border-t border-gray-100 pt-2">
+        <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+          Welcome to AstroVed Puja Seva
+        </p>
+        <Link
+          href="/puja"
+          className="flex items-center justify-between px-3 py-3.5 rounded-xl hover:bg-gray-50 transition-colors"
+        >
+          <div className="flex items-center gap-4">
+            <span className="text-gray-400 w-5 flex justify-center">
+              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.7"/><path d="M12 8v4l3 3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+            </span>
+            <span className="text-[14px] font-semibold text-gray-700">How Puja Seva works?</span>
+          </div>
+          <ChevronRight />
+        </Link>
+      </div>
+
+      {/* Help & Support */}
+      <div className="px-3 pb-3 border-t border-gray-100 pt-2">
+        <p className="px-2 py-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">Help &amp; Support for Puja Booking</p>
+        <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-50 mb-2">
+          <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-green-600"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+          </div>
+          <div>
+            <p className="text-[13px] font-bold text-gray-900">080-711-74417</p>
+            <p className="text-[11px] text-gray-400">You can call us from 10:30 AM - 7:30 PM</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <a href="mailto:support@AstroVed.com" className="flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-colors text-[13px] font-bold text-gray-700">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-red-500"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+            Email us
+          </a>
+          <a href="https://wa.me/918071174417" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-colors text-[13px] font-bold text-gray-700">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-green-500"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="currentColor" opacity=".8"/></svg>
+            Whatsapp us
+          </a>
+        </div>
+
+        {user && (
+          <button
+            onClick={handleLogout}
+            className="mt-2 w-full py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+          >
+            <svg viewBox="0 0 24 24" fill="none" className="inline h-4 w-4 mr-2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            {t("account.logout")}
+          </button>
+        )}
+        </div>
+      </div>
+    </div>
+    </div>
+  );
 
   return (
     <>
-      {/* ── Login Modal ── */}
-      <LoginModal
-        isOpen={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
-        onSuccess={handleLoginSuccess}
-      />
+      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} onSuccess={handleLoginSuccess} />
 
-      <section className="sticky top-0 z-50 overflow-visible border-b border-gray-100 bg-white shadow-sm">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto] items-center gap-6 px-8 py-3.5 md:grid-cols-[1fr_auto_1fr]">
-          <div className="justify-self-start">
-            <Link href="/dashboard" className="flex items-center gap-3 pr-4">
-              <img
-                src="/images/logo.svg"
-                alt="AstroVed Logo"
-                className="h-9 md:h-11 w-auto object-contain"
-              />
-            </Link>
-          </div>
+      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white shadow-sm">
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-3 sm:px-5 lg:px-8">
 
-          <nav aria-label="Dashboard navigation" className="hidden md:block md:justify-self-center">
-            <ul className="flex items-center gap-8 text-[15px] font-semibold text-[#1a1a1a]">
+          {/* ── Logo ── */}
+          <Link href="/dashboard" className="flex items-center gap-2 shrink-0" aria-label="AstroVed Home">
+            <img src="/images/logo.svg" alt="AstroVed" className="h-8 sm:h-9 lg:h-11 w-auto object-contain" />
+          </Link>
+
+          {/* ── Desktop Nav (lg+) ── */}
+          <nav aria-label="Main navigation" className="hidden lg:block">
+            <ul className="flex items-center gap-6 xl:gap-8 text-[14px] xl:text-[15px] font-semibold text-[#1a1a1a]">
               {navKeys.map((item) => (
                 <li key={item.key}>
                   {item.external ? (
-                    <a
-                      href={item.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-[#1f1f1f]"
-                    >
+                    <a href={item.path} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#6869F9]">
                       {t(`nav.${item.key}`)}
                     </a>
                   ) : (
                     <Link
                       href={item.path}
-                      className={
-                        isActivePath(item.path)
-                          ? "text-[#5B5BF6] font-bold"
-                          : "transition-colors hover:text-[#5B5BF6]"
-                      }
+                      className={isActivePath(item.path) ? "text-[#6869F9] font-bold" : "transition-colors hover:text-[#6869F9]"}
                     >
                       {t(`nav.${item.key}`)}
                     </Link>
@@ -150,292 +271,86 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          <div className="justify-self-end flex items-center gap-4">
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-all duration-300 hover:bg-gray-50 md:hidden"
-            >
-              {mobileMenuOpen ? (
-                <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
-                  <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              )}
-            </button>
+          {/* ── Right actions ── */}
+          <div className="flex items-center gap-2 sm:gap-3">
 
-            {/* Language Dropdown - Click based */}
-            <div className="relative hidden md:block" ref={langRef}>
+            {/* Language pill */}
+            <div className="relative" ref={langRef}>
               <button
-                onClick={() => setLangOpen((prev) => !prev)}
-                aria-label={`Select language: ${(isFullLanguagePage ? fullLanguageOptions : baseLanguageOptions).map((item) => item.code).join(", ")}`}
-                className="flex items-center gap-1.5 h-[38px] px-3.5 rounded-full border border-gray-200 bg-white text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors"
+                onClick={() => { setLangOpen((p) => !p); setAccountOpen(false); }}
+                aria-label="Select language"
+                className="flex items-center gap-1 h-8 sm:h-9 px-3 rounded-full border border-gray-300 bg-white text-gray-700 text-[13px] font-bold hover:bg-gray-50 transition-colors"
               >
-                {languageDisplayNames[language] || "English"}
-                <svg className={`w-4 h-4 text-gray-500 transition-transform ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span>{language.slice(0, 2).charAt(0).toUpperCase() + language.slice(0, 2).charAt(1)}</span>
+                <svg className={`w-3 h-3 text-gray-400 transition-transform ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               {langOpen && (
-                <div className="absolute top-full right-0 mt-2 z-90">
-                  <div className="bg-white rounded-xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.12)] overflow-hidden" style={{ minWidth: "140px" }}>
-                    <div className="py-1">
-                      {[
-                        { code: "en", label: "English" },
-                        { code: "hi", label: "हिन्दी" },
-                        ...(isFullLanguagePage ? [
-                          { code: "ta", label: "தமிழ்" },
-                          { code: "te", label: "తెలుగు" },
-                          { code: "kn", label: "ಕನ್ನಡ" },
-                        ] : []),
-                      ].map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => { setLanguage(lang.code as SupportedLanguage); setLangOpen(false); }}
-                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${language === lang.code
-                            ? "text-[#1f1f1f] bg-blue-50 font-bold"
-                            : "text-gray-700 hover:bg-blue-50 hover:text-[#1f1f1f] font-medium"
-                            }`}
-                        >
-                          {lang.label}
-                        </button>
-                      ))}
-                    </div>
+                <div className="absolute top-full right-0 mt-2 z-90 bg-white rounded-xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.12)] overflow-hidden min-w-[140px]">
+                  <div className="py-1">
+                    {languageCodes.map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => { setLanguage(code as SupportedLanguage); setLangOpen(false); }}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${language === code ? "text-[#6869F9] bg-blue-50 font-bold" : "text-gray-700 hover:bg-gray-50 font-medium"}`}
+                      >
+                        {languageFullNames[code]}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Account dropdown */}
-            <div className="group relative hidden md:block">
+            {/* ── Account button + panel (visible on ALL screen sizes, Sri Mandir style) ── */}
+            <div className="relative" ref={accountRef}>
               <button
                 type="button"
-                aria-label="Account menu"
-                className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-all duration-300 hover:border-gray-300 hover:bg-gray-50"
+                aria-label="Account"
+                aria-expanded={accountOpen}
+                onClick={() => { setAccountOpen((p) => !p); setLangOpen(false); }}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 transition-colors overflow-hidden"
               >
                 {user ? (
-                  <div className="h-full w-full flex items-center justify-center bg-[#6869F9] text-white rounded-full font-bold text-xs uppercase">
+                  <span className="flex h-full w-full items-center justify-center bg-[#6869F9] text-white font-bold text-xs uppercase">
                     {user.name.charAt(0)}
-                  </div>
+                  </span>
                 ) : (
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-6 w-6">
-                    <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7" />
-                    <path d="M5 19a7 7 0 0 1 14 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                  /* Sri Mandir–style 3-line person icon */
+                  <svg viewBox="0 0 40 40" fill="none" className="h-full w-full" aria-hidden="true">
+                    <circle cx="20" cy="20" r="19" stroke="#e5e7eb" strokeWidth="1.2" fill="white" />
+                    {/* head */}
+                    <circle cx="20" cy="15" r="5" fill="#d1d5db" />
+                    {/* body lines */}
+                    <path d="M10 32c0-5.523 4.477-10 10-10s10 4.477 10 10" fill="#d1d5db" />
                   </svg>
                 )}
               </button>
 
-              <div className="pointer-events-none absolute right-0 top-full z-80 w-[320px] pt-3 opacity-0 translate-y-3 transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden">
-                  {!user ? (
-                    <div className="p-5 border-b border-gray-50 bg-gray-50/30">
-                      <p className="text-[13px] text-gray-500 font-medium mb-3">To check all available pujas &amp; offers:</p>
-                      {/* ── Trigger modal on click ── */}
-                      <button
-                        onClick={() => setLoginModalOpen(true)}
-                        className="block w-full bg-[#6869F9] text-white text-center py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-100 hover:bg-[#5657e8] transition-all"
-                      >
-                        {t("account.login")}
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="p-5 border-b border-gray-50 bg-[#6869F9]/5">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-[#6869F9] text-white rounded-full flex items-center justify-center font-bold">
-                          {user.name.charAt(0)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-[#1f1f1f] uppercase tracking-wider">Namaste,</p>
-                          <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="p-2">
-                    <p className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Account Details</p>
-                    <nav className="space-y-0.5">
-                      <Link href={user ? "/profile" : "#"} onClick={!user ? () => setLoginModalOpen(true) : undefined} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-user text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">{t("account.profile")}</span>
-                        </div>
-                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                      </Link>
-
-                      <Link href={user ? "/bookings/puja" : "#"} onClick={!user ? () => setLoginModalOpen(true) : undefined} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-calendar-check text-gray-400 group-hover/item:text-[#6869F9] transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">{t("account.pujaBookings")}</span>
-                        </div>
-                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                      </Link>
-
-
-
-                      <Link href="/puja" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-om text-gray-400 group-hover/item:text-[#1f1f1f] transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">{t("account.bookPuja")}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
-                          <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                        </div>
-                      </Link>
-
-                      <Link href="/chadhava" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-hands-praying text-gray-400 group-hover/item:text-[#1f1f1f] transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">{t("account.bookChadhava")}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
-                          <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                        </div>
-                      </Link>
-
-                      <Link href="/astro-tools" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-wand-magic-sparkles text-gray-400 group-hover/item:text-blue-600 transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">Astro Tools</span>
-                        </div>
-                        <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                      </Link>
-
-                      <a href="https://AstroVed-tau.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group/item">
-                        <div className="flex items-center gap-4">
-                          <i className="fa-solid fa-cart-shopping text-gray-400 group-hover/item:text-blue-500 transition-colors"></i>
-                          <span className="text-[14px] font-semibold text-gray-700">Store</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="bg-[#00c26d] text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">New</span>
-                          <i className="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
-                        </div>
-                      </a>
-                    </nav>
-                  </div>
-
-                  <div className="p-4 bg-gray-50/50 space-y-4">
-                    <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{t("account.helpSupport")}</p>
-                    <div className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-2xl">
-                      <div className="h-8 w-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-sm">
-                        <i className="fa-solid fa-phone"></i>
-                      </div>
-                      <div>
-                        <p className="text-[13px] font-bold text-gray-900">1800 102 9098</p>
-                        <p className="text-[10px] text-gray-400 font-medium tracking-tight">Available from 10:30 AM - 7:30 PM</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <a href="mailto:support@AstroVed.com" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
-                        <i className="fa-regular fa-envelope text-red-500"></i>
-                        <span className="text-xs font-bold text-gray-700">Email us</span>
-                      </a>
-                      <a href="https://wa.me/918071174417" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-100 bg-white hover:bg-gray-50 transition-all">
-                        <i className="fa-brands fa-whatsapp text-blue-500"></i>
-                        <span className="text-xs font-bold text-gray-700">Whatsapp</span>
-                      </a>
-                    </div>
-
-                    {user && (
-                      <button
-                        onClick={handleLogout}
-                        className="w-full py-2.5 mt-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                      >
-                        <i className="fa-solid fa-power-off mr-2"></i> {t("account.logout")}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {accountOpen && <AccountPanel />}
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <div className={`mx-auto max-w-6xl overflow-hidden px-6 transition-all duration-300 md:hidden ${mobileMenuOpen ? "max-h-[80vh] pb-4" : "max-h-0"}`}>
-          <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
-            <nav aria-label="Mobile navigation">
-              <ul className="space-y-1">
-                {navKeys.map((item) => (
-                  <li key={`mobile-${item.key}`}>
-                    {item.external ? (
-                      <a
-                        href={item.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
-                      >
-                        {t(`nav.${item.key}`)}
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.path}
-                        className={`block rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${isActivePath(item.path) ? "bg-[#5B5BF6]/10 text-[#5B5BF6] font-bold" : "text-gray-700 hover:bg-gray-50 hover:text-[#5B5BF6]"
-                          }`}
-                      >
-                        {t(`nav.${item.key}`)}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            {/* Mobile language switcher */}
-            <div className="mt-3 border-t border-gray-100 pt-3">
-              <p className="px-2 text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Language</p>
-              <div className="flex flex-wrap gap-2 px-2">
-                {["en", "hi", ...(isFullLanguagePage ? ["ta", "te", "kn"] : [])].map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang as SupportedLanguage)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium ${language === lang ? "bg-[#6869F9] text-white" : "bg-gray-100 text-gray-700"}`}
-                  >
-                    {languageDisplayNames[lang]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-3 border-t border-gray-100 pt-3">
-              {user ? (
-                <>
-                  <p className="px-2 text-xs font-bold uppercase tracking-wider text-[#1f1f1f]">Namaste, {user.name}</p>
-                  <div className="mt-2 space-y-1">
-                    <Link href="/profile" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Profile</Link>
-                    <Link href="/bookings/puja" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">{t("account.pujaBookings")}</Link>
-                    <Link href="/bookings/chadhava" className="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">My Chadhava Bookings</Link>
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
-                    >
-                      Log out
-                    </button>
-                  </div>
-                </>
-              ) : (
-                /* Mobile: open modal */
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setLoginModalOpen(true); }}
-                  className="block w-full rounded-xl bg-[#6869F9] px-4 py-3 text-center text-sm font-bold text-white shadow-md shadow-blue-100 transition-all hover:bg-[#5657e8]"
-                >
-                  {t("account.login")}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      </header>
     </>
   );
+}
+
+// ── Small SVG helpers ─────────────────────────────────────────────────────
+function ChevronRight() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 text-gray-300 shrink-0">
+      <path d="M7.5 4.5l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function PersonIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7"/><path d="M5 19a7 7 0 0114 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>;
+}
+function BookingIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function StoreIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>;
 }

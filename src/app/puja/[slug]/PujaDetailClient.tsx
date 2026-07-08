@@ -202,6 +202,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
   const [reviewsShown, setReviewsShown] = useState(3);
   const [activeCarouselDot, setActiveCarouselDot] = useState(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [pendingSankalpUrl, setPendingSankalpUrl] = useState<string | null>(null);
   const [isIndian, setIsIndian] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -484,10 +486,10 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
     return (
       <div className="min-h-screen bg-[#f8f9fa] pb-32">
         {/* Hide site footer & AI chat while in review booking mode */}
-        <style>{`footer, [data-global-chrome="assistant"] { display: none !important; }`}</style>
+        <style>{`footer, [data-global-chrome="assistant"], [data-mobile-bottom-nav] { display: none !important; }`}</style>
         <Navbar />
         {/* Review Breadcrumbs */}
-        <div className="bg-white border-b border-gray-100 py-3 px-4 sticky top-[64px] z-20">
+        <div className="bg-white border-b border-gray-100 py-2.5 sm:py-3 px-3 sm:px-4 sticky top-16 z-20">
           <div className="mx-auto max-w-7xl flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#1f1f1f] overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-1.5 shrink-0">
@@ -514,13 +516,13 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 Make Payment
               </div>
             </div>
-            <button onClick={() => setShowReviewModal(false)} className="text-gray-400 hover:text-red-500 shrink-0 ml-3">
+            <button onClick={() => setShowExitConfirm(true)} className="text-gray-400 hover:text-red-500 shrink-0 ml-3">
               <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 py-6 sm:py-10 grid grid-cols-1 md:grid-cols-[2fr_1fr] lg:grid-cols-3 gap-6 sm:gap-10">
           {/* Left Column: Selected Items */}
           <div className="lg:col-span-2 space-y-6">
             <button
@@ -539,7 +541,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
             <div className="space-y-4">
               {/* Primary Package */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm relative">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1 min-w-0 mr-3">
                     <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
@@ -663,7 +665,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 )}
               </div>
 
-              <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-3xl p-5 sm:p-8 border border-gray-100 shadow-sm">
                 <h3 className="font-bold text-[#1f1f1f] mb-6 border-b border-gray-50 pb-4">Bill details</h3>
                 <div className="space-y-4 text-sm font-medium text-gray-500">
                   <div className="flex justify-between">
@@ -709,129 +711,139 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 </div>
               </div>
 
-              <div className="mt-6">
+              <div className="mt-6 flex flex-col gap-3">
                 {reviewCartError && (
                   <div className="mb-4 rounded-xl bg-red-50 p-4 text-center text-sm font-semibold text-red-500 border border-red-200">
                     {reviewCartError}
                   </div>
                 )}
-                <div className="flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-2xl shadow-xl shadow-[#6869F9]/20">
-                  <div className="flex items-center gap-4 text-sm font-bold pl-4">
-                    <span>{1 + selectedExtraIds.length} Sevas selected</span>
-                    <span className="opacity-50">•</span>
-                    <span className="text-lg">{currencySymbol} {totalAmount}</span>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      setReviewLoading(true);
-                      setReviewCartError("");
-                      try {
-                        const res = await fetch('/api/auth/me');
-                        const authData = await res.json();
+                <button
+                  onClick={async () => {
+                    if (!agreedToTerms) {
+                      setToastMsg("Please agree to the Terms of Service to proceed.");
+                      setTimeout(() => setToastMsg(""), 3500);
+                      return;
+                    }
+                    setReviewLoading(true);
+                    setReviewCartError("");
+                    try {
+                      const res = await fetch('/api/auth/me');
+                      const authData = await res.json();
 
-                        let customerId = 1145090; // Default fallback
-                        if (authData.authenticated && authData.user?.customerId) {
-                          customerId = Number(authData.user.customerId) || 1145090;
-                        }
+                      let customerId = 1145090; // Default fallback
+                      if (authData.authenticated && authData.user?.customerId) {
+                        customerId = Number(authData.user.customerId) || 1145090;
+                      }
 
-                        let localCartId = shoppingCartId || "";
+                      let localCartId = shoppingCartId || "";
 
-                        // Add selected offerings to cart
-                        const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
-                        if (selectedOfferings.length > 0) {
-                          for (const offering of selectedOfferings) {
-                            const offProductId = offering.productId || 10;
-                            const cartRes = await fetch('/api/cart/add', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                customerId,
-                                productId: offProductId,
-                                quantity: 1,
-                                shopName: "AstroVed",
-                                variationId: 0,
-                                currencyCode: "INR",
-                                localeCode: "en-US",
-                                freeProductContributionAmount: 0,
-                                productSubVariationExternalId: ""
-                              })
-                            });
+                      // Add selected offerings to cart
+                      const selectedOfferings = (puja.offerings || []).filter(o => selectedExtraIds.includes(o.id));
+                      if (selectedOfferings.length > 0) {
+                        for (const offering of selectedOfferings) {
+                          const offProductId = offering.productId || 10;
+                          const cartRes = await fetch('/api/cart/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              customerId,
+                              productId: offProductId,
+                              quantity: 1,
+                              shopName: "AstroVed",
+                              variationId: 0,
+                              currencyCode: "INR",
+                              localeCode: "en-US",
+                              freeProductContributionAmount: 0,
+                              productSubVariationExternalId: ""
+                            })
+                          });
 
-                            const cartData = await cartRes.json();
-                            if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
-                              throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
-                            }
-                            if (cartData.SelectedListId) {
-                              localCartId = String(cartData.SelectedListId);
-                            }
+                          const cartData = await cartRes.json();
+                          if (!cartRes.ok || (cartData.StatusCode !== 200 && cartData.Status !== "OK")) {
+                            throw new Error(cartData.Message || `Failed to add "${offering.name}" to cart. Please check its product ID configuration.`);
+                          }
+                          if (cartData.SelectedListId) {
+                            localCartId = String(cartData.SelectedListId);
                           }
                         }
-
-                        if (localCartId) {
-                          setShoppingCartId(localCartId);
-                        }
-
-                        const extras = selectedExtraIds.join(',');
-                        const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
-                        if (!authData.authenticated) {
-                          setPendingSankalpUrl(sankalpUrl);
-                          setShowLoginModal(true);
-                          return;
-                        }
-                        window.location.href = sankalpUrl;
-                      } catch (err: any) {
-                        setReviewCartError(err.message || "Connection error. Please try again.");
-                      } finally {
-                        setReviewLoading(false);
                       }
-                    }}
-                    disabled={reviewLoading || !agreedToTerms}
-                    className="flex items-center gap-2 font-bold hover:gap-4 transition-all uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+
+                      if (localCartId) {
+                        setShoppingCartId(localCartId);
+                      }
+
+                      const extras = selectedExtraIds.join(',');
+                      const sankalpUrl = `/sankalp?amount=${totalAmount}&type=puja&pkg=${selectedPackageId}&name=${encodeURIComponent(userDetails.name)}&wa=${userDetails.whatsapp}&extras=${extras}&title=${encodeURIComponent(puja.title)}&slug=${encodeURIComponent(slug || '')}&shoppingCartId=${localCartId}`;
+                      if (!authData.authenticated) {
+                        setPendingSankalpUrl(sankalpUrl);
+                        setShowLoginModal(true);
+                        return;
+                      }
+                      window.location.href = sankalpUrl;
+                    } catch (err: any) {
+                      setReviewCartError(err.message || "Connection error. Please try again.");
+                    } finally {
+                      setReviewLoading(false);
+                    }
+                  }}
+                  className={`flex items-center justify-between p-3 sm:p-4 lg:p-5 rounded-2xl shadow-xl transition-all ${reviewLoading ? 'opacity-70 cursor-not-allowed bg-[#5657e8]' : 'bg-[#6869F9] hover:bg-[#5657e8]'} text-white shadow-[#6869F9]/20 w-full`}
+                  disabled={reviewLoading}
+                >
+                  <div className="flex items-center gap-2 sm:gap-4 text-sm font-bold pl-2 sm:pl-4">
+                    <span className="text-left leading-tight">{1 + selectedExtraIds.length} Sevas<br className="sm:hidden" /> <span className="hidden sm:inline">selected</span></span>
+                    <span className="opacity-50">•</span>
+                    <span className="text-base sm:text-lg">{currencySymbol} {totalAmount}</span>
+                  </div>
+                  <div className="flex items-center gap-1 sm:gap-2 font-bold uppercase tracking-widest text-[11px] sm:text-sm">
                     {reviewLoading ? 'Checking...' : 'Proceed to Book'} <i className="fa-solid fa-arrow-right"></i>
-                  </button>
-                </div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
 
           {/* Right Column: Upsell */}
-          <div>
-            <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
-              <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
-              Add more Divine offerings
-            </h3>
-            <div className="space-y-4">
-              {(puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id)).map(extra => (
-                <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
-                  {extra.badge && (
-                    <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
-                      <i className="fa-solid fa-box"></i> {extra.badge}
+          {(() => {
+            const availableExtras = (puja?.offerings || []).filter(o => !selectedExtraIds.includes(o.id));
+            if (availableExtras.length === 0) return null;
+            return (
+              <div>
+                <h3 className="font-bold text-[#1f1f1f] mb-6 flex items-center gap-2">
+                  <span className="h-1.5 w-6 bg-[#6869F9] rounded-full"></span>
+                  Add more Divine offerings
+                </h3>
+                <div className="space-y-4">
+                  {availableExtras.map(extra => (
+                    <div key={extra.id} className={`relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-4 group hover:border-[#6869F9]/30 transition-all ${extra.badge ? 'mt-8' : ''}`}>
+                      {extra.badge && (
+                        <div className="absolute -top-[26px] left-0 bg-[#fdc59d] text-[#7a3e14] px-3 py-1.5 rounded-t-lg text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-sm border border-[#fdc59d]">
+                          <i className="fa-solid fa-box"></i> {extra.badge}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0 pt-0.5">
+                        <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
+                        {extra.description && (
+                          <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
+                        )}
+                        <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
+                      </div>
+                      <div className="flex flex-col items-center gap-2.5 shrink-0">
+                        <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
+                          <img src={extra.imageUrl} className="w-full h-full object-cover" />
+                        </div>
+                        <button
+                          onClick={() => toggleExtra(extra.id)}
+                          className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
+                        >
+                          + Add
+                        </button>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0 pt-0.5">
-                    <h4 className="font-bold text-[14px] text-[#1f1f1f] leading-snug">{extra.name}</h4>
-                    {extra.description && (
-                      <p className="text-gray-600 text-[12px] mt-1.5 leading-relaxed line-clamp-3">{extra.description}</p>
-                    )}
-                    <p className="text-[#6869F9] font-bold text-[15px] mt-2">{currencySymbol}{getDisplayPrice(extra)}</p>
-                  </div>
-                  <div className="flex flex-col items-center gap-2.5 shrink-0">
-                    <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-50 shadow-sm border border-gray-100">
-                      <img src={extra.imageUrl} className="w-full h-full object-cover" />
-                    </div>
-                    <button
-                      onClick={() => toggleExtra(extra.id)}
-                      className="bg-white text-[#6869F9] border border-[#6869F9] h-7 px-4 rounded-md text-[12px] font-bold flex items-center gap-1 hover:bg-[#5657e8] hover:text-white transition-all active:scale-95 shadow-sm"
-                    >
-                      + Add
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-          </div>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Login Modal for booking flow */}
@@ -845,6 +857,47 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             }
           }}
         />
+        {/* Custom Toast Notification */}
+        {toastMsg && (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] w-[90vw] max-w-md bg-gray-900 text-white px-5 py-4 rounded-xl text-sm font-bold shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-start sm:items-center gap-3 transition-all duration-300 animate-[bounce_0.4s_ease-out]">
+            <i className="fa-solid fa-circle-exclamation text-[#f59e0b] mt-0.5 sm:mt-0"></i>
+            <span className="leading-snug">{toastMsg}</span>
+          </div>
+        )}
+
+        {/* Custom Exit Confirmation Modal */}
+        {showExitConfirm && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+            <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl animate-[modalIn_0.2s_ease-out]">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-14 h-14 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-4">
+                  <i className="fa-solid fa-triangle-exclamation text-2xl"></i>
+                </div>
+                <h3 className="text-lg font-black text-gray-900 mb-2">Wait, are you sure?</h3>
+                <p className="text-sm text-gray-500 mb-6 font-medium leading-relaxed">
+                  Are you sure you want to go back? Your current selections will be preserved.
+                </p>
+                <div className="flex gap-3 w-full">
+                  <button
+                    onClick={() => setShowExitConfirm(false)}
+                    className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+                  >
+                    No, Stay
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowExitConfirm(false);
+                      setShowReviewModal(false);
+                    }}
+                    className="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-500/30"
+                  >
+                    Yes, Go Back
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -854,7 +907,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
       <Navbar />
       <main className="min-h-screen bg-white pb-24">
         {loading ? (
-          <div className="mx-auto max-w-[1440px] px-6 py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 py-16 sm:py-20 text-center text-[#1f1f1f]">Loading puja details...</div>
         ) : !puja ? (
           <div className="mx-auto max-w-[1440px] px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-[#3b0764]">Puja not found</h1>
@@ -865,22 +918,22 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
         ) : (
           <>
             {/* -- Breadcrumb (sticky below navbar) -- */}
-            <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-              <div className="mx-auto max-w-[1440px] text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
-                <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
-                <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-                <Link href="/puja" className="hover:text-gray-800 transition-colors">AstroVed Puja Seva</Link>
-                <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-                <span className="text-[#1f1f1f] truncate max-w-[300px] font-bold">{puja.title}</span>
+            <nav className="bg-[#f5f3ff] py-2.5 px-4 sm:py-3.5 sm:px-6 sticky top-16 z-30 border-b border-[#ddd6fe]">
+              <div className="mx-auto max-w-[1440px] text-[12px] sm:text-[14px] font-semibold text-gray-500 flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto no-scrollbar">
+                <Link href="/" className="hover:text-gray-800 transition-colors shrink-0">Home</Link>
+                <i className="fa-solid fa-chevron-right text-[9px] opacity-70 shrink-0"></i>
+                <Link href="/puja" className="hover:text-gray-800 transition-colors shrink-0">AstroVed Puja Seva</Link>
+                <i className="fa-solid fa-chevron-right text-[9px] opacity-70 shrink-0"></i>
+                <span className="text-[#1f1f1f] truncate font-bold min-w-0">{puja.title}</span>
               </div>
             </nav>
 
             {/* -- Hero -- */}
-            <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-6">
-              <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="mx-auto max-w-[1440px] px-3 py-4 sm:px-4 sm:py-6 md:px-6">
+              <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr]">
                 {/* Left: Image Carousel */}
-                <div className="relative overflow-hidden rounded-2xl group cursor-pointer w-fit mx-auto" onClick={() => setShowGallery(true)}>
-                  <img src={images[currentImageIndex]} alt={puja.title} className="h-[350px] md:h-[450px] w-auto object-contain transition-opacity duration-300" />
+                <div className="relative overflow-hidden rounded-2xl group cursor-pointer" onClick={() => setShowGallery(true)}>
+                  <img src={images[currentImageIndex]} alt={puja.title} className="h-[240px] sm:h-[320px] md:h-[400px] lg:h-[450px] w-full object-cover object-center transition-opacity duration-300" />
 
                   {/* Top Left Badge */}
                   {puja.badge && (
@@ -1006,10 +1059,10 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
 
             {/* -- Flat Content Sections -- */}
-            {/* -- Section Nav Bar (sticky below breadcrumb+navbar = ~114px) -- */}
-            <div className="sticky top-[114px] z-20 bg-white border-b border-gray-200 shadow-sm">
-              <div className="mx-auto max-w-[1440px] px-4 md:px-6">
-                <div className="flex items-center justify-between overflow-x-auto no-scrollbar w-full gap-4">
+            {/* -- Section Nav Bar (sticky below breadcrumb+navbar) -- */}
+            <div className="sticky top-[100px] sm:top-[108px] z-20 bg-white border-b border-gray-200 shadow-sm">
+              <div className="mx-auto max-w-[1440px] px-3 sm:px-4 md:px-6">
+                <div className="flex items-center overflow-x-auto no-scrollbar w-full gap-1 sm:gap-2">
                   {sectionTabs.map((tab) => (
                     <button
                       key={tab.id}
@@ -1023,12 +1076,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                         const el = document.getElementById(tab.id);
                         if (el) {
-                          const offset = 180;
+                          const offset = 160;
                           const top = el.getBoundingClientRect().top + window.scrollY - offset;
                           window.scrollTo({ top, behavior: 'smooth' });
                         }
                       }}
-                      className={`relative shrink-0 py-4 text-[15px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
+                      className={`relative shrink-0 py-3 sm:py-4 px-1 sm:px-0 text-[12px] sm:text-[14px] lg:text-[15px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
                         ? 'text-[#1f1f1f]'
                         : 'text-gray-500 hover:text-[#1f1f1f]'
                         }`}
@@ -1043,12 +1096,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               </div>
             </div>
 
-            <div className="mx-auto max-w-[1440px] px-4 md:px-6 pt-10">
+            <div className="mx-auto max-w-[1440px] px-3 sm:px-4 md:px-6 pt-6 sm:pt-10">
               {currentSectionOrder.map((sectionId) => {
                 if (sectionId === "about") {
                   return (
-                    <section id="about" key="about" className="border-b border-gray-100 pb-10">
-                      <h2 className="flex items-start gap-3 text-[24px] font-bold text-[#1f1f1f] leading-snug">
+                    <section id="about" key="about" className="border-b border-gray-100 pb-8 sm:pb-10">
+                      <h2 className="flex items-start gap-3 text-[20px] sm:text-[24px] font-bold text-[#1f1f1f] leading-snug">
                         <SparklesIcon className="mt-1 h-7 w-7 shrink-0 text-[#6869F9]" />
                         <span>{puja.details?.heroTitle || "Sacred Havan for victory and peace."}</span>
                       </h2>
@@ -1071,9 +1124,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 if (sectionId === "benefits") {
                   return (
-                    <section id="benefits" key="benefits" className="border-b border-gray-100 py-10">
-                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
-                      <div className="mt-8 grid gap-8 md:grid-cols-3">
+                    <section id="benefits" key="benefits" className="border-b border-gray-100 py-8 sm:py-10">
+                      <h2 className="text-[20px] sm:text-[24px] font-bold text-[#1f1f1f]">Puja Benefits</h2>
+                      <div className="mt-6 sm:mt-8 grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         {puja.details.benefits.map((b, idx) => (
                           <div key={`benefit-${idx}`} className="flex gap-4">
                             <div className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ede9fe] text-[#6869F9] text-xl">
@@ -1096,9 +1149,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 if (sectionId === "process") {
                   return (
-                    <section id="process" key="process" className="border-b border-gray-100 py-10">
-                      <h2 className="text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
-                      <div className="mt-8 grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
+                    <section id="process" key="process" className="border-b border-gray-100 py-8 sm:py-10">
+                      <h2 className="text-[20px] sm:text-[24px] font-bold text-[#1f1f1f]">Puja Process</h2>
+                      <div className="mt-6 sm:mt-8 grid gap-x-6 sm:gap-x-8 gap-y-8 sm:gap-y-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                         {puja.details.process.map((step, idx) => (
                           <div key={`process-${idx}`} className="flex gap-3 items-start">
                             <div 
@@ -1120,10 +1173,10 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                 if (sectionId === "temple") {
                   return (
-                    <section id="temple" key="temple" className="border-b border-gray-100 py-10">
-                      <h2 className="text-[24px] font-bold text-gray-900">{puja.details.templeName}, {puja.details.templeLocation}</h2>
-                      <div className="mt-6 grid gap-8 md:grid-cols-[1fr_1.5fr]">
-                        <img src={puja.imageUrl} alt={puja.details.templeName} className="h-64 w-full rounded-2xl object-cover shadow-sm" />
+                    <section id="temple" key="temple" className="border-b border-gray-100 py-8 sm:py-10">
+                      <h2 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-snug">{puja.details.templeName}, {puja.details.templeLocation}</h2>
+                      <div className="mt-6 grid gap-6 sm:gap-8 lg:grid-cols-[1fr_1.5fr]">
+                        <img src={puja.imageUrl} alt={puja.details.templeName} className="h-48 sm:h-64 w-full rounded-2xl object-cover shadow-sm" />
                         <div className="space-y-4 text-[16px] leading-[1.9] text-gray-700 text-justify">
                           <p>{puja.details.templeNote || "This temple is known for powerful prosperity rituals and ancient worship traditions."}</p>
                           <p>{puja.details.about}</p>
@@ -1138,9 +1191,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   return (
                     <React.Fragment key="packages">
                       {/* -- All Packages Includes -- */}
-                      <section className="border-b border-gray-100 py-10">
-                        <h2 className="text-2xl font-bold text-gray-900">All Puja Packages includes</h2>
-                        <div className="mt-6 grid gap-4 md:grid-cols-2">
+                      <section className="border-b border-gray-100 py-8 sm:py-10">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">All Puja Packages includes</h2>
+                        <div className="mt-6 grid gap-3 sm:gap-4 sm:grid-cols-2">
                           {puja.details.inclusions.map((item, idx) => (
                             <div key={`incl-${idx}`} className="flex items-start gap-3">
                               <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f8f7ff] border border-[#6869F9]/20">
@@ -1157,9 +1210,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       </section>
 
                       {/* -- Package Selection -- */}
-                      <section id="packages" className="border-b border-gray-100 py-10">
-                        <h2 className="text-2xl font-bold text-gray-900">Select your puja package</h2>
-                        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                      <section id="packages" className="border-b border-gray-100 py-8 sm:py-10">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Select your puja package</h2>
+                        <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                           {puja.packages.map((pkg, idx) => {
                             const isSelected = selectedPackage?.id === pkg.id;
                             const isRecommended = idx === 2;
@@ -1238,8 +1291,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                         {/* Inline Proceed Bar */}
                         {selectedPackage && (
-                          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 rounded-xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50">
-                            <div className="flex items-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-100">
+                          <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 rounded-xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50">
+                            <div className="flex items-center overflow-hidden border-b sm:border-b-0 sm:border-r border-gray-100">
                               <Marquee scrollamount="4" className="text-[#64748b] whitespace-nowrap text-[13px] font-bold py-4">
                                 <i className="fa-solid fa-shield-halved mr-1"></i> Guarantee &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <i className="fa-solid fa-shield mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1284,9 +1337,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                   const userReviewsList = dbReviews.slice(0, reviewsShown);
 
                   return (
-                    <section id="reviews" key="reviews" className="border-b border-gray-100 py-10">
+                    <section id="reviews" key="reviews" className="border-b border-gray-100 py-8 sm:py-10">
                       {/* Header */}
-                      <h2 className="text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Reviews &amp; Ratings</h2>
                       <p className="mt-1 text-sm text-gray-500">Read to what our beloved devotees have to say about AstroVed.</p>
 
                       {dbReviews.length === 0 ? (
@@ -1354,8 +1407,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
                   return (
                     <React.Fragment key="faqs">
-                      <section id="faqs" className="py-10 border-b border-gray-100">
-                        <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
+                      <section id="faqs" className="py-8 sm:py-10 border-b border-gray-100">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
                         <div className="mt-6 divide-y divide-gray-100">
                           {puja.details.faq.map((item, idx) => (
                             <details key={`faq-${idx}`} className="group py-5">
@@ -1438,8 +1491,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
       {/* Package Selection Modal */}
       {showPackageModal && puja && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="relative flex h-full max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+        <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4 backdrop-blur-sm">
+          <div className="relative flex h-[92vh] sm:h-full max-h-[92vh] sm:max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl">
             {/* Close Button */}
             <div className="absolute right-4 top-4 z-10">
               <button onClick={() => setShowPackageModal(false)} className="rounded-full p-2 hover:bg-gray-100 transition-colors">
@@ -1448,7 +1501,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-6 pt-12">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 pt-10 sm:pt-12">
 
               {/* Top Inclusions & Alert */}
               <div className="mb-8">
@@ -1477,7 +1530,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               <h3 className="text-xl font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
 
               {/* Package Selection Grid */}
-              <div className="grid gap-4 grid-cols-2 md:grid-cols-4 relative">
+              <div className="grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-4 relative">
                 {(() => {
                   const displayPackages = [...puja.packages];
                   if (displayPackages.length === 3) {
@@ -1596,8 +1649,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
       {/* Details Collection Modal */}
       {showDetailsModal && puja && (
-        <div className="fixed inset-0 z-110 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-[32px] bg-white p-8 shadow-2xl">
+        <div className="fixed inset-0 z-110 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4 backdrop-blur-sm">
+          <div className="relative w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] bg-white p-5 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
               <button

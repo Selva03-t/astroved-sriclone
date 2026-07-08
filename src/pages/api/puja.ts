@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!id) return res.status(400).json({ error: 'ID is required' });
       await collection.deleteOne({ _id: new ObjectId(id as string) });
       return res.status(200).json({ success: true });
-    } else {
+    } else {     
       return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error: any) {

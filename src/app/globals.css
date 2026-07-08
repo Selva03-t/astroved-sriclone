@@ -150,6 +150,12 @@ body.puja-checkout-active [data-global-chrome="assistant"] {
   display: none;
 }
 
+@media (max-width: 1023px) {
+  body.has-mobile-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* Beautiful and clean custom autofill styles that blend with theme */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 

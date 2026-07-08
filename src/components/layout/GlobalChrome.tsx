@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Footer from "@/components/layout/Footer";
-import AIAssistant from "@/components/ui/AIAssistant";
+import MobileBottomNav from "@/components/layout/MobileBottomNav";
 
 export default function GlobalChrome() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function GlobalChrome() {
 
   return (
     <>
-      {!shouldHide && <div data-global-chrome="assistant"><AIAssistant /></div>}
+      {!shouldHide && <MobileBottomNav />}
       {!shouldHide && <Footer />}
     </>
   );

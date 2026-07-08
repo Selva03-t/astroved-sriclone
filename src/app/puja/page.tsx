@@ -241,8 +241,8 @@ function PujaFilterModal({
   const locationGroup = filterGroups.find((group) => group.label === "Location");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827]/55 px-4 py-6 backdrop-blur-[1px]">
-      <div className="flex max-h-[92vh] w-full max-w-[920px] flex-col overflow-hidden rounded-2xl bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#111827]/55 px-0 sm:px-4 py-0 sm:py-6 backdrop-blur-[1px]">
+      <div className="flex max-h-[92vh] sm:max-h-[92vh] w-full max-w-[920px] flex-col overflow-hidden rounded-t-2xl sm:rounded-2xl bg-white shadow-[0_24px_80px_rgba(15,23,42,0.28)]">
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
           <h3 className="text-xl font-black text-[#1f1f1f]">Puja Filters</h3>
           <button
@@ -262,7 +262,7 @@ function PujaFilterModal({
             {deityGroup && (
               <section>
                 <h4 className="mb-5 text-xl font-black text-[#1f1f1f]">{deityGroup.label}</h4>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                <div className="grid grid-cols-3 gap-x-4 gap-y-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                   {deityGroup.options
                     .filter((option) => option.value !== "All")
                     .map((option) => {
@@ -372,8 +372,38 @@ export default function PujaPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // Limit carousel to first 5 pujas
-  const carouselPujas = allPujas.slice(0, 5);
+  const defaultBanners: Puja[] = [
+    {
+      _id: "default-1",
+      title: "Ganesh Chaturthi Mahapuja",
+      location: "Maharashtra",
+      date: "Available Daily",
+      imageUrl: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
+      buttonText: "Participate Now",
+      slug: "ganesh-chaturthi-mahapuja",
+    },
+    {
+      _id: "default-2",
+      title: "Navagraha Shanti Puja",
+      location: "Tamil Nadu",
+      date: "Available Daily",
+      imageUrl: "/images/Navagraha-Shanti-Puja.jpg",
+      buttonText: "Participate Now",
+      slug: "navagraha-shanti-puja",
+    },
+    {
+      _id: "default-3",
+      title: "Lakshmi Homam",
+      location: "Karnataka",
+      date: "Available Daily",
+      imageUrl: "/images/Lakshmi-Homam.jpg",
+      buttonText: "Participate Now",
+      slug: "lakshmi-homam",
+    }
+  ];
+
+  // Limit carousel to first 5 pujas, or use default static banners if not loaded
+  const carouselPujas = allPujas.length > 0 ? allPujas.slice(0, 5) : defaultBanners;
 
   // Banner auto-rotate
   useEffect(() => {
@@ -442,14 +472,8 @@ export default function PujaPage() {
             {t.puja.heading}
           </h1>
 
-          {/* Banner Carousel */}
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center rounded-2xl bg-[#e3d9f8]/40">
-              <p className="text-base text-[#1f1f1f]">{t.puja.loading}</p>
-            </div>
-          ) : carouselPujas.length > 0 ? (
-            <>
-              <div className="relative overflow-hidden rounded-2xl border border-[#e3d9f8] shadow-[0_18px_48px_rgba(80,44,150,0.12)]">
+          {/* Banner Carousel — instant render */}
+          <div className="relative overflow-hidden rounded-2xl border border-[#e3d9f8] shadow-[0_18px_48px_rgba(80,44,150,0.12)]">
                 <div className="overflow-hidden">
                   <div
                     className="flex transition-transform duration-500 ease-in-out"
@@ -506,7 +530,7 @@ export default function PujaPage() {
                             }}
                           />
 
-                          {/* Main Image - object-top ensures deity features like Ganesha's head are beautifully visible */}
+                          {/* Main Image */}
                           <img
                             src={puja.imageUrl}
                             alt={puja.title}
@@ -521,43 +545,40 @@ export default function PujaPage() {
                   </div>
                 </div>
 
+            {/* Navigation Dots */}
+            <div className="absolute bottom-4 md:bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
+              {carouselPujas.map((_, i) => (
                 <button
+                  key={i}
                   type="button"
-                  onClick={() => setCurrentIndex((p) => (p === 0 ? carouselPujas.length - 1 : p - 1))}
-                  aria-label="Previous slide"
-                  className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
-                >
-                  <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
-                    <path d="m12.5 4.5-5 5 5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentIndex((p) => (p === carouselPujas.length - 1 ? 0 : p + 1))}
-                  aria-label="Next slide"
-                  className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
-                >
-                  <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
-                    <path d="m7.5 4.5 5 5-5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              </div>
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-2 rounded-full transition-all duration-300 ${i === activeIndex ? "w-8 bg-white" : "w-2 bg-white/50"}`}
+                />
+              ))}
+            </div>
 
-              {/* Dots */}
-              <div className="mt-4 flex justify-center gap-2">
-                {carouselPujas.map((puja, index) => (
-                  <button
-                    key={puja._id}
-                    type="button"
-                    onClick={() => setCurrentIndex(index)}
-                    aria-label={`Go to puja ${index + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${index === activeIndex ? "w-8 bg-[#6869F9]" : "w-2 bg-[#d7cbef]"
-                      }`}
-                  />
-                ))}
-              </div>
-            </>
-          ) : null}
+            <button
+              type="button"
+              onClick={() => setCurrentIndex((p) => (p === 0 ? carouselPujas.length - 1 : p - 1))}
+              aria-label="Previous slide"
+              className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
+            >
+              <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
+                <path d="m12.5 4.5-5 5 5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrentIndex((p) => (p === carouselPujas.length - 1 ? 0 : p + 1))}
+              aria-label="Next slide"
+              className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2.5 text-white backdrop-blur-sm transition hover:bg-black/50"
+            >
+              <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5">
+                <path d="m7.5 4.5 5 5-5 5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+
 
           {/* Section */}
           <section className="mt-12">
@@ -570,7 +591,7 @@ export default function PujaPage() {
 
             {/* -- Filter bar -- */}
             <div className="mt-6">
-              <div className="flex flex-wrap items-center gap-3 pb-1">
+              <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1">
                 <button
                   type="button"
                   onClick={() => setIsFilterModalOpen(true)}
@@ -685,7 +706,7 @@ export default function PujaPage() {
                 </button>
               </div>
             ) : (
-              <div className="mt-8 grid grid-cols-1 gap-8 lg:gap-10 md:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:gap-10 lg:grid-cols-3">
                 {displayedPujas.map((puja) => (
                   <div
                     key={puja._id}
@@ -754,21 +775,21 @@ export default function PujaPage() {
               {t.puja.sacredJourney}
             </h2>
             <p className="mb-8 text-sm text-gray-600">{t.puja.whyBook}</p>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-2xl bg-linear-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50">
-                <h3 className="text-2xl font-black text-[#2563eb]">10,00,000 +</h3>
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl bg-linear-to-br from-[#eff6ff] to-[#dbeafe] p-8 text-center shadow-sm border border-[#bfdbfe]/50 flex flex-col items-center justify-center">
+                <h3 className="text-2xl font-black text-[#2563eb] whitespace-nowrap">10,00,000+</h3>
                 <p className="mt-1 text-sm font-semibold text-[#3b82f6]">{t.puja.pujasDone}</p>
               </div>
-              <div className="rounded-2xl bg-linear-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50">
-                <h3 className="text-2xl font-black text-[#7c3aed]">300,000 +</h3>
+              <div className="rounded-2xl bg-linear-to-br from-[#f5f3ff] to-[#ede8ff] p-8 text-center shadow-sm border border-[#e0d9ff]/50 flex flex-col items-center justify-center">
+                <h3 className="text-2xl font-black text-[#7c3aed] whitespace-nowrap">300,000+</h3>
                 <p className="mt-1 text-sm font-semibold text-[#8b5cf6]">{t.puja.happyDevotees}</p>
               </div>
-              <div className="rounded-2xl bg-linear-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50">
-                <h3 className="text-2xl font-black text-[#db2777]">100 +</h3>
+              <div className="rounded-2xl bg-linear-to-br from-[#fdf2f8] to-[#fce7f3] p-8 text-center shadow-sm border border-[#fbcfe8]/50 flex flex-col items-center justify-center">
+                <h3 className="text-2xl font-black text-[#db2777] whitespace-nowrap">100+</h3>
                 <p className="mt-1 text-sm font-semibold text-[#ec4899]">{t.puja.famousTemples}</p>
               </div>
-              <div className="rounded-2xl bg-linear-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50">
-                <h3 className="text-2xl font-black text-[#d97706]">{t.puja.sankalp}</h3>
+              <div className="rounded-2xl bg-linear-to-br from-[#fff7ed] to-[#ffedd5] p-8 text-center shadow-sm border border-[#fed7aa]/50 flex flex-col items-center justify-center">
+                <h3 className="text-2xl font-black text-[#d97706] whitespace-nowrap">{t.puja.sankalp}</h3>
                 <p className="mt-1 text-sm font-semibold text-[#f59e0b]">{t.puja.sankalpDesc}</p>
               </div>
             </div>

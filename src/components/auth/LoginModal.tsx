@@ -235,31 +235,12 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
       {/* Modal card — exactly mirrors Sri Mandir split layout */}
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          width: "100%",
-          maxWidth: 680,
-          minHeight: 380,
-          borderRadius: 16,
-          overflow: "hidden",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.35)",
-          animation: "modalIn 0.22s ease",
-        }}
-      >
-        {/* ── Left orange-style panel (AstroVed blue) ── */}
+      <div className="relative flex w-full max-w-[680px] min-h-[380px] rounded-2xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.35)] animate-[modalIn_0.22s_ease]">
+        
+        {/* ── Left orange-style panel (AstroVed blue) - Hidden on mobile ── */}
         <div
-          style={{
-            width: 200,
-            flexShrink: 0,
-            background: `linear-gradient(160deg, ${BLUE} 0%, ${BLUE_DARK} 100%)`,
-            padding: "36px 28px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-          className="hidden-mobile-left-panel"
+          className="hidden md:flex flex-col justify-start w-[200px] shrink-0 px-7 py-9"
+          style={{ background: `linear-gradient(160deg, ${BLUE} 0%, ${BLUE_DARK} 100%)` }}
         >
           <h2 style={{ color: "#fff", fontSize: 26, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>
             Login
@@ -273,17 +254,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
         </div>
 
         {/* ── Right white panel ── */}
-        <div
-          style={{
-            flex: 1,
-            background: "#fff",
-            padding: "32px 36px 28px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
+        <div className="flex flex-col items-center flex-1 bg-white p-6 sm:p-8 relative">
           {/* Close button */}
           <button
             onClick={handleClose}

@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#6869F9] text-white">
       <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4 lg:gap-8">
           {/* Logo and Description */}
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Part (Badges and Legal) */}
-        <div className="mt-16 border-t border-white/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-16 border-t border-white/20 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8">
           {/* Download Badges */}
           <div id="download-app" className="flex scroll-mt-28 flex-wrap justify-center gap-4 md:justify-start">
             <a href="https://play.google.com/store/search?q=astroved&c=apps" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
@@ -83,7 +83,7 @@ export default function Footer() {
           </div>
 
           {/* Compliance Logos */}
-          <div className="flex items-center gap-6 opacity-90">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 opacity-90">
             <div className="flex flex-col items-center gap-1">
 
               <img
@@ -120,8 +120,8 @@ export default function Footer() {
           </div>
 
           {/* Legal and Copyright */}
-          <div className="text-center md:text-right">
-            <div className="flex gap-4 text-xs font-semibold justify-center md:justify-end mb-1">
+          <div className="text-center sm:text-right">
+            <div className="flex gap-4 text-xs font-semibold justify-center sm:justify-end mb-1">
               <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
               <span>•</span>
               <Link href="/terms" className="hover:underline">Terms and Conditions</Link>
