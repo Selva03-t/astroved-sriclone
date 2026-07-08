@@ -29,8 +29,7 @@ const banners = [
       "and Gotra to your beloved deity."
     ],
     buttons: [
-      { text: "Explore Pujas", variant: "outline", href: "/puja" },
-      { text: "Participate Now", variant: "solid", href: "/puja" }
+      { text: "Explore Pujas", variant: "solid", href: "/puja" }
     ],
     image: "/images/Ganesh-Chaturthi-Mahapuja.jpg",
     baseColor: "#5b172a",
@@ -108,7 +107,7 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden group">
+        <div className="relative w-full h-[600px] md:h-[500px] lg:h-[550px] overflow-hidden group">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
@@ -120,12 +119,13 @@ export default function DashboardPage() {
                 className="relative h-full w-full transition-colors duration-700"
                 style={{ backgroundColor: banner.baseColor || "#5b172a" }}
               >
-                <div className="absolute inset-y-0 right-0 w-full md:w-[65%]">
+                {/* Image container: on mobile it takes the top 65%, on desktop it takes the full height */}
+                <div className="absolute top-0 right-0 w-full h-[65%] md:h-full md:w-[65%]">
                   <Image
                     src={banner.image || "/images/placeholder.jpg"}
                     alt={banner.title}
                     fill
-                    className="object-cover object-top md:object-top-right opacity-80 md:opacity-100"
+                    className="object-cover object-top md:object-top-right opacity-90 md:opacity-100"
                     priority={index === 0}
                   />
                 </div>
@@ -138,11 +138,11 @@ export default function DashboardPage() {
                   }}
                 />
 
-                {/* Mobile gradient overlay for legibility */}
+                {/* Mobile gradient overlay for legibility and blending the image edge */}
                 <div 
-                  className="absolute inset-0 md:hidden"
+                  className="absolute inset-0 md:hidden pointer-events-none"
                   style={{
-                    background: `linear-gradient(to top, ${banner.baseColor || "#5b172a"} 30%, ${banner.baseColor || "#5b172a"}88 50%, transparent 100%)`
+                    background: `linear-gradient(to top, ${banner.baseColor || "#5b172a"} 35%, ${banner.baseColor || "#5b172a"}f0 45%, transparent 70%)`
                   }}
                 />
                 
