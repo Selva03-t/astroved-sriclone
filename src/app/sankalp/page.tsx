@@ -406,9 +406,15 @@ function SankalpContent() {
                   <input
                     type="tel"
                     value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    onChange={(e) => {
+                      let digits = e.target.value.replace(/\D/g, "");
+                      if ((digits.startsWith("91") && digits.length > 10) || digits.length === 12) {
+                        digits = digits.slice(2);
+                      }
+                      setWhatsapp(digits.slice(0, 10));
+                    }}
                     inputMode="numeric"
-                    maxLength={10}
+                    maxLength={16}
                     placeholder="Enter WhatsApp number"
                     className={`w-full rounded border py-3 pl-24 pr-4 text-sm font-semibold text-gray-900 outline-none transition-all
                       ${whatsapp && !whatsappValid ? "border-red-400 bg-red-50" : whatsappValid ? "border-[#6869F9] bg-white" : "border-gray-300 bg-white"}
@@ -441,9 +447,15 @@ function SankalpContent() {
                       <input
                         type="tel"
                         value={callingNumber}
-                        onChange={(e) => setCallingNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        onChange={(e) => {
+                          let digits = e.target.value.replace(/\D/g, "");
+                          if ((digits.startsWith("91") && digits.length > 10) || digits.length === 12) {
+                            digits = digits.slice(2);
+                          }
+                          setCallingNumber(digits.slice(0, 10));
+                        }}
                         inputMode="numeric"
-                        maxLength={10}
+                        maxLength={16}
                         placeholder="Enter calling number"
                         className="w-full rounded border border-gray-300 py-3 pl-16 pr-4 text-sm font-semibold text-gray-900 outline-none focus:border-[#6869F9] focus:ring-1 focus:ring-[#6869F9]/20 transition-all"
                       />
