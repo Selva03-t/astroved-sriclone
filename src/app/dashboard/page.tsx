@@ -89,11 +89,10 @@ export default function DashboardPage() {
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-700 ${
-                index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-700 ${index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
             >
-              <div 
+              <div
                 className="relative h-full w-full transition-colors duration-700"
                 style={{ backgroundColor: banner.baseColor || "#5b172a" }}
               >
@@ -108,7 +107,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Desktop merge effect (spans full width to hide the container edge) */}
-                <div 
+                <div
                   className="hidden md:block absolute inset-0"
                   style={{
                     background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 35%, transparent 65%)`
@@ -116,13 +115,13 @@ export default function DashboardPage() {
                 />
 
                 {/* Mobile gradient overlay for legibility */}
-                <div 
+                <div
                   className="absolute inset-0 md:hidden"
                   style={{
                     background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
                   }}
                 />
-                
+
                 <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
                   <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
                     {banner.title}
@@ -151,7 +150,7 @@ export default function DashboardPage() {
 
                       if (btn.action === "scroll-bottom") {
                         return (
-                          <button 
+                          <button
                             key={i}
                             className={buttonClass}
                             onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
@@ -179,15 +178,15 @@ export default function DashboardPage() {
             className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/40 flex items-center justify-center text-white hover:bg-black/60 transition-colors backdrop-blur-sm z-20 opacity-0 group-hover:opacity-100"
             aria-label="Previous banner"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m15 18-6-6 6-6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m15 18-6-6 6-6" /></svg>
           </button>
-          
+
           <button
             onClick={() => setCurrentBanner((prev) => (prev + 1) % banners.length)}
             className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/40 flex items-center justify-center text-white hover:bg-black/60 transition-colors backdrop-blur-sm z-20 opacity-0 group-hover:opacity-100"
             aria-label="Next banner"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m9 18 6-6-6-6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6"><path d="m9 18 6-6-6-6" /></svg>
           </button>
 
           {/* Dots Indicator */}
@@ -196,9 +195,8 @@ export default function DashboardPage() {
               <button
                 key={index}
                 onClick={() => setCurrentBanner(index)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentBanner ? "bg-white w-8" : "bg-white/50 w-1.5 hover:bg-white/80"
-                }`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === currentBanner ? "bg-white w-8" : "bg-white/50 w-1.5 hover:bg-white/80"
+                  }`}
                 aria-label={`Go to banner ${index + 1}`}
               />
             ))}
@@ -237,36 +235,36 @@ export default function DashboardPage() {
       </div>
 
       {/* AstroVed Special Pujas Section */}
-      <section className="bg-white py-20">
+      <section className="bg-white pt-8 pb-8 md:pt-10 md:pb-10">
         <div className="mx-auto max-w-[1440px] px-4 md:px-8">
-          <h2 className="text-4xl font-extrabold text-center mb-4 tracking-tight text-[#111827]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-3 tracking-tight text-[#111827]">
             <span className="text-[rgb(107,76,154)]">AstroVed</span> {t.home.specialPujas}
           </h2>
-          <p className="text-center text-[17px] font-medium text-gray-700 mb-14 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-center text-[17px] font-medium text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed">
             {t.home.specialPujasSubtitle}
           </p>
           <PujaCardsSection />
-        </div>               
+        </div>
       </section>
 
       {/* Reviews & Ratings Section */}
-      <section className="bg-[#fafafa] py-20">
+      <section className="bg-[#fafafa] pt-8 pb-14 md:pt-10 md:pb-16">
         <div className="mx-auto max-w-[1440px] px-6 text-center">
-          <h2 className="text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">{t.home.reviewsTitle}</h2>
-          <p className="text-[17px] font-medium text-gray-700 mb-14">{t.home.reviewsSubtitle}</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111827] mb-3 tracking-tight">{t.home.reviewsTitle}</h2>
+          <p className="text-[17px] font-medium text-gray-700 mb-10">{t.home.reviewsSubtitle}</p>
 
           <ReviewsSection />
         </div>
       </section>
 
       {/* Trust & Impact Section */}
-      <section className="bg-[#0f1c3d] py-16 md:py-20 text-white overflow-hidden">
+      <section className="bg-[#0f1c3d] py-14 md:py-16 text-white overflow-hidden">
         <div className="mx-auto max-w-[1440px] px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left Column */}
             <div>
               <p className="text-[#f59e0b] font-bold text-sm mb-3 uppercase tracking-wide">{t.home.trustedBy}</p>
-              <h2 className="text-4xl lg:text-[40px] font-bold leading-tight mb-5">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold leading-tight mb-5">
                 {t.home.largestPlatform}
               </h2>
               <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
@@ -310,10 +308,10 @@ export default function DashboardPage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-white py-16 md:py-20">
+      <section className="bg-white pt-10 pb-8 md:pt-14 md:pb-10">
         <div className="mx-auto max-w-[1440px] px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-[40px] font-bold text-[#1f1f1f] mb-4">{t.home.oneApp}</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold text-[#1f1f1f] mb-4">{t.home.oneApp}</h2>
             <p className="text-lg text-gray-600 max-w-5xl mx-auto leading-relaxed">
               {t.home.oneAppDesc}
             </p>
@@ -346,7 +344,7 @@ export default function DashboardPage() {
                 <p className="text-gray-600 text-base leading-relaxed">{t.home.devotionalMusicDesc}</p>
               </div>
             </div>
-            
+
             {/* Feature 4 */}
             <div className="flex flex-col gap-4">
               <div className="h-14 w-14 bg-[#ea580c] rounded-xl flex items-center justify-center text-2xl shadow-md">✡</div>
@@ -378,10 +376,10 @@ export default function DashboardPage() {
       </section>
 
       {/* Articles Section (Exactly as in Image) */}
-      <section className="bg-white py-24">
+      <section className="bg-white pt-1 pb-16 md:pt-5 md:pb-20">
         <div className="mx-auto max-w-[1440px] px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#1f1f1f] mb-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1f1f1f] mb-4 leading-snug">
               {t.home.articlesTitle}
             </h2>
             <p className="text-lg text-gray-600 mb-4">
@@ -446,7 +444,7 @@ export default function DashboardPage() {
                 {t.home.readAll}
               </Link>
             </div>
-  
+
             {/* Card 4: Ayurvedic & Home Remedies */}
             <div className="flex flex-col">
               <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-6 shadow-md">
@@ -488,8 +486,8 @@ type Review = {
 const ReviewCard = ({ review }: { review: Review }) => {
   const isVideo = review.type === 'video';
   const isDirectVideo = review.videoUrl && (
-    review.videoUrl.includes('.mp4') || 
-    review.videoUrl.includes('.webm') || 
+    review.videoUrl.includes('.mp4') ||
+    review.videoUrl.includes('.webm') ||
     review.videoUrl.includes('.ogg') ||
     review.videoUrl.startsWith('/videos/') ||
     review.videoUrl.startsWith('/')
@@ -507,8 +505,8 @@ const ReviewCard = ({ review }: { review: Review }) => {
             />
           ) : (
             <iframe
-              src={review.videoUrl 
-                ? review.videoUrl.replace('watch?v=', 'embed/') 
+              src={review.videoUrl
+                ? review.videoUrl.replace('watch?v=', 'embed/')
                 : "https://player.vimeo.com/video/414764881?autoplay=0&title=0&byline=0&portrait=0"}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -684,7 +682,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
         </div>
       )}
     </div>
-    
+
     {/* Content Section */}
     <div className="pt-5 pb-1 px-1 flex flex-col flex-1 text-left">
       {puja.subtitle && (
@@ -698,20 +696,20 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
       <p className="text-gray-500 text-[14px] leading-relaxed line-clamp-2 mb-6 flex-1">
         {puja.description}
       </p>
-      
+
       {/* Location & Date */}
       <div className="flex items-start gap-2.5 mb-3 text-[13px] text-gray-500">
-        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
         <span className="line-clamp-2 leading-tight">{(puja as any).location || "Sacred Temple, India"}</span>
       </div>
       <div className="flex items-start gap-2.5 mb-6 text-[13px] text-gray-500">
-        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg className="w-[16px] h-[16px] text-[#a78bfa] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
         <span className="leading-tight">{(puja as any).date || "Upcoming Auspicious Date"}</span>
       </div>
 
       <Link href={`/puja/${puja.slug || String(puja.title || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`} className="w-full bg-[#6869F9] text-white text-[15px] font-bold tracking-wide py-3.5 rounded-lg hover:bg-[#5657e8] transition-colors flex items-center justify-center gap-1.5">
         {puja.buttonText || "PARTICIPATE"}
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
       </Link>
     </div>
   </div>
@@ -748,7 +746,7 @@ export function PujaCardsSection() {
           <PujaCard key={puja._id} puja={puja} />
         ))}
       </div>
-      <div className="mt-12">
+      <div className="mt-8">
         <Link href="/puja" className="text-[#1f1f1f] text-xl hover:text-[#000000] transition-all flex items-center gap-2 group">
           {t.home.viewAllPujas} <span className="group-hover:translate-x-2 transition-transform">→</span>
         </Link>
