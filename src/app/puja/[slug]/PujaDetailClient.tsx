@@ -917,14 +917,20 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
           </div>
         ) : (
           <>
-            {/* -- Breadcrumb (sticky below navbar) -- */}
-            <nav className="bg-[#f5f3ff] py-2.5 px-4 sm:py-3.5 sm:px-6 sticky top-16 z-30 border-b border-[#ddd6fe]">
-              <div className="mx-auto max-w-[1440px] text-[12px] sm:text-[14px] font-semibold text-gray-500 flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto no-scrollbar">
-                <Link href="/" className="hover:text-gray-800 transition-colors shrink-0">Home</Link>
-                <i className="fa-solid fa-chevron-right text-[9px] opacity-70 shrink-0"></i>
-                <Link href="/puja" className="hover:text-gray-800 transition-colors shrink-0">AstroVed Puja Seva</Link>
-                <i className="fa-solid fa-chevron-right text-[9px] opacity-70 shrink-0"></i>
-                <span className="text-[#1f1f1f] truncate font-bold min-w-0">{puja.title}</span>
+            {/* -- Breadcrumb (sticky below navbar, full-width) -- */}
+            <nav
+              className="w-full bg-[#f5f3ff] border-b border-[#ddd6fe] sticky top-[56px] sm:top-[60px] z-30"
+            >
+              <div className="w-full px-4 sm:px-6 lg:px-8 py-3 text-[12px] sm:text-[13px] font-medium text-gray-500 flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar">
+                <Link href="/" className="hover:text-gray-800 transition-colors shrink-0 whitespace-nowrap">Home</Link>
+                <svg className="w-3 h-3 text-gray-400 shrink-0 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+                <Link href="/puja" className="hover:text-gray-800 transition-colors shrink-0 whitespace-nowrap">AstroVed Puja Seva</Link>
+                <svg className="w-3 h-3 text-gray-400 shrink-0 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+                <span className="text-[#1f1f1f] font-bold truncate min-w-0">{puja.title}</span>
               </div>
             </nav>
 
@@ -1058,11 +1064,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
 
 
 
-            {/* -- Flat Content Sections -- */}
-            {/* -- Section Nav Bar (sticky below breadcrumb+navbar) -- */}
-            <div className="sticky top-[100px] sm:top-[108px] z-20 bg-white border-b border-gray-200 shadow-sm">
-              <div className="mx-auto max-w-[1440px] px-3 sm:px-4 md:px-6">
-                <div className="flex items-center overflow-x-auto no-scrollbar w-full gap-1 sm:gap-2">
+            {/* -- Section Nav Bar (sticky: navbar + breadcrumb height) -- */}
+            {/*  navbar ~56–60px + breadcrumb ~44px = 100–104px             */}
+            <div className="sticky top-[100px] sm:top-[104px] z-20 bg-white border-b border-gray-200 shadow-sm">
+              <div className="w-full px-4 sm:px-6 lg:px-8">
+                {/* justify-between spreads tabs evenly edge-to-edge like Sri Mandir */}
+                <div className="flex items-center overflow-x-auto no-scrollbar w-full justify-between">
                   {sectionTabs.map((tab) => (
                     <button
                       key={tab.id}
@@ -1081,7 +1088,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           window.scrollTo({ top, behavior: 'smooth' });
                         }
                       }}
-                      className={`relative shrink-0 py-3 sm:py-4 px-1 sm:px-0 text-[12px] sm:text-[14px] lg:text-[15px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
+                      className={`relative flex-1 text-center py-3 sm:py-[14px] px-1 text-[11px] sm:text-[13px] lg:text-[14px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
                         ? 'text-[#1f1f1f]'
                         : 'text-gray-500 hover:text-[#1f1f1f]'
                         }`}
