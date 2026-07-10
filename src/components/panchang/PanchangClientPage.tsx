@@ -139,7 +139,7 @@ function MobilePanchangView({
         </div>
 
         {/* Date tabs row */}
-        <div className="px-3 py-2.5 flex items-center gap-2">
+        <div className="px-3 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
           {/* Today button — orange like Sri Mandir */}
           <button
             onClick={() => setSelectedDate(getTodayStr())}
@@ -159,7 +159,7 @@ function MobilePanchangView({
           </button>
 
           {/* Date picker — clicking opens native calendar */}
-          <div className="flex items-center gap-1 ml-auto">
+          <div className="flex items-center gap-1 ml-auto shrink-0">
             <button
               onClick={() => setSelectedDate(addDays(selectedDate, -1))}
               className="w-7 h-7 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors"
