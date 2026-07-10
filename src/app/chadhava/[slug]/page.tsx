@@ -331,24 +331,24 @@ export default function ChadhavaDetailPage() {
 
       {/* Breadcrumbs */}
       <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-        <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
-          <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
-          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <Link href="/chadhava" className="hover:text-gray-800 transition-colors">AstroVed Chadhava Seva</Link>
-          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <span className="text-[#1f1f1f] truncate max-w-[300px] font-bold">{data.title}</span>
+        <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2 md:gap-2.5 overflow-x-auto no-scrollbar">
+          <Link href="/" className="hover:text-gray-800 transition-colors shrink-0 whitespace-nowrap">Home</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70 shrink-0"></i>
+          <Link href="/chadhava" className="hover:text-gray-800 transition-colors shrink-0 whitespace-nowrap">AstroVed Chadhava Seva</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70 shrink-0"></i>
+          <span className="text-[#1f1f1f] truncate font-bold shrink-0">{data.title}</span>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-white py-12 lg:py-16 border-b border-gray-100">
-        <div className="mx-auto max-w-[1150px] px-6 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
-          <div className="relative w-full flex flex-col items-center">
-             <div className="relative w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-gray-50">
+      <section className="bg-white py-4 md:py-10 lg:py-16">
+        <div className="mx-auto max-w-[1200px] px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-10">
+          <div className="relative group">
+            <div className="rounded-[16px] md:rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.08)] md:shadow-sm relative">
                <img 
                  src={carouselImages[currentImageIndex]} 
                  alt={data.title} 
-                 className="w-full aspect-16/10 object-cover transition-opacity duration-300"
+                 className="w-full aspect-[16/10] object-cover transition-opacity duration-300"
                />
                {carouselImages.length > 1 && (
                  <>
@@ -379,37 +379,37 @@ export default function ChadhavaDetailPage() {
                   ))}
                </div>
              )}
-          </div>
-          <div className="lg:pl-4">
-            <h1 className="text-3xl lg:text-[34px] font-bold text-[#687383] leading-tight mb-6">
+           </div>
+           <div className="lg:pl-4 mt-2 md:mt-0">
+            <h1 className="text-[19px] md:text-3xl lg:text-[34px] font-bold text-[#687383] leading-[1.3] mb-3 md:mb-6">
               {data.heroTitle || data.title}
             </h1>
-            <div className="text-[15px] text-[#555] leading-[1.7] mb-6">
-              <p className="flex items-center gap-2">
+            <div className="text-[13px] md:text-[15px] text-[#555] leading-[1.6] md:leading-[1.7] mb-5 md:mb-6 italic md:not-italic">
+              <p className="hidden md:flex items-center gap-2">
                 <SparklesIcon className="h-5 w-5 shrink-0 text-[#1f1f1f]" />
                 <strong>What happens when the offering is made?</strong>
               </p>
-              <div className={`mt-2 transition-all ${!isExpanded ? 'line-clamp-4' : ''}`}>
+              <div className={`mt-0 md:mt-2 transition-all ${!isExpanded ? 'line-clamp-4' : ''}`}>
                  {data.content ? data.content : data.description}
               </div>
               <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[14px] hover:text-[#1f1f1f] transition-colors"
+                className="text-gray-800 font-bold mt-1.5 underline decoration-gray-400 underline-offset-2 text-[12px] md:text-[14px] hover:text-[#1f1f1f] transition-colors not-italic"
               >
                 {isExpanded ? 'Read less' : 'Read more'}
               </button>
             </div>
             
-            <div className="flex items-center gap-4 mt-8">
+            <div className="flex items-center gap-4 mt-5 md:mt-8">
                 <div className="flex -space-x-2">
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=1" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=2" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=3" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=4" alt="user" /></div>
-                   <div className="h-9 w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=5" alt="user" /></div>
+                   <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=1" alt="user" /></div>
+                   <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=2" alt="user" /></div>
+                   <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=3" alt="user" /></div>
+                   <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=4" alt="user" /></div>
+                   <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/32?u=5" alt="user" /></div>
                 </div>
             </div>
-            <p className="text-[15px] text-[#555] leading-relaxed mt-4">
+            <p className="text-[11px] md:text-[15px] text-[#555] leading-[1.5] md:leading-relaxed mt-2 md:mt-4">
                Till now <span className="text-[#1f1f1f] font-bold">1,50,000+ Devotees</span> have participated in Chadava conducted by Sri Mandir Chadava Seva.
             </p>
           </div>
@@ -417,9 +417,9 @@ export default function ChadhavaDetailPage() {
       </section>
 
       {/* Offerings Selector */}
-      <section className="py-10 lg:py-16 bg-[#f8f8f8]">
-        <div className="mx-auto max-w-[1000px] px-6">
-          <h2 className="text-[28px] font-bold text-[#111827] mb-8">Choose an offering</h2>
+      <section className="py-6 md:py-10 lg:py-16 bg-white md:bg-[#f8f8f8]">
+        <div className="mx-auto max-w-[1000px] px-4 md:px-6">
+          <h2 className="text-[16px] md:text-[28px] font-bold text-[#111] mb-4 md:mb-8">Choose an offering</h2>
           
           <div className="flex flex-col border-t border-[#ececec]">
             {data.offerings.map((off, index) => {
@@ -453,9 +453,9 @@ export default function ChadhavaDetailPage() {
       </section>
 
       {/* FAQs */}
-      <section className="py-16 bg-white border-t border-[#ececec]">
-        <div className="mx-auto max-w-[1000px] px-6">
-           <h2 className="text-[28px] font-bold text-[#111827] mb-8">Frequently asked Questions</h2>
+      <section className="py-8 md:py-16 bg-white md:border-t md:border-[#ececec]">
+        <div className="mx-auto max-w-[1000px] px-4 md:px-6">
+           <h2 className="text-[18px] md:text-[28px] font-bold text-[#111827] mb-5 md:mb-8 hidden md:block">Frequently asked Questions</h2>
            <div className="flex flex-col border-t border-[#ececec]">
               {data.faqs.map((faq, i) => (
                 <FAQAccordion
@@ -470,16 +470,16 @@ export default function ChadhavaDetailPage() {
 
       {/* Cart Bar */}
       {selectedCount > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 p-4 lg:p-6 z-50 animate-in slide-in-from-bottom duration-500">
-           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-4 lg:p-5 rounded-[24px] shadow-2xl shadow-[#6869F9]/30">
-              <div className="flex items-center gap-4 text-sm lg:text-base font-bold pl-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 p-3 md:p-4 lg:p-6 z-50 animate-in slide-in-from-bottom duration-500">
+           <div className="mx-auto max-w-7xl flex items-center justify-between bg-[#6869F9] text-white p-3 md:p-4 lg:p-5 rounded-[20px] md:rounded-[24px] shadow-2xl shadow-[#6869F9]/30">
+              <div className="flex items-center gap-2 md:gap-4 text-[13px] md:text-sm lg:text-base font-bold pl-2 md:pl-4">
                  <span>{selectedCount} Offerings</span>
                  <span className="opacity-40">•</span>
                  <span>{currencySymbol} {selectedTotal}</span>
               </div>
               <button 
                 onClick={() => setShowModal(true)}
-                className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-sm transition-all active:scale-95 group"
+                className="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-6 md:px-8 py-2 md:py-3 rounded-[10px] md:rounded-xl font-bold uppercase tracking-wider text-[12px] md:text-sm transition-all active:scale-95 group"
               >
                  Next <i className="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
               </button>

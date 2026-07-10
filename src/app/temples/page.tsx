@@ -97,10 +97,10 @@ export default function TemplesPage() {
               </li>
             </ul>
 
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="flex flex-row md:flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
               <button 
                 onClick={() => document.getElementById('temples-list')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-[#6869F9] hover:bg-[#6869F9] text-white font-bold py-3.5 px-8 rounded-full transition-all shadow-md active:scale-95 text-[15px]"
+                className="flex-1 md:flex-none bg-[#f97316] md:bg-[#6869F9] hover:bg-[#ea580c] md:hover:bg-[#6869F9] text-white font-bold py-2.5 px-2 md:py-3.5 md:px-8 rounded-lg md:rounded-full transition-all shadow-sm md:shadow-md active:scale-95 text-[14px] md:text-[15px] text-center"
               >
                 {t.temples.exploreBtn}
               </button>
@@ -108,15 +108,15 @@ export default function TemplesPage() {
                 href="https://docs.google.com/forms/d/e/1FAIpQLSeFIQnaxbHWpVUXKMrCn4I9A8UNSybCRhhAgBwvTkq3uEddBA/viewform?usp=publish-editors" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-3.5 px-8 rounded-full border border-gray-300 transition-all shadow-sm flex items-center gap-2 active:scale-95 text-[15px]"
+                className="flex-1 md:flex-none bg-white hover:bg-gray-50 text-gray-700 font-bold py-2.5 px-2 md:py-3.5 md:px-8 rounded-lg md:rounded-full border border-gray-300 transition-all shadow-sm flex items-center justify-center md:justify-start gap-1 md:gap-2 active:scale-95 text-[14px] md:text-[15px]"
               >
-                <span className="text-xl leading-none -mt-1">+</span> {t.temples.addTemples}
+                <span className="text-lg md:text-xl leading-none -mt-1">+</span> {t.temples.addTemples}
               </a>
             </div>
           </div>
 
           {/* Hero Image */}
-          <div className="flex-1 w-full flex justify-center lg:justify-end relative">
+          <div className="hidden md:flex flex-1 w-full justify-center lg:justify-end relative">
             <motion.div
               className="relative w-full max-w-[500px]"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -134,7 +134,7 @@ export default function TemplesPage() {
       </section>
 
       {/* Locations Navbar */}
-      <section className="border-b border-[#e9d5ff] sticky top-0 bg-white z-40 shadow-sm relative group">
+      <section className="border-b border-[#e9d5ff] sticky top-14 sm:top-[60px] lg:top-[68px] bg-white z-40 shadow-sm group">
         {/* Left Scroll Button */}
         <button 
           onClick={() => handleScroll('left')}
@@ -153,17 +153,17 @@ export default function TemplesPage() {
               <button
                 key={loc.name}
                 onClick={() => setActiveCity(loc.name)}
-                className={`group flex flex-col items-center gap-2 pb-3 min-w-max border-b-4 transition-all ${
+                className={`group flex flex-col items-center gap-1.5 md:gap-2 pb-2 md:pb-3 min-w-max border-b-[3px] md:border-b-4 transition-all ${
                   activeCity === loc.name 
-                    ? "border-[#6869F9]" 
+                    ? "border-[#f97316] md:border-[#6869F9]" 
                     : "border-transparent opacity-80 hover:opacity-100 hover:border-gray-200"
                 }`}
               >
-                <div className={`h-[68px] w-[68px] rounded-2xl overflow-hidden shadow-sm transition-transform ${activeCity === loc.name ? "transform scale-105 border-2 border-white shadow-md ring-2 ring-[#1f1f1f]/20" : "border border-gray-100 group-hover:scale-105"}`}>
+                <div className={`h-[54px] w-[54px] md:h-[68px] md:w-[68px] rounded-[14px] md:rounded-2xl overflow-hidden shadow-sm transition-transform ${activeCity === loc.name ? "md:transform md:scale-105 border-2 border-white shadow-md ring-2 ring-[#f97316]/20 md:ring-[#1f1f1f]/20" : "border border-gray-100 group-hover:scale-105"}`}>
                   <img src={loc.image} alt={loc.name} className="h-full w-full object-cover" />
                 </div>
-                <span className={`text-[15px] font-bold ${
-                  activeCity === loc.name ? "text-[#1f1f1f]" : "text-gray-500"
+                <span className={`text-[13px] md:text-[15px] font-bold ${
+                  activeCity === loc.name ? "text-[#f97316] md:text-[#1f1f1f]" : "text-gray-500"
                 }`}>
                   {loc.name === "All" ? t.temples.filterAll : loc.name}
                 </span>
@@ -182,7 +182,7 @@ export default function TemplesPage() {
       </section>
 
       {/* Grid */}
-      <section id="temples-list" className="max-w-7xl mx-auto px-6 py-16">
+      <section id="temples-list" className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16">
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-pulse flex flex-col items-center">

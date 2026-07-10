@@ -92,13 +92,16 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
   );
 
   const Sec = ({ title, children, sRef }: { title: string; children: React.ReactNode; sRef?: React.RefObject<HTMLDivElement | null> }) => (
-    <div ref={sRef} className="border-t border-gray-200 pt-7 pb-7 scroll-mt-32">
-      <h2 className="text-[23px] font-bold text-[#111] mb-4">{title}</h2>
-      {children}
+    <div ref={sRef} className="scroll-mt-32 md:border-t md:border-gray-200 md:pt-7 md:pb-7">
+      <div className="h-3 bg-[#f3f4f6] -mx-5 md:hidden" />
+      <div className="py-5 md:py-0">
+        <h2 className="text-[19px] md:text-[23px] font-bold text-[#111] mb-2 md:mb-4">{title}</h2>
+        {children}
+      </div>
     </div>
   );
 
-  const Body = ({ text }: { text: string }) => <p className="text-[17px] text-[#555] leading-[1.75]">{text}</p>;
+  const Body = ({ text }: { text: string }) => <p className="text-[14px] md:text-[17px] text-[#555] leading-[1.6] md:leading-[1.75]">{text}</p>;
 
   return (
     <main className="min-h-screen bg-white">
@@ -122,9 +125,21 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
         )}
 
         {/* Gallery — overflow-hidden clips images strictly to h-[320px] */}
-        <div className="grid grid-cols-2 gap-[3px] h-[320px] overflow-hidden">
-          <div className="overflow-hidden h-full"><img src={gallery[0]} className="w-full h-full object-cover" alt={temple.name} /></div>
-          <div className="grid grid-cols-2 grid-rows-2 gap-[3px] h-full overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[3px] h-[320px] overflow-hidden relative">
+          <div className="overflow-hidden h-full relative cursor-pointer" onClick={() => { setGalleryIndex(0); setShowGallery(true); }}>
+            <img src={gallery[0]} className="w-full h-full object-cover" alt={temple.name} />
+            <div className="absolute bottom-4 right-4 bg-black/60 text-white text-[13px] px-2 py-0.5 rounded md:hidden font-medium">1/{gallery.length}</div>
+            <button className="absolute top-4 right-4 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center md:hidden shadow-md text-[#1f1f1f]"
+              onClick={(e) => {
+                e.stopPropagation();
+                const text = encodeURIComponent(`Visit ${temple.name} in ${temple.city}, ${temple.state}!\n${window.location.href}`);
+                window.open(`https://wa.me/?text=${text}`, '_blank');
+              }}
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#25D366]" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </button>
+          </div>
+          <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-[3px] h-full overflow-hidden">
             {[1,2,3].map((i: number) => (
               <div key={i} className="overflow-hidden cursor-pointer" onClick={() => { setGalleryIndex(i); setShowGallery(true); }}>
                 <img src={gallery[i]} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="" />
@@ -159,30 +174,33 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
 
         <div className="px-5">
           {/* Action Buttons */}
-          <div className="flex justify-center gap-14 py-6 border-b border-gray-200">
-            <a href="/puja" className="flex flex-col items-center gap-2 hover:opacity-85 active:scale-95 transition-all cursor-pointer">
-              <div className="w-14 h-14 rounded-[14px] bg-gradient-to-br from-[#1f1f1f] to-[#F47820] flex items-center justify-center shadow-md">
-                <SparklesIcon className="h-8 w-8 text-white" />
+          <div className="flex justify-center gap-10 md:gap-14 py-4 md:py-6 border-b border-gray-200">
+            <a href="/puja" className="flex flex-col items-center gap-1.5 md:gap-2 hover:opacity-85 active:scale-95 transition-all cursor-pointer">
+              <div className="w-[42px] h-[42px] md:w-14 md:h-14 rounded-xl md:rounded-[14px] bg-[#f97316] md:bg-gradient-to-br md:from-[#1f1f1f] md:to-[#F47820] flex items-center justify-center shadow-sm md:shadow-md">
+                <svg className="h-5 w-5 text-white md:hidden" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.25 2.25c-.2.7-.42 1.41-.65 2.12-.46 1.42-1.01 2.92-1.55 4.38-.85 2.3-1.8 4.74-1.8 7.25 0 2.62 2.13 4.75 4.75 4.75s4.75-2.13 4.75-4.75c0-2.51-.95-4.95-1.8-7.25-.54-1.46-1.09-2.96-1.55-4.38-.23-.71-.45-1.42-.65-2.12-.13-.42-.77-.42-.9 0zm.75 16c-1.38 0-2.5-1.12-2.5-2.5 0-1.44.82-3.1 1.63-5.11.26-.64.51-1.28.75-1.92.24.64.49 1.28.75 1.92.81 2.01 1.63 3.67 1.63 5.11 0 1.38-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <SparklesIcon className="hidden md:block h-8 w-8 text-white" />
               </div>
-              <span className="text-[13px] font-semibold text-[#333] text-center leading-tight">Book your<br/>Pooja</span>
+              <span className="text-[11px] md:text-[13px] font-semibold text-[#333] text-center leading-tight">Book your<br/>Pooja</span>
             </a>
             <button
               onClick={() => {
                 const text = encodeURIComponent(`Visit ${temple.name} in ${temple.city}, ${temple.state}!\n${window.location.href}`);
                 window.open(`https://wa.me/?text=${text}`, '_blank');
               }}
-              className="flex flex-col items-center gap-2 hover:opacity-85 active:scale-95 transition-all cursor-pointer">
-              <div className="w-14 h-14 rounded-[14px] bg-[#3d4854] flex items-center justify-center shadow-md">
-                <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+              className="flex flex-col items-center gap-1.5 md:gap-2 hover:opacity-85 active:scale-95 transition-all cursor-pointer">
+              <div className="w-[42px] h-[42px] md:w-14 md:h-14 rounded-xl md:rounded-[14px] bg-[#3d4854] flex items-center justify-center shadow-sm md:shadow-md">
+                <svg className="w-5 h-5 md:w-8 md:h-8 text-[#25D366] md:text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
               </div>
-              <span className="text-[13px] font-semibold text-[#333] text-center leading-tight">Share with<br/>friends</span>
+              <span className="text-[11px] md:text-[13px] font-semibold text-[#333] text-center leading-tight">Share with<br/>friends</span>
             </button>
           </div>
 
           {/* Section Nav — sticky below action buttons */}
-          <div className="sticky top-[64px] z-40 bg-white border-b border-gray-200 shadow-sm -mx-5 px-8 mt-0">
+          <div className="hidden md:block sticky top-[64px] z-40 bg-white border-b border-gray-200 shadow-sm -mx-5 px-8 mt-0">
             <div className="flex justify-between">
               <Tab id="overview" label="Overview" ref={overviewRef} />
               <Tab id="timings" label="Timings" ref={timingsRef} />
@@ -205,15 +223,15 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
           {/* Timings */}
           {temple.timings && Object.values(temple.timings).some(v => v) && (
             <Sec title="Temple Timings" sRef={timingsRef}>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {temple.timings.morningOpen && temple.timings.morningClose && (
-                  <TimingCard icon="calendar" label="Morning timings of the temple" time={`${temple.timings.morningOpen} - ${temple.timings.morningClose}`} />
+                  <TimingCard icon="calendar" label="Temple morning timings" time={`${temple.timings.morningOpen} - ${temple.timings.morningClose}`} />
                 )}
                 {temple.timings.aartiTiming && (
                   <TimingCard icon="bell" label="Mangala Aarti timings" time={temple.timings.aartiTiming} />
                 )}
                 {temple.timings.eveningOpen && temple.timings.eveningClose && (
-                  <TimingCard icon="calendar" label="Evening timings of the temple" time={`${temple.timings.eveningOpen} - ${temple.timings.eveningClose}`} />
+                  <TimingCard icon="calendar" label="Temple evening timings" time={`${temple.timings.eveningOpen} - ${temple.timings.eveningClose}`} />
                 )}
               </div>
             </Sec>
@@ -338,16 +356,16 @@ export default function TempleDetailPage({ params }: { params: Promise<{ slug: s
 
 function TimingCard({ icon, label, time }: { icon: "calendar" | "bell"; label: string; time: string }) {
   return (
-    <div className="bg-[#f7f7f7] rounded-xl p-4 flex items-start gap-3">
-      <div className="w-10 h-10 bg-[#6869F9] rounded-lg flex items-center justify-center flex-shrink-0">
+    <div className="bg-[#fcfcfc] md:bg-[#f7f7f7] rounded-xl p-3 md:p-4 flex items-start gap-3 border border-gray-50 md:border-none shadow-[0_1px_2px_rgba(0,0,0,0.02)] md:shadow-none mb-1 md:mb-0">
+      <div className="w-10 h-10 md:bg-[#6869F9] bg-[#fff0e6] rounded-full md:rounded-lg flex items-center justify-center flex-shrink-0">
         {icon === "calendar"
-          ? <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
-          : <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+          ? <svg className="w-5 h-5 md:text-white text-[#f97316]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
+          : <svg className="w-5 h-5 md:text-white text-[#f97316]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
         }
       </div>
       <div>
-        <p className="text-[15px] font-bold text-[#111] leading-tight">{label}</p>
-        <p className="text-[14px] text-[#888] mt-1">{time}</p>
+        <p className="text-[14px] md:text-[15px] font-bold text-[#111] leading-tight mt-0.5">{label}</p>
+        <p className="text-[13px] md:text-[14px] text-[#888] mt-1 uppercase tracking-wide">{time}</p>
       </div>
     </div>
   );

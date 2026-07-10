@@ -158,26 +158,25 @@ export default function AstroPageLayout({
     <div className="min-h-screen bg-[#f5f5f5]">
 
       {/* -- Breadcrumb -- */}
-      <nav className="bg-[#f5f3ff] py-3.5 px-6 sticky top-[64px] z-30 border-b border-[#ddd6fe]">
-        <div className="mx-auto max-w-7xl text-[14px] font-semibold text-gray-500 flex items-center gap-2.5">
-          <Link href="/" className="hover:text-gray-800 transition-colors">Home</Link>
-          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <Link href="/astro-tools" className="hover:text-gray-800 transition-colors">Astrology Calculator</Link>
-          <i className="fa-solid fa-chevron-right text-[10px] opacity-70"></i>
-          <span className="text-[#1f1f1f] truncate max-w-[300px] font-bold">{breadcrumb}</span>
+      <nav className="bg-[#f5f3ff] py-3.5 px-4 md:px-6 sticky top-[56px] md:top-[64px] z-30 border-b border-[#ddd6fe]">
+        <div className="mx-auto max-w-7xl text-[12px] md:text-[14px] font-semibold text-gray-500 flex items-center gap-2 md:gap-2.5 overflow-x-auto no-scrollbar">
+          <Link href="/" className="hover:text-gray-800 transition-colors shrink-0">Home</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70 shrink-0"></i>
+          <Link href="/astro-tools" className="hover:text-gray-800 transition-colors shrink-0">Astrology Calculator</Link>
+          <i className="fa-solid fa-chevron-right text-[10px] opacity-70 shrink-0"></i>
+          <span className="text-[#1f1f1f] truncate max-w-[200px] md:max-w-[300px] font-bold shrink-0">{breadcrumb}</span>
         </div>
       </nav>
 
-      <div className="max-w-[1400px] mx-auto px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-0 md:px-6 py-0 md:py-6">
 
         {/* SEO subtitle */}
-        <p className="text-base text-gray-600 mb-4 font-medium">{seoSubtitle}</p>
+        <p className="text-[13px] md:text-base text-gray-600 mb-0 md:mb-4 font-medium px-4 md:px-0 pt-4 md:pt-0 hidden md:block">{seoSubtitle}</p>
 
         {/* -- Hero Banner -- */}
         <div
-          className="relative w-full rounded-3xl overflow-hidden mb-8 flex items-end"
+          className="relative w-full rounded-none md:rounded-3xl overflow-hidden mb-0 md:mb-8 flex items-end min-h-[160px] md:min-h-[300px]"
           style={{
-            minHeight: 300,
             background: "linear-gradient(135deg, #0f0c29 0%, #1a1a4e 40%, #2d1b69 100%)",
           }}
         >
@@ -193,10 +192,22 @@ export default function AstroPageLayout({
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
           {/* Title */}
-          <div className="relative z-10 p-10 pb-12">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-lg">
+          <div className="relative z-10 p-4 pb-12 md:p-10 md:pb-12 w-full flex items-center justify-between">
+            <h1 className="text-[1.25rem] md:text-5xl font-extrabold text-white leading-tight drop-shadow-lg">
               {heroTitle}
             </h1>
+            <button
+              onClick={() => {
+                const t = encodeURIComponent(`${heroTitle}: ${window.location.href}`);
+                window.open(`https://wa.me/?text=${t}`, "_blank", "noopener,noreferrer");
+              }}
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-white text-green-500 shadow-sm hover:shadow-md active:scale-95 transition-all duration-200 shrink-0"
+              aria-label="Share on WhatsApp"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-[16px] h-[16px] md:w-[20px] md:h-[20px]">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -205,8 +216,10 @@ export default function AstroPageLayout({
 
           {/* -- LEFT: Form + SEO content -- */}
           <div className="flex flex-col gap-7">
-            {/* Form card */}
-            {children}
+            {/* Form card wrapper (overlaps hero on mobile) */}
+            <div className="-mt-8 md:mt-0 relative z-20 px-3 md:px-0">
+              {children}
+            </div>
 
             {/* SEO content sections — no card wrapper, plain content */}
             <div className="px-1">

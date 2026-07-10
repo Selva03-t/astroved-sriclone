@@ -123,9 +123,9 @@ export default function AstroToolsPage() {
         <div className="max-w-6xl mx-auto px-6">
 
           {/* -- Title row -- */}
-          <div className="flex items-start justify-between pt-10 pb-8">
-            <h1 className="text-[2.25rem] font-extrabold text-gray-900 leading-tight tracking-tight">
-              Free Astrology Calculators
+          <div className="flex items-start justify-between pt-6 md:pt-10 pb-6 md:pb-8">
+            <h1 className="text-[1.75rem] md:text-[2.25rem] font-extrabold text-gray-900 leading-tight tracking-tight">
+              Free Astrology<br className="md:hidden" /> Calculators
             </h1>
 
             {/* Share + WhatsApp — right side */}
@@ -151,17 +151,17 @@ export default function AstroToolsPage() {
           </div>
 
           {/* -- Active calculator cards -- */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6 mb-10 md:mb-14">
             {ACTIVE.map((c) => <CalculatorCard key={c.id} {...c} />)}
           </div>
 
           {/* -- Coming Soon heading -- */}
-          <h2 className="text-[2rem] font-extrabold text-gray-900 mb-6 tracking-tight">
+          <h2 className="text-[1.5rem] md:text-[2rem] font-extrabold text-gray-900 mb-4 md:mb-6 tracking-tight">
             Coming Soon
           </h2>
 
           {/* -- Coming Soon cards -- */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6 mb-10 md:mb-14">
             {COMING_SOON.map((c) => <CalculatorCard key={c.id} {...c} />)}
           </div>
 
