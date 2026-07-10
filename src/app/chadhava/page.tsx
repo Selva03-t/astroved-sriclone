@@ -73,23 +73,23 @@ export default function ChadhavaPage() {
       <Navbar />
       <main className="min-h-screen bg-[#f5f3ff]">
         {/* New Hero Section */}
-        <section className="bg-linear-to-r from-[#f5f3ff] to-[#ffffff] py-12 md:py-16 mb-12">
-          <div className="mx-auto max-w-7xl px-6 flex flex-col lg:flex-row items-center gap-12">
-            {/* Left Content */}
-            <div className="flex-1 text-left">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1f1f1f] leading-tight mb-8">
+        <section className="bg-linear-to-r from-[#f5f3ff] to-[#ffffff] py-8 sm:py-12 md:py-16 mb-12 overflow-hidden">
+          <div className="mx-auto max-w-7xl px-6 flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12">
+            {/* Left Content (Bottom on mobile, Left on desktop) */}
+            <div className="flex-1 text-center lg:text-left">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1f1f1f] leading-tight mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                 {t.chadhava.heroTitle}
               </h1>
               
-              <ul className="space-y-4 mb-10">
+              <ul className="space-y-3.5 sm:space-y-4 mb-8 sm:mb-10 inline-block text-left animate-fade-in-up" style={{ animationDelay: '250ms' }}>
                 {[
                   t.chadhava.feature1,
                   t.chadhava.feature2,
                   t.chadhava.feature3,
                   t.chadhava.feature4
                 ].map((text, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-gray-700 font-medium">
-                    <div className="h-5 w-5 rounded-full bg-[#6869F9] flex items-center justify-center shrink-0">
+                  <li key={idx} className="flex items-center gap-3 text-gray-700 font-medium text-sm sm:text-base">
+                    <div className="h-5 w-5 rounded-full bg-[#6869F9] flex items-center justify-center shrink-0 shadow-sm">
                        <i className="fa-solid fa-check text-[10px] text-white"></i>
                     </div>
                     {text}
@@ -97,22 +97,22 @@ export default function ChadhavaPage() {
                 ))}
               </ul>
 
-              <div className="flex flex-wrap gap-4">
-                <a href="#upcoming" className="inline-block bg-[#6869F9] text-white px-10 py-3.5 rounded-xl font-bold text-base hover:bg-[#5657e8] transition-all shadow-lg shadow-green-900/10 active:scale-95 text-center">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                <a href="#upcoming" className="inline-block bg-[#6869F9] text-white px-8 sm:px-10 py-3.5 rounded-xl font-bold text-sm sm:text-base hover:bg-[#5657e8] transition-all shadow-lg shadow-[#6869F9]/20 active:scale-95 text-center">
                   {t.chadhava.viewNow}
                 </a>
-                <a href="#how-it-works" className="inline-block bg-white text-gray-700 border border-gray-200 px-10 py-3.5 rounded-xl font-bold text-base hover:bg-gray-50 transition-all active:scale-95 text-center">
+                <a href="#how-it-works" className="inline-block bg-white text-gray-700 border border-gray-200 px-8 sm:px-10 py-3.5 rounded-xl font-bold text-sm sm:text-base hover:bg-gray-50 transition-all active:scale-95 text-center">
                   {t.chadhava.howItWorks}
                 </a>
               </div>
             </div>
 
-            {/* Right Image */}
-            <div className="flex-1 relative w-full max-w-2xl">
+            {/* Right Image (Top on mobile, Right on desktop) */}
+            <div className="flex-1 relative w-full max-w-xl lg:max-w-2xl shrink-0">
               <img 
                 src="https://www.srimandir.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimg_chadhava_web_banner.3fc5e49e.webp&w=1200&q=75" 
                 alt="Chadhava Banner" 
-                className="w-full h-auto object-contain"
+                className="w-full h-auto object-contain transition-transform duration-700 hover:scale-105"
               />
             </div>
           </div>

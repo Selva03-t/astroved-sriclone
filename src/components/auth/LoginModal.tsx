@@ -353,12 +353,19 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                       type={isIndian ? "tel" : "email"}
                       inputMode={isIndian ? "numeric" : "email"}
                       value={inputValue}
-                      onChange={(e) =>
-                        setInputValue(
-                          isIndian ? e.target.value.replace(/\D/g, "").slice(0, 10) : e.target.value
-                        )
-                      }
+                      onChange={(e) => {
+                        if (!isIndian) {
+                          setInputValue(e.target.value);
+                          return;
+                        }
+                        let digits = e.target.value.replace(/\D/g, "");
+                        if ((digits.startsWith("91") && digits.length > 10) || digits.length === 12) {
+                          digits = digits.slice(2);
+                        }
+                        setInputValue(digits.slice(0, 10));
+                      }}
                       placeholder={isIndian ? "" : "Enter your email"}
+                      maxLength={isIndian ? 16 : undefined}
                       style={{
                         flex: 1,
                         border: "none",

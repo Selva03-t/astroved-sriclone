@@ -1685,11 +1685,14 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     </div>
                     <input
                       type="tel"
-                      maxLength={10}
+                      maxLength={16}
                       value={userDetails.whatsapp}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
-                        setUserDetails(prev => ({ ...prev, whatsapp: val }));
+                        let digits = e.target.value.replace(/\D/g, '');
+                        if ((digits.startsWith('91') && digits.length > 10) || digits.length === 12) {
+                          digits = digits.slice(2);
+                        }
+                        setUserDetails(prev => ({ ...prev, whatsapp: digits.slice(0, 10) }));
                       }}
                       className="w-full bg-white border-2 border-blue-500 rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 outline-none shadow-[0_0_0_1px_rgba(59,130,246,0.1)]"
                       placeholder="8192812323"

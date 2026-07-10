@@ -135,8 +135,8 @@ export default function LoginMethods() {
 
     let digitsOnly = nextValue.replace(/[^0-9]/g, "");
     
-    // Auto-strip leading "91" if the user entered it (since +91 is already pre-selected)
-    if (digitsOnly.startsWith("91") && digitsOnly.length > 10) {
+    // Auto-strip leading "91" if the user entered it (since +91 is already pre-selected) or if length is 12
+    if ((digitsOnly.startsWith("91") && digitsOnly.length > 10) || digitsOnly.length === 12) {
       digitsOnly = digitsOnly.slice(2);
     }
     
@@ -349,7 +349,7 @@ export default function LoginMethods() {
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
                 placeholder={placeholder}
-                maxLength={method === "email" ? undefined : 10}
+                maxLength={method === "email" ? undefined : 16}
                 className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
               />
               {value && (

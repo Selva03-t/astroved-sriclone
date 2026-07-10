@@ -509,11 +509,14 @@ export default function ChadhavaDetailPage() {
                        </div>
                        <input 
                          type="tel" 
-                         maxLength={10}
+                         maxLength={16}
                          value={userInfo.whatsapp}
                          onChange={(e) => {
-                           const val = e.target.value.replace(/\D/g, '').slice(0, 10);
-                           setUserInfo(prev => ({ ...prev, whatsapp: val }));
+                           let digits = e.target.value.replace(/\D/g, '');
+                           if ((digits.startsWith('91') && digits.length > 10) || digits.length === 12) {
+                             digits = digits.slice(2);
+                           }
+                           setUserInfo(prev => ({ ...prev, whatsapp: digits.slice(0, 10) }));
                          }}
                          className="w-full bg-gray-50 border-2 border-transparent focus:border-[#6869F9] outline-none rounded-2xl py-4 pl-24 pr-12 font-bold text-gray-900 transition-all"
                          placeholder="8727121883"
