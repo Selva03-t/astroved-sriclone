@@ -85,59 +85,67 @@ export default function DashboardPage() {
 
       {/* Banner Section */}
       <section className="w-full">
-        <div className="relative w-full h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden group">
+        <div className="relative w-full h-[560px] sm:h-[580px] md:h-[500px] lg:h-[550px] overflow-hidden group bg-[#0f1c3d]">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-700 ${index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"
+              className={`absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${index === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
                 }`}
             >
               <div
-                className="relative h-full w-full transition-colors duration-700"
+                className="relative h-full w-full transition-colors duration-1000 ease-in-out flex flex-col md:block"
                 style={{ backgroundColor: banner.baseColor || "#5b172a" }}
               >
-                <div className="absolute inset-y-0 right-0 w-full md:w-[65%]">
+                {/* Image Section: Top half on mobile, Right 65% on desktop */}
+                <div className="relative w-full h-[250px] sm:h-[280px] md:absolute md:inset-y-0 md:right-0 md:w-[65%] md:h-full shrink-0 overflow-hidden">
                   <Image
                     src={banner.image || "/images/placeholder.jpg"}
                     alt={banner.title}
                     fill
-                    className="object-cover object-top md:object-top-right opacity-80 md:opacity-100"
+                    className={`object-cover object-top md:object-top-right transition-all duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${index === currentBanner ? 'scale-100 opacity-90 md:opacity-100' : 'scale-108 opacity-0'}`}
                     priority={index === 0}
+                  />
+
+                  {/* Mobile bottom fade: seamlessly blends the top image into the dark/baseColor bottom letters area */}
+                  <div
+                    className="absolute inset-0 md:hidden"
+                    style={{
+                      background: `linear-gradient(to bottom, transparent 20%, ${banner.baseColor || "#5b172a"} 100%)`
+                    }}
                   />
                 </div>
 
-                {/* Desktop merge effect (spans full width to hide the container edge) */}
+                {/* Desktop merge effect (spans full width to hide the container edge on desktop) */}
                 <div
-                  className="hidden md:block absolute inset-0"
+                  className="hidden md:block absolute inset-0 pointer-events-none"
                   style={{
                     background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 35%, transparent 65%)`
                   }}
                 />
 
-                {/* Mobile gradient overlay for legibility */}
-                <div
-                  className="absolute inset-0 md:hidden"
-                  style={{
-                    background: `linear-gradient(to right, ${banner.baseColor || "#5b172a"} 10%, transparent 100%)`
-                  }}
-                />
-
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-24 md:max-w-[60%] text-left z-10">
-                  <h2 className={`text-3xl md:text-[44px] font-bold leading-[1.15] mb-6 tracking-tight ${banner.titleColor || 'text-white'}`}>
+                {/* Letters/Wordings Section: Bottom area on mobile, Left 60% on desktop */}
+                <div className="relative md:absolute md:inset-0 flex flex-col justify-center items-center md:items-start text-center md:text-left px-6 sm:px-8 pt-4 pb-14 md:py-0 md:px-24 md:max-w-[60%] z-10 flex-1">
+                  <h2
+                    className={`text-2xl sm:text-3xl md:text-[44px] font-bold leading-[1.2] md:leading-[1.15] mb-4 md:mb-6 tracking-tight transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${banner.titleColor || 'text-white'} ${index === currentBanner ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-6 duration-300 delay-0'}`}
+                  >
                     {banner.title}
                     {banner.titleHighlight && (
                       <span className="text-[#ffc107]">{banner.titleHighlight}</span>
                     )}
                   </h2>
                   {banner.subtitle && (
-                    <p className="text-[16px] md:text-[18px] font-medium text-gray-200 mb-10 max-w-2xl leading-relaxed">
+                    <p
+                      className={`text-[15px] sm:text-[16px] md:text-[18px] font-medium text-gray-200 mb-6 md:mb-10 max-w-xl md:max-w-2xl leading-relaxed transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${index === currentBanner ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-6 duration-300 delay-0'}`}
+                    >
                       {banner.subtitle}
                     </p>
                   )}
-                  <div className="flex flex-wrap gap-4">
+                  <div
+                    className={`flex flex-wrap justify-center md:justify-start gap-3 md:gap-4 w-full md:w-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${index === currentBanner ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-6 duration-300 delay-0'}`}
+                  >
                     {banner.buttons.map((btn: any, i) => {
-                      const outlineClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
-                      const solidClass = `rounded-xl px-8 py-3.5 font-bold text-[15px] transition-all shadow-lg active:scale-95 bg-white text-[#5B5BF6] hover:bg-white/90 hover:shadow-xl`;
+                      const outlineClass = `rounded-xl px-7 py-3 md:px-8 md:py-3.5 font-bold text-[14px] md:text-[15px] transition-all shadow-sm active:scale-95 bg-transparent border border-white text-white hover:bg-white/10`;
+                      const solidClass = `rounded-xl px-7 py-3 md:px-8 md:py-3.5 font-bold text-[14px] md:text-[15px] transition-all shadow-lg active:scale-95 bg-white text-[#5B5BF6] hover:bg-white/90 hover:shadow-xl`;
                       const buttonClass = btn.variant === "outline" ? outlineClass : solidClass;
 
                       if (btn.href) {
@@ -673,7 +681,7 @@ const PujaCard = ({ puja }: { puja: Puja }) => (
       <img
         src={puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=800&q=80"}
         alt={puja.title}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-fit"
       />
       {/* Top Left Badge */}
       {puja.badge && (
