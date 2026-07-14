@@ -269,35 +269,25 @@ export default function LoginMethods() {
       </div>
 
       {/* ── Right form panel ── */}
-      <div className="flex-1 bg-white p-8 sm:p-10 flex flex-col">
-        {/* Logo on mobile */}
-        <div className="flex md:hidden items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(145deg, #6869F9, #4546d4)" }}>
-            <AstroVedMark size={32} />
-          </div>
-          <span className="font-bold text-[#2e1b53] text-lg">AstroVed</span>
-        </div>
-
-        {/* Logo circle (like Sri Mandir modal) */}
-        <div className="flex flex-col items-center mb-6">
-          <div
-            className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
-            style={{ background: "linear-gradient(145deg, #6869F9 0%, #4546d4 100%)" }}
-          >
-            <AstroVedMark size={44} />
-          </div>
-          <span className="mt-2 font-bold text-[#6869F9] text-base tracking-tight">AstroVed</span>
+      <div className="flex-1 bg-white p-8 sm:p-10 flex flex-col items-center relative">
+        {/* Standard Logo */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+          <img
+            src="/images/logo.svg"
+            alt="AstroVed"
+            style={{ height: 40, width: "auto", objectFit: "contain" }}
+          />
         </div>
 
         {/* Heading */}
-        <h1 className="text-center text-xl font-bold text-[#1a1a2e] leading-snug">
+        <h1 className="text-center text-[17px] font-bold text-[#1a1a2e] leading-snug mt-2">
           {isAdmin
             ? "Admin Login"
             : isIndian
               ? "Login to continue"
               : "Login to continue your booking"}
         </h1>
-        <p className="mt-1.5 text-center text-sm text-[#6a4e95]">
+        <p className="mt-1.5 text-center text-[13px] text-[#666] mb-2">
           {isAdmin
             ? "Access the administrative control center."
             : isIndian
@@ -330,15 +320,15 @@ export default function LoginMethods() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4 flex-1 flex flex-col">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4 flex-1 flex flex-col w-full">
           <div>
-            <label className="block text-sm font-medium text-[#5a3b8a] mb-1.5">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               {method === "email" ? "Email" : "WhatsApp Number"}
             </label>
-            <div className="flex items-center rounded-xl border border-[#d8c9fb] bg-[#fcfaff] px-4 py-3 transition-all duration-300 focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#ddd1ff]">
+            <div className="flex items-center rounded-lg border-[1.5px] border-[#ddd] bg-white px-3.5 py-2.5 transition-all duration-300 focus-within:border-[#6869F9]">
               {method !== "email" && (
-                <span className="mr-2 text-sm font-semibold text-[#6869F9] bg-[#eee9ff] px-2 py-0.5 rounded-md">
-                  +{DEFAULT_COUNTRY.dialCode}
+                <span className="mr-2 text-[15px] font-medium text-[#444] border-r border-[#ddd] pr-3 py-1 flex items-center gap-1.5">
+                  <span className="text-xl leading-none">🇮🇳</span> +{DEFAULT_COUNTRY.dialCode}
                 </span>
               )}
                <input
@@ -350,13 +340,13 @@ export default function LoginMethods() {
                 onChange={(event) => setValue(event.target.value)}
                 placeholder={placeholder}
                 maxLength={method === "email" ? undefined : 16}
-                className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf]"
+                className="w-full bg-transparent text-[15px] text-[#222] outline-none placeholder:text-gray-400 font-sans"
               />
               {value && (
                 <button
                   type="button"
                   onClick={() => setValue("")}
-                  className="ml-2 text-[#a288cf] hover:text-[#6869F9] transition-colors"
+                  className="ml-2 text-gray-400 hover:text-[#6869F9] transition-colors"
                   aria-label="Clear input"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -369,21 +359,21 @@ export default function LoginMethods() {
 
           {method === "email" && isAdmin && (
             <div>
-              <label className="block text-sm font-medium text-[#5a3b8a] mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Password
               </label>
-              <div className="relative flex items-center rounded-xl border border-[#d8c9fb] bg-[#faf8ff] px-4 py-3 transition-all duration-300 focus-within:border-[#6869F9] focus-within:ring-2 focus-within:ring-[#e0dcff]">
+              <div className="relative flex items-center rounded-lg border-[1.5px] border-[#ddd] bg-white px-3.5 py-2.5 transition-all duration-300 focus-within:border-[#6869F9]">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="Enter your password"
-                  className="w-full bg-transparent text-base text-[#342151] outline-none placeholder:text-[#a288cf] pr-10"
+                  className="w-full bg-transparent text-[15px] text-[#222] outline-none placeholder:text-gray-400 font-sans pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 p-1 text-[#a288cf] hover:text-[#5a3b8a] transition-colors"
+                  className="absolute right-3.5 p-1 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showPassword ? (
                     <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
@@ -423,20 +413,19 @@ export default function LoginMethods() {
             id="login-submit-btn"
             type="submit"
             disabled={!isValid || loading}
-            className={`w-full rounded-xl px-4 py-3.5 text-base font-semibold text-white transition-all duration-500 ${
+            className={`w-full rounded-lg px-4 py-3.5 text-[16px] font-bold text-white transition-all duration-200 ${
               isValid && !loading
-                ? "shadow-[0_10px_24px_rgba(104,105,249,0.35)] hover:brightness-110"
-                : "cursor-not-allowed opacity-50"
+                ? "hover:brightness-110"
+                : "cursor-not-allowed opacity-90"
             }`}
-            style={
-              isValid && !loading
-                ? { background: "linear-gradient(135deg, #6869F9 0%, #4546d4 100%)" }
-                : { background: "#c4b8f0" }
-            }
+            style={{
+              background: isValid && !loading ? "#25a244" : "#a8d5b4",
+              fontFamily: "inherit"
+            }}
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
@@ -445,7 +434,7 @@ export default function LoginMethods() {
             ) : isAdmin ? (
               "Sign In"
             ) : (
-              "Get OTP"
+              "Login"
             )}
           </button>
 

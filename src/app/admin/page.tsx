@@ -9,8 +9,6 @@ export default function AdminDashboard() {
     { name: 'Temples', value: '0', key: 'temples' },
     { name: 'Chadhava', value: '0', key: 'chadhava' },
     { name: 'Library', value: '0', key: 'library' },
-    { name: 'Panchang', value: '0', key: 'panchang' },
-    { name: 'Astro Tools', value: '0', key: 'astroTools' },
     { name: 'Store', value: '0', key: 'store' },
     { name: 'Reviews', value: '0', key: 'reviews' },
   ]);
