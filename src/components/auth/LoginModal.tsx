@@ -12,7 +12,7 @@ type Step = "input" | "otp";
 type Method = "whatsapp" | "email";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex  = /^[0-9]{10,15}$/;
+const phoneRegex = /^[0-9]{10,15}$/;
 const RESEND_SECS = 60;
 
 /* ─────────────────────────────────────────────
@@ -22,9 +22,10 @@ function AstroVedLogo() {
   return (
     <div style={{ display: "flex", justifyContent: "center", marginBottom: 2 }}>
       <img
-        src="/images/logo.svg"
+        src="/icons/Fav-Icon.png"
         alt="AstroVed"
-        style={{ height: 40, width: "auto", objectFit: "contain" }}
+        className="w-13 p-1 h-13 rounded-full flex items-center justify-center shadow-lg"
+
       />
     </div>
   );
@@ -44,21 +45,21 @@ interface LoginModalProps {
 ───────────────────────────────────────────── */
 export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   /* ── Location detection ── */
-  const [method, setMethod]           = useState<Method>("whatsapp");
-  const [detecting, setDetecting]     = useState(true);
-  const [isIndian, setIsIndian]       = useState(true);
+  const [method, setMethod] = useState<Method>("whatsapp");
+  const [detecting, setDetecting] = useState(true);
+  const [isIndian, setIsIndian] = useState(true);
 
   /* ── Input step ── */
-  const [inputValue, setInputValue]   = useState("");
-  const [inputError, setInputError]   = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [inputError, setInputError] = useState("");
   const [inputLoading, setInputLoading] = useState(false);
 
   /* ── OTP step ── */
-  const [step, setStep]               = useState<Step>("input");
-  const [otp, setOtp]                 = useState("");
-  const [otpError, setOtpError]       = useState("");
-  const [otpLoading, setOtpLoading]   = useState(false);
-  const [resendSecs, setResendSecs]   = useState(RESEND_SECS);
+  const [step, setStep] = useState<Step>("input");
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [resendSecs, setResendSecs] = useState(RESEND_SECS);
 
   const otpInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +69,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
     if (!isOpen) return;
     async function detect() {
       try {
-        const res  = await fetch("/api/auth/geoip");
+        const res = await fetch("/api/auth/geoip");
         const data = await res.json();
         const country = data?.country ?? "IN";
         setIsIndian(country === "IN");
@@ -171,11 +172,11 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
         method === "email"
           ? { method: "email" as const, email: inputValue, otp: code }
           : {
-              method: "whatsapp" as const,
-              country: DEFAULT_COUNTRY,
-              number: inputValue.replace(/\D/g, ""),
-              otp: code,
-            };
+            method: "whatsapp" as const,
+            country: DEFAULT_COUNTRY,
+            number: inputValue.replace(/\D/g, ""),
+            otp: code,
+          };
       await authService.verifyOtp(payload as any);
       handleClose();
       if (onSuccess) onSuccess();
@@ -234,27 +235,11 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
       }}
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
-      {/* Modal card — exactly mirrors Sri Mandir split layout */}
-      <div className="relative flex w-full max-w-[680px] min-h-[380px] rounded-2xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.35)] animate-[modalIn_0.22s_ease]">
-        
-        {/* ── Left orange-style panel (AstroVed blue) - Hidden on mobile ── */}
-        <div
-          className="hidden md:flex flex-col justify-start w-[200px] shrink-0 px-7 py-9"
-          style={{ background: `linear-gradient(160deg, ${BLUE} 0%, ${BLUE_DARK} 100%)` }}
-        >
-          <h2 style={{ color: "#fff", fontSize: 26, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>
-            Login
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, marginTop: 14, lineHeight: 1.65 }}>
-            Get access to all<br />
-            <strong>AstroVed</strong> services,<br />
-            1000+ devotional music<br />
-            and other items
-          </p>
-        </div>
+      {/* Modal card — clean single-column layout */}
+      <div className="relative flex flex-col items-center w-full max-w-[440px] min-h-[380px] rounded-2xl overflow-hidden bg-white shadow-[0_24px_80px_rgba(0,0,0,0.35)] animate-[modalIn_0.22s_ease] p-6 sm:p-8">
 
-        {/* ── Right white panel ── */}
-        <div className="flex flex-col items-center flex-1 bg-white p-6 sm:p-8 relative">
+        {/* ── Main white content ── */}
+        <div className="flex flex-col items-center w-full relative">
           {/* Close button */}
           <button
             onClick={handleClose}
@@ -300,15 +285,15 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 {detecting
                   ? "Loading..."
                   : isIndian
-                  ? "Login to check your booking"
-                  : "Login to continue your booking"}
+                    ? "Login to check your booking"
+                    : "Login to continue your booking"}
               </h1>
               <p style={{ fontSize: 13, color: "#666", textAlign: "center", margin: "0 0 18px", lineHeight: 1.5 }}>
                 {detecting
                   ? ""
                   : isIndian
-                  ? "Please login with the same number that you have used for booking."
-                  : "All booking updates will be sent on the logged-in email"}
+                    ? "Please login with the same number that you have used for booking."
+                    : "All booking updates will be sent on the logged-in email"}
               </p>
 
               {detecting ? (
@@ -341,8 +326,12 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                   >
                     {isIndian && (
                       <>
-                        {/* Indian flag emoji */}
-                        <span style={{ fontSize: 20 }}>🇮🇳</span>
+                        {/* Indian flag image */}
+                        <img
+                          src="/images/flag.png"
+                          alt="India Flag"
+                          style={{ width: 24, height: 16, objectFit: "cover", borderRadius: 2 }}
+                        />
                         <span style={{ color: "#444", fontWeight: 500, fontSize: 15, userSelect: "none" }}>+91</span>
                         <div style={{ width: 1, height: 20, background: "#ddd" }} />
                       </>
@@ -408,7 +397,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                       padding: "13px",
                       borderRadius: 8,
                       border: "none",
-                      background: isInputValid && !inputLoading ? "#25a244" : "#a8d5b4",
+                      background: isInputValid && !inputLoading ? "#6772eaff" : "#91a2eeff",
                       color: "#fff",
                       fontWeight: 700,
                       fontSize: 16,
