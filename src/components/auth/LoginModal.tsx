@@ -24,7 +24,7 @@ function AstroVedLogo() {
       <img
         src="/icons/Fav-Icon.png"
         alt="AstroVed"
-        className="w-13 p-1 h-13 rounded-full flex items-center justify-center shadow-lg"
+        className="w-13 p-2 h-13 rounded-full flex items-center justify-center shadow-lg"
 
       />
     </div>
