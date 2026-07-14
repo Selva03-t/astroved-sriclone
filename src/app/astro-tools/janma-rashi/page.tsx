@@ -58,15 +58,15 @@ const IconShare = () => (
 );
 
 const inputCls =
-  "w-full h-14 rounded-xl border border-gray-200 px-4 text-base text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
+  "w-full h-12 md:h-14 rounded-xl border border-gray-200 pl-9 pr-2 md:pl-12 md:pr-4 text-[14px] md:text-base text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all placeholder-gray-400 bg-white";
 
 function Field({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-base font-semibold text-gray-700 mb-2">{label}</label>
-      <div className="relative flex items-center">
-        <span className="absolute left-4 text-violet-400 flex-shrink-0">{icon}</span>
-        <div className="w-full pl-10">{children}</div>
+      <label className="block text-[14px] md:text-base font-semibold text-gray-700 mb-1.5 md:mb-2">{label}</label>
+      <div className="relative flex items-center w-full">
+        <span className="absolute left-3 md:left-4 text-violet-400 flex-shrink-0 z-10">{icon}</span>
+        <div className="w-full">{children}</div>
       </div>
     </div>
   );
@@ -152,15 +152,16 @@ export default function JanmaRashiPage() {
         currentHref="/astro-tools/janma-rashi"
       >
         {/* -- Form Card -- */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-          <div className="flex items-start justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900 leading-snug max-w-[80%]">
-              Enter Your Birth Details
+        <div className="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+          {/* Card header */}
+          <div className="flex items-start justify-between mb-4 md:mb-6">
+            <h2 className="text-[16px] md:text-xl font-bold text-gray-900 leading-snug max-w-[90%] md:max-w-[80%]">
+              Enter Your Birth Details to Calculate Your Janma Rashi
             </h2>
             <button
               onClick={handleShare}
               aria-label="Share"
-              className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
+              className="hidden md:flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-500 hover:border-violet-300 hover:text-violet-500 transition-colors flex-shrink-0 ml-3"
             >
               <IconShare />
             </button>

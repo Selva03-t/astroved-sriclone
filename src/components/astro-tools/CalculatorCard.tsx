@@ -24,27 +24,27 @@ export default function CalculatorCard({
   const card = (
     <div
       className={[
-        "relative bg-white rounded-2xl border border-gray-200 overflow-hidden",
+        "relative bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col justify-between md:block h-full md:h-auto md:min-h-[300px]",
         live ? "cursor-pointer" : "cursor-default",
       ].join(" ")}
-      style={{ minHeight: 300 }}
     >
+      <div className="absolute inset-0 z-0 pointer-events-none md:hidden"></div>
       {/* ── Text & button (left column) ── */}
-      <div className="relative z-10 flex flex-col gap-3 p-7 pb-8" style={{ maxWidth: "55%" }}>
-        <h2 className="text-xl font-bold leading-snug" style={{ color: accentHex }}>
+      <div className="relative z-10 flex flex-col gap-1.5 md:gap-3 p-3 pb-3 md:p-7 md:pb-8 w-[58%] md:w-auto md:max-w-[55%]">
+        <h2 className="text-[13px] md:text-xl font-bold leading-tight md:leading-snug" style={{ color: accentHex }}>
           {title}
         </h2>
-        <p className="text-[13.5px] text-gray-500 leading-relaxed">{description}</p>
+        <p className="text-[11px] md:text-[13.5px] text-gray-500 leading-snug md:leading-relaxed">{description}</p>
 
         {/* Wide pill arrow button — only on live cards */}
         {live && (
-          <div className="mt-2">
+          <div className="mt-1 md:mt-2">
             <span
-              className="inline-flex items-center justify-center gap-1.5 px-5 h-10 rounded-full text-white text-[15px] font-semibold shadow select-none"
+              className="inline-flex items-center justify-center gap-1 px-3 md:px-5 h-6 md:h-10 rounded-full text-white font-semibold shadow select-none"
               style={{ backgroundColor: accentHex }}
             >
               <svg
-                className="w-5 h-5"
+                className="w-3 h-3 md:w-5 md:h-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -60,15 +60,14 @@ export default function CalculatorCard({
 
       {/* ── Zodiac image — large, bottom-right, partially cropped ── */}
       <div
-        className="absolute bottom-0 right-0 pointer-events-none select-none"
-        style={{ width: 220, height: 260 }}
+        className="absolute bottom-0 right-0 pointer-events-none select-none w-[75px] h-[75px] md:w-[220px] md:h-[260px]"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageUrl}
           alt=""
           role="presentation"
-          className="w-full h-full object-cover object-left-top"
+          className="w-full h-full object-cover object-left-top rounded-tl-[40px] md:rounded-tl-[0px]"
           style={{
             filter: live ? "none" : "grayscale(100%) brightness(0.55)",
           }}
