@@ -545,15 +545,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1 min-w-0 mr-3">
                     <h3 className="font-bold text-[#1f1f1f] text-lg mb-2">{selectedPackage?.name}</h3>
-                    <div className="flex items-center gap-3">
-                      <div className="bg-[#eef2ff] border border-[#6869F9]/20 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                        <span className="text-lg font-black text-[#1f1f1f] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
-                      </div>
-                      {selectedPackage && (
-                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 flex items-center justify-center">
-                          <span className="text-sm font-bold text-gray-400 line-through leading-tight">{currencySymbol} {Math.round(getDisplayPrice(selectedPackage) * 1.2)}</span>
-                        </div>
-                      )}
+                    <div className="mt-1">
+                      <span className="text-lg font-black text-[#6869F9] leading-tight">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : 0}</span>
                     </div>
                   </div>
                   <div className="bg-[#6869F9]/10 text-[#1f1f1f] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0">
@@ -1222,7 +1215,6 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                         <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                           {puja.packages.map((pkg, idx) => {
                             const isSelected = selectedPackage?.id === pkg.id;
-                            const isRecommended = idx === 2;
                             return (
                               <button
                                 key={`pkg-${pkg.id}-${idx}`}
@@ -1231,9 +1223,6 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                 className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
                                   }`}
                               >
-                                {isRecommended && (
-                                  <div className="bg-[#5b21b6] py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-white rounded-t-xl">RECOMMENDED</div>
-                                )}
                                 <div className="flex flex-1 flex-col p-5">
                                   {/* Person badge + radio */}
                                   <div className="flex items-center justify-between">
@@ -1255,13 +1244,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                       <p className="text-sm text-gray-600 mt-1 line-clamp-3 wrap-break-word">
                                         {pkg.description || "Recommended for devotees."}
                                       </p>
-                                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                                        <div className="bg-[#eef2ff] border border-[#6869F9]/10 rounded-lg px-2 py-0.5 flex flex-col justify-center">
-                                          <span className="text-sm font-black text-[#1f1f1f]">{currencySymbol} {getDisplayPrice(pkg)}</span>
-                                        </div>
-                                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2 py-0.5 flex flex-col justify-center">
-                                          <span className="text-xs font-bold text-gray-400 line-through">{currencySymbol} {Math.round(getDisplayPrice(pkg) * 1.2)}</span>
-                                        </div>
+                                      <div className="mt-3">
+                                        <span className="text-base font-black text-[#6869F9]">{currencySymbol} {getDisplayPrice(pkg)}</span>
                                       </div>
                                     </div>
                                     <img

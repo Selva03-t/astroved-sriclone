@@ -19,7 +19,7 @@ export default function LoginPage() {
         style={{ background: "radial-gradient(ellipse, #F47820 0%, transparent 60%)" }}
       />
 
-      <div className="relative z-10 w-full max-w-2xl px-4 py-12">
+      <div className="relative z-10 w-full max-w-2xl px-4 py-12 flex justify-center items-center">
         <LoginMethods />
       </div>
 
