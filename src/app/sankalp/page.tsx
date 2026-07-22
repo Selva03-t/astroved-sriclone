@@ -278,6 +278,15 @@ function SankalpContent() {
   const returnSlug = searchParams?.get("slug") || "";
   const shoppingCartId = searchParams?.get("shoppingCartId") || "";
 
+  // ── GeoIP: detect if user is from India ──────────────────────────────────
+  const [isIndian, setIsIndian] = useState(true); // default to Indian to avoid flash
+  useEffect(() => {
+    fetch("/api/auth/geoip")
+      .then(r => r.json())
+      .then(data => { if (data?.country) setIsIndian(data.country === "IN"); })
+      .catch(() => { /* keep default (Indian) on error */ });
+  }, []);
+
   // ── Form State ────────────────────────────────────────────────────────────
   const [whatsapp, setWhatsapp] = useState(waParam);
   const [differentCalling, setDifferentCalling] = useState(false);
@@ -360,7 +369,12 @@ function SankalpContent() {
       }),
     });
 
-    router.push(`/payment?${params.toString()}`);
+    // Route to USD payment page for international users, Razorpay for Indians
+    if (isIndian) {
+      router.push(`/payment?${params.toString()}`);
+    } else {
+      router.push(`/payment/international?${params.toString()}`);
+    }
   };
 
   return (

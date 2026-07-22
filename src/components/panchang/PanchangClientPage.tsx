@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "@/contexts/LanguageContext";
 import { useSearchParams } from "next/navigation";
 import LocationSearch, { CITIES } from "./LocationSearch";
+import { getMoonPhaseFromTithi } from "@/utils/moonPhase";
 
 const localeMap: Record<string, string> = {
   en: "en-IN", hi: "hi-IN", ta: "ta-IN", te: "te-IN", kn: "kn-IN",
@@ -69,15 +70,14 @@ function getFallbackData(dateStr?: string) {
   };
 }
 
-function MoonPhaseIcon() {
+function MoonPhaseIcon({ tithiName }: { tithiName?: string }) {
+  const moonInfo = getMoonPhaseFromTithi(tithiName);
   return (
-    <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#b0b8c1" />
-      <circle cx="38" cy="34" r="8" fill="#8a929a" opacity="0.4" />
-      <circle cx="30" cy="58" r="5" fill="#8a929a" opacity="0.3" />
-      <circle cx="46" cy="68" r="6" fill="#8a929a" opacity="0.35" />
-      <ellipse cx="62" cy="50" rx="36" ry="48" fill="#2d3748" />
-    </svg>
+    <img 
+      src={moonInfo.imagePath} 
+      alt={moonInfo.phaseLabel} 
+      className="w-full h-full object-cover scale-[1.4]" 
+    />
   );
 }
 
@@ -115,6 +115,7 @@ function MobilePanchangView({
   weekday,
   formattedDisplayDate,
 }: any) {
+  const { t, language } = useTranslation();
   const auspicious = data?.auspiciousTimings || {};
   const inauspicious = data?.inauspiciousTimings || {};
   const sun = data?.sun || {};
@@ -218,11 +219,11 @@ function MobilePanchangView({
 
         {/* 2 ── Panchang Summary Card */}
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-          <div className="p-4 flex gap-3 items-center">
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden flex-shrink-0 bg-[#f4f7fb] border border-gray-100 shadow-inner flex items-center justify-center p-1.5">
-              <MoonPhaseIcon />
+          <div className="p-4 flex gap-4 items-center">
+            <div className="w-[88px] h-[88px] rounded-full overflow-hidden flex-shrink-0 relative">
+              <MoonPhaseIcon tithiName={data?.tithi?.name} />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 py-1">
               <h3 className="text-[16px] font-bold text-[#1f1f1f] leading-snug mb-0.5">
                 {data?.tithi?.name},&nbsp;{weekday}
               </h3>

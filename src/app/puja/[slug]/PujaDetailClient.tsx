@@ -1086,8 +1086,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             {/*  navbar ~56–60px + breadcrumb ~44px = 100–104px             */}
             <div className="sticky top-[100px] sm:top-[104px] z-20 bg-white border-b border-gray-200 shadow-sm">
               <div className="w-full px-4 sm:px-6 lg:px-8">
-                {/* justify-between spreads tabs evenly edge-to-edge like Sri Mandir */}
-                <div className="flex items-center overflow-x-auto no-scrollbar w-full justify-between">
+                {/* justify-between spreads tabs evenly edge-to-edge */}
+                <div className="flex items-center overflow-x-auto no-scrollbar w-full justify-between gap-1">
                   {sectionTabs.map((tab) => (
                     <button
                       key={tab.id}
@@ -1106,9 +1106,9 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                           window.scrollTo({ top, behavior: 'smooth' });
                         }
                       }}
-                      className={`relative flex-1 text-center py-3 sm:py-[14px] px-1 text-[11px] sm:text-[13px] lg:text-[14px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
-                        ? 'text-[#1f1f1f]'
-                        : 'text-gray-500 hover:text-[#1f1f1f]'
+                      className={`relative flex-1 text-center py-3 sm:py-[14px] px-2 sm:px-3 text-[11px] sm:text-[13px] lg:text-[14px] font-semibold whitespace-nowrap transition-colors ${activeTab === tab.id
+                        ? 'text-[#6869F9]'
+                        : 'text-gray-500 hover:text-[#6869F9]'
                         }`}
                     >
                       {tab.label}
@@ -1592,13 +1592,12 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 pt-10 sm:pt-12">
+            <div className="flex-1 overflow-y-auto pt-10 sm:pt-12">
 
-              {/* Top Inclusions & Alert */}
-              <div className="mb-8">
+              {/* All Puja Packages includes */}
+              <div className="px-4 sm:px-6 mb-6">
                 <h2 className="text-[20px] font-bold text-[#1f1f1f] mb-4">All Puja Packages includes</h2>
-
-                <div className="space-y-4 mb-6">
+                <div className="space-y-3 mb-5">
                   {[
                     "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
                     "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
@@ -1606,22 +1605,26 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     "A free Aashirwad Box with Tirth Prasad will be delivered to your home if you opt in to receive it."
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3">
-                      <CheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#6869F9]" />
-                      <p className="text-[14px] leading-relaxed text-[#4b5563] font-medium">{item}</p>
+                      <div className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-[#6869F9]/10 flex items-center justify-center">
+                        <CheckIcon className="h-3 w-3 text-[#6869F9]" />
+                      </div>
+                      <p className="text-[13px] leading-relaxed text-[#4b5563] font-medium">{item}</p>
                     </div>
                   ))}
                 </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-[#f5f3ff] p-4 text-[#6869F9]">
-                  <i className="fa-solid fa-hand-holding-dollar text-xl shrink-0 mt-0.5"></i>
-                  <p className="text-[13px] font-semibold leading-relaxed">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
+                <div className="flex items-start gap-3 rounded-xl bg-[#fff8f0] border border-[#fde8cc] p-3.5">
+                  <i className="fa-solid fa-hand-holding-dollar text-[#e07c2a] text-lg shrink-0 mt-0.5"></i>
+                  <p className="text-[12px] font-semibold leading-relaxed text-[#c25e0e]">Opt for additional offerings like Vastra Daan, Anna Daan, Deep Daan, or Gau Seva in your name, available on the payments page.</p>
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-[#1f1f1f] mb-6">Select your puja package</h3>
+              <div className="px-4 sm:px-6 mb-4">
+                <h3 className="text-[17px] font-bold text-[#1f1f1f]">Select your puja package</h3>
+              </div>
 
-              {/* Package Selection Grid */}
-              <div className="grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-4 relative">
+
+              {/* ── MOBILE: Vertical Card List with per-package theme colors ── */}
+              <div className="md:hidden flex flex-col gap-3 px-4">
                 {(() => {
                   const displayPackages = [...puja.packages];
                   if (displayPackages.length === 3) {
@@ -1632,85 +1635,236 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       description: 'Family sankalp with bhog offering and temple archana included.'
                     });
                   }
+
+                  // Per-package theme colors matching Sri Mandir exactly
+                  const themes = [
+                    {
+                      border: "#FF7A00", imageBg: "#FFF5EC", priceColor: "#FF7A00",
+                      badgeBg: "#FFF0E0", badgeText: "#C25000",
+                      radioBorder: "#FF7A00", radioBg: "#FF7A00",
+                      participateBg: "#FF7A00", participateHover: "#E06900",
+                      cardBg: "#FFFAF5",
+                    },
+                    {
+                      border: "#D22B75", imageBg: "#FFF0F5", priceColor: "#D22B75",
+                      badgeBg: "#FCE4EF", badgeText: "#9D174D",
+                      radioBorder: "#D22B75", radioBg: "#D22B75",
+                      participateBg: "#D22B75", participateHover: "#B02266",
+                      cardBg: "#FFF8FB",
+                    },
+                    {
+                      border: "#4F6B20", imageBg: "#F4F8EC", priceColor: "#4F6B20",
+                      badgeBg: "#E8F2D4", badgeText: "#3A5018",
+                      radioBorder: "#4F6B20", radioBg: "#4F6B20",
+                      participateBg: "#4F6B20", participateHover: "#3D5519",
+                      cardBg: "#F9FBF5",
+                    },
+                    {
+                      border: "#836814", imageBg: "#FAF7ED", priceColor: "#836814",
+                      badgeBg: "#F5EECF", badgeText: "#5C4910",
+                      radioBorder: "#836814", radioBg: "#836814",
+                      participateBg: "#836814", participateHover: "#6A530F",
+                      cardBg: "#FDFAF2",
+                    },
+                  ];
+                  const personLabels = ["1 Person", "2 Person", "4 Person", "6 Person"];
+                  const personSubtitles = ["Package for 1 Person", "Package for 2 People", "Package for 4 People", "Package for upto 6 People"];
+
                   return displayPackages.map((pkg, idx) => {
                     const isSelected = selectedPackageId === pkg.id;
-                    const personCount = idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person";
-
-                    // Use pkg.imageUrl if available, otherwise fallback to puja.imageUrl
+                    const theme = themes[idx] || themes[0];
+                    const personLabel = personLabels[idx] || "1 Person";
+                    const personSubtitle = pkg.description || personSubtitles[idx] || "Package";
                     const imageUrl = pkg.imageUrl || puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=150&q=80";
 
                     return (
-                      <button
+                      <div
                         key={pkg.id}
                         onClick={() => setSelectedPackageId(pkg.id)}
-                        className={`relative flex flex-col p-4 rounded-2xl border-2 transition-all text-left overflow-hidden min-h-[160px] ${isSelected ? "border-[#6869F9] bg-white shadow-md ring-2 ring-[#6869F9]/20" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                        style={{
+                          borderColor: isSelected ? theme.border : "#e5e7eb",
+                          borderWidth: isSelected ? "2px" : "1px",
+                          backgroundColor: isSelected ? theme.cardBg : "#ffffff",
+                        }}
+                        className="relative rounded-2xl border cursor-pointer transition-all duration-200 overflow-hidden shadow-sm"
                       >
-                        <div className="flex items-center justify-between mb-4 w-full">
-                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase ${isSelected ? "bg-[#6869F9] text-white" : "bg-indigo-50 text-[#6869F9]"}`}>
-                            <i className="fa-solid fa-user text-[10px]"></i>
-                            {personCount}
+                        {/* Main card row */}
+                        <div className="flex items-start gap-0">
+                          {/* Left image section with no explicit bg (relies on card bg) */}
+                          <div className="relative shrink-0 flex flex-col items-center justify-between pt-3 pb-3 px-3 min-w-[105px]">
+                            <img
+                              src={imageUrl}
+                              alt={pkg.name}
+                              className="w-[84px] h-[84px] object-cover rounded-lg"
+                            />
+                            {/* Person badge under the image */}
+                            <div
+                              className="mt-2 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-bold transition-colors"
+                              style={{ 
+                                backgroundColor: isSelected ? theme.participateBg : theme.badgeBg, 
+                                color: isSelected ? "#ffffff" : theme.badgeText 
+                              }}
+                            >
+                              <i className="fa-solid fa-user text-[10px]"></i>
+                              {personLabel}
+                            </div>
                           </div>
-                          <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-200"}`}>
-                            {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
+
+                          {/* Right: text content */}
+                          <div className="flex-1 min-w-0 px-2 pt-3 pb-3 flex flex-col">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-[16px] font-bold text-[#1f1f1f] leading-snug">{pkg.name}</h4>
+                                <p className="text-[13px] text-gray-500 mt-0.5 font-medium leading-relaxed">
+                                  {personSubtitle}
+                                </p>
+                                <p className="text-[18px] font-black mt-2" style={{ color: theme.priceColor }}>
+                                  {currencySymbol}{getDisplayPrice(pkg)}
+                                </p>
+                              </div>
+                              {/* Check mark radio button */}
+                              <div
+                                className="mt-1 h-[24px] w-[24px] shrink-0 rounded-full flex items-center justify-center transition-colors"
+                                style={{
+                                  border: isSelected ? 'none' : '1px solid #d1d5db',
+                                  backgroundColor: isSelected ? theme.radioBg : "#ffffff",
+                                }}
+                              >
+                                {isSelected && <i className="fa-solid fa-check text-white text-[13px]"></i>}
+                              </div>
+                            </div>
                           </div>
                         </div>
-
-                        <h4 className="text-sm font-bold text-[#1f1f1f] pr-2 z-10 w-2/3">{pkg.name}</h4>
-
-                        <div className="mt-auto flex items-end justify-between w-full relative z-10">
-                          <span className="text-lg font-black text-[#6869F9]">{currencySymbol} {getDisplayPrice(pkg)}</span>
-                        </div>
-
-                        {/* Bottom Right Image */}
-                        <div className="absolute -bottom-2 -right-2 w-[70px] h-[70px] rounded-tl-[40px] rounded-br-xl overflow-hidden shadow-sm z-0">
-                          <img src={imageUrl} alt="Package Image" className="w-full h-full object-cover opacity-90" />
-                        </div>
-                      </button>
+                      </div>
                     );
                   });
                 })()}
               </div>
 
-              {/* Floating Details Box */}
-              {selectedPackage && (
-                <div className="mt-6 relative">
-                  {/* Upward pointing triangle pseudo-element effect */}
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#f5f3ff] border-t-2 border-l-2 border-[#6869F9] rotate-45 z-20"></div>
+              {/* ── DESKTOP: 4-Column Horizontal Grid ── */}
+              <div className="hidden md:block px-6 pb-2">
+                <div className="grid grid-cols-4 gap-3">
+                  {(() => {
+                    const displayPackages = [...puja.packages];
+                    if (displayPackages.length === 3) {
+                      displayPackages.push({
+                        id: 'family-bhog',
+                        name: 'Family Puja + Bhog',
+                        price: Math.round((displayPackages[2]?.price || 1000) * 1.5),
+                        description: 'Family sankalp with bhog offering and temple archana included.'
+                      });
+                    }
+                    const themes = [
+                      {
+                        border: "#e07c2a", imageBg: "#fff8f0", priceColor: "#e07c2a",
+                        badgeBg: "#fde8cc", badgeText: "#c25e0e",
+                        radioBg: "#e07c2a", participateBg: "#e07c2a", cardBg: "#FFFAF5",
+                      },
+                      {
+                        border: "#D22B75", imageBg: "#FFF0F5", priceColor: "#D22B75",
+                        badgeBg: "#FCE4EF", badgeText: "#9D174D",
+                        radioBg: "#D22B75", participateBg: "#D22B75", cardBg: "#FFF8FB",
+                      },
+                      {
+                        border: "#4F6B20", imageBg: "#F4F8EC", priceColor: "#4F6B20",
+                        badgeBg: "#E8F2D4", badgeText: "#3A5018",
+                        radioBg: "#4F6B20", participateBg: "#4F6B20", cardBg: "#F9FBF5",
+                      },
+                      {
+                        border: "#836814", imageBg: "#FAF7ED", priceColor: "#836814",
+                        badgeBg: "#F5EECF", badgeText: "#5C4910",
+                        radioBg: "#836814", participateBg: "#836814", cardBg: "#FDFAF2",
+                      },
+                    ];
+                    
+                    return displayPackages.map((pkg, idx) => {
+                      const isSelected = selectedPackageId === pkg.id;
+                      const theme = themes[idx] || themes[0];
+                      const personLabel = idx === 0 ? "1 Person" : idx === 1 ? "2 Person" : idx === 2 ? "4 Person" : "6 Person";
+                      const imageUrl = pkg.imageUrl || puja.imageUrl || "https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=150&q=80";
 
-                  <div className="border-2 border-[#6869F9] rounded-2xl p-5 bg-[#f5f3ff] relative z-10 shadow-sm">
-                    <h4 className="text-[#6869F9] font-bold text-[15px] mb-3">{selectedPackage.name}</h4>
-                    <div className="space-y-2">
-                      {[
-                        selectedPackage.description,
-                        "The participant's name and gotra will be recited by an experienced Panditji during the puja.",
-                        "Participants will receive guided mantras and step-by-step instructions to join the puja from home.",
-                        "A complete video of the puja and offerings will be shared on your WhatsApp."
-                      ].map((item, idx) => (
-                        <div key={idx} className="flex items-start gap-2">
-                          <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#6869F9]" />
-                          <p className="text-[13px] leading-relaxed text-gray-700 font-medium">{item}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                      return (
+                        <button
+                          key={pkg.id}
+                          onClick={() => setSelectedPackageId(pkg.id)}
+                          style={{
+                            borderColor: isSelected ? theme.border : "#e5e7eb",
+                            backgroundColor: isSelected ? theme.cardBg : "#ffffff",
+                          }}
+                          className="relative flex flex-col p-3 rounded-2xl border-2 transition-all text-left overflow-hidden min-h-[180px] shadow-sm hover:shadow-md"
+                        >
+                          {/* Top row: person badge + radio */}
+                          <div className="flex items-center justify-between w-full mb-2">
+                            <span 
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors"
+                              style={{ 
+                                backgroundColor: isSelected ? theme.participateBg : theme.badgeBg, 
+                                color: isSelected ? "#ffffff" : theme.badgeText 
+                              }}
+                            >
+                              <i className="fa-solid fa-user text-[9px]"></i>
+                              {personLabel}
+                            </span>
+                            <div 
+                              className="h-[22px] w-[22px] rounded-full flex items-center justify-center transition-colors"
+                              style={{
+                                border: isSelected ? 'none' : '1px solid #d1d5db',
+                                backgroundColor: isSelected ? theme.radioBg : "#ffffff",
+                              }}
+                            >
+                              {isSelected && <i className="fa-solid fa-check text-white text-[12px]"></i>}
+                            </div>
+                          </div>
+
+                          {/* Package name */}
+                          <h4 className="text-[14px] font-bold text-[#1f1f1f] leading-snug w-[65%] z-10 mt-1">{pkg.name}</h4>
+
+                          {/* Price */}
+                          <span 
+                            className="mt-auto text-[18px] font-black z-10"
+                            style={{ color: isSelected ? theme.priceColor : "#1f1f1f" }}
+                          >
+                            {currencySymbol} {getDisplayPrice(pkg)}
+                          </span>
+
+                          {/* Bottom-right image */}
+                          <div className="absolute -bottom-1 -right-1 w-[72px] h-[72px] rounded-tl-[36px] rounded-br-2xl overflow-hidden z-0">
+                            <img src={imageUrl} alt={pkg.name} className="w-full h-full object-cover opacity-90" />
+                          </div>
+                        </button>
+                      );
+                    });
+                  })()}
                 </div>
-              )}
-
-              {/* Trust Bar - Marquee */}
-              <div className="mt-8 border-t border-gray-100 pt-5 pb-2 overflow-hidden">
-                <Marquee scrollamount="5" className="text-[#64748b] whitespace-nowrap text-[13px] font-bold">
-                  <i className="fa-solid fa-shield-halved mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <i className="fa-solid fa-certificate mr-1"></i> ISO 9001 Certified Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <i className="fa-solid fa-place-of-worship mr-1"></i> Official Temple Partner &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <i className="fa-solid fa-shield-halved mr-1"></i> No Hidden Cost &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <i className="fa-solid fa-certificate mr-1"></i> ISO 9001 Certified Company &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <i className="fa-solid fa-place-of-worship mr-1"></i> Official Temple Partner
-                </Marquee>
               </div>
             </div>
 
-            {/* Bottom Action Bar */}
-            <div className="border-t border-gray-100 p-4 bg-gray-50 sticky bottom-0 z-20">
+            {/* Trust Badges — Marquee Scroll (Fixed) */}
+            <div className="border-t border-b border-gray-100 bg-[#f8f9fa] overflow-hidden py-1">
+              <div className="flex" style={{ animation: 'marqueeScroll 35s linear infinite', width: 'max-content' }}>
+                {[
+                  { icon: "fa-shield-halved", label: "100% Money Back Guarantee" },
+                  { icon: "fa-shield-halved", label: "No Hidden Cost" },
+                  { icon: "fa-certificate", label: "ISO 9001 Certified" },
+                  { icon: "fa-place-of-worship", label: "Official Temple Partner" },
+                  { icon: "fa-headset", label: "24/7 Support" },
+                  { icon: "fa-shield-halved", label: "100% Money Back Guarantee" },
+                  { icon: "fa-shield-halved", label: "No Hidden Cost" },
+                  { icon: "fa-certificate", label: "ISO 9001 Certified" },
+                  { icon: "fa-place-of-worship", label: "Official Temple Partner" },
+                  { icon: "fa-headset", label: "24/7 Support" },
+                ].map((badge, i) => (
+                  <div key={i} className="flex items-center gap-2 px-5 py-2 shrink-0 border-r border-gray-200">
+                    <i className={`fa-solid ${badge.icon} text-[#6869F9] text-[13px]`}></i>
+                    <span className="text-[12px] font-semibold text-gray-600 whitespace-nowrap">{badge.label}</span>
+                  </div>
+                ))}
+              </div>
+              <style>{`@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
+            </div>
+
+            {/* Bottom Action Bar — white bg + contained green button */}
+            <div className="bg-white px-5 py-3 sm:px-6 sm:py-4">
               <button
                 onClick={() => {
                   if (selectedPackageId) {
@@ -1722,15 +1876,21 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     }
                   }
                 }}
-                className="flex w-full items-center justify-between rounded-xl bg-[#6869F9] px-6 py-4 text-white shadow-[0_4px_14px_rgba(104,105,249,0.4)] hover:bg-[#5657e8] transition-colors"
+                className="flex w-[96%] mx-auto max-w-sm items-center justify-between bg-[#0f7a50] hover:bg-[#0c6843] active:bg-[#0a5c3a] transition-colors px-5 py-2.5 rounded-lg shadow-md"
               >
-                <div className="text-left flex flex-col">
-                  <span className="text-xl font-bold">{currencySymbol} {selectedPackage ? getDisplayPrice(selectedPackage) : '0'}</span>
-                  <span className="text-[11px] font-semibold opacity-90">{selectedPackage?.name}</span>
+                {/* Left: price + name */}
+                <div className="flex flex-col text-left">
+                  <span className="text-[18px] font-black text-white leading-tight">
+                    {currencySymbol}{selectedPackage ? getDisplayPrice(selectedPackage) : '—'}
+                  </span>
+                  <span className="text-[11px] font-semibold text-white/90">{selectedPackage?.name ?? 'Select a package'}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[15px] font-bold">Proceed</span>
-                  <i className="fa-solid fa-arrow-right text-[14px]"></i>
+                {/* Right: Proceed + arrow */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[16px] font-bold text-white">Proceed</span>
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </div>
               </button>
             </div>
