@@ -1230,28 +1230,49 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                       {/* -- Package Selection -- */}
                       <section id="packages" className="border-b border-gray-100 py-8 sm:py-10">
                         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Select your puja package</h2>
+                        {/* Desktop Package Grid — 4-column with themed colors */}
                         <div className="hidden md:grid mt-6 sm:mt-8 gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
                           {puja.packages.map((pkg, idx) => {
                             const isSelected = selectedPackage?.id === pkg.id;
+                            const themes = [
+                              { border: "#d95a2b", priceColor: "#d95a2b", badgeBg: "#FFF0E0", badgeText: "#C25000", radioBg: "#d95a2b", cardBg: "#fffaf8" },
+                              { border: "#D22B75", priceColor: "#D22B75", badgeBg: "#FCE4EF", badgeText: "#9D174D", radioBg: "#D22B75", cardBg: "#FFF8FB" },
+                              { border: "#4F6B20", priceColor: "#4F6B20", badgeBg: "#E8F2D4", badgeText: "#3A5018", radioBg: "#4F6B20", cardBg: "#F9FBF5" },
+                              { border: "#836814", priceColor: "#836814", badgeBg: "#F5EECF", badgeText: "#5C4910", radioBg: "#836814", cardBg: "#FDFAF2" },
+                            ];
+                            const personLabels = ["1 Person", "2 Person", "4 Person", "6 Person"];
+                            const theme = themes[idx] || themes[0];
+                            const badgeLabel = personLabels[idx] ?? `${idx + 1} Person`;
                             return (
                               <button
                                 key={`pkg-${pkg.id}-${idx}`}
                                 type="button"
                                 onClick={() => setSelectedPackageId(pkg.id)}
-                                className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${isSelected ? "border-[#6869F9] shadow-[0_8px_30px_rgba(105,105,250,0.12)] -translate-y-1" : "border-gray-100 hover:border-[#6869F9]/30 hover:shadow-md"
-                                  }`}
+                                style={{
+                                  borderColor: isSelected ? theme.border : "#e5e7eb",
+                                  backgroundColor: isSelected ? theme.cardBg : "#ffffff",
+                                }}
+                                className={`relative flex flex-col rounded-2xl border-2 text-left transition-all duration-300 ${isSelected ? "shadow-lg -translate-y-1" : "hover:shadow-md"}`}
                               >
                                 <div className="flex flex-1 flex-col p-5">
                                   {/* Person badge + radio */}
                                   <div className="flex items-center justify-between">
-                                    <span className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-bold ${PERSON_COLORS[idx] ?? PERSON_COLORS[0]}`}>
+                                    <span
+                                      className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-bold"
+                                      style={{ backgroundColor: theme.badgeBg, color: theme.badgeText }}
+                                    >
                                       <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
                                         <path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z" />
                                       </svg>
-                                      {PERSON_LABELS[idx] ?? `${idx + 1} Person`}
+                                      {badgeLabel}
                                     </span>
-                                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? "border-[#6869F9] bg-[#6869F9]" : "border-gray-300"
-                                      }`}>
+                                    <div
+                                      className="flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors"
+                                      style={{
+                                        borderColor: isSelected ? theme.radioBg : "#d1d5db",
+                                        backgroundColor: isSelected ? theme.radioBg : "transparent",
+                                      }}
+                                    >
                                       {isSelected && <CheckIcon className="h-3 w-3 text-white" />}
                                     </div>
                                   </div>
@@ -1263,7 +1284,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                         {pkg.description || "Recommended for devotees."}
                                       </p>
                                       <div className="mt-3">
-                                        <span className="text-base font-black text-[#6869F9]">{currencySymbol} {getDisplayPrice(pkg)}</span>
+                                        <span className="text-base font-black" style={{ color: theme.priceColor }}>{currencySymbol} {getDisplayPrice(pkg)}</span>
                                       </div>
                                     </div>
                                     <img
@@ -1274,7 +1295,7 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                                   </div>
                                 </div>
                                 {isSelected && (
-                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 border-[#6869F9] rotate-45 z-10"></div>
+                                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-b-2 border-r-2 rotate-45 z-10" style={{ borderColor: theme.border }}></div>
                                 )}
                               </button>
                             );
@@ -1847,8 +1868,8 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
               <style>{`@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
             </div>
 
-            {/* Bottom Action Bar — white bg + contained green button */}
-            <div className="bg-white px-5 py-3 sm:px-6 sm:py-4">
+            {/* Bottom Action Bar — full-width green proceed button */}
+            <div className="bg-white px-4 py-4 sm:px-6 sm:py-5">
               <button
                 onClick={() => {
                   if (selectedPackageId) {
@@ -1860,19 +1881,19 @@ export default function PujaDetailClient({ initialPuja }: { initialPuja: Puja | 
                     }
                   }
                 }}
-                className="flex w-[96%] mx-auto max-w-sm items-center justify-between bg-[#0f7a50] hover:bg-[#0c6843] active:bg-[#0a5c3a] transition-colors px-5 py-2.5 rounded-lg shadow-md"
+                className="flex w-full items-center justify-between bg-[#0f7a50] hover:bg-[#0c6843] active:bg-[#0a5c3a] transition-colors px-6 py-4 rounded-xl shadow-md"
               >
                 {/* Left: price + name */}
                 <div className="flex flex-col text-left">
-                  <span className="text-[18px] font-black text-white leading-tight">
+                  <span className="text-[22px] font-black text-white leading-tight">
                     {currencySymbol}{selectedPackage ? getDisplayPrice(selectedPackage) : '—'}
                   </span>
-                  <span className="text-[11px] font-semibold text-white/90">{selectedPackage?.name ?? 'Select a package'}</span>
+                  <span className="text-[12px] font-semibold text-white/90">{selectedPackage?.name ?? 'Select a package'}</span>
                 </div>
                 {/* Right: Proceed + arrow */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[16px] font-bold text-white">Proceed</span>
-                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[18px] font-bold text-white">Proceed</span>
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </div>
