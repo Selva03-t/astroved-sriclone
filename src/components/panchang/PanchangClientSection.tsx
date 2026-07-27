@@ -9,7 +9,7 @@ import DetailedPanchang from "./DetailedPanchang";
 import UpcomingFestivals from "./UpcomingFestivals";
 import PanchangPromotions from "./PanchangPromotions";
 
-export default function PanchangClientSection({ data }: { data: any }) {
+export default function PanchangClientSection({ data, monthlyFestivals, selectedDate, festivalsLoading }: { data: any, monthlyFestivals?: any[], selectedDate?: string, festivalsLoading?: boolean }) {
   const { t } = useTranslation();
 
   if (!data) {
@@ -42,7 +42,7 @@ export default function PanchangClientSection({ data }: { data: any }) {
 
         {/* Column 3 */}
         <div className="flex flex-col h-[700px]">
-          <UpcomingFestivals festivals={data.upcomingFestivals} />
+          <UpcomingFestivals festivals={monthlyFestivals} selectedDate={selectedDate} loading={festivalsLoading} />
         </div>
       </div>
 

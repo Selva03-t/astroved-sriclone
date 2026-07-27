@@ -11,21 +11,21 @@ export default function Footer() {
           Matches exact structure of reference screenshot while retaining AstroVed theme
       ========================================== */}
       <div className="block md:hidden w-full">
-        {/* Top Colored Banner Block */}
-        <div className="w-full bg-[#6869F9] text-white px-6 py-8">
+        {/* Top Light Banner Block */}
+        <div className="w-full bg-[#f3f4f6] text-[#1f2937] px-6 py-8 border-t border-gray-200">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-2.5 mb-5">
             <img
               src="/images/logo.svg"
               alt="AstroVed Logo"
-              className="brightness-0 invert h-9 w-auto object-contain"
+              className="h-9 w-auto object-contain"
             />
 
           </div>
 
           {/* Our Address */}
-          <h3 className="text-[15px] font-bold text-white mb-2">Our Address</h3>
-          <p className="text-xs leading-[1.65] text-white/90 mb-6 font-medium">
+          <h3 className="text-[15px] font-bold text-[#111827] mb-2">Our Address</h3>
+          <p className="text-xs leading-[1.65] text-gray-500 mb-6 font-medium">
             AstroVed.Com Pvt. Ltd., Prince Info Park, Plot No: 81-B, A-Block, 4th Floor, 2nd Main Road, Ambattur Industrial Estate, Chennai 600 058
           </p>
 
@@ -45,7 +45,7 @@ export default function Footer() {
               href="https://play.google.com/store/search?q=astroved&c=apps"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-black rounded-xl p-2.5 flex items-center justify-center gap-2.5 border border-white/25 text-white hover:bg-white/10 transition-colors shadow-sm"
+              className="bg-[#1f2937] rounded-xl p-2.5 flex items-center justify-center gap-2.5 border border-gray-700 text-white hover:bg-gray-700 transition-colors shadow-sm"
             >
               <i className="fa-brands fa-google-play text-xl text-green-400 shrink-0"></i>
               <div className="text-left leading-tight">
@@ -57,7 +57,7 @@ export default function Footer() {
               href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-black rounded-xl p-2.5 flex items-center justify-center gap-2.5 border border-white/25 text-white hover:bg-white/10 transition-colors shadow-sm"
+              className="bg-[#1f2937] rounded-xl p-2.5 flex items-center justify-center gap-2.5 border border-gray-700 text-white hover:bg-gray-700 transition-colors shadow-sm"
             >
               <i className="fa-brands fa-apple text-2xl text-white shrink-0"></i>
               <div className="text-left leading-tight">
@@ -125,7 +125,7 @@ export default function Footer() {
           DESKTOP FOOTER STRUCTURE (>= 768px / hidden md:block)
           Exact existing design untouched
       ========================================== */}
-      <div className="hidden md:block w-full bg-[#6869F9] text-white">
+      <div className="hidden md:block w-full bg-[#f3f4f6] text-[#1f2937] border-t border-gray-200">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4 lg:gap-8">
             {/* Logo and Description */}
@@ -134,38 +134,38 @@ export default function Footer() {
                 <img
                   src="/images/logo.svg"
                   alt="AstroVed Logo"
-                  className="brightness-0 invert h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
-              <p className="text-sm leading-relaxed text-white/90">
+              <p className="text-sm leading-relaxed text-gray-500">
                 AstroVed has brought religious services to the masses in India by connecting devotees, pandits and temples. Partnering with over 100 renowned temples, we provide exclusive pujas and offerings performed by expert pandits and share videos of the completed puja rituals.
               </p>
             </div>
 
             {/* Company Links */}
             <div>
-              <h4 className="mb-6 text-xl font-bold">Company</h4>
-              <ul className="flex flex-col gap-4 text-sm font-medium">
-                <li><Link href="/about" className="hover:opacity-80 transition">About Us</Link></li>
-                <li><Link href="/contact" className="hover:opacity-80 transition">Contact Us</Link></li>
+              <h4 className="mb-6 text-xl font-bold text-[#111827]">Company</h4>
+              <ul className="flex flex-col gap-4 text-sm font-medium text-gray-500">
+                <li><Link href="/about" className="hover:text-[#1f2937] transition">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-[#1f2937] transition">Contact Us</Link></li>
               </ul>
             </div>
 
             {/* Services Links */}
             <div>
-              <h4 className="mb-6 text-xl font-bold">Our Services</h4>
-              <ul className="flex flex-col gap-4 text-sm font-medium">
-                <li><Link href="/puja" className="hover:opacity-80 transition">Puja</Link></li>
-                <li><Link href="/chadhava" className="hover:opacity-80 transition">Chadhava</Link></li>
-                <li><Link href="/panchang" className="hover:opacity-80 transition">Panchang</Link></li>
-                <li><Link href="/temples" className="hover:opacity-80 transition">Temples</Link></li>
+              <h4 className="mb-6 text-xl font-bold text-[#111827]">Our Services</h4>
+              <ul className="flex flex-col gap-4 text-sm font-medium text-gray-500">
+                <li><Link href="/puja" className="hover:text-[#1f2937] transition">Puja</Link></li>
+                <li><Link href="/chadhava" className="hover:text-[#1f2937] transition">Chadhava</Link></li>
+                <li><Link href="/panchang" className="hover:text-[#1f2937] transition">Panchang</Link></li>
+                <li><Link href="/temples" className="hover:text-[#1f2937] transition">Temples</Link></li>
               </ul>
             </div>
 
             {/* Address and Socials */}
             <div>
-              <h4 className="mb-6 text-xl font-bold">Our Address</h4>
-              <p className="text-sm leading-relaxed mb-6">
+              <h4 className="mb-6 text-xl font-bold text-[#111827]">Our Address</h4>
+              <p className="text-sm leading-relaxed mb-6 text-gray-500">
                 AstroVed.Com Pvt. Ltd.,
                 Prince Info Park, Plot No: 81-B,
                 A-Block, 4th Floor, 2nd Main Road,
@@ -184,16 +184,16 @@ export default function Footer() {
           </div>
 
           {/* Bottom Part (Badges and Legal) */}
-          <div className="mt-16 border-t border-white/20 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="mt-16 border-t border-gray-300 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8">
             {/* Download Badges */}
             <div id="download-app" className="flex scroll-mt-28 flex-wrap justify-center gap-4 md:justify-start">
-              <a href="https://play.google.com/store/search?q=astroved&c=apps" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+              <a href="https://play.google.com/store/search?q=astroved&c=apps" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on Google Play" className="h-12 w-36 bg-[#1f2937] text-white rounded-lg flex items-center px-3 text-[10px] gap-3 border border-gray-700 cursor-pointer hover:bg-gray-700 transition-all">
                 <i className="fa-brands fa-google-play text-xl"></i>
                 <div className="leading-tight">
                   <p className="font-bold text-[15px]">Google Play</p>
                 </div>
               </a>
-              <a href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on the App Store" className="h-12 w-36 bg-black rounded-lg flex items-center px-3 text-[10px] gap-3 border border-white/20 cursor-pointer hover:bg-white/5 transition-all">
+              <a href="https://apps.apple.com/us/app/AstroVed-astrology-remedies/id1406242342" target="_blank" rel="noopener noreferrer" aria-label="Download AstroVed on the App Store" className="h-12 w-36 bg-[#1f2937] text-white rounded-lg flex items-center px-3 text-[10px] gap-3 border border-gray-700 cursor-pointer hover:bg-gray-700 transition-all">
                 <i className="fa-brands fa-apple text-2xl"></i>
                 <div className="leading-tight">
                   <p className="font-bold text-[15px]">App Store</p>
@@ -207,40 +207,40 @@ export default function Footer() {
                 <img
                   src="https://cdn.astroved.com/images/images-av/years-of-services.png"
                   alt="25 YEARS OF ASTROVED"
-                  className="brightness-100 h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <img
                   src="https://cdn.astroved.com/images/images-av/podbean-logo.png"
                   alt="PODBEAN"
-                  className="brightness-100 h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
               <div>
                 <img
                   src="https://cdn.astroved.com/images/images-av/iso.png"
                   alt="ISO"
-                  className="brightness-100 h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
                 <img
                   src="https://cdn.astroved.com/images/images-av/sectigo_trust_seal.jpg"
                   alt="trust seal"
-                  className="brightness-100 h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
             </div>
 
             {/* Legal and Copyright */}
             <div className="text-center sm:text-right">
-              <div className="flex gap-4 text-xs font-semibold justify-center sm:justify-end mb-1">
+              <div className="flex gap-4 text-xs font-semibold justify-center sm:justify-end mb-1 text-[#1f2937]">
                 <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
                 <span>•</span>
                 <Link href="/terms" className="hover:underline">Terms and Conditions</Link>
               </div>
-              <p className="text-[10px] opacity-70">© 2001 - 2026 AstroVed - All rights reserved.</p>
+              <p className="text-[10px] text-gray-400">© 2001 - 2026 AstroVed - All rights reserved.</p>
             </div>
           </div>
         </div>
