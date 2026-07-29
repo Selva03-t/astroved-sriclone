@@ -71,15 +71,12 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // 3. Fetch IP Geolocation if cookie not found
         if (!foundCookie) {
           try {
-            const res = await fetch("https://ipapi.co/json/");
+            // Uses internal /api/geo route — server-side, no rate limits, no external API key needed
+            const res = await fetch("/api/geo");
             if (res.ok) {
               const data = await res.json();
-              if (data.country_code === "IN") {
-                detectedCurrency = "INR";
-              } else if (data.country_code === "MY") {
-                detectedCurrency = "MYR";
-              } else {
-                detectedCurrency = "USD";
+              if (data.currency && ["INR", "USD", "MYR"].includes(data.currency)) {
+                detectedCurrency = data.currency as CurrencyType;
               }
             }
           } catch (geoError) {
